@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  /* Azules (jerarquía más clara) */
+  --navy-dark: #0B1D33;
+  --navy: #0b1f49;
+  --navy-light: #0c1e3c;
+  --navy-medium: #2A3441;
+  --accent-blue: #1B365D;
+
+  /* Dorados (mayor rango) */
+  --gold: #D4AF37;
+  --gold-light: #F4E4BC;
+  --gold-dark: #B8941F;
+  --gold-muted: #928250;
+
+  /* Neutrales Ampliados */
+  --black: #1E1E1E;
+  --carbon: #2B2B2B;
+  --white: #FFFFFF;
+  --white-soft: #F8F9FA;
+  --text-muted: #6B7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--navy-dark);
+  color: var(--white-soft);
+}
+
+main {
+  min-height: calc(100vh - 80px);
+}
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Asegurar que los enlaces no tengan decoración por defecto */
+a {
+  text-decoration: none;
+  color: inherit;
+}

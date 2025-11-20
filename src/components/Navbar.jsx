@@ -200,6 +200,137 @@ function AnimatedLogo({ text }) {
 }
 
 // -------------------------------
+//  COMPONENTE: AnimatedWaves (del Footer)
+// -------------------------------
+function AnimatedWaves() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const setCanvasSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = 70; // Altura del navbar
+    };
+    setCanvasSize();
+
+    // Olas animadas
+    class Wave {
+      constructor(y, amplitude, frequency, speed, color) {
+        this.y = y;
+        this.amplitude = amplitude;
+        this.frequency = frequency;
+        this.speed = speed;
+        this.color = color;
+        this.phase = Math.random() * Math.PI * 2;
+      }
+
+      draw(time) {
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height);
+
+        for (let x = 0; x <= canvas.width; x += 5) {
+          const y = this.y + Math.sin((x * this.frequency) + (time * this.speed) + this.phase) * this.amplitude;
+          ctx.lineTo(x, y);
+        }
+
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    // Partículas flotantes
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + 20;
+        this.size = Math.random() * 2 + 1;
+        this.speedY = Math.random() * 0.3 + 0.1;
+        this.speedX = (Math.random() - 0.5) * 0.2;
+        this.opacity = Math.random() * 0.4 + 0.2;
+      }
+
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+
+        if (this.y < -20) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = `rgba(212, 175, 55, ${this.opacity})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    const waves = [
+      new Wave(50, 8, 0.01, 0.0005, 'rgba(2, 6, 20, 0.3)'),
+      new Wave(55, 6, 0.015, 0.0008, 'rgba(2, 6, 20, 0.25)'),
+      new Wave(60, 5, 0.02, 0.001, 'rgba(2, 6, 20, 0.2)')
+    ];
+
+    const particles = Array.from({ length: 30 }, () => new Particle());
+
+    let animationTime = 0;
+    let animationId;
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      waves.forEach(wave => wave.draw(animationTime));
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      animationTime += 0.016;
+      animationId = requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', setCanvasSize);
+    return () => {
+      window.removeEventListener('resize', setCanvasSize);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, []);
+
+  return (
+    <canvas 
+      ref={canvasRef} 
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        opacity: 0.5,
+        pointerEvents: 'none',
+        zIndex: 1,
+      }}
+    />
+  );
+}
+
+// -------------------------------
 //  COMPONENTE PRINCIPAL: GeckNavbar
 // -------------------------------
 export default function GeckNavbar() {
@@ -218,9 +349,9 @@ export default function GeckNavbar() {
   const cssVariables = `
     :root {
       --gold: #D4AF37;
-      --navy-dark: #0B1F49;
-      --navy-medium: #162F5C;
-      --navy-light: #1B365D;
+      --navy-dark: #0A1D35;
+      --navy-medium: #f1f1f1ff;
+      --navy-light: #fdfdffff;
       --white: #FFFFFF;
       --white-soft: #F8FAFC;
     }
@@ -280,7 +411,7 @@ export default function GeckNavbar() {
     setTimeout(() => {
       setMobileMenuOpen(false);
       setMobileMenuClosing(false);
-    }, 400); // Duración de la animación de cierre
+    }, 400);
   };
 
   const handleNavLinkClick = () => {
@@ -391,9 +522,9 @@ export default function GeckNavbar() {
           bottom: 0;
           background: linear-gradient(
             180deg,
-            rgba(11, 31, 73, 0.45) 0%,
-            rgba(11, 31, 73, 0.35) 50%,
-            rgba(11, 31, 73, 0.3) 100%
+            rgba(2, 6, 20, 0.45) 0%,
+            rgba(2, 6, 20, 0.35) 50%,
+            rgba(2, 6, 20, 0.3) 100%
           );
           backdrop-filter: blur(60px) saturate(200%) !important;
           -webkit-backdrop-filter: blur(60px) saturate(200%) !important;
@@ -444,7 +575,7 @@ export default function GeckNavbar() {
           background: 
             radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
             radial-gradient(circle at 80% 60%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(11, 31, 73, 0.2) 0%, transparent 50%);
+            radial-gradient(circle at 40% 80%, rgba(2, 6, 20, 0.2) 0%, transparent 50%);
           pointer-events: none;
           animation: particleFloat 8s ease-in-out infinite;
         }
@@ -479,7 +610,7 @@ export default function GeckNavbar() {
         
         .nav-glow-right {
           right: 0;
-          background: radial-gradient(ellipse at right, rgba(11, 31, 73, 0.4) 0%, transparent 70%);
+          background: radial-gradient(ellipse at right, rgba(2, 6, 20, 0.4) 0%, transparent 70%);
           filter: blur(30px);
           animation: pulseRight 5s ease-in-out infinite;
         }
@@ -532,12 +663,12 @@ export default function GeckNavbar() {
             90deg,
             transparent,
             var(--gold) 20%,
-            var(--navy-medium) 50%,
+            #041934 50%,
             var(--gold) 80%,
             transparent
           );
           animation: pulseLine 4s ease-in-out infinite;
-          z-index: 1;
+          z-index: 3;
         }
 
         @keyframes pulseLine {
@@ -625,27 +756,13 @@ export default function GeckNavbar() {
         .blur-button-navy {
           backdrop-filter: blur(25px) !important;
           -webkit-backdrop-filter: blur(25px) !important;
-          background: rgba(11, 31, 73, 0.2) !important;
+          background: rgba(2, 6, 20, 0.2) !important;
           border: 1px solid rgba(212, 175, 55, 0.25) !important;
         }
 
         .blur-button-navy:hover {
-          background: rgba(11, 31, 73, 0.35) !important;
+          background: rgba(2, 6, 20, 0.35) !important;
           border-color: rgba(212, 175, 55, 0.4) !important;
-        }
-
-        .blur-button-gold {
-          backdrop-filter: blur(22px) !important;
-          -webkit-backdrop-filter: blur(22px) !important;
-          background: rgba(212, 175, 55, 0.12) !important;
-          border: 1px solid rgba(212, 175, 55, 0.25) !important;
-        }
-
-        .blur-button-blue {
-          backdrop-filter: blur(22px) !important;
-          -webkit-backdrop-filter: blur(22px) !important;
-          background: rgba(30, 64, 175, 0.12) !important;
-          border: 1px solid rgba(30, 64, 175, 0.25) !important;
         }
 
         /* Mejora del scroll en el menú móvil */
@@ -654,7 +771,7 @@ export default function GeckNavbar() {
         }
 
         .mobile-menu::-webkit-scrollbar-track {
-          background: rgba(11, 31, 73, 0.3);
+          background: rgba(2, 6, 20, 0.3);
         }
 
         .mobile-menu::-webkit-scrollbar-thumb {
@@ -716,7 +833,7 @@ export default function GeckNavbar() {
         .mobile-lang-btn {
           backdrop-filter: blur(20px) !important;
           -webkit-backdrop-filter: blur(20px) !important;
-          background: rgba(11, 31, 73, 0.2) !important;
+          background: rgba(2, 6, 20, 0.2) !important;
           border: 1px solid rgba(212, 175, 55, 0.2) !important;
           transition: all 0.3s ease !important;
         }
@@ -738,9 +855,9 @@ export default function GeckNavbar() {
         style={{
           background: `
             linear-gradient(135deg, 
-              rgba(11,31,73,0.25) 0%, 
-              rgba(22,47,92,0.35) 50%, 
-              rgba(11,31,73,0.25) 100%
+              rgba(2,6,20,0.40) 0%, 
+              rgba(2,6,20,0.40) 50%, 
+              rgba(2,6,20,0.40) 100%
             ),
             radial-gradient(ellipse at 20% 50%, rgba(212,175,55,0.08) 0%, transparent 50%),
             radial-gradient(ellipse at 80% 50%, rgba(212,175,55,0.05) 0%, transparent 50%)
@@ -756,9 +873,12 @@ export default function GeckNavbar() {
           transform: navVisible ? "translateY(0)" : "translateY(-100%)",
           transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
           overflow: "hidden",
-          boxShadow: "0 4px 30px rgba(11, 31, 73, 0.2)",
+          boxShadow: "0 4px 30px rgba(2, 6, 20, 0.3)",
         }}
       >
+        {/* Canvas con ondas animadas del footer */}
+        <AnimatedWaves />
+
         {/* Efectos de glow en los lados con pulso */}
         <div className="nav-glow-left" />
         <div className="nav-glow-right" />
@@ -772,7 +892,7 @@ export default function GeckNavbar() {
               left: particle.left,
               animationDelay: particle.delay,
               animationDuration: particle.duration,
-              background: particle.color === "gold" ? "var(--gold)" : "var(--navy-medium)",
+              background: particle.color === "gold" ? "var(--gold)" : "#041934",
               width: particle.width,
               height: particle.height,
             }}
@@ -953,7 +1073,7 @@ export default function GeckNavbar() {
                     position: "absolute",
                     right: 0,
                     top: "calc(100% + 0.5rem)",
-                    background: "rgba(11, 31, 73, 0.4)",
+                    background: "rgba(2, 6, 20, 0.4)",
                     backdropFilter: "blur(30px)",
                     WebkitBackdropFilter: "blur(30px)",
                     border: "1px solid rgba(212, 175, 55, 0.25)",

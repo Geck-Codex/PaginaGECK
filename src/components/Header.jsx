@@ -98,10 +98,10 @@ export default function Header() {
 
   const getLineColor = (style) => {
     const styles = {
-      'snake-head': 'text-[var(--gold)] text-lg scale-110',
-      'snake-tongue': 'text-[var(--gold-light)] text-lg scale-110',
-      'snake-body': 'text-[#d4af37] text-base',
-      'snake-tail': 'text-[#b8921f] text-base',
+      'snake-head': 'text-[var(--gold)] text-base sm:text-lg scale-110',
+      'snake-tongue': 'text-[var(--gold-light)] text-base sm:text-lg scale-110',
+      'snake-body': 'text-[#d4af37] text-sm sm:text-base',
+      'snake-tail': 'text-[#b8921f] text-sm sm:text-base',
     };
     return styles[style] || 'text-[var(--white-soft)]';
   };
@@ -114,7 +114,7 @@ export default function Header() {
   };
 
   return (
-    <header className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0B1D33] via-[#0d2440] to-[#0B1D33] relative overflow-hidden px-4">
+    <header className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0B1D33] via-[#0d2440] to-[#0B1D33] relative overflow-hidden px-2 sm:px-4 pb-12 sm:pb-16 md:pb-24 lg:pb-32">
       {/* Grid de fondo */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(212,175,55,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none"></div>
 
@@ -138,23 +138,23 @@ export default function Header() {
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-3xl hidden lg:block"></div>
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--gold)]/5 rounded-full blur-3xl hidden lg:block"></div>
 
-      <div className="w-full max-w-7xl mx-auto relative z-10 py-12">
+      <div className="w-full max-w-7xl mx-auto relative z-10 py-8 sm:py-12">
 
         {/* Contenedor Principal - TODO CENTRADO */}
-        <div className="flex flex-col items-center gap-16 lg:gap-20">
+        <div className="flex flex-col items-center gap-12 sm:gap-16 lg:gap-20">
 
           {/* SECCIÓN DE TEXTO - CENTRADA CON EFECTOS MEJORADOS */}
-          <div className="w-full max-w-4xl text-center px-6 relative">
+          <div className="w-full max-w-4xl text-center px-4 sm:px-6 relative">
             
             {/* Decoración superior */}
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-60">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[var(--gold)]"></div>
-              <div className="w-2 h-2 bg-[var(--gold)] rounded-full animate-pulse"></div>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[var(--gold)]"></div>
+            <div className="absolute -top-6 sm:-top-8 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-60">
+              <div className="h-px w-8 sm:w-12 bg-gradient-to-r from-transparent to-[var(--gold)]"></div>
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--gold)] rounded-full animate-pulse"></div>
+              <div className="h-px w-8 sm:w-12 bg-gradient-to-l from-transparent to-[var(--gold)]"></div>
             </div>
 
             {/* Título principal con Outfit - CON EFECTOS MEJORADOS */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black uppercase tracking-tight mb-8 leading-[0.95]" 
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black uppercase tracking-tight mb-6 sm:mb-8 leading-[0.95]" 
                 style={{ fontFamily: "'Outfit', sans-serif" }}>
               <span className="relative inline-block group">
                 <span className="bg-gradient-to-r from-[var(--white)] via-[var(--gold-light)] to-[var(--gold)] bg-clip-text text-transparent drop-shadow-2xl animate-gradient hover-glow">
@@ -163,7 +163,7 @@ export default function Header() {
                 {/* Efecto de resplandor mejorado */}
                 <span className="absolute inset-0 bg-gradient-to-r from-[var(--gold)]/30 via-[var(--gold-light)]/30 to-[var(--gold)]/30 blur-3xl -z-10 group-hover:blur-2xl transition-all duration-500"></span>
                 {/* Línea decorativa superior */}
-                <div className="absolute -top-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)]/40 to-transparent"></div>
+                <div className="absolute -top-3 sm:-top-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)]/40 to-transparent"></div>
               </span>
               <br />
               <span className="relative inline-block group">
@@ -171,22 +171,22 @@ export default function Header() {
                   DIGITALES
                 </span>
                 {/* Línea decorativa bajo el texto - CENTRADA Y ANIMADA */}
-                <div className="h-1 w-3/4 bg-gradient-to-r from-[var(--gold)] via-[var(--gold-light)] to-transparent mt-4 mx-auto animate-line-expand"></div>
+                <div className="h-0.5 sm:h-1 w-3/4 bg-gradient-to-r from-[var(--gold)] via-[var(--gold-light)] to-transparent mt-3 sm:mt-4 mx-auto animate-line-expand"></div>
                 {/* Puntos decorativos */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-                  <div className="w-1.5 h-1.5 bg-[var(--gold)] rounded-full animate-pulse"></div>
-                  <div className="w-1.5 h-1.5 bg-[var(--gold-light)] rounded-full animate-pulse delay-100"></div>
-                  <div className="w-1.5 h-1.5 bg-[var(--gold)] rounded-full animate-pulse delay-200"></div>
+                <div className="absolute -bottom-6 sm:-bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[var(--gold)] rounded-full animate-pulse"></div>
+                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[var(--gold-light)] rounded-full animate-pulse delay-100"></div>
+                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[var(--gold)] rounded-full animate-pulse delay-200"></div>
                 </div>
               </span>
             </h1>
 
             {/* Descripción con Prompt - CENTRADA Y MEJORADA */}
-            <div className="relative max-w-3xl mx-auto mt-12">
+            <div className="relative max-w-3xl mx-auto mt-10 sm:mt-12">
               {/* Marco decorativo sutil */}
               <div className="absolute -inset-4 bg-gradient-to-r from-[var(--gold)]/5 via-transparent to-[var(--gold)]/5 rounded-lg blur-xl"></div>
               
-              <p className="text-lg sm:text-xl lg:text-2xl text-[var(--white-soft)]/95 leading-relaxed tracking-wide relative"
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[var(--white-soft)]/95 leading-relaxed tracking-wide relative"
                  style={{ fontFamily: "'Prompt', sans-serif", fontWeight: 300 }}>
                 No solo desarrollamos software, <span className="text-[var(--gold-light)] font-medium relative inline-block hover:text-[var(--gold)] transition-colors">creamos experiencias digitales</span> que 
                 revolucionan industrias. Cada proyecto es una <span className="text-[var(--gold)] font-semibold relative inline-block hover:scale-105 transition-transform">obra maestra</span> de 
@@ -208,88 +208,90 @@ export default function Header() {
 
           </div>
 
-          {/* TERMINAL - CENTRADA CON HOVER MEJORADO */}
-          <div className="w-full max-w-5xl px-6 terminal-container">
-            <div className="terminal-card bg-gradient-to-br from-[var(--carbon)]/80 to-[var(--black)]/95 backdrop-blur-xl rounded-2xl border-2 border-[var(--gold)]/40 shadow-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:border-[var(--gold)]/80 group relative">
+          {/* TERMINAL - CENTRADA CON HOVER MEJORADO Y OPTIMIZADA PARA MÓVIL */}
+          <div className="w-full max-w-5xl px-3 sm:px-6 terminal-container">
+            <div className="terminal-card bg-gradient-to-br from-[var(--carbon)]/80 to-[var(--black)]/95 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-[var(--gold)]/40 sm:border-2 shadow-2xl overflow-hidden transition-all duration-500 hover:scale-[1.01] sm:hover:scale-[1.02] hover:border-[var(--gold)]/80 group relative">
 
               {/* Resplandor hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--gold)]/0 via-[var(--gold)]/5 to-[var(--gold)]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
               
               {/* Efecto de brillo en las esquinas */}
-              <div className="absolute top-0 left-0 w-20 h-20 bg-[var(--gold)]/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute bottom-0 right-0 w-20 h-20 bg-[var(--gold)]/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute top-0 left-0 w-16 h-16 sm:w-20 sm:h-20 bg-[var(--gold)]/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute bottom-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-[var(--gold)]/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
               {/* Header de la terminal */}
-              <div className="bg-gradient-to-r from-[#0B1D33] to-[#0d2440] px-5 py-4 flex items-center gap-4 border-b border-[var(--gold)]/30 relative z-10">
-                <div className="flex gap-2.5">
-                  <div className="w-3.5 h-3.5 rounded-full bg-red-500 hover:bg-red-400 transition-colors cursor-pointer"></div>
-                  <div className="w-3.5 h-3.5 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-colors cursor-pointer"></div>
-                  <div className="w-3.5 h-3.5 rounded-full bg-green-500 hover:bg-green-400 transition-colors cursor-pointer"></div>
+              <div className="bg-gradient-to-r from-[#0B1D33] to-[#0d2440] px-3 sm:px-5 py-3 sm:py-4 flex items-center gap-3 sm:gap-4 border-b border-[var(--gold)]/30 relative z-10">
+                <div className="flex gap-1.5 sm:gap-2.5">
+                  <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-red-500 hover:bg-red-400 transition-colors cursor-pointer"></div>
+                  <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-colors cursor-pointer"></div>
+                  <div className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-green-500 hover:bg-green-400 transition-colors cursor-pointer"></div>
                 </div>
-                <div className="text-[var(--gold)] text-sm font-mono">python_digital.py</div>
+                <div className="text-[var(--gold)] text-xs sm:text-sm font-mono">python_digital.py</div>
               </div>
 
               {/* Contenido Terminal */}
-              <div className="p-8 lg:p-12 xl:p-16 font-mono text-base lg:text-lg xl:text-xl 
-                min-h-[500px] lg:min-h-[600px] bg-[var(--black)]/40 backdrop-blur-sm relative z-10">
+              <div className="p-3 sm:p-4 lg:p-6 xl:p-8 font-mono text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 
+                min-h-[280px] sm:min-h-[320px] lg:min-h-[380px] bg-[var(--black)]/40 backdrop-blur-sm relative z-10">
 
-                <div className="w-full grid grid-cols-1 xl:grid-cols-[auto_1fr] gap-12 items-start justify-items-center">
+                <div className="w-full flex flex-col xl:grid xl:grid-cols-[auto_1fr] gap-4 sm:gap-6 items-start xl:justify-items-center">
 
-                  {/* SERPIENTE */}
-                  <div className="w-full max-w-2xl">
-                    {displayedLines.map((line, index) => (
-                      <div 
-                        key={index}
-                        className={`${getLineColor(line.style)} animate-fadeIn leading-relaxed whitespace-pre relative`}
-                        style={line.isSnake && typeof line.snakeIndex === 'number' ? {
-                          transform: `translateX(${getOffset(line.snakeIndex)}px)`,
-                          transition: 'transform 0.05s linear',
-                        } : {}}
-                      >
-                        {line.isTongue ? getTongueVariation() : line.text}
+                  {/* SERPIENTE - Reducida en móvil */}
+                  <div className="w-full overflow-x-auto scrollbar-hide">
+                    <div className="min-w-max px-2 sm:px-0">
+                      {displayedLines.map((line, index) => (
+                        <div 
+                          key={index}
+                          className={`${getLineColor(line.style)} animate-fadeIn leading-snug whitespace-pre relative`}
+                          style={line.isSnake && typeof line.snakeIndex === 'number' ? {
+                            transform: `translateX(${getOffset(line.snakeIndex)}px)`,
+                            transition: 'transform 0.05s linear',
+                          } : {}}
+                        >
+                          {line.isTongue ? getTongueVariation() : line.text}
 
-                        {line.snakeIndex === 0 && (
-                          <span 
-                            className="absolute animate-pulse"
-                            style={{
-                              color: 'var(--gold)',
-                              textShadow: '0 0 12px var(--gold), 0 0 20px var(--gold-light)',
-                              left: '60%',
-                              top: '50%',
-                              fontSize: '1.2em'
-                            }}
-                          >
-                            ●
-                          </span>
-                        )}
+                          {line.snakeIndex === 0 && (
+                            <span 
+                              className="absolute animate-pulse"
+                              style={{
+                                color: 'var(--gold)',
+                                textShadow: '0 0 12px var(--gold), 0 0 20px var(--gold-light)',
+                                left: '60%',
+                                top: '50%',
+                                fontSize: '1.2em'
+                              }}
+                            >
+                              ●
+                            </span>
+                          )}
 
-                        {index === displayedLines.length - 1 && line.text && (
-                          <span className="inline-block w-2 h-4 bg-[var(--gold)] ml-1 animate-blink"></span>
-                        )}
-                      </div>
-                    ))}
+                          {index === displayedLines.length - 1 && line.text && (
+                            <span className="inline-block w-1.5 h-3 sm:w-2 sm:h-4 bg-[var(--gold)] ml-1 animate-blink"></span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  {/* GRÁFICAS GOLD FRAME ANIMADAS */}
-                  <div className="hidden xl:flex flex-col gap-8 text-[var(--gold-muted)] text-lg">
+                  {/* GRÁFICAS GOLD FRAME ANIMADAS - Debajo en móvil, al lado en XL */}
+                  <div className="w-full xl:w-auto flex flex-col gap-3 sm:gap-4 text-[var(--gold-muted)] text-xs sm:text-sm md:text-base">
 
-                    <pre className="leading-tight hover:text-[var(--gold)] transition-colors">
+                    <pre className="leading-tight hover:text-[var(--gold)] transition-colors overflow-x-auto scrollbar-hide">
 {`┌──────────────────────────────────┐
-│        PROYECTOS COMPLETADOS     │
+│     PROYECTOS COMPLETADOS        │
 │   ${renderBar(projectProgress)}
 └──────────────────────────────────┘`}
                     </pre>
 
-                    <pre className="leading-tight hover:text-[var(--gold)] transition-colors">
+                    <pre className="leading-tight hover:text-[var(--gold)] transition-colors overflow-x-auto scrollbar-hide">
 {`┌──────────────────────────────────┐
-│        CLIENTES SATISFECHOS      │
+│     CLIENTES SATISFECHOS         │
 │   ${renderBar(clientProgress)}
 └──────────────────────────────────┘`}
                     </pre>
 
-                    <pre className="leading-tight hover:text-[var(--gold)] transition-colors">
+                    <pre className="leading-tight hover:text-[var(--gold)] transition-colors overflow-x-auto scrollbar-hide">
 {`┌──────────────────────────────────┐
-│            SOPORTE 24/7          │
+│         SOPORTE 24/7             │
 │   ${['ONLINE','DISPONIBLE','OK'].map((label,i) => dotPhase===i ? `● ${label}` : `○ ${label}`).join('  ')}
 │  
 └──────────────────────────────────┘`}
@@ -301,8 +303,8 @@ export default function Header() {
               </div>
 
               {/* Footer */}
-              <div className="px-5 py-3 bg-[var(--black)]/50 border-t border-[var(--gold)]/20 flex items-center justify-between text-xs font-mono relative z-10">
-                <div className="flex items-center gap-4">
+              <div className="px-3 sm:px-5 py-2 sm:py-3 bg-[var(--black)]/50 border-t border-[var(--gold)]/20 flex flex-wrap items-center justify-between text-[10px] sm:text-xs font-mono gap-2 relative z-10">
+                <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                   <span className="text-[var(--gold-muted)]">v4.2.0</span>
                   <span className="text-green-400">CPU: 12%</span>
                   <span className="text-blue-400">RAM: 2.1GB</span>
@@ -318,6 +320,15 @@ export default function Header() {
       </div>
 
       <style jsx>{`
+        /* Ocultar scrollbar pero mantener funcionalidad */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+
         @keyframes fadeIn { 
           from { opacity: 0; transform: translateY(10px); } 
           to { opacity: 1; transform: translateY(0); } 

@@ -1,10 +1,15 @@
 ---
-import Layout from '../layouts/MainLayout.astro';
-import Header from '../components/Header.jsx';
-import Carrusel from '../components/hero/Carrusel.jsx';
+import Layout from '@/layouts/MainLayout.astro';
+import Header from '@/components/Header.jsx';
+import Carrusel from '@/components/hero/Carrusel.jsx';
+import Tecno from '@/components/hero/Tecno.jsx';
+
+
 ---
 
 <Layout>
   <Header client:load />
+  <Tecno client:load />
   <Carrusel client:load />
+  
 </Layout>

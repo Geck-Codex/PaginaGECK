@@ -1,122 +1,138 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+// ✅ VERSIÓN V2 - Contenido 40% más pequeño, contenedor grande para aire
+// Ícono: w-12→w-16 | Título: text-xl→text-3xl | Todo reducido
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NeuralNetworkPro = () => {
   const [hoveredNode, setHoveredNode] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [particles, setParticles] = useState([]);
+  const [portalParticles, setPortalParticles] = useState([]);
   const [backgroundParticles, setBackgroundParticles] = useState([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
   const [focusedNode, setFocusedNode] = useState(null);
-  const [networkPulse, setNetworkPulse] = useState(0);
-  const canvasRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
+  const svgRef = useRef(null);
 
-  const centralNode = {
+  // Memoizar los datos para evitar recrearlos en cada render
+  const centralNode = useMemo(() => ({
     id: 'core',
     name: 'IA & Computer Vision',
     x: 50,
     y: 50,
-    size: 'large',
-    color: 'gold',
+    icon: '🧠',
     description: 'Núcleo central de inteligencia artificial y visión por computadora',
     details: 'Desarrollamos soluciones de IA avanzada, machine learning y computer vision para automatizar procesos complejos y extraer insights valiosos de datos visuales.',
     technologies: [
-      { name: 'TensorFlow', icon: '🧮', color: '#FF6F00' },
-      { name: 'PyTorch', icon: '🔥', color: '#EE4C2C' },
-      { name: 'OpenCV', icon: '👁️', color: '#5C3EE8' },
-      { name: 'Neural Nets', icon: '🕸️', color: '#00D9FF' }
+      { name: 'TensorFlow', icon: '🧮' },
+      { name: 'PyTorch', icon: '🔥' },
+      { name: 'OpenCV', icon: '👁️' },
+      { name: 'Neural Nets', icon: '🕸️' }
     ],
-    projects: ['Reconocimiento facial', 'Detección de objetos', 'Análisis predictivo'],
-    stats: { projects: 45, clients: 20, accuracy: '98%' }
-  };
+    projects: ['Reconocimiento facial', 'Detección de objetos', 'Análisis predictivo']
+  }), []);
 
-  const nodes = [
+  const nodes = useMemo(() => [
     {
       id: 1,
       name: 'Desarrollo Web',
+      icon: '💻',
       x: 20,
       y: 20,
       connections: ['core', 2, 5],
       description: 'Aplicaciones web modernas y escalables',
       details: 'Creamos experiencias web de alta performance usando las últimas tecnologías. Desde landing pages hasta aplicaciones empresariales complejas.',
       technologies: [
-        { name: 'React', icon: '⚛️', color: '#61DAFB' },
-        { name: 'Node.js', icon: '🟢', color: '#339933' },
-        { name: 'PHP', icon: '🐘', color: '#777BB4' }
+        { name: 'React', icon: '⚛️' },
+        { name: 'Node.js', icon: '🟢' },
+        { name: 'PHP', icon: '🐘' },
+        { name: 'TypeScript', icon: '📘' }
       ],
-      projects: ['E-commerce', 'Portales corporativos', 'SaaS platforms'],
-      stats: { projects: 120, clients: 50, satisfaction: '95%' }
+      projects: ['E-commerce', 'Portales corporativos', 'SaaS platforms']
     },
     {
       id: 2,
       name: 'Desarrollo Móvil',
+      icon: '📱',
       x: 80,
       y: 15,
       connections: ['core', 1, 3],
       description: 'Apps móviles nativas y cross-platform',
       details: 'Desarrollamos aplicaciones móviles que tus usuarios amarán. Optimizadas para iOS y Android con la mejor UX.',
       technologies: [
-        { name: 'React Native', icon: '📱', color: '#61DAFB' },
-        { name: 'Flutter', icon: '🎯', color: '#02569B' },
-        { name: 'Swift', icon: '🍎', color: '#FA7343' }
+        { name: 'React Native', icon: '📱' },
+        { name: 'Flutter', icon: '🎯' },
+        { name: 'Swift', icon: '🍎' },
+        { name: 'Kotlin', icon: '🤖' }
       ],
-      projects: ['Apps bancarias', 'Delivery apps', 'Social networks'],
-      stats: { projects: 80, clients: 35, downloads: '2M+' }
+      projects: ['Apps bancarias', 'Delivery apps', 'Social networks']
     },
     {
       id: 3,
       name: 'Sistemas Empresariales',
+      icon: '🏢',
       x: 85,
       y: 60,
       connections: ['core', 2, 4],
       description: 'Soluciones ERP y CRM personalizadas',
       details: 'Sistemas robustos que integran todos los procesos de tu empresa. Aumenta la eficiencia y reduce costos operativos.',
       technologies: [
-        { name: 'ERP', icon: '🏢', color: '#FF6B6B' },
-        { name: 'CRM', icon: '👥', color: '#4ECDC4' },
-        { name: 'Cloud', icon: '☁️', color: '#95E1D3' }
+        { name: 'ERP', icon: '🏢' },
+        { name: 'CRM', icon: '👥' },
+        { name: 'Cloud', icon: '☁️' },
+        { name: 'Database', icon: '🗄️' }
       ],
-      projects: ['Gestión inventario', 'Control de ventas', 'HR Management'],
-      stats: { projects: 60, clients: 25, uptime: '99.9%' }
+      projects: ['Gestión inventario', 'Control de ventas', 'HR Management']
     },
     {
       id: 4,
       name: 'Automatización',
+      icon: '⚙️',
       x: 65,
       y: 85,
       connections: ['core', 3, 5],
       description: 'Automatización e integraciones',
       details: 'Conectamos tus sistemas y automatizamos tareas repetitivas. Ahorra tiempo y elimina errores humanos.',
       technologies: [
-        { name: 'API', icon: '🔌', color: '#A8E6CF' },
-        { name: 'Python', icon: '🐍', color: '#3776AB' },
-        { name: 'RPA', icon: '🤖', color: '#FFD93D' }
+        { name: 'API', icon: '🔌' },
+        { name: 'Python', icon: '🐍' },
+        { name: 'RPA', icon: '🤖' },
+        { name: 'Webhooks', icon: '🔗' }
       ],
-      projects: ['Zapier workflows', 'API integrations', 'Bot automation'],
-      stats: { projects: 95, clients: 40, timeSaved: '10k hrs' }
+      projects: ['Zapier workflows', 'API integrations', 'Bot automation']
     },
     {
       id: 5,
       name: 'Datos & Analytics',
+      icon: '📊',
       x: 15,
       y: 75,
       connections: ['core', 1, 4],
       description: 'Business Intelligence y análisis de datos',
       details: 'Convertimos tus datos en decisiones estratégicas. Dashboards, reportes y predicciones basadas en IA.',
       technologies: [
-        { name: 'Analytics', icon: '📊', color: '#6C5CE7' },
-        { name: 'ML', icon: '🧠', color: '#FD79A8' },
-        { name: 'BI', icon: '📈', color: '#00B894' }
+        { name: 'Analytics', icon: '📊' },
+        { name: 'ML', icon: '🧠' },
+        { name: 'BI', icon: '📈' },
+        { name: 'PowerBI', icon: '📉' }
       ],
-      projects: ['Dashboards ejecutivos', 'Modelos predictivos', 'Data lakes'],
-      stats: { projects: 70, clients: 30, insights: '500+' }
+      projects: ['Dashboards ejecutivos', 'Modelos predictivos', 'Data lakes']
     }
-  ];
+  ], []);
 
   useEffect(() => {
-    const particles = Array.from({ length: 100 }, (_, i) => ({
+    // Detectar si es dispositivo móvil
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Ajustar número de partículas según dispositivo - REDUCIDO
+    const particleCount = window.innerWidth < 768 ? 15 : 25;
+    const particles = Array.from({ length: particleCount }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -128,10 +144,14 @@ const NeuralNetworkPro = () => {
     setBackgroundParticles(particles);
 
     const loadSequence = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(loadSequence);
+    return () => {
+      clearTimeout(loadSequence);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   useEffect(() => {
+    // Aumentado de 50ms a 100ms para reducir carga de CPU
     const interval = setInterval(() => {
       setBackgroundParticles(prev =>
         prev.map(p => ({
@@ -140,59 +160,106 @@ const NeuralNetworkPro = () => {
           y: (p.y + p.vy + 100) % 100
         }))
       );
-    }, 50);
+    }, 100);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
+    let rafId = null;
+    let lastUpdate = 0;
+    const throttleDelay = 50; // Actualizar máximo cada 50ms
+
     const handleMouseMove = (e) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setMousePosition({
-          x: ((e.clientX - rect.left) / rect.width) * 100,
-          y: ((e.clientY - rect.top) / rect.height) * 100
-        });
-      }
+      const now = Date.now();
+      if (now - lastUpdate < throttleDelay) return;
+      
+      if (rafId) cancelAnimationFrame(rafId);
+      
+      rafId = requestAnimationFrame(() => {
+        if (containerRef.current) {
+          const rect = containerRef.current.getBoundingClientRect();
+          setMousePosition({
+            x: ((e.clientX - rect.left) / rect.width) * 100,
+            y: ((e.clientY - rect.top) / rect.height) * 100
+          });
+          lastUpdate = now;
+        }
+      });
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setNetworkPulse(prev => (prev + 1) % 100);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (hoveredNode) {
+    if (hoveredNode && !selectedNode) {
+      // Aumentado de 200ms a 600ms para generar MUCHAS menos partículas
       const interval = setInterval(() => {
-        const newParticle = {
-          id: Date.now() + Math.random(),
-          startNode: hoveredNode,
-          endNode: hoveredNode === 'core'
-            ? nodes[Math.floor(Math.random() * nodes.length)].id
-            : 'core',
-          progress: 0,
-          trail: []
-        };
-        setParticles(prev => [...prev, newParticle]);
-      }, 200);
+        setParticles(prev => {
+          // Limitar partículas según dispositivo: 5 en móvil, 8 en desktop
+          const maxParticles = isMobile ? 5 : 8;
+          if (prev.length >= maxParticles) return prev;
+          
+          const newParticle = {
+            id: Date.now() + Math.random(),
+            startNode: hoveredNode,
+            endNode: hoveredNode === 'core'
+              ? nodes[Math.floor(Math.random() * nodes.length)].id
+              : 'core',
+            progress: 0
+          };
+          return [...prev, newParticle];
+        });
+      }, 600); // Más lento
       return () => clearInterval(interval);
     }
-  }, [hoveredNode]);
+  }, [hoveredNode, selectedNode, isMobile]);
 
   useEffect(() => {
+    // Aumentado de 40ms a 60ms para reducir re-renders
     const interval = setInterval(() => {
       setParticles(prev =>
         prev
-          .map(p => ({ ...p, progress: p.progress + 0.015 }))
+          .map(p => ({ ...p, progress: p.progress + 0.02 }))
           .filter(p => p.progress < 1)
       );
-    }, 20);
+    }, 60);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (selectedNode) {
+      const nodePos = getNodePosition(selectedNode);
+      // Reducido de 20 a 10 partículas para mejor performance
+      const newPortalParticles = Array.from({ length: 10 }, (_, i) => ({
+        id: `portal-${Date.now()}-${i}`,
+        startX: nodePos.x,
+        startY: nodePos.y,
+        angle: (i / 10) * Math.PI * 2,
+        progress: 0
+      }));
+      setPortalParticles(newPortalParticles);
+    } else {
+      setPortalParticles([]);
+    }
+  }, [selectedNode]);
+
+  useEffect(() => {
+    if (portalParticles.length > 0) {
+      // Aumentado de 30ms a 50ms para reducir carga
+      const interval = setInterval(() => {
+        setPortalParticles(prev =>
+          prev
+            .map(p => ({ ...p, progress: p.progress + 0.05 }))
+            .filter(p => p.progress < 1)
+        );
+      }, 50);
+      return () => clearInterval(interval);
+    }
+  }, [portalParticles]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -205,13 +272,13 @@ const NeuralNetworkPro = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const getNodePosition = (nodeId) => {
+  const getNodePosition = useCallback((nodeId) => {
     if (nodeId === 'core') return { x: centralNode.x, y: centralNode.y };
     const node = nodes.find(n => n.id === nodeId);
     return node ? { x: node.x, y: node.y } : { x: 50, y: 50 };
-  };
+  }, []);
 
-  const isConnected = (nodeId) => {
+  const isConnected = useCallback((nodeId) => {
     if (!hoveredNode && !focusedNode) return false;
     const activeNode = focusedNode || hoveredNode;
     if (activeNode === 'core') return true;
@@ -225,17 +292,31 @@ const NeuralNetworkPro = () => {
     if (currentNodeData?.connections.includes(activeNode)) return true;
 
     return false;
-  };
+  }, [hoveredNode, focusedNode]);
 
-  const handleNodeClick = (nodeId) => {
-    setSelectedNode(nodeId);
-    setFocusedNode(nodeId);
-  };
+  const handleNodeClick = useCallback((nodeId) => {
+    // Usar requestAnimationFrame para suavizar la interacción
+    requestAnimationFrame(() => {
+      if (selectedNode === nodeId) {
+        setSelectedNode(null);
+        setFocusedNode(null);
+      } else {
+        setSelectedNode(nodeId);
+        setFocusedNode(nodeId);
+      }
+    });
+  }, [selectedNode]);
 
-  const getNodeData = (nodeId) => {
+  const getNodeData = useCallback((nodeId) => {
     if (nodeId === 'core') return centralNode;
     return nodes.find(n => n.id === nodeId);
-  };
+  }, []);
+
+  const getNodeIcon = useCallback((nodeId) => {
+    if (nodeId === 'core') return centralNode.icon;
+    const node = nodes.find(n => n.id === nodeId);
+    return node?.icon || '📦';
+  }, []);
 
   return (
     <div 
@@ -256,21 +337,63 @@ const NeuralNetworkPro = () => {
           --gold-light: #F4E4BC;
           --gold-dark: #B8941F;
           --gold-muted: #928250;
-          --black: #1E1E1E;
-          --carbon: #2B2B2B;
-          --white: #FFFFFF;
           --white-soft: #F8F9FA;
           --text-muted: #6B7280;
+          --card-bg: #222220;
         }
         
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+        /* Optimizaciones de performance */
+        * {
+          -webkit-tap-highlight-color: transparent;
         }
 
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+        /* Animación de pulso SUPER sutil solo para nodo central */
+        @keyframes subtlePulse {
+          0%, 100% {
+            opacity: 0.95;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(11, 29, 51, 0.3);
+          border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: var(--gold-muted);
+          border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: var(--gold);
+        }
+
+        /* Prevenir scroll del body cuando modal está abierto */
+        body.modal-open {
+          overflow: hidden;
+        }
+
+        /* Forzar aceleración de hardware */
+        svg, foreignObject {
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+
+        /* Optimizar animaciones */
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
         }
       `}</style>
 
@@ -282,7 +405,7 @@ const NeuralNetworkPro = () => {
         }}
       />
 
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0, willChange: 'auto' }}>
         {backgroundParticles.map(p => {
           const parallaxX = p.x + (mousePosition.x - 50) * 0.02;
           const parallaxY = p.y + (mousePosition.y - 50) * 0.02;
@@ -300,12 +423,17 @@ const NeuralNetworkPro = () => {
         })}
 
         {backgroundParticles.map((p1, i) => {
-          return backgroundParticles.slice(i + 1).map((p2, j) => {
+          // Optimización: Solo renderizar líneas entre partículas cercanas
+          // y limitar el número de comparaciones
+          if (i >= backgroundParticles.length - 1) return null;
+          
+          return backgroundParticles.slice(i + 1, Math.min(i + 6, backgroundParticles.length)).map((p2, j) => {
             const dx = p1.x - p2.x;
             const dy = p1.y - p2.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 15) {
+            // Reducido umbral de 15 a 12 para menos líneas
+            if (distance < 12) {
               return (
                 <line
                   key={`${i}-${j}`}
@@ -325,16 +453,20 @@ const NeuralNetworkPro = () => {
       </svg>
 
       <AnimatePresence>
-        {focusedNode && (
+        {selectedNode && (
           <motion.div
-            className="absolute inset-0 z-10"
-            style={{ backgroundColor: 'rgba(11, 29, 51, 0.7)', backdropFilter: 'blur(4px)' }}
+            className="fixed inset-0 z-40"
+            style={{ 
+              background: 'radial-gradient(circle at center, rgba(11, 29, 51, 0.92) 0%, rgba(5, 13, 26, 0.96) 100%)',
+              backdropFilter: 'blur(12px)'
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
             onClick={() => {
-              setFocusedNode(null);
               setSelectedNode(null);
+              setFocusedNode(null);
             }}
           />
         )}
@@ -395,14 +527,18 @@ const NeuralNetworkPro = () => {
       </motion.div>
 
       <div className="relative w-full max-w-7xl aspect-square sm:aspect-video px-4 sm:px-6 md:px-8">
-        <svg className="absolute inset-0 w-full h-full" style={{ zIndex: focusedNode ? 15 : 5 }}>
+        <svg 
+          ref={svgRef} 
+          className="absolute inset-0 w-full h-full" 
+          viewBox="0 0 100 100" 
+          preserveAspectRatio="xMidYMid meet" 
+          style={{ 
+            zIndex: focusedNode ? 15 : 5,
+            transform: 'translateZ(0)',
+            willChange: focusedNode ? 'contents' : 'auto'
+          }}
+        >
           <defs>
-            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="var(--gold-dark)" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="var(--gold)" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="var(--gold-light)" stopOpacity="0.4" />
-            </linearGradient>
-
             <linearGradient id="pulseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="var(--gold)" stopOpacity="0.9">
                 <animate attributeName="offset" values="0;1;0" dur="3s" repeatCount="indefinite" />
@@ -414,32 +550,6 @@ const NeuralNetworkPro = () => {
                 <animate attributeName="offset" values="1;0;1" dur="3s" repeatCount="indefinite" />
               </stop>
             </linearGradient>
-
-            <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="var(--navy-light)" />
-              <stop offset="100%" stopColor="var(--navy-dark)" />
-            </linearGradient>
-
-            <linearGradient id="nodeActiveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="var(--accent-blue)" />
-              <stop offset="100%" stopColor="var(--navy)" />
-            </linearGradient>
-
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-
-            <filter id="strongGlow">
-              <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
 
             <filter id="goldGlow">
               <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
@@ -453,8 +563,17 @@ const NeuralNetworkPro = () => {
                 <feMergeNode in="SourceGraphic"/>
               </feMerge>
             </filter>
+
+            <filter id="strongGlow">
+              <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
           </defs>
 
+          {/* LÍNEAS DE CONEXIÓN - Versión simplificada */}
           {nodes.map(node =>
             node.connections.map(targetId => {
               const start = getNodePosition(node.id);
@@ -465,17 +584,16 @@ const NeuralNetworkPro = () => {
               return (
                 <motion.line
                   key={`${node.id}-${targetId}`}
-                  x1={`${start.x}%`}
-                  y1={`${start.y}%`}
-                  x2={`${end.x}%`}
-                  y2={`${end.y}%`}
-                  stroke={isActive ? "url(#pulseGradient)" : "var(--navy-medium)"}
-                  strokeWidth={isActive ? "3" : "1.5"}
-                  filter={isActive ? "url(#goldGlow)" : "none"}
+                  x1={start.x}
+                  y1={start.y}
+                  x2={end.x}
+                  y2={end.y}
+                  stroke={isActive ? "var(--gold-muted)" : "var(--navy-medium)"}
+                  strokeWidth={isActive ? "0.35" : "0.2"}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{
                     pathLength: isLoaded ? 1 : 0,
-                    opacity: shouldShow ? (isActive ? 1 : 0.25) : 0.08
+                    opacity: shouldShow ? (isActive ? 0.7 : 0.3) : 0.1
                   }}
                   transition={{
                     pathLength: { duration: 1.5, delay: 0.5, ease: "easeInOut" },
@@ -486,6 +604,7 @@ const NeuralNetworkPro = () => {
             })
           )}
 
+          {/* PARTÍCULAS ANIMADAS (solo hover) */}
           {particles.map(particle => {
             const start = getNodePosition(particle.startNode);
             const end = getNodePosition(particle.endNode);
@@ -494,428 +613,281 @@ const NeuralNetworkPro = () => {
 
             return (
               <g key={particle.id}>
-                <motion.line
-                  x1={`${start.x + (end.x - start.x) * Math.max(0, particle.progress - 0.1)}%`}
-                  y1={`${start.y + (end.y - start.y) * Math.max(0, particle.progress - 0.1)}%`}
-                  x2={`${x}%`}
-                  y2={`${y}%`}
-                  stroke="var(--gold)"
-                  strokeWidth="2"
-                  opacity={0.7 * (1 - particle.progress)}
-                  filter="url(#goldGlow)"
-                />
                 <circle
-                  cx={`${x}%`}
-                  cy={`${y}%`}
-                  r="5"
+                  cx={x}
+                  cy={y}
+                  r="0.5"
                   fill="var(--gold-light)"
-                  filter="url(#strongGlow)"
-                  opacity={1 - particle.progress * 0.3}
+                  opacity={1 - particle.progress * 0.5}
                 />
               </g>
             );
           })}
-        </svg>
 
-        <motion.div
-          className="absolute rounded-full cursor-pointer flex items-center justify-center"
-          style={{
-            left: `${centralNode.x}%`,
-            top: `${centralNode.y}%`,
-            width: '120px',
-            height: '120px',
-            transform: 'translate(-50%, -50%)',
-            background: `radial-gradient(circle at 30% 30%, var(--gold-light) 0%, var(--gold) 40%, var(--gold-dark) 80%, transparent 100%)`,
-            boxShadow: hoveredNode === 'core'
-              ? '0 0 80px var(--gold), 0 0 120px rgba(212, 175, 55, 0.5), inset 0 0 40px rgba(244, 228, 188, 0.3)'
-              : '0 0 50px var(--gold-dark), 0 0 80px rgba(212, 175, 55, 0.4), inset 0 0 30px rgba(244, 228, 188, 0.2)',
-            zIndex: focusedNode === 'core' ? 25 : 20,
-            opacity: focusedNode && focusedNode !== 'core' ? 0.3 : 1,
-            border: '3px solid var(--gold)'
-          }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ 
-            scale: isLoaded ? 1 : 0,
-            opacity: focusedNode && focusedNode !== 'core' ? 0.3 : 1
-          }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          onHoverStart={() => setHoveredNode('core')}
-          onHoverEnd={() => setHoveredNode(null)}
-          onClick={() => handleNodeClick('core')}
-          whileHover={{ scale: 1.15 }}
-        >
-          <div className="text-center relative z-10">
-            <motion.div 
-              className="text-3xl sm:text-4xl mb-1 sm:mb-2"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              🧠
-            </motion.div>
-            <div 
-              className="text-xs sm:text-sm font-bold px-2 sm:px-3 leading-tight" 
-              style={{ 
-                color: 'var(--navy-dark)',
-                textShadow: '0 1px 2px rgba(255,255,255,0.5), 0 0 8px rgba(244, 228, 188, 0.6)'
-              }}
-            >
-              {centralNode.name}
-            </div>
-          </div>
-
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            style={{ border: '2px solid rgba(244, 228, 188, 0.3)' }}
-            animate={{
-              scale: [1, 1.25, 1],
-              opacity: [0.5, 0, 0.5]
-            }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {hoveredNode === 'core' && centralNode.technologies.map((tech, idx) => {
-            const angle = (idx * 360) / centralNode.technologies.length;
-            const radian = (angle * Math.PI) / 180;
-            const radius = 90;
-            const x = Math.cos(radian) * radius;
-            const y = Math.sin(radian) * radius;
-
-            return (
-              <motion.div
-                key={tech.name}
-                className="absolute w-16 h-16 rounded-full flex flex-col items-center justify-center text-2xl shadow-lg"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  x: x,
-                  y: y,
-                  background: 'linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%)',
-                  border: '2px solid var(--gold)',
-                  boxShadow: '0 0 25px rgba(212, 175, 55, 0.6), 0 4px 15px rgba(11, 29, 51, 0.8)'
-                }}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.08 }}
-              >
-                <div>{tech.icon}</div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        {nodes.map((node, index) => {
-          const isActive = isConnected(node.id);
-          const isHovered = hoveredNode === node.id;
-          const isFocused = focusedNode === node.id;
-
-          return (
-            <motion.div
-              key={node.id}
-              className="absolute rounded-full cursor-pointer flex items-center justify-center"
+          {/* NODOS DENTRO DEL SVG USANDO foreignObject */}
+          
+          {/* Nodo Central */}
+          <foreignObject 
+            x={centralNode.x - 6} 
+            y={centralNode.y - 6} 
+            width="16" 
+            height="16"
+            style={{ overflow: 'visible', pointerEvents: selectedNode ? 'none' : 'auto' }}
+          >
+            <div
+              className="w-full h-full rounded-full cursor-pointer flex items-center justify-center overflow-visible"
               style={{
-                left: `${node.x}%`,
-                top: `${node.y}%`,
-                width: '95px',
-                height: '95px',
-                transform: 'translate(-50%, -50%)',
-                background: isHovered || isFocused
-                  ? 'linear-gradient(135deg, var(--accent-blue) 0%, var(--navy) 60%, var(--navy-dark) 100%)'
-                  : 'linear-gradient(135deg, var(--navy-light) 0%, var(--navy-dark) 100%)',
-                border: '2px solid',
-                borderColor: isActive ? 'rgba(212, 175, 55, 0.4)' : 'var(--navy-medium)',
-                boxShadow: isActive
-                  ? '0 0 25px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.08)'
-                  : '0 4px 20px rgba(11, 29, 51, 0.6)',
-                zIndex: isFocused ? 25 : isHovered ? 15 : 10,
-                opacity: focusedNode && !isFocused && focusedNode !== 'core' ? 0.3 : 1
+                background: `radial-gradient(circle at 30% 30%, var(--gold-light) 0%, var(--gold) 40%, var(--gold-dark) 80%, transparent 100%)`,
+                boxShadow: hoveredNode === 'core'
+                  ? '0 0 80px var(--gold), 0 0 120px rgba(212, 175, 55, 0.5), inset 0 0 40px rgba(244, 228, 188, 0.3)'
+                  : '0 0 50px var(--gold-dark), 0 0 80px rgba(212, 175, 55, 0.4), inset 0 0 30px rgba(244, 228, 188, 0.2)',
+                opacity: selectedNode && selectedNode !== 'core' ? 0.3 : (selectedNode === 'core' ? 0 : 1),
+                border: '3px solid var(--gold)',
+                transform: isLoaded ? 'scale(1) translateZ(0)' : 'scale(0) translateZ(0)',
+                transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                touchAction: 'manipulation',
+                willChange: hoveredNode === 'core' ? 'transform, opacity' : 'auto',
+                animation: hoveredNode !== 'core' ? 'subtlePulse 4s ease-in-out infinite' : 'none'
               }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{
-                scale: isLoaded ? 1 : 0,
-                opacity: focusedNode && !isFocused && focusedNode !== 'core' ? 0.3 : 1
-              }}
-              transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              onHoverStart={() => setHoveredNode(node.id)}
-              onHoverEnd={() => setHoveredNode(null)}
-              onClick={() => handleNodeClick(node.id)}
+              onMouseEnter={() => !selectedNode && setHoveredNode('core')}
+              onMouseLeave={() => !selectedNode && setHoveredNode(null)}
+              onClick={() => handleNodeClick('core')}
             >
-              <div className="text-center px-2 relative z-10">
-                <p 
-                  className="text-xs sm:text-sm font-bold leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" 
+              <div className="text-center relative z-10">
+                <div 
+                  className="font-bold px-1 leading-tight" 
                   style={{ 
-                    color: 'var(--gold-light)',
-                    textShadow: '0 0 10px rgba(11, 29, 51, 0.8), 0 2px 4px rgba(0,0,0,1)' 
+                    color: 'var(--navy-dark)',
+                    textShadow: '0 1px 2px rgba(255,255,255,0.5), 0 0 8px rgba(244, 228, 188, 0.6)',
+                    fontSize: '0.2rem'
                   }}
                 >
-                  {node.name}
-                </p>
+                  {centralNode.name}
+                </div>
               </div>
+            </div>
+          </foreignObject>
 
-              {isActive && (
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ border: '2px solid rgba(212, 175, 55, 0.3)' }}
-                  animate={{
-                    scale: [1, 1.4],
-                    opacity: [0.4, 0]
+          {/* Nodos Secundarios */}
+          {nodes.map((node, index) => {
+            const isActive = isConnected(node.id);
+            const isHovered = hoveredNode === node.id;
+            const isFocused = focusedNode === node.id;
+
+            return (
+              <foreignObject
+                key={node.id}
+                x={node.x - 4.75}
+                y={node.y - 4.75}
+                width="9.5"
+                height="9.5"
+                style={{ 
+                  overflow: 'visible',
+                  pointerEvents: selectedNode && selectedNode !== node.id ? 'auto' : (selectedNode === node.id ? 'none' : 'auto')
+                }}
+              >
+                <div
+                  className="w-full h-full rounded-full cursor-pointer flex items-center justify-center"
+                  style={{
+                    background: isHovered || isFocused
+                      ? 'linear-gradient(135deg, var(--accent-blue) 0%, var(--navy) 60%, var(--navy-dark) 100%)'
+                      : 'linear-gradient(135deg, var(--navy-light) 0%, var(--navy-dark) 100%)',
+                    border: '2px solid',
+                    borderColor: isActive ? 'rgba(212, 175, 55, 0.4)' : 'var(--navy-medium)',
+                    boxShadow: isActive
+                      ? '0 0 25px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.08)'
+                      : '0 4px 20px rgba(11, 29, 51, 0.6)',
+                    opacity: selectedNode && selectedNode !== node.id ? 0.3 : (selectedNode === node.id ? 0 : 1),
+                    transform: isLoaded ? 'scale(1) translateZ(0)' : 'scale(0) translateZ(0)',
+                    transition: `all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.4 + index * 0.1}s`,
+                    touchAction: 'manipulation',
+                    willChange: isHovered || isFocused ? 'transform, opacity' : 'auto'
                   }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                />
-              )}
-
-              {isHovered && node.technologies.map((tech, idx) => {
-                const angle = (idx * 360) / node.technologies.length;
-                const radian = (angle * Math.PI) / 180;
-                const radius = 70;
-                const x = Math.cos(radian) * radius;
-                const y = Math.sin(radian) * radius;
-
-                return (
-                  <motion.div
-                    key={tech.name}
-                    className="absolute w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg"
-                    style={{
-                      left: '50%',
-                      top: '50%',
-                      x: x,
-                      y: y,
-                      background: 'linear-gradient(135deg, var(--navy-dark) 0%, var(--accent-blue) 100%)',
-                      border: '2px solid var(--gold-muted)',
-                      boxShadow: '0 0 20px rgba(146, 130, 80, 0.5), 0 4px 12px rgba(11, 29, 51, 0.8)'
-                    }}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, delay: idx * 0.1 }}
-                  >
-                    {tech.icon}
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          );
-        })}
+                  onMouseEnter={() => !selectedNode && setHoveredNode(node.id)}
+                  onMouseLeave={() => !selectedNode && setHoveredNode(null)}
+                  onClick={() => handleNodeClick(node.id)}
+                >
+                  <div className="text-center px-1 relative z-10">
+                    <p 
+                      className="font-bold leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" 
+                      style={{ 
+                        color: 'var(--gold-light)',
+                        textShadow: '0 0 10px rgba(11, 29, 51, 0.8), 0 2px 4px rgba(0,0,0,1)',
+                        fontSize: '0.2rem'
+                      }}
+                    >
+                      {node.name}
+                    </p>
+                  </div>
+                </div>
+              </foreignObject>
+            );
+          })}
+        </svg>
       </div>
 
+      {/* MODAL DESDE CERO - DISEÑO LIMPIO */}
       <AnimatePresence>
         {selectedNode && (
           <motion.div
-            className="fixed right-0 top-0 h-full w-full md:w-[500px] lg:w-[550px] shadow-2xl z-30 overflow-y-auto"
-            style={{
-              background: 'linear-gradient(180deg, #050D1A 0%, #0B1D33 100%)',
-              borderLeft: '1px solid var(--gold-muted)'
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setSelectedNode(null);
+                setFocusedNode(null);
+              }
             }}
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
           >
-            {(() => {
-              const data = getNodeData(selectedNode);
-              return (
-                <div className="min-h-full flex flex-col">
-                  {/* Header */}
-                  <div 
-                    className="sticky top-0 z-10 p-6 sm:p-8 border-b"
-                    style={{
-                      background: 'rgba(5, 13, 26, 0.95)',
-                      backdropFilter: 'blur(10px)',
-                      borderBottomColor: 'var(--navy-medium)'
-                    }}
-                  >
-                    <div className="flex justify-between items-start gap-4">
-                      <h2 
-                        className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight"
-                        style={{ color: 'var(--gold)' }}
-                      >
-                        {data.name}
-                      </h2>
-                      <button
-                        onClick={() => {
-                          setSelectedNode(null);
-                          setFocusedNode(null);
-                        }}
-                        className="text-3xl transition-colors touch-manipulation p-2 -m-2 flex-shrink-0"
-                        style={{ color: 'var(--text-muted)' }}
-                        onMouseEnter={(e) => e.target.style.color = 'var(--white-soft)'}
-                        onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
+            <motion.div
+              className="relative w-full max-w-4xl bg-[#1a1a1a] rounded-3xl shadow-2xl overflow-hidden"
+              style={{
+                maxHeight: '85vh',
+                border: '1px solid rgba(212, 175, 55, 0.2)'
+              }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Botón cerrar */}
+              <button
+                onClick={() => {
+                  setSelectedNode(null);
+                  setFocusedNode(null);
+                }}
+                className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <span className="text-xl">✕</span>
+              </button>
 
-                  {/* Content */}
-                  <div className="flex-1 p-6 sm:p-8 space-y-8">
-                    {/* Description */}
-                    <div>
-                      <p 
-                        className="text-base sm:text-lg leading-relaxed"
-                        style={{ color: 'var(--white-soft)' }}
-                      >
-                        {data.description}
-                      </p>
-                    </div>
-
-                    {/* Details */}
-                    <div 
-                      className="rounded-xl p-5 sm:p-6 border"
-                      style={{
-                        backgroundColor: 'rgba(27, 54, 93, 0.15)',
-                        borderColor: 'rgba(27, 54, 93, 0.3)'
-                      }}
-                    >
-                      <p 
-                        className="text-sm sm:text-base leading-relaxed"
-                        style={{ color: 'var(--white-soft)', opacity: 0.9 }}
-                      >
-                        {data.details}
-                      </p>
-                    </div>
-
-                    {/* Technologies */}
-                    <div>
-                      <h3 
-                        className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-3"
-                        style={{ color: 'var(--gold-light)' }}
-                      >
-                        <span className="text-2xl">⚡</span>
-                        Tecnologías
-                      </h3>
-                      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                        {data.technologies.map((tech, idx) => (
-                          <motion.div
-                            key={tech.name}
-                            className="rounded-xl p-4 sm:p-5 flex items-center gap-3 border"
-                            style={{
-                              backgroundColor: 'rgba(27, 54, 93, 0.2)',
-                              borderColor: 'rgba(146, 130, 80, 0.2)'
+              {/* Contenido scrollable */}
+              <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: '85vh' }}>
+                {(() => {
+                  const data = getNodeData(selectedNode);
+                  return (
+                    <div className="p-8 md:p-12">
+                      {/* Header con ícono y título */}
+                      <div className="flex items-start gap-6 mb-8">
+                        <div 
+                          className="w-20 h-20 rounded-2xl flex items-center justify-center text-5xl flex-shrink-0"
+                          style={{
+                            background: 'linear-gradient(135deg, var(--gold-dark), var(--gold))',
+                            boxShadow: '0 8px 24px rgba(212, 175, 55, 0.3)'
+                          }}
+                        >
+                          {getNodeIcon(selectedNode)}
+                        </div>
+                        <div className="flex-1 pt-1">
+                          <h2 
+                            className="text-3xl md:text-4xl font-bold mb-3"
+                            style={{ 
+                              background: 'linear-gradient(135deg, var(--gold-light), var(--gold))',
+                              WebkitBackgroundClip: 'text',
+                              backgroundClip: 'text',
+                              color: 'transparent'
                             }}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.1 }}
                           >
-                            <span className="text-3xl sm:text-4xl flex-shrink-0">{tech.icon}</span>
-                            <span 
-                              className="font-medium text-sm sm:text-base"
-                              style={{ color: 'var(--white-soft)' }}
-                            >
-                              {tech.name}
-                            </span>
-                          </motion.div>
-                        ))}
+                            {data.name}
+                          </h2>
+                          <p 
+                            className="text-base text-gray-400"
+                          >
+                            {data.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Projects */}
-                    <div>
-                      <h3 
-                        className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-3"
-                        style={{ color: 'var(--gold-light)' }}
-                      >
-                        <span className="text-2xl">🚀</span>
-                        Proyectos
-                      </h3>
-                      <div className="space-y-3">
-                        {data.projects.map((project, idx) => (
-                          <motion.div
-                            key={project}
-                            className="rounded-xl p-4 sm:p-5 border"
-                            style={{
-                              background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(27, 54, 93, 0.1) 100%)',
-                              borderColor: 'rgba(212, 175, 55, 0.15)'
-                            }}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3 + idx * 0.1 }}
-                          >
-                            <p 
-                              className="text-sm sm:text-base"
-                              style={{ color: 'var(--white-soft)' }}
-                            >
-                              • {project}
-                            </p>
-                          </motion.div>
-                        ))}
+                      {/* Descripción del servicio */}
+                      <div className="mb-8">
+                        <h3 
+                          className="text-xl font-semibold mb-4 flex items-center gap-2"
+                          style={{ color: 'var(--gold-light)' }}
+                        >
+                          <span>✨</span>
+                          Sobre el servicio
+                        </h3>
+                        <div 
+                          className="p-6 rounded-2xl"
+                          style={{
+                            backgroundColor: 'rgba(27, 54, 93, 0.1)',
+                            border: '1px solid rgba(27, 54, 93, 0.2)'
+                          }}
+                        >
+                          <p className="text-gray-300 leading-relaxed">
+                            {data.details}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Statistics */}
-                    <div>
-                      <h3 
-                        className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-3"
-                        style={{ color: 'var(--gold-light)' }}
-                      >
-                        <span className="text-2xl">📊</span>
-                        Estadísticas
-                      </h3>
-                      <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                        {Object.entries(data.stats).map(([key, value], idx) => (
-                          <motion.div
-                            key={key}
-                            className="rounded-xl p-4 sm:p-5 text-center border"
-                            style={{
-                              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(27, 54, 93, 0.1) 100%)',
-                              borderColor: 'rgba(212, 175, 55, 0.2)'
-                            }}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.5 + idx * 0.1 }}
-                          >
-                            <div 
-                              className="text-2xl sm:text-3xl font-bold mb-2"
-                              style={{ color: 'var(--gold)' }}
+                      {/* Lista de proyectos */}
+                      <div className="mb-8">
+                        <h3 
+                          className="text-xl font-semibold mb-4 flex items-center gap-2"
+                          style={{ color: 'var(--gold-light)' }}
+                        >
+                          <span>🚀</span>
+                          Proyectos
+                        </h3>
+                        <div className="grid gap-3">
+                          {data.projects.map((project, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center gap-3 p-4 rounded-xl transition-all hover:bg-white/5 cursor-pointer"
+                              style={{
+                                backgroundColor: 'rgba(27, 54, 93, 0.05)',
+                                border: '1px solid rgba(212, 175, 55, 0.1)'
+                              }}
                             >
-                              {value}
+                              <div 
+                                className="w-2 h-2 rounded-full"
+                                style={{ backgroundColor: 'var(--gold)' }}
+                              />
+                              <span className="text-gray-200">
+                                {project}
+                              </span>
                             </div>
-                            <div 
-                              className="text-xs sm:text-sm capitalize leading-tight"
-                              style={{ color: 'var(--text-muted)' }}
-                            >
-                              {key}
-                            </div>
-                          </motion.div>
-                        ))}
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Botones de acción */}
+                      <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-800">
+                        <button 
+                          className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition-all hover:scale-105"
+                          style={{
+                            background: 'linear-gradient(135deg, var(--gold-dark), var(--gold))',
+                            color: 'var(--navy-dark)',
+                            boxShadow: '0 4px 16px rgba(212, 175, 55, 0.3)'
+                          }}
+                        >
+                          💬 Contactar
+                        </button>
+                        <button 
+                          className="flex-1 py-4 px-6 rounded-xl font-semibold text-lg transition-all hover:scale-105"
+                          style={{
+                            background: 'transparent',
+                            color: 'var(--gold-light)',
+                            border: '1px solid var(--gold-muted)'
+                          }}
+                        >
+                          📖 Ver Más
+                        </button>
                       </div>
                     </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                      <button 
-                        className="flex-1 font-semibold py-4 px-6 rounded-xl transition-all transform active:scale-95 border text-base sm:text-lg"
-                        style={{
-                          background: 'linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%)',
-                          color: 'var(--navy-dark)',
-                          borderColor: 'var(--gold)',
-                          boxShadow: '0 4px 20px rgba(212, 175, 55, 0.2)'
-                        }}
-                      >
-                        Contactar
-                      </button>
-                      <button 
-                        className="flex-1 font-semibold py-4 px-6 rounded-xl transition-all transform active:scale-95 border text-base sm:text-lg"
-                        style={{
-                          background: 'transparent',
-                          color: 'var(--gold-light)',
-                          borderColor: 'var(--gold-muted)'
-                        }}
-                      >
-                        Ver Más
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
+                  );
+                })()}
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Instrucciones de teclado */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 text-xs z-40 hidden md:block">
         <div 
           className="backdrop-blur-sm rounded-lg px-4 py-2 border"
@@ -930,7 +902,12 @@ const NeuralNetworkPro = () => {
             style={{ backgroundColor: 'var(--navy)', color: 'var(--gold-light)' }}
           >
             ESC
-          </kbd> para salir
+          </kbd> para salir • <kbd 
+            className="px-2 py-1 rounded"
+            style={{ backgroundColor: 'var(--navy)', color: 'var(--gold-light)' }}
+          >
+            CLICK
+          </kbd> en otros nodos
         </div>
       </div>
     </div>

@@ -1,15 +1,28 @@
 ---
 import Layout from '@/layouts/MainLayout.astro';
-import Header from '@/components/Header.jsx';
+import VideoBackground from '@/components/VideoBackground.jsx';
+import Header from '@/components/hero/Header.jsx';
+import Introduction from '@/components/hero/Introduccion.jsx';
 import Carrusel from '@/components/hero/Carrusel.jsx';
-import Tecno from '@/components/hero/Tecno.jsx';
-
-
+import IASection from '@/components/hero/IASection.jsx';
+import WebSection from '@/components/hero/WebSection.jsx';
+import MobileSection from '@/components/hero/MobileSection.jsx';
+import IntroSpecialties  from '@/components/hero/IntroSpecialties.jsx';
+import OutroSpecialties from '@/components/hero/OutroSpecialties.jsx';
 ---
 
 <Layout>
-  <Header client:load />
-  <Tecno client:load />
-  <Carrusel client:load />
+  <!-- Video solo para estas dos secciones -->
+  <VideoBackground client:load>
+    <Header client:load />
+    <Introduction client:load />
+  </VideoBackground>
   
+  <!-- Estas ya NO tienen video de fondo -->
+  <IntroSpecialties client:load />
+  <IASection client:load />
+  <WebSection client:load />
+  <MobileSection client:load />
+  <OutroSpecialties client:load />
+  <Carrusel client:load />
 </Layout>

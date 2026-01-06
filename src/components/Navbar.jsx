@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Menu, X, Briefcase, Info, BookOpen, Globe, Mail } from "lucide-react";
+import { useContactDrawer } from '../contexts/ContactDrawerContext';
 
 const translations = {
   en: {
@@ -30,6 +31,8 @@ const languageOptions = [
   { code: "es", label: "Español", flag: "🇪🇸" },
   { code: "pt", label: "Português", flag: "🇧🇷" },
 ];
+
+
 
 // Partículas fijas para evitar problemas de hidratación con Math.random()
 const FIXED_PARTICLES = [
@@ -344,6 +347,7 @@ export default function GeckNavbar() {
   const navRef = useRef(null);
 
   const t = translations[language];
+  const { openDrawer } = useContactDrawer();
 
   // -------- CSS Variables --------
   const cssVariables = `
@@ -405,6 +409,9 @@ export default function GeckNavbar() {
       closeMobileMenu();
     }
   };
+
+
+  
 
   const closeMobileMenu = () => {
     setMobileMenuClosing(true);
@@ -918,7 +925,7 @@ export default function GeckNavbar() {
         >
           {/* LOGO A LA IZQUIERDA - siempre visible */}
           <a
-            href="#home"
+            href="/"
             className="logo-container"
             style={{ 
               display: "flex", 
@@ -1008,9 +1015,11 @@ export default function GeckNavbar() {
           {/* NAV DESKTOP - DERECHA */}
           <div className="nav-desktop" style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
             {/* Botón Contacto MEJORADO - Más llamativo */}
-            <a
-              href="#contact"
-              onClick={handleNavLinkClick}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                openDrawer();
+              }}
               className="contact-button"
               style={{
                 display: "flex",
@@ -1036,7 +1045,7 @@ export default function GeckNavbar() {
             >
               <Mail size={18} />
               {t.contact}
-            </a>
+            </button>
 
             {/* Menu Idioma */}
             <div ref={langMenuRef} style={{ position: "relative" }}>
@@ -1183,10 +1192,12 @@ export default function GeckNavbar() {
             ))}
 
             {/* Botón de Contacto */}
-            <a
-              href="#contact"
-              onClick={handleNavLinkClick}
-              className="mobile-contact-btn"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                openDrawer();
+              }}
+              className="contact-button"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -1203,7 +1214,7 @@ export default function GeckNavbar() {
             >
               <Mail size={20} />
               {t.contact}
-            </a>
+            </button>
 
             {/* Selector de idioma - REDISEÑADO */}
             <div

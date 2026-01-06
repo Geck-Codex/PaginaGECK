@@ -1,0 +1,1062 @@
+/* ============================================
+   AI SHOWCASE - STACK 3D CON MÁS SEPARACIÓN
+   ============================================ */
+
+/* Variables CSS */
+:root {
+  --navy-dark: #0B1D33;
+  --navy: #0b1f49;
+  --navy-light: #0c1e3c;
+  --navy-medium: #2A3441;
+  --accent-blue: #1B365D;
+  --gold: #D4AF37;
+  --gold-light: #F4E4BC;
+  --gold-dark: #B8941F;
+  --gold-muted: #928250;
+  --black: #1E1E1E;
+  --carbon: #2B2B2B;
+  --white: #FFFFFF;
+  --white-soft: #F8F9FA;
+  --text-muted: #6B7280;
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.ai-showcase {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  padding: 4rem 1rem;
+  background: linear-gradient(135deg, #050D1A 0%, #0B1D33 25%, #0D1825 50%, #0b1f49 75%, #060E1B 100%);
+}
+
+/* ============================================
+   GRADIENTE DE FONDO
+   ============================================ */
+.ai-showcase__bg-gradient {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background: radial-gradient(circle at 50% 50%, var(--gold) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.ai-showcase__header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 56rem;
+  padding: 0 1rem;
+}
+
+.ai-showcase__title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.ai-showcase__title-gradient {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================
+   SECCIÓN: STACK 3D
+   ============================================ */
+.ai-showcase__what-we-do {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 90rem;
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+  perspective: 2000px;
+}
+
+/* Container del stack 3D - Para 3 cards */
+.ai-showcase__services-grid-special {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  min-height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* ============================================
+   CARDS EN STACK 3D - DIAGONAL DESCENDENTE
+   ============================================ */
+
+/* Base para todas las cards */
+.ai-showcase__card-container {
+  position: absolute;
+  width: 100%;
+  max-width: 550px;
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
+  filter: brightness(0.7) saturate(0.7);
+  will-change: transform, filter, z-index;
+}
+
+/* Card IA - ARRIBA IZQUIERDA (inicio de la diagonal) */
+.ai-showcase__card-container--ai {
+  z-index: 30;
+  transform: 
+    translateZ(240px) 
+    translateY(-120px)
+    translateX(-80px)
+    rotateX(5deg)
+    rotateY(-3deg);
+}
+
+.ai-showcase__card-container--ai:hover {
+  z-index: 1000 !important;
+  filter: brightness(1.15) saturate(1.15) !important;
+  transform: 
+    translateZ(700px) 
+    translateY(-120px)
+    translateX(-80px)
+    rotateX(0deg)
+    rotateY(0deg)
+    scale(1.12) !important;
+}
+
+/* Card Web - MEDIO CENTRO (mitad de la diagonal) */
+.ai-showcase__card-container--web {
+  z-index: 20;
+  transform: 
+    translateZ(120px) 
+    translateY(-60px)
+    translateX(0px)
+    rotateX(5deg);
+  filter: brightness(0.8) saturate(0.8);
+}
+
+.ai-showcase__card-container--web:hover {
+  z-index: 1000 !important;
+  filter: brightness(1.15) saturate(1.15) !important;
+  transform: 
+    translateZ(700px) 
+    translateY(-60px)
+    translateX(0px)
+    rotateX(0deg)
+    rotateY(0deg)
+    scale(1.12) !important;
+}
+
+/* Card Mobile - posición 3 en diagonal */
+.ai-showcase__card-container--mobile {
+  z-index: 10;
+  transform: 
+    translateZ(0px) 
+    translateY(0px)
+    translateX(80px)
+    rotateX(5deg)
+    rotateY(3deg);
+  filter: brightness(0.6) saturate(0.6);
+}
+
+.ai-showcase__card-container--mobile:hover {
+  z-index: 1000 !important;
+  filter: brightness(1.15) saturate(1.15) !important;
+  transform: 
+    translateZ(700px)
+    translateY(0px)
+    translateX(80px)
+    rotateX(0deg)
+    rotateY(0deg)
+    scale(1.12) !important;
+}
+
+/* Animación de entrada del stack */
+@keyframes stackEntry {
+  from {
+    opacity: 0;
+    transform: translateZ(-200px) rotateX(-20deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0px) rotateX(5deg);
+  }
+}
+
+.ai-showcase__card-container--ai {
+  animation: stackEntry 0.8s ease-out 0.2s backwards;
+}
+
+.ai-showcase__card-container--web {
+  animation: stackEntry 0.8s ease-out 0.4s backwards;
+}
+
+.ai-showcase__card-container--mobile {
+  animation: stackEntry 0.8s ease-out 0.6s backwards;
+}
+
+/* ============================================
+   CARDS CON FLIP
+   ============================================ */
+
+/* Flipper */
+.ai-showcase__card-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-showcase__card-flipper--flipped {
+  transform: rotateY(180deg);
+}
+
+/* Cards (frente y reverso) */
+.ai-showcase__service-card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(212, 175, 55, 0.1),
+    inset 0 0 100px rgba(212, 175, 55, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Efecto de borde brillante en hover + GLOW de foco */
+.ai-showcase__card-container:hover .ai-showcase__service-card {
+  box-shadow: 
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    0 0 0 3px rgba(212, 175, 55, 0.8),
+    0 0 60px rgba(212, 175, 55, 0.5),
+    inset 0 0 150px rgba(212, 175, 55, 0.15);
+}
+
+/* Card FRENTE */
+.ai-showcase__service-card--front {
+  transform: rotateY(0deg);
+}
+
+/* Card REVERSO */
+.ai-showcase__service-card--back {
+  transform: rotateY(180deg);
+}
+
+/* Indicador de flip */
+.ai-showcase__flip-hint {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--gold-muted);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-weight: 500;
+}
+
+.ai-showcase__card-container:hover .ai-showcase__flip-hint {
+  opacity: 0.9;
+}
+
+.ai-showcase__flip-hint--back {
+  margin-top: 2rem;
+  opacity: 0.8;
+}
+
+/* ============================================
+   CONTENIDO DE LAS CARDS
+   ============================================ */
+
+.ai-showcase__card-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header de la card */
+.ai-showcase__card-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.ai-showcase__card-header--ai {
+  justify-content: flex-start;
+}
+
+.ai-showcase__card-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
+}
+
+.ai-showcase__card-icon--ai {
+  font-size: 3.5rem;
+}
+
+.ai-showcase__card-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  line-height: 1.2;
+}
+
+.ai-showcase__card-title--ai {
+  font-size: 2.25rem;
+}
+
+.ai-showcase__card-description {
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Lista de servicios */
+.ai-showcase__service-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: auto;
+}
+
+.ai-showcase__service-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.5rem 0;
+}
+
+.ai-showcase__service-bullet {
+  font-size: 1rem;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  color: var(--gold);
+}
+
+.ai-showcase__service-text {
+  font-size: 0.9rem;
+  color: var(--white-soft);
+  line-height: 1.6;
+}
+
+/* Badge de especialidad */
+.ai-showcase__specialty-badge {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ai-showcase__badge {
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--navy-dark);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+/* ============================================
+   REVERSO - TECNOLOGÍAS
+   ============================================ */
+
+.ai-showcase__tech-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+
+.ai-showcase__tech-grid-card {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.ai-showcase__tech-grid-card--ai {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.ai-showcase__tech-item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  border-radius: 1rem;
+  background: rgba(27, 54, 93, 0.3);
+  border: 1px solid var(--navy-medium);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.ai-showcase__tech-item-card:hover {
+  background: rgba(27, 54, 93, 0.5);
+  border-color: var(--gold-muted);
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+}
+
+.ai-showcase__tech-icon-card {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.ai-showcase__tech-name-card {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  text-align: center;
+}
+
+/* ============================================
+   SECCIÓN: CTA CON TEXTO Y BOTÓN ATRACTIVO
+   ============================================ */
+.ai-showcase__more-services {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 56rem;
+  margin: 5rem auto 3rem;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.ai-showcase__more-text {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.ai-showcase__more-button {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  
+  /* Glassmorphism base */
+  background: linear-gradient(
+    135deg,
+    rgba(27, 54, 93, 0.25),
+    rgba(11, 29, 51, 0.35)
+  );
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  
+  border: 2px solid transparent;
+  border-radius: 1.25rem;
+  padding: 3px;
+  
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+/* Borde animado dorado */
+.ai-showcase__more-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1.25rem;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    var(--gold-dark),
+    var(--gold),
+    var(--gold-light),
+    var(--gold)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+}
+
+.ai-showcase__more-button:hover::before {
+  opacity: 1;
+  animation: borderShimmer 2s linear infinite;
+}
+
+@keyframes borderShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* Shimmer effect interno */
+.ai-showcase__more-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(212, 175, 55, 0.1) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.ai-showcase__more-button:hover::after {
+  transform: translateX(100%);
+}
+
+/* Inner container */
+.ai-showcase__more-button-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.25rem 3rem;
+  
+  background: linear-gradient(
+    135deg,
+    rgba(11, 31, 73, 0.9),
+    rgba(11, 29, 51, 0.95)
+  );
+  border-radius: 1rem;
+  
+  transition: all 0.3s ease;
+}
+
+.ai-showcase__more-button:hover .ai-showcase__more-button-inner {
+  background: linear-gradient(
+    135deg,
+    rgba(11, 31, 73, 0.95),
+    rgba(27, 54, 93, 0.98)
+  );
+}
+
+.ai-showcase__more-button-text {
+  position: relative;
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  color: var(--gold-light);
+  transition: all 0.3s ease;
+}
+
+.ai-showcase__more-button:hover .ai-showcase__more-button-text {
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.ai-showcase__more-button-icon {
+  position: relative;
+  font-size: 1.5rem;
+  color: var(--gold);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+
+.ai-showcase__more-button:hover .ai-showcase__more-button-icon {
+  transform: translateX(8px);
+  color: var(--gold-light);
+}
+
+/* Efecto de elevación */
+.ai-showcase__more-button:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 80px rgba(212, 175, 55, 0.2),
+    inset 0 0 100px rgba(212, 175, 55, 0.1);
+}
+
+.ai-showcase__more-button:active {
+  transform: translateY(-3px);
+}
+
+/* ============================================
+   BOTONES CTA
+   ============================================ */
+.ai-showcase__cta {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.ai-showcase__cta-button {
+  padding: 1.125rem 2.5rem;
+  border-radius: 0.875rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-align: center;
+  min-width: 220px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.ai-showcase__cta-button--primary {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--navy-dark);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+  border: 2px solid var(--gold);
+}
+
+.ai-showcase__cta-button--primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.6);
+}
+
+.ai-showcase__cta-button--secondary {
+  background: transparent;
+  color: var(--gold-light);
+  border: 2px solid var(--gold-muted);
+  box-shadow: 0 4px 16px rgba(27, 54, 93, 0.6);
+}
+
+.ai-showcase__cta-button--secondary:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: var(--gold);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+/* ============================================
+   TEXTO INFERIOR
+   ============================================ */
+.ai-showcase__footer-text {
+  position: relative;
+  z-index: 10;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: 42rem;
+  padding: 0 1rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE (Efecto baraja mejorado)
+   ============================================ */
+@media (max-width: 639px) {
+  /* Contenedor más alto para las 3 cards espaciadas */
+  .ai-showcase__services-grid-special {
+    min-height: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  .ai-showcase__card-container {
+    position: absolute;
+    width: 80%;
+    max-width: 300px;
+  }
+
+  /* Reducir TODO el contenido en mobile */
+  .ai-showcase__card-flipper {
+    min-height: 320px;
+  }
+
+  .ai-showcase__service-card {
+    padding: 1.25rem;
+  }
+
+  /* Header más pequeño */
+  .ai-showcase__card-header {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .ai-showcase__card-title {
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  .ai-showcase__card-title--ai {
+    font-size: 1.35rem;
+  }
+
+  .ai-showcase__card-icon {
+    font-size: 1.75rem;
+  }
+
+  .ai-showcase__card-icon--ai {
+    font-size: 2.25rem;
+  }
+
+  .ai-showcase__card-description {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Lista de servicios más compacta */
+  .ai-showcase__service-list {
+    gap: 0.5rem;
+  }
+
+  .ai-showcase__service-item {
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+  }
+
+  .ai-showcase__service-bullet {
+    font-size: 0.85rem;
+  }
+
+  .ai-showcase__service-text {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  /* Tecnologías más pequeñas */
+  .ai-showcase__tech-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .ai-showcase__tech-grid-card {
+    gap: 0.75rem;
+  }
+
+  .ai-showcase__tech-item-card {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .ai-showcase__tech-icon-card {
+    font-size: 1.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .ai-showcase__tech-name-card {
+    font-size: 0.75rem;
+  }
+
+  /* Badge más pequeño */
+  .ai-showcase__badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .ai-showcase__flip-hint {
+    font-size: 0.65rem;
+    margin-top: 1rem;
+  }
+
+  /* Card IA - MUCHO MÁS ARRIBA para espacio clickeable */
+  .ai-showcase__card-container--ai {
+    z-index: 30;
+    transform: 
+      translateY(-180px)
+      translateX(-6px)
+      rotate(-2deg) !important;
+    filter: brightness(1) saturate(1) !important;
+  }
+
+  /* Card Web - Centro */
+  .ai-showcase__card-container--web {
+    z-index: 20;
+    transform: 
+      translateY(0px)
+      translateX(0px)
+      rotate(0deg) !important;
+    filter: brightness(0.95) saturate(0.95) !important;
+  }
+
+  /* Card Mobile - MUCHO MÁS ABAJO para espacio clickeable */
+  .ai-showcase__card-container--mobile {
+    z-index: 10;
+    transform: 
+      translateY(180px)
+      translateX(6px)
+      rotate(2deg) !important;
+    filter: brightness(0.9) saturate(0.9) !important;
+  }
+
+  /* Click/Tap trae la card al frente */
+  .ai-showcase__card-container:active,
+  .ai-showcase__card-container--ai:active,
+  .ai-showcase__card-container--web:active,
+  .ai-showcase__card-container--mobile:active {
+    z-index: 1000 !important;
+    transform: 
+      translateY(-20px)
+      translateX(0px)
+      rotate(0deg)
+      scale(1.02) !important;
+    filter: brightness(1.1) saturate(1.1) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .ai-showcase__more-text {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .ai-showcase__more-button-inner {
+    padding: 1rem 2rem;
+  }
+
+  .ai-showcase__more-button-text {
+    font-size: 0.95rem;
+  }
+
+  .ai-showcase__more-button-icon {
+    font-size: 1.25rem;
+  }
+
+  .ai-showcase__title {
+    font-size: 1.875rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - TABLET
+   ============================================ */
+@media (min-width: 640px) {
+  .ai-showcase__title {
+    font-size: 3rem;
+  }
+
+  .ai-showcase__services-grid-special {
+    max-width: 700px;
+    min-height: 900px;
+  }
+
+  .ai-showcase__more-title {
+    font-size: 2rem;
+  }
+
+  .ai-showcase__more-description {
+    font-size: 1.25rem;
+  }
+
+  .ai-showcase__card-container {
+    max-width: 600px;
+  }
+
+  .ai-showcase__cta {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .ai-showcase__more-text {
+    font-size: 1.25rem;
+  }
+
+  .ai-showcase__tech-grid-card--ai {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============================================
+   RESPONSIVE - DESKTOP
+   ============================================ */
+@media (min-width: 768px) {
+  .ai-showcase {
+    padding: 5rem 2rem;
+  }
+
+  .ai-showcase__title {
+    font-size: 3.75rem;
+  }
+
+  .ai-showcase__services-grid-special {
+    max-width: 750px;
+    min-height: 1000px;
+  }
+
+  .ai-showcase__more-title {
+    font-size: 2.25rem;
+  }
+
+  .ai-showcase__card-container {
+    max-width: 650px;
+  }
+
+  /* Stack diagonal en desktop - más pronunciado */
+  .ai-showcase__card-container--ai {
+    transform: 
+      translateZ(360px) 
+      translateY(-180px)
+      translateX(-120px)
+      rotateX(6deg)
+      rotateY(-4deg);
+  }
+
+  .ai-showcase__card-container--web {
+    transform: 
+      translateZ(180px) 
+      translateY(-90px)
+      translateX(0px)
+      rotateX(6deg);
+  }
+
+  .ai-showcase__card-container--mobile {
+    transform: 
+      translateZ(0px) 
+      translateY(0px)
+      translateX(120px)
+      rotateX(6deg)
+      rotateY(4deg);
+  }
+
+  .ai-showcase__service-list--ai {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================
+   RESPONSIVE - LARGE DESKTOP
+   ============================================ */
+@media (min-width: 1024px) {
+  .ai-showcase__title {
+    font-size: 4.5rem;
+  }
+
+  .ai-showcase__services-grid-special {
+    max-width: 800px;
+    min-height: 1100px;
+  }
+
+  .ai-showcase__more-title {
+    font-size: 2.5rem;
+  }
+
+  .ai-showcase__more-content {
+    padding: 4rem 3rem;
+  }
+
+  .ai-showcase__card-container {
+    max-width: 700px;
+  }
+
+  .ai-showcase__service-list--ai {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Stack diagonal EXTREMO en pantallas grandes */
+  .ai-showcase__card-container--ai {
+    transform: 
+      translateZ(450px) 
+      translateY(-225px)
+      translateX(-150px)
+      rotateX(7deg)
+      rotateY(-5deg);
+  }
+
+  .ai-showcase__card-container--web {
+    transform: 
+      translateZ(225px) 
+      translateY(-112px)
+      translateX(0px)
+      rotateX(7deg);
+  }
+
+  .ai-showcase__card-container--mobile {
+    transform: 
+      translateZ(0px) 
+      translateY(0px)
+      translateX(150px)
+      rotateX(7deg)
+      rotateY(5deg);
+  }
+
+  /* Card Hosting - posición 4 */
+  .ai-showcase__card-container--hosting {
+    transform: 
+      translateZ(-225px) 
+      translateY(112px)
+      translateX(300px)
+      rotateX(7deg)
+      rotateY(6deg);
+  }
+
+  /* Card n8n - posición 5 */
+  .ai-showcase__card-container--n8n {
+    transform: 
+      translateZ(-450px) 
+      translateY(225px)
+      translateX(450px)
+      rotateX(7deg)
+      rotateY(7deg);
+  }
+
+  /* Card Automation - posición 6 */
+  .ai-showcase__card-container--automation {
+    transform: 
+      translateZ(-675px) 
+      translateY(337px)
+      translateX(600px)
+      rotateX(7deg)
+      rotateY(8deg);
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ai-showcase__card-container {
+    transform: none !important;
+  }
+
+  .ai-showcase__card-container:hover {
+    transform: scale(1.02) !important;
+  }
+}
+
+/* Focus states */
+.ai-showcase__card-container:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 6px;
+  border-radius: 1.5rem;
+}

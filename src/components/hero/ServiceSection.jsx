@@ -40,36 +40,48 @@ export default function ServiceSection({
     };
   }, []);
 
-  // Calcular opacidad del video (0 cuando lejos, 1 en centro)
+  // Calcular opacidad del video (se mantiene visible por más tiempo)
   const getVideoOpacity = () => {
-    if (letterOpacity < 0.3) return 0;
-    if (letterOpacity > 0.7) return 0;
+    // Video aparece más temprano y se queda más tiempo
+    if (letterOpacity < 0.15) return 0; // Empieza a aparecer antes
+    if (letterOpacity > 0.85) return 0; // Se queda hasta más tarde
     
-    // Entre 0.3 y 0.7, va de 0 a 1 y de vuelta
+    // Entre 0.15 y 0.85, transición muy suave
     if (letterOpacity <= 0.5) {
-      return (letterOpacity - 0.3) / 0.2;
+      // Fade in: de 0.15 a 0.5 → opacidad de 0 a 1
+      return Math.min(1, (letterOpacity - 0.15) / 0.25);
     } else {
-      return 1 - ((letterOpacity - 0.5) / 0.2);
+      // Fade out: de 0.5 a 0.85 → opacidad de 1 a 0
+      return Math.max(0, 1 - ((letterOpacity - 0.5) / 0.35));
     }
   };
 
-  // Calcular opacidad del texto (SIEMPRE VISIBLE)
+  // Calcular opacidad del texto (aparece gradualmente)
   const getTextOpacity = () => {
-    return 1; // Siempre visible, nunca desaparece
+    // Texto empieza a aparecer cuando el video ya está visible
+    if (letterOpacity < 0.25) return 0;
+    if (letterOpacity > 0.75) return Math.max(0, 1 - ((letterOpacity - 0.75) / 0.25));
+    
+    // Entre 0.25 y 0.5, fade in suave
+    if (letterOpacity <= 0.5) {
+      return (letterOpacity - 0.25) / 0.25;
+    }
+    
+    return 1; // Visible en el centro
   };
 
-  // Calcular parallax del texto (empieza abajo y sube)
+  // Calcular parallax del texto (mucho más marcado)
   const getTextParallax = () => {
-    // progress 0 (arriba) → texto muy abajo (300px)
+    // progress 0 (muy arriba) → texto MUY abajo (600px)
     // progress 0.5 (centro) → texto en posición (0px)
-    // progress 1 (abajo) → texto sigue subiendo (-100px)
+    // progress 1 (muy abajo) → texto sigue subiendo (-300px)
     
     if (letterOpacity < 0.5) {
-      // Subiendo: de 300px abajo → 0px
-      return 300 - (letterOpacity / 0.5) * 300;
+      // Subiendo: de 600px abajo → 0px (mucho más marcado)
+      return 600 - (letterOpacity / 0.5) * 600;
     } else {
-      // Sigue subiendo: de 0px → -100px
-      return -((letterOpacity - 0.5) / 0.5) * 100;
+      // Sigue subiendo: de 0px → -300px (más recorrido)
+      return -((letterOpacity - 0.5) / 0.5) * 300;
     }
   };
 
@@ -90,12 +102,11 @@ export default function ServiceSection({
             className="service-section__video"
             style={{
               opacity: videoOpacity,
-              transition: 'opacity 0.5s ease-out'
+              transition: 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)' // Transición más larga y suave
             }}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
-          {/* SIN overlay gradient para que coincida con background sólido */}
         </div>
 
         {/* Contenido */}
@@ -104,7 +115,7 @@ export default function ServiceSection({
           style={{
             opacity: textOpacity,
             transform: `translateY(${textParallax}px)`,
-            transition: 'opacity 0.3s ease-out, transform 0.1s linear'
+            transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)' // Suavizado
           }}
         >
           <h2 className="service-section__title">
@@ -120,7 +131,7 @@ export default function ServiceSection({
         </div>
       </section>
 
-      <style jsx>{`
+      <style>{`
         /* ============================================
            SECCIÓN
            ============================================ */
@@ -168,6 +179,7 @@ export default function ServiceSection({
           max-width: 700px;
           padding-left: 5rem;
           padding-right: 2rem;
+          will-change: transform, opacity;
         }
 
         /* ============================================

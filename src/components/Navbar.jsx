@@ -80,7 +80,7 @@ function DisperseText({ text, isHovered }) {
 // -------------------------------
 //  COMPONENTE: MagneticLink
 // -------------------------------
-function MagneticLink({ href, icon: Icon, text, onClick }) {
+function MagneticLink({ href, icon: Icon, text }) {
   const [hover, setHover] = useState(false);
   const [disperseHover, setDisperseHover] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -104,18 +104,10 @@ function MagneticLink({ href, icon: Icon, text, onClick }) {
     setTimeout(() => setDisperseHover(false), 100);
   };
 
-  const handleClick = (e) => {
-    if (onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
   return (
     <a
       ref={linkRef}
       href={href}
-      onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => {
         setHover(true);
@@ -410,9 +402,6 @@ export default function GeckNavbar() {
     }
   };
 
-
-  
-
   const closeMobileMenu = () => {
     setMobileMenuClosing(true);
     setTimeout(() => {
@@ -436,9 +425,9 @@ export default function GeckNavbar() {
   };
 
   const navLinks = [
-    { key: "portfolio", icon: Briefcase, href: "#portfolio" },
-    { key: "about", icon: Info, href: "#about" },
-    { key: "blog", icon: BookOpen, href: "#blog" },
+    { key: "portfolio", icon: Briefcase, href: "/portafolio" },
+    { key: "about", icon: Info, href: "/nosotros" },
+    { key: "blog", icon: BookOpen, href: "/blog" },
   ];
 
   return (
@@ -1007,7 +996,6 @@ export default function GeckNavbar() {
                 href={href} 
                 icon={icon} 
                 text={t[key]}
-                onClick={handleNavLinkClick}
               />
             ))}
           </div>
@@ -1196,6 +1184,7 @@ export default function GeckNavbar() {
               onClick={(e) => {
                 e.preventDefault();
                 openDrawer();
+                closeMobileMenu();
               }}
               className="contact-button"
               style={{

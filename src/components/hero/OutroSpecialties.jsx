@@ -84,7 +84,7 @@ export default function OutroSpecialties() {
 
       <style jsx>{`
         .outro-specialties {
-          background: #030c1d;
+          background: #222220;
           min-height: 70vh;
           display: flex;
           align-items: center;

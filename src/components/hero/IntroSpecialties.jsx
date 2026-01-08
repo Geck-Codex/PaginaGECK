@@ -65,7 +65,7 @@ export default function IntroSpecialties() {
 
       <style jsx>{`
         .intro-specialties {
-          background: #030c1d;
+          background: #222220;
           min-height: 60vh;
           display: flex;
           align-items: center;

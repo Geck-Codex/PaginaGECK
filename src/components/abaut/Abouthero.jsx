@@ -139,7 +139,7 @@ export default function AboutHero() {
           min-height: 100vh;
           width: 100%;
           overflow: hidden;
-          background: linear-gradient(to bottom, #0b1f49, #000000);
+          background: transparent; 
           display: flex;
           align-items: center;
           justify-content: center;

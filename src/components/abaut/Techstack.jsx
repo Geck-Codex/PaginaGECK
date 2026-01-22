@@ -212,7 +212,7 @@ export default function TechStack() {
         .tech-stack {
           position: relative;
           width: 100%;
-          background: linear-gradient(to bottom, #000000, #0b1f49);
+          background: transparent; 
           padding: 8rem 2rem;
           overflow: hidden;
         }

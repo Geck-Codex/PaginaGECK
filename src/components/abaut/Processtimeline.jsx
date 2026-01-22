@@ -157,7 +157,7 @@ export default function ProcessTimeline() {
         .process-timeline {
           position: relative;
           width: 100%;
-          background: linear-gradient(to bottom, #0b1f49, #000000);
+          background: transparent; 
           padding: 8rem 2rem;
           overflow: hidden;
         }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 export default function IntroSpecialties() {
-  const [progress, setProgress] = useState(0);
+  const [visibility, setVisibility] = useState(0); // 0 a 1
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -13,33 +13,31 @@ export default function IntroSpecialties() {
       const windowHeight = window.innerHeight;
       const scrollY = window.scrollY;
 
+      // Centro de la sección
       const sectionCenter = sectionTop + sectionHeight / 2;
+      // Centro del viewport
       const viewportCenter = scrollY + windowHeight / 2;
 
-      const distance =
-        (viewportCenter - sectionCenter) / (windowHeight / 2);
-
-      const normalized = (distance + 1) / 2;
-
-      setProgress(Math.max(0, Math.min(1, normalized)));
+      // Distancia del centro de la sección al centro del viewport
+      const distance = Math.abs(viewportCenter - sectionCenter);
+      
+      // Rango en el que queremos que esté visible (ajusta este valor)
+      const fadeRange = windowHeight * 0.6; // 60% de la altura de la ventana
+      
+      // Calcular opacidad: 1 cuando está en el centro, 0 cuando está lejos
+      const opacity = Math.max(0, 1 - distance / fadeRange);
+      
+      setVisibility(opacity);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    handleScroll(); // Ejecutar al montar
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 👇 MISMA FUNCIÓN QUE EN ServiceSection
-  const getTextParallax = () => {
-    if (progress < 0.5) {
-      return 300 - (progress / 0.5) * 300;
-    } else {
-      return -((progress - 0.5) / 0.5) * 100;
-    }
-  };
-
-  const translateY = getTextParallax();
+  // Calcular blur: máximo blur cuando visibility es 0, sin blur cuando es 1
+  const blurAmount = (1 - visibility) * 10; // 10px de blur máximo
 
   return (
     <>
@@ -47,15 +45,23 @@ export default function IntroSpecialties() {
         <div
           className="intro-specialties__content"
           style={{
-            transform: `translateY(${translateY}px)`,
-            transition: 'transform 0.1s linear'
+            opacity: visibility,
+            transform: `translateY(${(1 - visibility) * 30}px) scale(${0.95 + visibility * 0.05})`,
+            filter: `blur(${blurAmount}px)`,
+            transition: 'opacity 0.1s linear, transform 0.1s linear, filter 0.1s linear'
           }}
         >
           <h2 className="intro-specialties__title">
             Nuestras Especialidades
           </h2>
 
-          <div className="intro-specialties__line"></div>
+          <div 
+            className="intro-specialties__line"
+            style={{
+              transform: `scaleX(${visibility})`,
+              opacity: visibility
+            }}
+          ></div>
 
           <p className="intro-specialties__text">
             Descubre las áreas donde destacamos y cómo podemos transformar tus ideas en realidad digital
@@ -78,7 +84,7 @@ export default function IntroSpecialties() {
         .intro-specialties__content {
           max-width: 900px;
           text-align: center;
-          will-change: transform;
+          will-change: opacity, transform, filter;
         }
 
         .intro-specialties__title {
@@ -108,6 +114,8 @@ export default function IntroSpecialties() {
           );
           margin: 0 auto 2rem;
           border-radius: 9999px;
+          transform-origin: center;
+          transition: transform 0.1s linear, opacity 0.1s linear;
         }
 
         .intro-specialties__text {

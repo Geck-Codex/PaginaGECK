@@ -925,7 +925,7 @@ export default function GeckNavbar() {
             }}
           >
             <img 
-              src="public/assets/image/logo.png" 
+              src={`${import.meta.env.BASE_URL}assets/image/logo.png`}
               alt="Geck Codex"
               className="logo-image"
               style={{

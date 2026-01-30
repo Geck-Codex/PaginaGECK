@@ -10,6 +10,9 @@ export default function Header() {
   const [clientProgress, setClientProgress] = useState(0);
   const [dotPhase, setDotPhase] = useState(0);
 
+  // Estado para el rectángulo
+  const [rectangleOpacity, setRectangleOpacity] = useState(0);
+
   const targetProject = 92;
   const targetClient = 100;
 
@@ -70,12 +73,39 @@ export default function Header() {
     // Animación puntos soporte
     const dotInterval = setInterval(() => setDotPhase(prev => (prev + 1) % 3), 500);
 
+    // Scroll listener para el rectángulo
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+      const rectangleElement = document.querySelector('.rectangle-section');
+      
+      if (rectangleElement) {
+        const rect = rectangleElement.getBoundingClientRect();
+        const elementTop = rect.top;
+        const elementHeight = rect.height;
+        const elementMiddle = elementTop + (elementHeight / 2);
+        
+        // Cuando el medio del rectángulo está en el medio de la pantalla
+        const screenMiddle = windowHeight / 2;
+        const distanceFromCenter = Math.abs(elementMiddle - screenMiddle);
+        
+        // Calcular opacidad: 0 cuando está lejos, 1 cuando está en el centro
+        const maxDistance = windowHeight;
+        const opacity = Math.max(0, Math.min(1, 1 - (distanceFromCenter / maxDistance)));
+        
+        setRectangleOpacity(opacity);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Llamar una vez al inicio
+
     return () => {
       clearInterval(phaseInterval);
       clearInterval(tongueInterval);
       clearInterval(projectInterval);
       clearInterval(clientInterval);
       clearInterval(dotInterval);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -110,19 +140,9 @@ export default function Header() {
   return (
     <>
       <header className="header">
-        {/* Fondo con grid */}
-        <div className="header__grid"></div>
-
         <div className="header__container">
           {/* Terminal con serpiente y stats */}
           <div className="terminal">
-            
-            {/* Resplandor hover */}
-            <div className="terminal__glow"></div>
-            
-            {/* Esquinas brillantes */}
-            <div className="terminal__corner terminal__corner--tl"></div>
-            <div className="terminal__corner terminal__corner--br"></div>
 
             {/* Header de la terminal */}
             <div className="terminal__header">
@@ -208,6 +228,16 @@ export default function Header() {
         </div>
       </header>
 
+      {/* Rectángulo después del footer */}
+      <div 
+        className="rectangle-section"
+        style={{ 
+          backgroundColor: `rgba(34, 34, 32, ${rectangleOpacity})`
+        }}
+      >
+        {/* Aquí puedes agregar contenido si lo deseas */}
+      </div>
+
       <style jsx>{`
         /* HEADER PRINCIPAL */
         .header {
@@ -215,21 +245,10 @@ export default function Header() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(to bottom, #0b1f49, #000000);
+          background: transparent;
           position: relative;
           overflow: hidden;
           padding: 3rem 1rem;
-        }
-
-        /* GRID DE FONDO */
-        .header__grid {
-          position: absolute;
-          inset: 0;
-          background-image: 
-            linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
-          background-size: 50px 50px;
-          pointer-events: none;
         }
 
         .header__container {
@@ -239,6 +258,13 @@ export default function Header() {
           position: relative;
           z-index: 10;
           padding: 0 1.5rem;
+        }
+
+        /* RECTÁNGULO DESPUÉS DEL FOOTER */
+        .rectangle-section {
+          width: 100%;
+          height: 50vh;
+          transition: background-color 0.3s ease;
         }
 
         /* TERMINAL */
@@ -252,58 +278,7 @@ export default function Header() {
             0 10px 40px rgba(0, 0, 0, 0.4),
             0 0 60px rgba(212, 175, 55, 0.1);
           overflow: hidden;
-          transition: all 0.5s ease;
           position: relative;
-        }
-
-        .terminal:hover {
-          transform: scale(1.02);
-          border-color: rgba(212, 175, 55, 0.8);
-          box-shadow: 
-            0 0 0 1px rgba(212, 175, 55, 0.3),
-            0 20px 60px rgba(0, 0, 0, 0.5),
-            0 0 100px rgba(212, 175, 55, 0.3);
-        }
-
-        /* RESPLANDOR HOVER */
-        .terminal__glow {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to bottom right, rgba(212, 175, 55, 0), rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0));
-          opacity: 0;
-          transition: opacity 0.5s ease;
-          pointer-events: none;
-        }
-
-        .terminal:hover .terminal__glow {
-          opacity: 1;
-        }
-
-        /* ESQUINAS BRILLANTES */
-        .terminal__corner {
-          position: absolute;
-          width: 5rem;
-          height: 5rem;
-          background: rgba(212, 175, 55, 0.2);
-          border-radius: 50%;
-          filter: blur(2rem);
-          opacity: 0;
-          transition: opacity 0.5s ease;
-          pointer-events: none;
-        }
-
-        .terminal__corner--tl {
-          top: 0;
-          left: 0;
-        }
-
-        .terminal__corner--br {
-          bottom: 0;
-          right: 0;
-        }
-
-        .terminal:hover .terminal__corner {
-          opacity: 1;
         }
 
         /* HEADER TERMINAL */
@@ -328,31 +303,18 @@ export default function Header() {
           height: 0.875rem;
           border-radius: 50%;
           cursor: pointer;
-          transition: all 0.3s ease;
         }
 
         .terminal__button--red {
           background: #ef4444;
         }
 
-        .terminal__button--red:hover {
-          background: #f87171;
-        }
-
         .terminal__button--yellow {
           background: #eab308;
         }
 
-        .terminal__button--yellow:hover {
-          background: #facc15;
-        }
-
         .terminal__button--green {
           background: #22c55e;
-        }
-
-        .terminal__button--green:hover {
-          background: #4ade80;
         }
 
         .terminal__title {
@@ -465,14 +427,9 @@ export default function Header() {
 
         .stat-box {
           line-height: 1.4;
-          transition: color 0.3s ease;
           overflow-x: auto;
           margin: 0;
           width: 100%;
-        }
-
-        .stat-box:hover {
-          color: #d4af37;
         }
 
         .stat-box::-webkit-scrollbar {

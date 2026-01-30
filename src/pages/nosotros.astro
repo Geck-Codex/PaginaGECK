@@ -9,23 +9,31 @@ import Fin from '@/components/abaut/Fin.jsx';
 ---
 
 <Layout>
-    <!-- Contenedor con fondo compartido para los primeros 3 componentes -->
-    <div class="shared-background">
-        <Abouthero client:load />
-        <Techstack client:load />
-        <Processtimeline client:load />
-    </div>
     
-    <!-- Los demás componentes con sus propios fondos -->
+        <!-- ✅ Componentes en contenedor separado -->
+        <div class="components-container">
+            <Abouthero client:load />
+            <Techstack client:load />
+             <Python client:load />
+            
+        </div>
+   
+    <div class="dos">
+    <Processtimeline client:load />    
     <Valuessection client:load />
-    <Python client:load />
+    
     <Fin client:load />
+    </div>
+   
 </Layout>
 
 <style>
-    .shared-background {
-        background: #020f2d;
-        position: relative;
-        width: 100%;
+    .components-container {
+        background: #06163B;
+       
     }
+    .dos {
+        background: #222220;
+    }
+    
 </style>

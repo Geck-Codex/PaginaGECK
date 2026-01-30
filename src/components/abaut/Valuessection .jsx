@@ -119,7 +119,7 @@ export default function ValuesSection() {
         .values-section {
           position: relative;
           width: 100%;
-          background: linear-gradient(to bottom, #000000, #0b1f49);
+          background: Transparent;
           padding: 8rem 2rem;
           overflow: hidden;
         }

@@ -1,205 +1,203 @@
 import { useState, useEffect, useRef } from 'react';
 
-export default function Introduction() {
-  const [blurAmount, setBlurAmount] = useState(10);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const sectionRef = useRef(null);
+export default function AboutHero() {
+  const [MapComponent, setMapComponent] = useState(null);
+  const heroRef = useRef(null);
 
+  // Cargar Leaflet solo en el cliente
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (sectionRef.current) {
-        const sectionTop = sectionRef.current.offsetTop;
-        const sectionHeight = sectionRef.current.offsetHeight;
-        const windowHeight = window.innerHeight;
-        
-        // Calcular posición relativa de la sección en viewport
-        const sectionCenter = sectionTop + (sectionHeight / 2);
-        const viewportCenter = currentScrollY + (windowHeight / 2);
-        
-        // Distancia del centro
-        const distance = Math.abs(sectionCenter - viewportCenter);
-        const maxDistance = windowHeight / 2;
-        
-        // Calcular blur (0-10px) basado en distancia
-        const newBlur = Math.min(10, (distance / maxDistance) * 10);
-        setBlurAmount(newBlur);
-
-        // Calcular progreso de scroll (0 = arriba, 0.5 = centro, 1 = abajo)
-        const sectionStart = sectionTop - windowHeight;
-        const sectionEnd = sectionTop + sectionHeight;
-        const scrollRange = sectionEnd - sectionStart;
-        const progress = (currentScrollY - sectionStart) / scrollRange;
-        
-        // Clamped entre 0 y 1
-        setScrollProgress(Math.max(0, Math.min(1, progress)));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const text1 = "Somos una empresa mexicana a la vanguardia tecnológica, especializados en transformar ideas en soluciones digitales inteligentes.";
-  const text2 = "Desde Computer Vision hasta automatizaciones empresariales, construimos el futuro con tecnología de clase mundial.";
-
-  // Función para calcular opacidad de cada letra basado en progreso de scroll
-  const getLetterOpacity = (index, totalLetters) => {
-    // Normalizar índice de letra (0 a 1)
-    const letterProgress = index / totalLetters;
-    
-    // Fase de aparición: desde que entras a la sección
-    // Las primeras letras aparecen antes, las últimas después
-    const fadeInStart = letterProgress * 0.3; // 0% a 30% del scroll
-    const fadeInEnd = 0.3 + (letterProgress * 0.1); // termina en 30-40%
-    
-    // Fase visible completa: TODO visible en el centro
-    const visibleStart = 0.4; // 40% del scroll
-    const visibleEnd = 0.6;   // 60% del scroll
-    
-    // Fase de desaparición: al salir de la sección
-    const fadeOutStart = 0.6 + (letterProgress * 0.1); // 60-70%
-    const fadeOutEnd = 0.7 + (letterProgress * 0.3);   // 70-100%
-    
-    let opacity = 0;
-    
-    // Fase de aparición gradual
-    if (scrollProgress >= fadeInStart && scrollProgress <= fadeInEnd) {
-      opacity = (scrollProgress - fadeInStart) / (fadeInEnd - fadeInStart);
-    }
-    // Fase visible (TODO EL TEXTO VISIBLE)
-    else if (scrollProgress > visibleStart && scrollProgress < visibleEnd) {
-      opacity = 1;
-    }
-    // Transición entre aparecer y estar visible
-    else if (scrollProgress > fadeInEnd && scrollProgress <= visibleStart) {
-      opacity = 1;
-    }
-    // Transición entre visible y desaparecer
-    else if (scrollProgress >= visibleEnd && scrollProgress < fadeOutStart) {
-      opacity = 1;
-    }
-    // Fase de desaparición gradual
-    else if (scrollProgress >= fadeOutStart && scrollProgress <= fadeOutEnd) {
-      opacity = 1 - ((scrollProgress - fadeOutStart) / (fadeOutEnd - fadeOutStart));
-    }
-    
-    return Math.max(0, Math.min(1, opacity));
-  };
-
-  // Función para dividir texto en spans animados
-  const animateText = (text) => {
-    const letters = text.split('');
-    return letters.map((char, index) => {
-      const opacity = getLetterOpacity(index, letters.length);
+    import('react-leaflet').then((module) => {
+      const { MapContainer, TileLayer, Marker, Popup, Circle, useMap } = module;
       
-      return (
-        <span
-          key={index}
-          className="animated-letter"
-          style={{
-            opacity: opacity,
-            transform: `translateY(${(1 - opacity) * 10}px)`
-          }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      );
+      import('leaflet').then((L) => {
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        });
+
+        const customIcon = new L.Icon({
+          iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+            <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="25" cy="25" r="22" fill="url(#grad)" stroke="#fff" stroke-width="4"/>
+              <circle cx="25" cy="25" r="10" fill="#fff"/>
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#f4d03f;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            </svg>
+          `),
+          iconSize: [50, 50],
+          iconAnchor: [25, 25],
+          popupAnchor: [0, -25],
+        });
+
+        // Componente que maneja la animación del zoom con loop infinito
+        function AutoZoom() {
+          const map = useMap();
+
+          useEffect(() => {
+            const mexicoCenter = [23.6345, -102.5528];
+            const parralCoords = [26.9323, -105.6669];
+
+            const runAnimation = () => {
+              map.setView(mexicoCenter, 5, { animate: false });
+
+              setTimeout(() => {
+                map.flyTo(parralCoords, 7, {
+                  duration: 3,
+                  easeLinearity: 0.25
+                });
+              }, 2000);
+
+              setTimeout(() => {
+                map.flyTo(parralCoords, 9, {
+                  duration: 2.5,
+                  easeLinearity: 0.25
+                });
+              }, 6000);
+            };
+
+            runAnimation();
+
+            const loopInterval = setInterval(() => {
+              runAnimation();
+            }, 15000);
+
+            return () => {
+              clearInterval(loopInterval);
+            };
+          }, [map]);
+
+          return null;
+        }
+
+        const Map = () => {
+          const parralCoords = [26.9323, -105.6669];
+
+          return (
+            <MapContainer
+              center={[23.6345, -102.5528]}
+              zoom={5}
+              scrollWheelZoom={false}
+              zoomControl={true}
+              style={{ height: '100%', width: '100%' }}
+            >
+              <TileLayer
+                attribution='&copy; OpenStreetMap'
+                url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+              />
+
+              <AutoZoom />
+
+              <Circle
+                center={parralCoords}
+                radius={80000}
+                pathOptions={{
+                  fillColor: '#d4af37',
+                  fillOpacity: 0.1,
+                  color: '#d4af37',
+                  weight: 2,
+                  opacity: 0.5,
+                }}
+              />
+
+              <Marker position={parralCoords} icon={customIcon}>
+                <Popup>
+                  <div style={{ textAlign: 'center', padding: '0.5rem' }}>
+                    <strong style={{ color: '#d4af37', fontSize: '1.1rem' }}>
+                      Parral, Chihuahua 🇲🇽
+                    </strong>
+                    <br />
+                    <span style={{ color: '#666', fontSize: '0.9rem' }}>
+                      Innovación desde el norte
+                    </span>
+                  </div>
+                </Popup>
+              </Marker>
+            </MapContainer>
+          );
+        };
+
+        setMapComponent(() => Map);
+      });
     });
-  };
+  }, []);
 
   return (
     <>
-      <div className="intro-container" ref={sectionRef}>
-        {/* Contenido */}
-        <div className="intro-content">
-          <div className="intro-content-inner">
-            
-            {/* Texto central con efecto blur */}
-            <div 
-              className="intro-text-container"
-              style={{
-                filter: `blur(${blurAmount}px)`,
-                transition: 'filter 0.3s ease-out'
-              }}
-            >
-              <p className="intro-main-text">
-                {animateText(text1)}
-              </p>
-              <p className="intro-main-text">
-                {animateText(text2)}
-              </p>
-            </div>
-
+      <section className="about-hero" ref={heroRef}>
+        {/* COLUMNA IZQUIERDA - SOLO TÍTULO */}
+        <div className="about-hero__text-side">
+          <div className="about-hero__text-content">
+            <h1 className="about-hero__title">
+              Jóvenes Mexicanos
+              <span className="about-hero__title-highlight"> Revolucionando la Tecnología</span>
+            </h1>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="intro-scroll-indicator">
-          <div className="intro-scroll-mouse">
-            <div className="intro-scroll-wheel"></div>
+        {/* COLUMNA DERECHA - MAPA CON ZOOM AUTOMÁTICO LOOP */}
+        <div className="about-hero__map-side">
+          <div className="about-hero__map-wrapper">
+            {MapComponent ? (
+              <>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+                <MapComponent />
+              </>
+            ) : (
+              <div className="about-hero__map-loading">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#d4af37" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" opacity="0.3"/>
+                  <circle cx="12" cy="12" r="10" stroke="#d4af37" strokeWidth="3" strokeDasharray="15 45" strokeLinecap="round" style={{ animation: 'spin 1s linear infinite' }}/>
+                </svg>
+                <span>Cargando mapa...</span>
+              </div>
+            )}
           </div>
-          <p className="intro-scroll-text">Scroll</p>
         </div>
-      </div>
+      </section>
 
-      <style jsx>{`
-        /* ============================================
-           CONTENEDOR PRINCIPAL (SIN VIDEO)
-           ============================================ */
-        .intro-container {
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        /* HERO PRINCIPAL - FONDO TRANSPARENTE */
+        .about-hero {
           position: relative;
+          min-height: 100vh;
           width: 100%;
+          background: transparent;
+          display: flex;
+          overflow: hidden;
+        }
+
+        /* COLUMNA IZQUIERDA - TRANSPARENTE */
+        .about-hero__text-side {
+          position: relative;
+          width: 35%;
           min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 4rem 3rem;
+          z-index: 2;
+          background: transparent;
         }
 
-        /* ============================================
-           CONTENIDO
-           ============================================ */
-        .intro-content {
-          position: relative;
-          z-index: 10;
-          text-align: center;
-          padding: 3rem 1.5rem;
-          max-width: 1100px;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 100vh;
+        .about-hero__text-content {
+          max-width: 500px;
         }
 
-        .intro-content-inner {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-        }
-
-        /* ============================================
-           TEXTO CENTRAL CON BLUR
-           ============================================ */
-        .intro-text-container {
-          max-width: 900px;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-          will-change: filter, opacity;
-        }
-
-        .intro-main-text {
-          font-size: 1.75rem;
-          font-weight: 300;
+        /* TÍTULO - MISMA TIPOGRAFÍA QUE INTRODUCTION */
+        .about-hero__title {
+          font-size: 4rem;
+          font-weight: 900;
           line-height: 1.8;
           color: #F4E4BC;
           text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
@@ -207,131 +205,162 @@ export default function Introduction() {
           letter-spacing: 0.02em;
         }
 
-        /* Letras animadas con transición suave */
-        .animated-letter {
-          display: inline-block;
-          transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-          will-change: opacity, transform;
+        .about-hero__title-highlight {
+          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          display: block;
+          margin-top: 0.5rem;
+          font-weight: 900;
+          letter-spacing: 0.02em;
         }
 
-        /* Efecto de enfoque en palabras clave */
-        .intro-main-text::first-line {
-          font-weight: 400;
+        /* COLUMNA DERECHA - MAPA */
+        .about-hero__map-side {
+          position: relative;
+          width: 65%;
+          min-height: 100vh;
+          z-index: 1;
+          padding: 3rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        /* ============================================
-           SCROLL INDICATOR
-           ============================================ */
-        .intro-scroll-indicator {
-          position: absolute;
-          bottom: 40px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 10;
+        /* WRAPPER DEL MAPA CON BORDES REDONDEADOS */
+        .about-hero__map-wrapper {
+          width: 100%;
+          height: 85vh;
+          border-radius: 30px;
+          overflow: hidden;
+          box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(212, 175, 55, 0.2);
+        }
+
+        .about-hero__map-loading {
+          height: 100%;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0.5rem;
-          animation: scrollBounce 2s ease-in-out infinite;
+          justify-content: center;
+          gap: 1.5rem;
+          background: rgba(6, 22, 58, 0.5);
+          color: #d4af37;
+          font-size: 1.3rem;
+          font-weight: 600;
         }
 
-        .intro-scroll-mouse {
-          width: 28px;
-          height: 48px;
-          border: 2px solid rgba(212, 175, 55, 0.5);
-          border-radius: 20px;
-          position: relative;
+        /* Controles de Leaflet */
+        .about-hero__map-wrapper :global(.leaflet-control-zoom) {
+          border: none !important;
+          background: rgba(6, 22, 58, 0.9) !important;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(212, 175, 55, 0.3) !important;
+          border-radius: 12px !important;
+          overflow: hidden;
         }
 
-        .intro-scroll-wheel {
-          width: 3px;
-          height: 8px;
-          background: #D4AF37;
-          border-radius: 2px;
-          position: absolute;
-          top: 8px;
-          left: 50%;
-          transform: translateX(-50%);
-          animation: scrollWheel 2s ease-in-out infinite;
+        .about-hero__map-wrapper :global(.leaflet-control-zoom a) {
+          background: rgba(27, 54, 93, 0.8) !important;
+          color: #d4af37 !important;
+          border: none !important;
+          font-size: 1.2rem !important;
+          width: 36px !important;
+          height: 36px !important;
+          line-height: 36px !important;
         }
 
-        .intro-scroll-text {
-          font-size: 0.75rem;
-          color: rgba(244, 228, 188, 0.6);
-          text-transform: uppercase;
-          letter-spacing: 0.15em;
-          margin: 0;
+        .about-hero__map-wrapper :global(.leaflet-control-zoom a:hover) {
+          background: rgba(212, 175, 55, 0.2) !important;
         }
 
-        @keyframes scrollBounce {
-          0%, 100% {
-            transform: translateX(-50%) translateY(0);
-          }
-          50% {
-            transform: translateX(-50%) translateY(10px);
-          }
+        /* Popup personalizado */
+        .about-hero__map-wrapper :global(.leaflet-popup-content-wrapper) {
+          background: rgba(6, 22, 58, 0.95) !important;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          border-radius: 12px !important;
         }
 
-        @keyframes scrollWheel {
-          0% {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-          }
-          100% {
-            opacity: 0;
-            transform: translateX(-50%) translateY(18px);
-          }
+        .about-hero__map-wrapper :global(.leaflet-popup-tip) {
+          background: rgba(6, 22, 58, 0.95) !important;
         }
 
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 767px) {
-          .intro-main-text {
-            font-size: 1.125rem;
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+          .about-hero__text-side {
+            width: 40%;
           }
 
-          .intro-text-container {
-            gap: 1.5rem;
+          .about-hero__map-side {
+            width: 60%;
+            padding: 2rem;
+          }
+
+          .about-hero__title {
+            font-size: 3.5rem;
           }
         }
 
-        @media (min-width: 768px) {
-          .intro-main-text {
-            font-size: 2rem;
+        @media (max-width: 968px) {
+          .about-hero {
+            flex-direction: column;
           }
 
-          .intro-text-container {
-            gap: 2.5rem;
+          .about-hero__text-side {
+            width: 100%;
+            min-height: auto;
+            padding: 5rem 2rem 3rem;
+            background: transparent;
+          }
+
+          .about-hero__text-content {
+            max-width: 100%;
+            text-align: center;
+          }
+
+          .about-hero__map-side {
+            width: 100%;
+            min-height: 60vh;
+            padding: 2rem;
+          }
+
+          .about-hero__map-wrapper {
+            height: 60vh;
+            border-radius: 20px;
+          }
+
+          .about-hero__title {
+            font-size: 3rem;
           }
         }
 
-        @media (min-width: 1024px) {
-          .intro-main-text {
-            font-size: 2.25rem;
+        @media (max-width: 640px) {
+          .about-hero__text-side {
+            padding: 4rem 1.5rem 2.5rem;
           }
 
-          .intro-text-container {
-            max-width: 1000px;
-            gap: 3rem;
+          .about-hero__title {
+            font-size: 2.5rem;
+          }
+
+          .about-hero__map-side {
+            padding: 1.5rem;
+          }
+
+          .about-hero__map-wrapper {
+            height: 50vh;
+            border-radius: 16px;
           }
         }
 
-        /* ============================================
-           ACCESIBILIDAD
-           ============================================ */
+        /* ACCESIBILIDAD */
         @media (prefers-reduced-motion: reduce) {
-          .intro-scroll-indicator,
-          .intro-scroll-wheel {
+          .about-hero__map-wrapper :global(.leaflet-control-zoom),
+          .about-hero__map-wrapper :global(.leaflet-popup) {
             animation: none !important;
-          }
-
-          .animated-letter {
-            transition: none !important;
-          }
-          
-          .intro-text-container {
-            transition: none !important;
           }
         }
       `}</style>

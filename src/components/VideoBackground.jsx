@@ -1,68 +1,80 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function VideoBackground({ children }) {
-  const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const rafRef = useRef(null);
 
   useEffect(() => {
+    const video = videoRef.current;
+
+    // Respeta accesibilidad
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    if (prefersReducedMotion && video) {
+      video.pause();
+    }
+
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      if (rafRef.current) return;
+
+      rafRef.current = requestAnimationFrame(() => {
+        const offset = window.scrollY * 0.35;
+
+        if (video) {
+          video.style.transform = `translate(-50%, calc(-50% + ${offset}px))`;
+        }
+
+        rafRef.current = null;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  // Parallax suave para el video
-  const parallaxOffset = scrollY * 0.5;
-
   return (
     <>
-      {/* Video Background Global - FIJO */}
-      <div className="global-video-wrapper">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="global-video"
-          style={{
-            transform: `translate(-50%, calc(-50% + ${parallaxOffset}px))`,
-            willChange: 'transform'
-          }}
-        >
-          <source src="/assets/video/geck.mp4" type="video/mp4" />
-          Tu navegador no soporta el elemento de video.
-        </video>
-        
-        {/* Overlay gradiente */}
-        <div className="global-video-overlay"></div>
-        
-        {/* Viñeta */}
-        <div className="global-video-vignette"></div>
+      {/* VIDEO BACKGROUND */}
+      <div ref={wrapperRef} className="global-video-wrapper">
+       <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        poster="/assets/image/geck-poster.jpg"
+        className="global-video"
+      >
+        <source src="/assets/video/geck-bg.mp4" type="video/mp4" />
+      </video>
+
+
+        <div className="global-video-overlay" />
+        <div className="global-video-vignette" />
       </div>
 
-      {/* Contenido que se superpone */}
+      {/* CONTENIDO */}
       <div className="global-content-wrapper">
         {children}
       </div>
 
       <style jsx>{`
         /* ============================================
-           VIDEO BACKGROUND GLOBAL (FIJO)
+           VIDEO BACKGROUND
            ============================================ */
         .global-video-wrapper {
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
+          inset: 0;
           z-index: -1;
           overflow: hidden;
+          background: #050d1a;
         }
 
         .global-video {
@@ -75,46 +87,42 @@ export default function VideoBackground({ children }) {
           height: auto;
           object-fit: cover;
           filter: brightness(0.65) contrast(1.1);
-          transition: transform 0.1s linear;
+          transform: translate(-50%, -50%);
+          will-change: transform;
+          backface-visibility: hidden;
         }
 
         /* ============================================
-           OVERLAYS GLOBALES
+           OVERLAYS
            ============================================ */
         .global-video-overlay {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          inset: 0;
           background: linear-gradient(
             135deg,
             rgba(11, 29, 51, 0.75) 0%,
             rgba(5, 13, 26, 0.7) 50%,
             rgba(11, 31, 73, 0.75) 100%
           );
-          z-index: 1;
           pointer-events: none;
+          z-index: 1;
         }
 
         .global-video-vignette {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          inset: 0;
           background: radial-gradient(
             circle at center,
             transparent 0%,
             rgba(5, 13, 26, 0.5) 60%,
             rgba(5, 13, 26, 0.9) 100%
           );
-          z-index: 2;
           pointer-events: none;
+          z-index: 2;
         }
 
         /* ============================================
-           CONTENT WRAPPER
+           CONTENT
            ============================================ */
         .global-content-wrapper {
           position: relative;
@@ -122,19 +130,21 @@ export default function VideoBackground({ children }) {
         }
 
         /* ============================================
-           MOBILE OPTIMIZATION
+           MOBILE
            ============================================ */
         @media (max-width: 768px) {
           .global-video {
             filter: brightness(0.55) contrast(1);
+            min-height: 100%;
           }
         }
 
         /* ============================================
-           ACCESIBILIDAD
+           REDUCED MOTION
            ============================================ */
         @media (prefers-reduced-motion: reduce) {
           .global-video {
+            transform: translate(-50%, -50%) !important;
             transition: none !important;
           }
         }

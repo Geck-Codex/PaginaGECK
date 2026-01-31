@@ -127,21 +127,62 @@ export default function VideoHero() {
         }
 
         /* ============================================
-           RESPONSIVE
+           RESPONSIVE - MÓVIL MEJORADO
            ============================================ */
         @media (max-width: 767px) {
           .video-subtitle-corner {
-            bottom: 40px;
-            left: 24px;
+            bottom: 80px; /* Aumentado desde 40px */
+            left: 20px;
           }
 
           .video-subtitle {
-            font-size: 1rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
           }
 
           .scroll-arrow-corner {
-            bottom: 40px;
-            right: 24px;
+            bottom: 80px; /* Aumentado desde 40px */
+            right: 20px;
+          }
+
+          .arrow-container {
+            width: 44px;
+            height: 44px;
+            border-width: 2.5px; /* Borde más visible */
+          }
+
+          .arrow-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          /* Asegurar que la animación de bounce sea más visible en móvil */
+          @keyframes arrowBounce {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(12px); /* Más movimiento en móvil */
+            }
+          }
+        }
+
+        /* ============================================
+           RESPONSIVE - MÓVILES PEQUEÑOS
+           ============================================ */
+        @media (max-width: 374px) {
+          .video-subtitle-corner {
+            bottom: 70px;
+            left: 16px;
+          }
+
+          .video-subtitle {
+            font-size: 0.95rem;
+          }
+
+          .scroll-arrow-corner {
+            bottom: 70px;
+            right: 16px;
           }
 
           .arrow-container {
@@ -155,9 +196,12 @@ export default function VideoHero() {
           }
         }
 
+        /* ============================================
+           RESPONSIVE - TABLET
+           ============================================ */
         @media (min-width: 768px) and (max-width: 1023px) {
           .video-subtitle-corner {
-            bottom: 50px;
+            bottom: 70px; /* Ajustado desde 50px */
             left: 40px;
           }
 
@@ -166,13 +210,13 @@ export default function VideoHero() {
           }
 
           .scroll-arrow-corner {
-            bottom: 50px;
+            bottom: 70px; /* Ajustado desde 50px */
             right: 40px;
           }
 
           .arrow-container {
-            width: 45px;
-            height: 45px;
+            width: 46px;
+            height: 46px;
           }
 
           .arrow-icon {
@@ -181,9 +225,25 @@ export default function VideoHero() {
           }
         }
 
+        /* ============================================
+           RESPONSIVE - DESKTOP
+           ============================================ */
         @media (min-width: 1024px) {
           .video-subtitle {
             font-size: 1.75rem;
+          }
+        }
+
+        /* ============================================
+           AJUSTE PARA PANTALLAS MUY CORTAS
+           ============================================ */
+        @media (max-height: 667px) and (max-width: 767px) {
+          .video-subtitle-corner {
+            bottom: 60px;
+          }
+
+          .scroll-arrow-corner {
+            bottom: 60px;
           }
         }
 

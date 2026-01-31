@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X, Briefcase, Info, BookOpen, Globe, Mail } from "lucide-react";
 import { useContactDrawer } from '../contexts/ContactDrawerContext';
 
+
 const translations = {
   en: {
     portfolio: "Portfolio",
@@ -925,7 +926,7 @@ export default function GeckNavbar() {
             }}
           >
             <img 
-              src={`${import.meta.env.BASE_URL}assets/image/logo.png`}
+              src="/assets/image/logo.png"  // ✅ Ruta absoluta desde public/
               alt="Geck Codex"
               className="logo-image"
               style={{

@@ -99,6 +99,7 @@ export default function IntroSpecialties() {
           );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
         .intro-specialties__line {
@@ -123,6 +124,21 @@ export default function IntroSpecialties() {
           font-weight: 300;
           line-height: 1.8;
           color: #F4E4BC;
+        }
+
+        @media (max-width: 768px) {
+          .intro-specialties {
+            min-height: 50vh;
+            padding: 3rem 1.5rem;
+          }
+
+          .intro-specialties__title {
+            font-size: 2.5rem;
+          }
+
+          .intro-specialties__text {
+            font-size: 1.2rem;
+          }
         }
       `}</style>
     </>

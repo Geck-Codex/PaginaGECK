@@ -70,27 +70,34 @@ export default function VideoBackground({ children }) {
            VIDEO BACKGROUND
            ============================================ */
         .global-video-wrapper {
-          position: fixed;
-          inset: 0;
-          z-index: -1;
-          overflow: hidden;
-          background: #050d1a;
-        }
+        position: fixed;
+        inset: 0;
+        height: 100dvh; /* viewport real en móvil */
+        overflow: hidden;
+      }
 
+      .global-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        filter: brightness(0.65) contrast(1.1);
+        will-change: transform;
+      }
+
+      /* 🔥 MOBILE FIX */
+      @media (max-width: 768px) {
         .global-video {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          min-width: 100%;
-          min-height: 120%;
-          width: auto;
-          height: auto;
-          object-fit: cover;
-          filter: brightness(0.65) contrast(1.1);
-          transform: translate(-50%, -50%);
-          will-change: transform;
-          backface-visibility: hidden;
+          width: 100%;
+          height: 100%;
+          min-width: unset;
+          min-height: unset;
+          transform: translate(-50%, -50%) scale(1.02);
         }
+      }
 
         /* ============================================
            OVERLAYS

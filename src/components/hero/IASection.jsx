@@ -1,9 +1,11 @@
-import ServiceSection from './ServiceSection';
+import ServiceSection from '@/components/hero/ServiceSection.jsx';
 
 export default function IASection() {
   return (
     <ServiceSection
-      videoSrc="/assets/video/ia.mp4"
+      videoDesktop="/assets/video/ia.mp4"
+      videoMobile="/assets/video/ia-cel.mp4"
+      poster="/assets/images/ia-poster.jpg"
       title="IA & Computer Vision"
       description="Desarrollamos soluciones de inteligencia artificial y visión por computadora que transforman tu negocio"
       link="/servicios/ia"

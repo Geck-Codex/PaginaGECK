@@ -1,9 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function VideoBackground({ children }) {
   const videoRef = useRef(null);
   const wrapperRef = useRef(null);
   const rafRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detectar si es móvil
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -43,18 +56,22 @@ export default function VideoBackground({ children }) {
     <>
       {/* VIDEO BACKGROUND */}
       <div ref={wrapperRef} className="global-video-wrapper">
-       <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster="/assets/image/geck-poster.jpg"
-        className="global-video"
-      >
-        <source src="/assets/video/geck-bg.mp4" type="video/mp4" />
-      </video>
-
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/assets/image/geck-poster.jpg"
+          className="global-video"
+          key={isMobile ? 'mobile' : 'desktop'} // Fuerza la recarga al cambiar
+        >
+          <source 
+            src={isMobile ? '/assets/video/geck-movil.mp4' : '/assets/video/geck-bg.mp4'} 
+            type="video/mp4" 
+          />
+        </video>
 
         <div className="global-video-overlay" />
         <div className="global-video-vignette" />
@@ -70,34 +87,34 @@ export default function VideoBackground({ children }) {
            VIDEO BACKGROUND
            ============================================ */
         .global-video-wrapper {
-        position: fixed;
-        inset: 0;
-        height: 100dvh; /* viewport real en móvil */
-        overflow: hidden;
-      }
+          position: fixed;
+          inset: 0;
+          height: 100dvh; /* viewport real en móvil */
+          overflow: hidden;
+        }
 
-      .global-video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transform: translate(-50%, -50%);
-        filter: brightness(0.65) contrast(1.1);
-        will-change: transform;
-      }
-
-      /* 🔥 MOBILE FIX */
-      @media (max-width: 768px) {
         .global-video {
+          position: absolute;
+          top: 50%;
+          left: 50%;
           width: 100%;
           height: 100%;
-          min-width: unset;
-          min-height: unset;
-          transform: translate(-50%, -50%) scale(1.02);
+          object-fit: cover;
+          transform: translate(-50%, -50%);
+          filter: brightness(0.65) contrast(1.1);
+          will-change: transform;
         }
-      }
+
+        /* 🔥 MOBILE FIX */
+        @media (max-width: 768px) {
+          .global-video {
+            width: 100%;
+            height: 100%;
+            min-width: unset;
+            min-height: unset;
+            transform: translate(-50%, -50%) scale(1.02);
+          }
+        }
 
         /* ============================================
            OVERLAYS

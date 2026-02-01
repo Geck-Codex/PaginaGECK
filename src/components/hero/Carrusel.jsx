@@ -5,13 +5,14 @@ const ClientCarousel = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [touchedIndex, setTouchedIndex] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState('center');
   const animationRef = useRef(null);
   const containerRef = useRef(null);
   const offsetRef = useRef(0);
   const componentRef = useRef(null);
   const touchStartRef = useRef(null);
+  const logoRefs = useRef({});
 
-  // Datos de clientes en una sola fila con espaciado uniforme
   const clients = [
     {
       id: 1,
@@ -45,7 +46,27 @@ const ClientCarousel = () => {
     }
   ];
 
-  // Funciones para manejar touch en móvil
+  // Calcular posición del tooltip basado en la posición del logo
+  const calculateTooltipPosition = (index) => {
+    const logoElement = logoRefs.current[index];
+    if (!logoElement) return 'center';
+
+    const rect = logoElement.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const tooltipWidth = viewportWidth < 1024 ? 256 : 320; // 64*4 o 80*4 (w-64 o w-80)
+    
+    const centerX = rect.left + rect.width / 2;
+    const tooltipLeft = centerX - tooltipWidth / 2;
+    const tooltipRight = centerX + tooltipWidth / 2;
+
+    // Si el tooltip se sale por la izquierda
+    if (tooltipLeft < 16) return 'left';
+    // Si el tooltip se sale por la derecha
+    if (tooltipRight > viewportWidth - 16) return 'right';
+    // Si está centrado
+    return 'center';
+  };
+
   const handleTouchStart = (index, e) => {
     touchStartRef.current = {
       index,
@@ -68,10 +89,17 @@ const ClientCarousel = () => {
     const deltaX = Math.abs(touchEnd.x - touchStartRef.current.x);
     const deltaY = Math.abs(touchEnd.y - touchStartRef.current.y);
     
-    // Si fue un tap rápido (no un scroll), mostrar el tooltip
     if (deltaTime < 300 && deltaX < 10 && deltaY < 10) {
-      setTouchedIndex(touchedIndex === index ? null : index);
+      const newIndex = touchedIndex === index ? null : index;
+      setTouchedIndex(newIndex);
       setHoveredIndex(null);
+      
+      // Calcular posición del tooltip
+      if (newIndex !== null) {
+        setTimeout(() => {
+          setTooltipPosition(calculateTooltipPosition(newIndex));
+        }, 0);
+      }
     }
     
     touchStartRef.current = null;
@@ -80,6 +108,10 @@ const ClientCarousel = () => {
   const handleMouseEnter = (index) => {
     setHoveredIndex(index);
     setTouchedIndex(null);
+    // Calcular posición del tooltip
+    setTimeout(() => {
+      setTooltipPosition(calculateTooltipPosition(index));
+    }, 0);
   };
 
   const handleMouseLeave = () => {
@@ -94,13 +126,10 @@ const ClientCarousel = () => {
       const rect = componentRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Calcular el progreso basado en la posición del componente
-      // Rango más amplio para animaciones más lentas y perceptibles
-      const startPoint = windowHeight * 1.0; // Comienza antes (más abajo)
-      const endPoint = windowHeight * 0.1;   // Termina más arriba
+      const startPoint = windowHeight * 1.0;
+      const endPoint = windowHeight * 0.1;
       
       if (rect.top <= startPoint && rect.top >= endPoint) {
-        // Mapear la posición a un valor entre 0 y 1
         const progress = 1 - ((rect.top - endPoint) / (startPoint - endPoint));
         const clampedProgress = Math.max(0, Math.min(1, progress));
         setScrollProgress(clampedProgress);
@@ -115,20 +144,19 @@ const ClientCarousel = () => {
       }
     };
 
-    // Intersection Observer para optimización (solo escuchar scroll cuando está cerca)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             window.addEventListener('scroll', handleScroll, { passive: true });
-            handleScroll(); // Llamar inmediatamente para calcular posición inicial
+            handleScroll();
           } else {
             window.removeEventListener('scroll', handleScroll);
           }
         });
       },
       { 
-        rootMargin: '100px 0px 100px 0px' // Empezar a observar antes de que entre en vista
+        rootMargin: '100px 0px 100px 0px'
       }
     );
 
@@ -144,7 +172,6 @@ const ClientCarousel = () => {
     };
   }, [hasAnimated]);
 
-  // Cerrar tooltip al tocar fuera (solo móvil)
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (touchedIndex !== null && containerRef.current && !containerRef.current.contains(e.target)) {
@@ -165,27 +192,22 @@ const ClientCarousel = () => {
     let lastTime = performance.now();
     
     const animate = (currentTime) => {
-      // Pausar animación si hay hover o touch activo
       if (hoveredIndex === null && touchedIndex === null && containerRef.current) {
         const deltaTime = currentTime - lastTime;
         lastTime = currentTime;
         
-        // Velocidad más lenta para mejor percepción (reducida de 30 a 20)
         const speed = 20;
         offsetRef.current += (speed * deltaTime) / 1000;
         
-        // Ancho del contenedor de un set de logos (aproximado)
-        const itemWidth = 200; // 128px logo + padding + gap
+        const itemWidth = 200;
         const setWidth = itemWidth * clients.length;
         
-        // Reset cuando completa un ciclo completo
         if (offsetRef.current >= setWidth) {
           offsetRef.current = offsetRef.current % setWidth;
         }
         
         containerRef.current.style.transform = `translateX(-${offsetRef.current}px)`;
       } else {
-        // Actualizar lastTime incluso cuando está pausado para evitar saltos
         lastTime = currentTime;
       }
       
@@ -201,9 +223,50 @@ const ClientCarousel = () => {
     };
   }, [hoveredIndex, touchedIndex, clients.length]);
 
+  // Recalcular posición del tooltip en resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (hoveredIndex !== null || touchedIndex !== null) {
+        const activeIndex = hoveredIndex !== null ? hoveredIndex : touchedIndex;
+        setTooltipPosition(calculateTooltipPosition(activeIndex));
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [hoveredIndex, touchedIndex]);
+
+  // Función para obtener las clases del tooltip según su posición
+  const getTooltipClasses = () => {
+    const baseClasses = "absolute top-full mt-6 lg:mt-8 w-64 lg:w-80 z-30";
+    
+    switch (tooltipPosition) {
+      case 'left':
+        return `${baseClasses} left-0`;
+      case 'right':
+        return `${baseClasses} right-0`;
+      default: // center
+        return `${baseClasses} left-1/2 transform -translate-x-1/2`;
+    }
+  };
+
+  // Función para obtener las clases de la flecha según posición
+  const getArrowClasses = () => {
+    const baseClasses = "absolute -top-2 w-4 h-4 bg-white rotate-45 border-l-2 border-t-2 border-[#D4AF37]/40";
+    
+    switch (tooltipPosition) {
+      case 'left':
+        return `${baseClasses} left-8`;
+      case 'right':
+        return `${baseClasses} right-8`;
+      default: // center
+        return `${baseClasses} left-1/2 transform -translate-x-1/2`;
+    }
+  };
+
   return (
     <div ref={componentRef} className="w-full bg-[#222220] relative overflow-hidden pt-16 md:pt-20 lg:pt-24">
-      {/* Línea dorada animada de entrada - vinculada al scroll */}
+      {/* Línea dorada animada de entrada */}
       {scrollProgress > 0 && (
         <div className="absolute top-0 left-0 w-full h-1 z-50 overflow-hidden">
           <div 
@@ -234,7 +297,6 @@ const ClientCarousel = () => {
             </linearGradient>
           </defs>
           
-          {/* Primera onda */}
           <path
             d="M0,200 Q250,150 500,200 T1000,200 T1500,200 T2000,200"
             stroke="url(#goldGradient)"
@@ -254,7 +316,6 @@ const ClientCarousel = () => {
             />
           </path>
           
-          {/* Segunda onda */}
           <path
             d="M0,300 Q250,350 500,300 T1000,300 T1500,300 T2000,300"
             stroke="url(#goldGradient)"
@@ -274,7 +335,6 @@ const ClientCarousel = () => {
             />
           </path>
           
-          {/* Tercera onda */}
           <path
             d="M0,400 Q250,380 500,400 T1000,400 T1500,400 T2000,400"
             stroke="url(#goldGradient)"
@@ -296,7 +356,7 @@ const ClientCarousel = () => {
         </svg>
       </div>
 
-      {/* Título Section - animado con scroll */}
+      {/* Título Section */}
       <div 
         className="text-center py-8 md:py-12 px-4 relative z-10"
         style={{
@@ -320,7 +380,7 @@ const ClientCarousel = () => {
         </p>
       </div>
 
-      {/* Carousel Section - animado con scroll */}
+      {/* Carousel Section */}
       <div 
         className="relative w-full h-[280px] md:h-[350px] lg:h-[400px] overflow-hidden py-6 md:py-10"
         style={{
@@ -333,7 +393,7 @@ const ClientCarousel = () => {
         <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-[#222220] via-[#222220]/80 to-transparent z-10 pointer-events-none"></div>
         <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-[#222220] via-[#222220]/80 to-transparent z-10 pointer-events-none"></div>
 
-        {/* Carousel Container - Loop infinito REAL sin saltos */}
+        {/* Carousel Container */}
         <div 
           ref={containerRef}
           className="flex items-center gap-8 md:gap-12 lg:gap-16 h-full"
@@ -342,7 +402,6 @@ const ClientCarousel = () => {
             willChange: 'transform'
           }}
         >
-          {/* Triplicar para loop seamless */}
           {[...clients, ...clients, ...clients].map((client, index) => {
             const isActive = hoveredIndex === index || touchedIndex === index;
             const isOtherActive = (hoveredIndex !== null && hoveredIndex !== index) || 
@@ -352,12 +411,12 @@ const ClientCarousel = () => {
               <div
                 key={`${client.id}-${index}`}
                 className="flex-shrink-0"
+                ref={el => logoRefs.current[index] = el}
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
                 onTouchStart={(e) => handleTouchStart(index, e)}
                 onTouchEnd={(e) => handleTouchEnd(index, e)}
               >
-                {/* Logo container - TODOS DEL MISMO TAMAÑO */}
                 <div className={`
                   relative bg-white rounded-xl md:rounded-2xl shadow-xl
                   w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36
@@ -370,7 +429,6 @@ const ClientCarousel = () => {
                       : 'hover:scale-105'
                   }
                 `}>
-                  {/* Glow effect al hacer hover/touch */}
                   {isActive && (
                     <div className="absolute inset-0 bg-[#D4AF37] rounded-xl md:rounded-2xl opacity-30 blur-xl md:blur-2xl -z-10 scale-150 animate-pulse"></div>
                   )}
@@ -385,10 +443,10 @@ const ClientCarousel = () => {
                     `}
                   />
 
-                  {/* Tooltip con descripción - ahora funciona en móvil también */}
+                  {/* Tooltip con posicionamiento inteligente */}
                   {isActive && (
                     <div 
-                      className="absolute top-full mt-6 lg:mt-8 left-1/2 transform -translate-x-1/2 w-64 lg:w-80 z-30"
+                      className={getTooltipClasses()}
                       style={{
                         animation: 'slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
                       }}
@@ -402,8 +460,8 @@ const ClientCarousel = () => {
                         </p>
                         <div className="h-0.5 lg:h-1 w-16 lg:w-20 bg-gradient-to-r from-[#D4AF37] to-[#B8941F] rounded-full mt-3 lg:mt-4"></div>
                       </div>
-                      {/* Flecha del tooltip */}
-                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l-2 border-t-2 border-[#D4AF37]/40"></div>
+                      {/* Flecha del tooltip con posicionamiento dinámico */}
+                      <div className={getArrowClasses()}></div>
                     </div>
                   )}
                 </div>
@@ -417,11 +475,11 @@ const ClientCarousel = () => {
         @keyframes slideDown {
           from {
             opacity: 0;
-            transform: translateX(-50%) translateY(-15px) scale(0.95);
+            transform: translateY(-15px) scale(0.95);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) translateY(0) scale(1);
+            transform: translateY(0) scale(1);
           }
         }
       `}</style>

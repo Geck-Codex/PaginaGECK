@@ -99,20 +99,21 @@ export default function ServiceSection({
       <section className="service-section" ref={sectionRef}>
         {/* VIDEO */}
         <div className="service-section__video-container">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster={poster}
-            className="service-section__video"
-            style={{
-              opacity: videoOpacity,
-              transition: 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
+         <video
+          key={isMobile ? 'mobile' : 'desktop'} // ← Esto fuerza re-render
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={poster}
+          className="service-section__video"
+          style={{
+            opacity: videoOpacity,
+            transition: 'opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
         </div>
 
         {/* CONTENIDO */}

@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 
 export default function ProcessTimeline() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [visibleSteps, setVisibleSteps] = useState([]);
+  const [activeStep, setActiveStep] = useState(-1);
   const sectionRef = useRef(null);
+  const timelineRef = useRef(null);
+  const stepRefs = useRef([]);
 
   const steps = [
     {
@@ -68,27 +71,68 @@ export default function ProcessTimeline() {
     }
   ];
 
+  // Maneja el progreso del scroll con IntersectionObserver
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            steps.forEach((_, index) => {
-              setTimeout(() => {
-                setVisibleSteps((prev) => [...new Set([...prev, index])]);
-              }, index * 200);
-            });
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
+    const handleScroll = () => {
+      if (!timelineRef.current) return;
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+      const rect = timelineRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const scrollStart = rect.top;
+      const scrollEnd = rect.bottom - windowHeight;
+      const scrollDistance = scrollEnd - scrollStart;
+      
+      let progress = 0;
+      if (scrollStart > 0) {
+        progress = 0;
+      } else if (scrollEnd < 0) {
+        progress = 100;
+      } else {
+        progress = Math.min(100, Math.max(0, (Math.abs(scrollStart) / scrollDistance) * 100));
+      }
 
-    return () => observer.disconnect();
+      setScrollProgress(progress);
+    };
+
+    // IntersectionObserver para cada step individual
+    const observerOptions = {
+      threshold: [0, 0.2, 0.5, 0.8, 1],
+      rootMargin: '-10% 0px -10% 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const index = Number(entry.target.dataset.index);
+        
+        // Marca como visible cuando entra al viewport
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+          setVisibleSteps(prev => {
+            if (!prev.includes(index)) {
+              return [...prev, index].sort((a, b) => a - b);
+            }
+            return prev;
+          });
+        }
+
+        // Marca como activo cuando está centrado
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          setActiveStep(index);
+        }
+      });
+    }, observerOptions);
+
+    // Observa cada step
+    stepRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
@@ -114,41 +158,122 @@ export default function ProcessTimeline() {
           </div>
 
           {/* Timeline */}
-          <div className="process-timeline__steps">
-            {steps.map((step, index) => (
-              <div
-                key={step.id}
-                className={`timeline-step ${visibleSteps.includes(index) ? 'timeline-step--visible' : ''} ${activeStep === index ? 'timeline-step--active' : ''}`}
-                onMouseEnter={() => setActiveStep(index)}
-                style={{
-                  animationDelay: `${index * 0.2}s`
-                }}
-              >
-                {/* Línea conectora */}
-                {index < steps.length - 1 && (
-                  <div className="timeline-step__line"></div>
-                )}
+          <div className="process-timeline__steps" ref={timelineRef}>
+            {/* Raíz/línea principal que crece */}
+            <svg className="timeline-root" viewBox="0 0 200 1000" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="rootGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#d4af37" stopOpacity="0.8" />
+                  <stop offset="50%" stopColor="#d4af37" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#d4af37" stopOpacity="0.2" />
+                </linearGradient>
+                
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              
+              {/* Línea principal orgánica */}
+              <path
+                d="M100,0 Q90,100 100,200 Q110,300 100,400 Q95,500 100,600 Q105,700 100,800 Q100,900 100,1000"
+                fill="none"
+                stroke="url(#rootGradient)"
+                strokeWidth="6"
+                filter="url(#glow)"
+                strokeDasharray="1000"
+                strokeDashoffset={1000 - (scrollProgress * 10)}
+                style={{ transition: 'stroke-dashoffset 0.3s ease-out' }}
+              />
+              
+              {/* Ramificaciones secundarias */}
+              {steps.map((_, index) => {
+                const yPos = (index / (steps.length - 1)) * 1000;
+                const isVisible = visibleSteps.includes(index);
+                return (
+                  <g key={index} opacity={isVisible ? 1 : 0} style={{ transition: 'opacity 0.5s ease' }}>
+                    <path
+                      d={`M100,${yPos} Q${index % 2 === 0 ? 70 : 130},${yPos + 20} ${index % 2 === 0 ? 50 : 150},${yPos + 30}`}
+                      fill="none"
+                      stroke="#d4af37"
+                      strokeWidth="3"
+                      opacity="0.4"
+                      strokeDasharray="100"
+                      strokeDashoffset={isVisible ? 0 : 100}
+                      style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
+                    />
+                  </g>
+                );
+              })}
+            </svg>
 
-                {/* Número */}
-                <div className="timeline-step__number-container">
-                  <div className="timeline-step__number">{step.number}</div>
-                  <div className="timeline-step__pulse"></div>
-                </div>
+            {/* Steps Container */}
+            <div className="timeline-step-wrapper">
+              {steps.map((step, index) => {
+                const isVisible = visibleSteps.includes(index);
+                const isActive = activeStep === index;
+                
+                return (
+                  <div
+                    key={step.id}
+                    ref={(el) => (stepRefs.current[index] = el)}
+                    data-index={index}
+                    className={`timeline-step ${isVisible ? 'timeline-step--visible' : ''} ${isActive ? 'timeline-step--active' : ''}`}
+                    style={{
+                      '--step-index': index,
+                      '--delay': `${index * 0.1}s`
+                    }}
+                  >
+                    {/* Nodo/semilla en la raíz */}
+                    <div className="timeline-step__node">
+                      <div className="timeline-step__node-inner">
+                        <div className="timeline-step__node-number">{step.number}</div>
+                      </div>
+                      {isActive && (
+                        <>
+                          <div className="timeline-step__node-pulse"></div>
+                          <div className="timeline-step__node-pulse timeline-step__node-pulse--delay"></div>
+                        </>
+                      )}
+                    </div>
 
-                {/* Card */}
-                <div className="timeline-step__card">
-                  <div className="timeline-step__icon">
-                    {step.icon}
+                    {/* Card que crece desde el nodo */}
+                    <div className="timeline-step__card">
+                      <div className="timeline-step__card-inner">
+                        <div className="timeline-step__icon">
+                          {step.icon}
+                        </div>
+                        <h3 className="timeline-step__title">{step.title}</h3>
+                        <p className="timeline-step__description">{step.description}</p>
+                        
+                        {/* Hojas decorativas */}
+                        <div className="timeline-step__leaf timeline-step__leaf--1"></div>
+                        <div className="timeline-step__leaf timeline-step__leaf--2"></div>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="timeline-step__title">{step.title}</h3>
-                  <p className="timeline-step__description">{step.description}</p>
-                  
-                  {/* Indicador de progreso */}
-                  <div className="timeline-step__progress"></div>
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
+        </div>
+
+        {/* Partículas flotantes */}
+        <div className="floating-particles">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${5 + Math.random() * 10}s`
+              }}
+            />
+          ))}
         </div>
       </section>
 
@@ -157,20 +282,20 @@ export default function ProcessTimeline() {
         .process-timeline {
           position: relative;
           width: 100%;
-          background: transparent; 
+          background: transparent;
           padding: 8rem 2rem;
           overflow: hidden;
         }
 
         .process-timeline__container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
         }
 
         /* HEADER */
         .process-timeline__header {
           text-align: center;
-          margin-bottom: 6rem;
+          margin-bottom: 8rem;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -215,133 +340,187 @@ export default function ProcessTimeline() {
           max-width: 600px;
         }
 
-        /* TIMELINE STEPS */
+        /* TIMELINE STEPS CONTAINER */
         .process-timeline__steps {
+          position: relative;
+          min-height: 350vh;
+          padding: 0 2rem;
+        }
+
+        /* SVG RAÍZ */
+        .timeline-root {
+          position: absolute;
+          left: 50%;
+          top: 0;
+          width: 200px;
+          height: 100%;
+          transform: translateX(-50%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* WRAPPER PARA LOS STEPS */
+        .timeline-step-wrapper {
+          position: relative;
           display: flex;
           flex-direction: column;
-          gap: 3rem;
-          position: relative;
+          gap: 20vh;
+          padding: 15vh 0;
         }
 
         /* STEP */
         .timeline-step {
           position: relative;
           display: grid;
-          grid-template-columns: 100px 1fr;
+          grid-template-columns: 1fr 80px 1fr;
           gap: 3rem;
-          align-items: start;
+          align-items: center;
           opacity: 0;
-          transform: translateX(-50px);
+          transform: scale(0.85) translateY(60px);
+          transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+          min-height: 280px;
+        }
+
+        .timeline-step:nth-child(odd) .timeline-step__card {
+          grid-column: 1;
+          grid-row: 1;
+        }
+
+        .timeline-step:nth-child(odd) .timeline-step__node {
+          grid-column: 2;
+          grid-row: 1;
+        }
+
+        .timeline-step:nth-child(even) .timeline-step__card {
+          grid-column: 3;
+          grid-row: 1;
+        }
+
+        .timeline-step:nth-child(even) .timeline-step__node {
+          grid-column: 2;
+          grid-row: 1;
         }
 
         .timeline-step--visible {
-          animation: stepSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          opacity: 1;
+          transform: scale(1) translateY(0);
         }
 
-        @keyframes stepSlideIn {
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        /* Línea conectora */
-        .timeline-step__line {
-          position: absolute;
-          left: 50px;
-          top: 100px;
-          width: 2px;
-          height: calc(100% + 3rem);
-          background: linear-gradient(
-            to bottom,
-            rgba(212, 175, 55, 0.5),
-            rgba(212, 175, 55, 0.1)
-          );
-        }
-
-        .timeline-step--active .timeline-step__line {
-          background: linear-gradient(
-            to bottom,
-            rgba(212, 175, 55, 0.8),
-            rgba(212, 175, 55, 0.3)
-          );
-        }
-
-        /* Número */
-        .timeline-step__number-container {
+        /* NODO (Semilla en la raíz) */
+        .timeline-step__node {
           position: relative;
-          width: 100px;
-          height: 100px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          width: 80px;
+          height: 80px;
+          z-index: 10;
+          justify-self: center;
+          opacity: 0;
+          transform: scale(0) rotate(-180deg);
+          transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .timeline-step__number {
-          width: 100px;
-          height: 100px;
+        .timeline-step--visible .timeline-step__node {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+          transition-delay: 0.2s;
+        }
+
+        .timeline-step__node-inner {
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle, rgba(212, 175, 55, 0.3), rgba(212, 175, 55, 0.1));
+          border: 3px solid rgba(212, 175, 55, 0.5);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(27, 54, 93, 0.5);
-          border: 2px solid rgba(212, 175, 55, 0.3);
-          border-radius: 50%;
-          font-size: 2rem;
-          font-weight: 900;
-          color: #d4af37;
-          transition: all 0.4s ease;
           position: relative;
           z-index: 2;
+          backdrop-filter: blur(10px);
+          transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .timeline-step--active .timeline-step__number {
-          background: rgba(212, 175, 55, 0.2);
-          border-color: rgba(212, 175, 55, 0.8);
+        .timeline-step--active .timeline-step__node-inner {
+          background: radial-gradient(circle, rgba(212, 175, 55, 0.5), rgba(212, 175, 55, 0.2));
+          border-color: #d4af37;
+          box-shadow: 
+            0 0 40px rgba(212, 175, 55, 0.8),
+            inset 0 0 30px rgba(212, 175, 55, 0.3);
+          transform: scale(1.2) rotate(360deg);
+        }
+
+        .timeline-step__node-number {
+          font-size: 1.5rem;
+          font-weight: 900;
+          color: #d4af37;
+          text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+          transition: transform 0.3s ease;
+        }
+
+        .timeline-step--active .timeline-step__node-number {
           transform: scale(1.1);
-          box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
         }
 
-        /* Pulse effect */
-        .timeline-step__pulse {
+        /* Pulsos del nodo */
+        .timeline-step__node-pulse {
           position: absolute;
-          inset: -5px;
+          inset: -10px;
           border: 2px solid #d4af37;
           border-radius: 50%;
-          opacity: 0;
-          animation: pulse 2s ease-out infinite;
+          animation: nodePulse 2s ease-out infinite;
         }
 
-        .timeline-step--active .timeline-step__pulse {
-          animation: pulse 2s ease-out infinite;
+        .timeline-step__node-pulse--delay {
+          animation-delay: 1s;
         }
 
-        @keyframes pulse {
+        @keyframes nodePulse {
           0% {
             transform: scale(1);
             opacity: 0.8;
           }
           100% {
-            transform: scale(1.3);
+            transform: scale(2);
             opacity: 0;
           }
         }
 
-        /* Card */
+        /* CARD */
         .timeline-step__card {
           position: relative;
-          padding: 2.5rem;
-          background: rgba(27, 54, 93, 0.3);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          border-radius: 20px;
-          backdrop-filter: blur(10px);
-          transition: all 0.4s ease;
-          overflow: hidden;
+          opacity: 0;
+          transform: translateX(-60px) scale(0.9);
+          transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transition-delay: var(--delay, 0s);
         }
 
-        .timeline-step--active .timeline-step__card {
-          border-color: rgba(212, 175, 55, 0.5);
-          transform: translateX(10px);
-          box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+        .timeline-step:nth-child(even) .timeline-step__card {
+          transform: translateX(60px) scale(0.9);
+        }
+
+        .timeline-step--visible .timeline-step__card {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          transition-delay: 0.4s;
+        }
+
+        .timeline-step__card-inner {
+          position: relative;
+          padding: 2.5rem;
+          background: rgba(27, 54, 93, 0.4);
+          border: 2px solid rgba(212, 175, 55, 0.2);
+          border-radius: 24px;
+          backdrop-filter: blur(10px);
+          overflow: hidden;
+          transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .timeline-step--active .timeline-step__card-inner {
+          border-color: rgba(212, 175, 55, 0.6);
+          background: rgba(27, 54, 93, 0.7);
+          box-shadow: 
+            0 25px 70px rgba(212, 175, 55, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          transform: translateY(-15px) scale(1.03);
         }
 
         /* Icon */
@@ -353,16 +532,18 @@ export default function ProcessTimeline() {
           justify-content: center;
           background: rgba(212, 175, 55, 0.1);
           border: 2px solid rgba(212, 175, 55, 0.3);
-          border-radius: 12px;
+          border-radius: 16px;
           color: #d4af37;
           margin-bottom: 1.5rem;
-          transition: all 0.3s ease;
+          transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          transform-origin: center;
         }
 
         .timeline-step--active .timeline-step__icon {
-          transform: scale(1.1) rotate(5deg);
-          background: rgba(212, 175, 55, 0.2);
-          border-color: rgba(212, 175, 55, 0.5);
+          transform: scale(1.15) rotate(10deg);
+          background: rgba(212, 175, 55, 0.25);
+          border-color: #d4af37;
+          box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
         }
 
         /* Title */
@@ -371,11 +552,14 @@ export default function ProcessTimeline() {
           font-weight: 700;
           color: #f5f5f5;
           margin: 0 0 1rem 0;
-          transition: color 0.3s ease;
+          transition: all 0.4s ease;
+          transform-origin: left center;
         }
 
         .timeline-step--active .timeline-step__title {
           color: #d4af37;
+          transform: scale(1.02);
+          text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         /* Description */
@@ -384,21 +568,83 @@ export default function ProcessTimeline() {
           line-height: 1.7;
           color: #a0a0a0;
           margin: 0;
+          transition: color 0.3s ease;
         }
 
-        /* Progress bar */
-        .timeline-step__progress {
+        .timeline-step--active .timeline-step__description {
+          color: #b8b8b8;
+        }
+
+        /* Hojas decorativas */
+        .timeline-step__leaf {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          height: 3px;
-          width: 0;
-          background: linear-gradient(90deg, #d4af37, #f4d03f);
-          transition: width 0.6s ease;
+          width: 50px;
+          height: 50px;
+          background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.4), transparent);
+          border-radius: 0 100% 0 100%;
+          opacity: 0;
+          transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .timeline-step--active .timeline-step__progress {
-          width: 100%;
+        .timeline-step__leaf--1 {
+          top: 10px;
+          right: 10px;
+          transform: rotate(45deg) scale(0);
+        }
+
+        .timeline-step__leaf--2 {
+          bottom: 10px;
+          left: 10px;
+          transform: rotate(-135deg) scale(0);
+        }
+
+        .timeline-step--active .timeline-step__leaf {
+          opacity: 0.7;
+        }
+
+        .timeline-step--active .timeline-step__leaf--1 {
+          transform: rotate(45deg) scale(1) translateX(5px) translateY(-5px);
+          transition-delay: 0.2s;
+        }
+
+        .timeline-step--active .timeline-step__leaf--2 {
+          transform: rotate(-135deg) scale(1) translateX(-5px) translateY(5px);
+          transition-delay: 0.3s;
+        }
+
+        /* PARTÍCULAS FLOTANTES */
+        .floating-particles {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .particle {
+          position: absolute;
+          width: 5px;
+          height: 5px;
+          background: radial-gradient(circle, #d4af37, transparent);
+          border-radius: 50%;
+          animation: float linear infinite;
+          opacity: 0;
+        }
+
+        @keyframes float {
+          0% {
+            transform: translateY(100vh) scale(0) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100px) scale(1.5) rotate(360deg);
+            opacity: 0;
+          }
         }
 
         /* RESPONSIVE */
@@ -408,32 +654,28 @@ export default function ProcessTimeline() {
           }
 
           .timeline-step {
-            grid-template-columns: 80px 1fr;
+            grid-template-columns: 1fr 70px 1fr;
             gap: 2rem;
+            min-height: 220px;
           }
 
-          .timeline-step__number-container,
-          .timeline-step__number {
-            width: 80px;
-            height: 80px;
+          .timeline-step__node {
+            width: 70px;
+            height: 70px;
           }
 
-          .timeline-step__number {
-            font-size: 1.5rem;
-          }
-
-          .timeline-step__line {
-            left: 40px;
+          .timeline-step-wrapper {
+            gap: 18vh;
           }
         }
 
         @media (max-width: 768px) {
           .process-timeline {
-            padding: 5rem 1.5rem;
+            padding: 5rem 1rem;
           }
 
           .process-timeline__header {
-            margin-bottom: 4rem;
+            margin-bottom: 5rem;
           }
 
           .process-timeline__title {
@@ -444,20 +686,51 @@ export default function ProcessTimeline() {
             font-size: 1.1rem;
           }
 
+          .process-timeline__steps {
+            padding: 0;
+            min-height: auto;
+          }
+
+          .timeline-step-wrapper {
+            gap: 12vh;
+            padding: 8vh 0;
+          }
+
           .timeline-step {
-            grid-template-columns: 1fr;
+            grid-template-columns: 70px 1fr;
             gap: 1.5rem;
+            min-height: auto;
           }
 
-          .timeline-step__number-container {
+          .timeline-step__node {
+            grid-column: 1;
+            grid-row: 1;
             justify-self: start;
-          }
-
-          .timeline-step__line {
-            display: none;
+            width: 60px;
+            height: 60px;
           }
 
           .timeline-step__card {
+            grid-column: 2;
+            grid-row: 1;
+          }
+
+          .timeline-step:nth-child(odd) .timeline-step__card,
+          .timeline-step:nth-child(even) .timeline-step__card {
+            grid-column: 2;
+          }
+
+          .timeline-step:nth-child(odd) .timeline-step__node,
+          .timeline-step:nth-child(even) .timeline-step__node {
+            grid-column: 1;
+          }
+
+          .timeline-root {
+            left: 35px;
+            width: 100px;
+          }
+
+          .timeline-step__card-inner {
             padding: 2rem;
           }
 
@@ -474,18 +747,15 @@ export default function ProcessTimeline() {
             font-size: 0.95rem;
           }
 
-          .timeline-step--active .timeline-step__card {
-            transform: translateX(0);
+          .timeline-step__node-number {
+            font-size: 1.2rem;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .timeline-step,
-          .timeline-step__number,
-          .timeline-step__icon,
-          .timeline-step__pulse {
+          * {
             animation: none !important;
-            transition: none !important;
+            transition-duration: 0.01ms !important;
           }
         }
       `}</style>

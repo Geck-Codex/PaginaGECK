@@ -6,6 +6,7 @@ import Processtimeline from '@/components/abaut/Processtimeline.jsx';
 import Techstack from '@/components/abaut/Techstack.jsx';
 import Valuessection  from '@/components/abaut/Valuessection .jsx';
 import Fin from '@/components/abaut/Fin.jsx';
+import ColorTransition from '@/components/abaut/ColorTransition';
 ---
 
 <Layout>
@@ -17,19 +18,20 @@ import Fin from '@/components/abaut/Fin.jsx';
              <Python client:load />
             
         </div>
-   
-    <div class="dos">
-    <Processtimeline client:load />    
-    <Valuessection client:load />
-    
-    <Fin client:load />
-    </div>
+        
+        <ColorTransition client:load />
+        <div class="dos">
+        <Processtimeline client:load />    
+        <Valuessection client:load />
+        
+        <Fin client:load />
+        </div>
    
 </Layout>
 
 <style>
     .components-container {
-        background: #06163B;
+        background: #030C1D;
        
     }
     .dos {

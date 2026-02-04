@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Header() {
   const [displayedLines, setDisplayedLines] = useState([]);
@@ -10,8 +10,10 @@ export default function Header() {
   const [clientProgress, setClientProgress] = useState(0);
   const [dotPhase, setDotPhase] = useState(0);
 
-  // Estado para el rectángulo
-  const [rectangleOpacity, setRectangleOpacity] = useState(0);
+  // Estado para animación de scroll
+  const [scrollProgress, setScrollProgress] = useState(0);
+  
+  const terminalRef = useRef(null);
 
   const targetProject = 92;
   const targetClient = 100;
@@ -22,7 +24,7 @@ export default function Header() {
     { text: '', delay: 200 },
     { text: '', delay: 300 },
     { text: '                  ___  ___      ', delay: 400, style: 'snake-head', isSnake: true, snakeIndex: 0 },
-    { text: '         \\/     /~   ╱    \\  ', delay: 500, style: 'snake-tongue', isSnake: true, snakeIndex: 1, isTongue: true },
+    { text: '         \\/     /~  ╱    \\  ', delay: 500, style: 'snake-tongue', isSnake: true, snakeIndex: 1, isTongue: true },
     { text: '          \\____|           \\  ', delay: 600, style: 'snake-head', isSnake: true, snakeIndex: 2 },
     { text: '                 \\ _______/\\/ \\ ', delay: 700, style: 'snake-body', isSnake: true, snakeIndex: 3 },
     { text: '                         `/\\/\\/\\                    \\', delay: 800, style: 'snake-body', isSnake: true, snakeIndex: 4 },
@@ -44,10 +46,12 @@ export default function Header() {
   ];
 
   useEffect(() => {
-    // Mostrar líneas de la serpiente
-    codeLines.forEach((line) => {
-      setTimeout(() => setDisplayedLines((prev) => [...prev, line]), line.delay);
-    });
+    // Mostrar líneas de la serpiente solo una vez
+    if (displayedLines.length === 0) {
+      codeLines.forEach((line) => {
+        setTimeout(() => setDisplayedLines((prev) => [...prev, line]), line.delay);
+      });
+    }
 
     // Animación ondulante serpiente
     const phaseInterval = setInterval(() => setPhase((prev) => (prev + 0.1) % (Math.PI * 2)), 50);
@@ -73,31 +77,35 @@ export default function Header() {
     // Animación puntos soporte
     const dotInterval = setInterval(() => setDotPhase(prev => (prev + 1) % 3), 500);
 
-    // Scroll listener para el rectángulo
+    // Listener de scroll para animación enlazada
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
-      const rectangleElement = document.querySelector('.rectangle-section');
       
-      if (rectangleElement) {
-        const rect = rectangleElement.getBoundingClientRect();
+      // Animación de entrada de la Terminal ENLAZADA AL SCROLL
+      if (terminalRef.current) {
+        const rect = terminalRef.current.getBoundingClientRect();
         const elementTop = rect.top;
-        const elementHeight = rect.height;
-        const elementMiddle = elementTop + (elementHeight / 2);
         
-        // Cuando el medio del rectángulo está en el medio de la pantalla
-        const screenMiddle = windowHeight / 2;
-        const distanceFromCenter = Math.abs(elementMiddle - screenMiddle);
+        // Rango más amplio para hacer la animación más lenta
+        const triggerPoint = windowHeight * 0.8;
+        const endPoint = windowHeight * 0.2;
         
-        // Calcular opacidad: 0 cuando está lejos, 1 cuando está en el centro
-        const maxDistance = windowHeight;
-        const opacity = Math.max(0, Math.min(1, 1 - (distanceFromCenter / maxDistance)));
-        
-        setRectangleOpacity(opacity);
+        if (elementTop <= triggerPoint && elementTop >= endPoint) {
+          // Calcular progreso de 0 a 1
+          const progress = 1 - ((elementTop - endPoint) / (triggerPoint - endPoint));
+          // Aplicar easing para suavizar aún más
+          const easedProgress = progress * progress * (3 - 2 * progress); // smoothstep
+          setScrollProgress(Math.max(0, Math.min(1, easedProgress)));
+        } else if (elementTop < endPoint) {
+          setScrollProgress(1);
+        } else {
+          setScrollProgress(0);
+        }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Llamar una vez al inicio
+    handleScroll(); // Chequeo inicial
 
     return () => {
       clearInterval(phaseInterval);
@@ -111,10 +119,10 @@ export default function Header() {
 
   const getTongueVariation = () => {
     const tongues = [
-      '         \\/     /~   ╱    \\  ',
-      '         \\ /    /~   ╱    \\  ',
-      '         \\  /   /~   ╱    \\  ',
-      '         \\ /    /~   ╱    \\  ',
+      '         \\/     /~  ╱    \\  ',
+      '         \\ /    /~  ╱    \\  ',
+      '         \\  /   /~  ╱    \\  ',
+      '         \\ /    /~  ╱    \\  ',
     ];
     return tongues[tonguePhase];
   };
@@ -126,10 +134,6 @@ export default function Header() {
     return Math.sin(phase + index * frequency) * (baseAmplitude + amplitudeMultiplier);
   };
 
-  const getLineColor = (style) => {
-    return style || '';
-  };
-
   const renderBar = (progress) => {
     const totalBlocks = 24;
     const filledBlocks = Math.round((progress / 100) * totalBlocks);
@@ -137,13 +141,28 @@ export default function Header() {
     return '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks) + `  ${progress}%`;
   };
 
+  // Calcular transformaciones basadas en el progreso del scroll
+  const getScrollTransform = () => {
+    const translateY = 100 - (scrollProgress * 100); // De 100px a 0
+    const scale = 0.7 + (scrollProgress * 0.3); // De 0.7 a 1
+    const opacity = scrollProgress; // De 0 a 1
+    const rotateX = 20 - (scrollProgress * 20); // De 20deg a 0
+    
+    return {
+      transform: `translateY(${translateY}px) scale(${scale}) rotateX(${rotateX}deg)`,
+      opacity: opacity,
+    };
+  };
+
   return (
     <>
       <header className="header">
         <div className="header__container">
-          {/* Terminal con serpiente y stats */}
-          <div className="terminal">
-
+          <div 
+            ref={terminalRef}
+            className="terminal"
+            style={getScrollTransform()}
+          >
             {/* Header de la terminal */}
             <div className="terminal__header">
               <div className="terminal__buttons">
@@ -157,27 +176,22 @@ export default function Header() {
             {/* Contenido Terminal */}
             <div className="terminal__body">
               <div className="terminal__content">
-
                 {/* SERPIENTE */}
                 <div className="snake-container">
                   <div className="snake">
                     {displayedLines.map((line, index) => (
                       <div 
                         key={index}
-                        className={`snake-line ${getLineColor(line.style)}`}
+                        className={`snake-line ${line.style || ''}`}
                         style={line.isSnake && typeof line.snakeIndex === 'number' ? {
                           transform: `translateX(${getOffset(line.snakeIndex)}px)`,
                           transition: 'transform 0.05s linear',
                         } : {}}
                       >
                         {line.isTongue ? getTongueVariation() : line.text}
-
-                        {/* Ojo */}
                         {line.snakeIndex === 0 && (
                           <span className="snake-eye">●</span>
                         )}
-
-                        {/* Cursor */}
                         {index === displayedLines.length - 1 && line.text && (
                           <span className="snake-cursor"></span>
                         )}
@@ -206,40 +220,16 @@ export default function Header() {
 {`┌──────────────────────────────────┐
 │         SOPORTE 24/7             │
 │   ${['ONLINE','DISPONIBLE','OK'].map((label,i) => dotPhase===i ? `● ${label}` : `○ ${label}`).join('  ')}
-│  
 └──────────────────────────────────┘`}
                   </pre>
                 </div>
-
               </div>
             </div>
-
-            {/* Footer */}
-            <div className="terminal__footer">
-              <div className="terminal__footer-left">
-                <span className="terminal__version">v4.2.0</span>
-                <span className="terminal__cpu">CPU: 12%</span>
-                <span className="terminal__ram">RAM: 2.1GB</span>
-              </div>
-              <div className="terminal__footer-right">Arquitectos Digitales ©</div>
-            </div>
-
           </div>
         </div>
       </header>
 
-      {/* Rectángulo después del footer */}
-      <div 
-        className="rectangle-section"
-        style={{ 
-          backgroundColor: `rgba(34, 34, 32, ${rectangleOpacity})`
-        }}
-      >
-        {/* Aquí puedes agregar contenido si lo deseas */}
-      </div>
-
       <style jsx>{`
-        /* HEADER PRINCIPAL */
         .header {
           min-height: 100vh;
           display: flex;
@@ -248,163 +238,82 @@ export default function Header() {
           background: transparent;
           position: relative;
           overflow: hidden;
-          padding: 3rem 1rem;
+          padding: 2rem 1rem;
         }
 
         .header__container {
           width: 100%;
-          max-width: 1400px;
+          max-width: 1200px;
           margin: 0 auto;
           position: relative;
           z-index: 10;
-          padding: 0 1.5rem;
+          padding: 0 1rem;
         }
 
-        /* RECTÁNGULO DESPUÉS DEL FOOTER */
-        .rectangle-section {
-          width: 100%;
-          height: 50vh;
-          transition: background-color 0.3s ease;
-        }
-
-        /* TERMINAL */
+        /* TERMINAL CON ANIMACIÓN ENLAZADA AL SCROLL */
         .terminal {
           background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(0, 0, 0, 0.95));
           backdrop-filter: blur(12px);
           border-radius: 1rem;
           border: 2px solid rgba(212, 175, 55, 0.4);
-          box-shadow: 
-            0 0 0 1px rgba(212, 175, 55, 0.1),
-            0 10px 40px rgba(0, 0, 0, 0.4),
-            0 0 60px rgba(212, 175, 55, 0.1);
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           position: relative;
+          perspective: 1500px;
+          
+          /* Transición más suave y lenta */
+          transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+          will-change: transform, opacity;
         }
 
-        /* HEADER TERMINAL */
         .terminal__header {
-          background: linear-gradient(to right, #222220, #222220);
-          padding: 1rem 1.25rem;
+          background: #222220;
+          padding: 0.75rem 1rem;
           display: flex;
           align-items: center;
           gap: 1rem;
           border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-          position: relative;
-          z-index: 10;
         }
 
-        .terminal__buttons {
-          display: flex;
-          gap: 0.625rem;
-        }
+        .terminal__buttons { display: flex; gap: 0.5rem; }
+        .terminal__button { width: 0.75rem; height: 0.75rem; border-radius: 50%; }
+        .terminal__button--red { background: #ef4444; }
+        .terminal__button--yellow { background: #eab308; }
+        .terminal__button--green { background: #22c55e; }
+        .terminal__title { color: #d4af37; font-size: 0.8rem; font-family: monospace; }
 
-        .terminal__button {
-          width: 0.875rem;
-          height: 0.875rem;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-
-        .terminal__button--red {
-          background: #ef4444;
-        }
-
-        .terminal__button--yellow {
-          background: #eab308;
-        }
-
-        .terminal__button--green {
-          background: #22c55e;
-        }
-
-        .terminal__title {
-          color: #d4af37;
-          font-size: 0.875rem;
-          font-family: monospace;
-        }
-
-        /* BODY TERMINAL */
         .terminal__body {
-          padding: 2rem;
+          padding: 1.5rem;
           font-family: monospace;
-          font-size: 1rem;
-          min-height: 400px;
+          font-size: 0.95rem;
+          min-height: 350px;
           background: #222220;
-          backdrop-filter: blur(4px);
           position: relative;
-          z-index: 10;
         }
 
         .terminal__content {
           width: 100%;
           display: flex;
           flex-direction: column;
-          gap: 2rem;
-          align-items: flex-start;
+          gap: 1.5rem;
         }
 
-        /* SERPIENTE */
-        .snake-container {
-          width: 100%;
-          overflow-x: auto;
-        }
+        .snake-container { width: 100%; overflow: hidden; }
+        .snake-line { line-height: 1.2; white-space: pre; position: relative; }
+        .snake-head { color: #d4af37; font-size: 1.05rem; }
+        .snake-tongue { color: #f4d03f; font-size: 1.05rem; }
+        .snake-body { color: #d4af37; }
+        .snake-tail { color: #b8921f; }
 
-        .snake-container::-webkit-scrollbar {
-          display: none;
-        }
-
-        .snake-container {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        .snake {
-          min-width: max-content;
-          padding: 0 1rem;
-        }
-
-        .snake-line {
-          line-height: 1.2;
-          white-space: pre;
-          position: relative;
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        /* ESTILOS SERPIENTE */
-        .snake-head {
-          color: #d4af37;
-          font-size: 1.125rem;
-          transform: scale(1.1);
-        }
-
-        .snake-tongue {
-          color: #f4d03f;
-          font-size: 1.125rem;
-          transform: scale(1.1);
-        }
-
-        .snake-body {
-          color: #d4af37;
-          font-size: 1rem;
-        }
-
-        .snake-tail {
-          color: #b8921f;
-          font-size: 1rem;
-        }
-
-        /* OJO SERPIENTE */
         .snake-eye {
           position: absolute;
           color: #d4af37;
-          text-shadow: 0 0 12px #d4af37, 0 0 20px #f4d03f;
+          text-shadow: 0 0 12px #d4af37;
           left: 60%;
           top: 50%;
-          font-size: 1.2em;
-          animation: pulse 2s ease-in-out infinite;
+          animation: pulse 2s infinite;
         }
 
-        /* CURSOR */
         .snake-cursor {
           display: inline-block;
           width: 0.5rem;
@@ -414,191 +323,99 @@ export default function Header() {
           animation: blink 1.2s infinite;
         }
 
-        /* STATS */
         .stats {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 0.75rem;
           color: rgba(212, 175, 55, 0.7);
-          font-size: 0.875rem;
+          font-size: 0.8rem;
           width: 100%;
           align-items: center;
         }
 
-        .stat-box {
-          line-height: 1.4;
-          overflow-x: auto;
-          margin: 0;
-          width: 100%;
-        }
+        .stat-box { line-height: 1.4; margin: 0; width: 100%; }
 
-        .stat-box::-webkit-scrollbar {
-          display: none;
-        }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.8; } }
 
-        .stat-box {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        /* FOOTER TERMINAL */
-        .terminal__footer {
-          padding: 0.75rem 1.25rem;
-          background: #222220;
-          border-top: 1px solid rgba(212, 175, 55, 0.2);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-size: 0.75rem;
-          font-family: monospace;
-          gap: 1rem;
-          flex-wrap: wrap;
-          position: relative;
-          z-index: 10;
-        }
-
-        .terminal__footer-left {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-
-        .terminal__version {
-          color: rgba(212, 175, 55, 0.7);
-        }
-
-        .terminal__cpu {
-          color: #22c55e;
-        }
-
-        .terminal__ram {
-          color: #3b82f6;
-        }
-
-        .terminal__footer-right {
-          color: rgba(212, 175, 55, 0.7);
-        }
-
-        /* ANIMACIONES */
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes blink {
-          0%, 50% {
-            opacity: 1;
-          }
-          51%, 100% {
-            opacity: 0;
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.8;
-            transform: scale(1.2);
-          }
-        }
-
-        /* RESPONSIVE */
         @media (min-width: 1280px) {
-          .terminal__content {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 3rem;
-            align-items: center;
-            justify-items: center;
-          }
+          .terminal__content { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2rem; }
         }
 
+        /* MÓVIL - TODO EL TERMINAL SE REDUCE */
         @media (max-width: 768px) {
           .header {
-            padding: 2rem 1rem;
+            padding: 1rem 0.5rem;
+          }
+
+          .header__container {
+            padding: 0 0.5rem;
+            max-width: 100%;
+          }
+
+          /* TODO EL TERMINAL SE ESCALA */
+          .terminal {
+            transform-origin: center;
+            scale: 0.75;
+            margin: -2rem 0;
           }
 
           .terminal__body {
-            padding: 1.5rem;
-            font-size: 0.875rem;
-            min-height: 320px;
+            padding: 1rem;
+            min-height: 280px;
+            font-size: 0.75rem;
           }
 
-          /* CENTRAR TODO EL CONTENIDO EN MÓVIL */
-          .terminal__content {
-            align-items: center;
-            justify-content: center;
+          .terminal__header {
+            padding: 0.5rem 0.75rem;
           }
 
-          .snake-container {
-            display: flex;
-            justify-content: center;
+          .terminal__title {
+            font-size: 0.7rem;
           }
 
-          /* ACHICAR SERPIENTE EN MÓVIL */
-          .snake {
-            transform: scale(0.85);
-            transform-origin: center center;
+          .terminal__buttons {
+            gap: 0.4rem;
+          }
+
+          .terminal__button {
+            width: 0.6rem;
+            height: 0.6rem;
           }
 
           .snake-head,
           .snake-tongue {
-            font-size: 0.875rem;
-          }
-
-          .snake-body,
-          .snake-tail {
-            font-size: 0.75rem;
-          }
-
-          /* CENTRAR STATS */
-          .stats {
-            align-items: center;
-            justify-content: center;
+            font-size: 0.95rem;
           }
 
           .stat-box {
-            font-size: 0.75rem;
-            text-align: center;
-            display: flex;
-            justify-content: center;
+            font-size: 0.7rem;
           }
 
-          .terminal__footer {
-            font-size: 0.625rem;
-            padding: 0.5rem 0.75rem;
+          .stats {
+            gap: 0.5rem;
+          }
+
+          .terminal__content {
+            gap: 1rem;
           }
         }
 
-        /* MÓVIL MUY PEQUEÑO */
+        /* MÓVILES PEQUEÑOS */
         @media (max-width: 480px) {
-          .snake {
-            transform: scale(0.75);
-            transform-origin: center center;
+          .terminal {
+            scale: 0.6;
+            margin: -3rem 0;
           }
 
-          .snake-head,
-          .snake-tongue {
-            font-size: 0.75rem;
-          }
-
-          .snake-body,
-          .snake-tail {
-            font-size: 0.625rem;
+          .terminal__body {
+            padding: 0.75rem;
+            min-height: 250px;
+            font-size: 0.7rem;
           }
 
           .stat-box {
-            font-size: 0.625rem;
+            font-size: 0.65rem;
           }
         }
       `}</style>

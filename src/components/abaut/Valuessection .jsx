@@ -1,26 +1,67 @@
 import { useState, useEffect, useRef } from 'react';
 
 export default function ValuesSection() {
-  const [visibleCards, setVisibleCards] = useState([]);
+  const [cardProgress, setCardProgress] = useState([0, 0, 0, 0]);
   const sectionRef = useRef(null);
+  const cardRefs = useRef([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleCards([0, 1, 2, 3]);
+    const handleScroll = () => {
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        const cardCenter = rect.top + rect.height / 2;
+        
+        const startOffset = windowHeight * 1.2;
+        const endOffset = -windowHeight * 0.2;
+        
+        let progress;
+        
+        if (cardCenter > startOffset) {
+          progress = 0;
+        } else if (cardCenter < endOffset) {
+          progress = 1;
+        } else {
+          const totalDistance = startOffset - endOffset;
+          const currentDistance = cardCenter - endOffset;
+          progress = 1 - (currentDistance / totalDistance);
+          
+          progress = easeOutQuart(Math.max(0, Math.min(1, progress)));
+        }
+        
+        setCardProgress(prev => {
+          const newProgress = [...prev];
+          if (Math.abs(newProgress[index] - progress) > 0.01) {
+            newProgress[index] = progress;
+            return newProgress;
           }
+          return prev;
         });
-      },
-      { threshold: 0.2 }
-    );
+      });
+    };
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    const easeOutQuart = (x) => {
+      return 1 - Math.pow(1 - x, 4);
+    };
 
-    return () => observer.disconnect();
+    let ticking = false;
+    const scrollHandler = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', scrollHandler);
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', scrollHandler);
   }, []);
 
   const values = [
@@ -66,6 +107,47 @@ export default function ValuesSection() {
     }
   ];
 
+  const getCardStyle = (progress) => {
+    const translateY = 60 * (1 - progress);
+    const scale = 0.95 + (0.05 * progress);
+    
+    return {
+      opacity: progress,
+      transform: `translateY(${translateY}px) scale(${scale})`,
+    };
+  };
+
+  const getIconStyle = (progress) => {
+    const iconProgress = Math.max(0, (progress - 0.2) / 0.8);
+    const scale = 0.8 + (0.2 * iconProgress);
+    
+    return {
+      opacity: iconProgress,
+      transform: `scale(${scale})`,
+    };
+  };
+
+  const getCornerStyle = (progress, isTopLeft) => {
+    const cornerProgress = Math.max(0, (progress - 0.5) / 0.5);
+    const distance = 15 * (1 - cornerProgress);
+    
+    return {
+      opacity: cornerProgress * 0.6,
+      transform: `translate(${isTopLeft ? -distance : distance}px, ${isTopLeft ? -distance : distance}px)`,
+    };
+  };
+
+  const getGlowStyle = (progress) => {
+    let glowOpacity = 0;
+    if (progress > 0.5 && progress < 0.9) {
+      glowOpacity = Math.sin((progress - 0.5) / 0.4 * Math.PI) * 0.5;
+    }
+    
+    return {
+      opacity: glowOpacity,
+    };
+  };
+
   return (
     <>
       <section className="values-section" ref={sectionRef}>
@@ -93,21 +175,34 @@ export default function ValuesSection() {
             {values.map((value, index) => (
               <div
                 key={value.id}
-                className={`values-card ${visibleCards.includes(index) ? 'values-card--visible' : ''}`}
-                style={{
-                  animationDelay: `${index * 0.15}s`
-                }}
+                ref={el => cardRefs.current[index] = el}
+                className={`values-card values-card--${index}`}
+                style={getCardStyle(cardProgress[index])}
               >
-                <div className="values-card__glow"></div>
-                <div className="values-card__icon">
+                {/* Resplandor de entrada - SOLO durante animación de scroll */}
+                <div 
+                  className="values-card__entrance-glow"
+                  style={getGlowStyle(cardProgress[index])}
+                ></div>
+
+                <div 
+                  className="values-card__icon"
+                  style={getIconStyle(cardProgress[index])}
+                >
                   {value.icon}
                 </div>
+
                 <h3 className="values-card__title">{value.title}</h3>
                 <p className="values-card__description">{value.description}</p>
                 
-                {/* Decoración */}
-                <div className="values-card__corner values-card__corner--tl"></div>
-                <div className="values-card__corner values-card__corner--br"></div>
+                <div 
+                  className="values-card__corner values-card__corner--tl"
+                  style={getCornerStyle(cardProgress[index], true)}
+                ></div>
+                <div 
+                  className="values-card__corner values-card__corner--br"
+                  style={getCornerStyle(cardProgress[index], false)}
+                ></div>
               </div>
             ))}
           </div>
@@ -122,6 +217,7 @@ export default function ValuesSection() {
           background: Transparent;
           padding: 8rem 2rem;
           overflow: hidden;
+          min-height: 200vh;
         }
 
         .values-section__container {
@@ -177,14 +273,14 @@ export default function ValuesSection() {
           max-width: 600px;
         }
 
-        /* GRID */
+        /* GRID ASIMÉTRICO */
         .values-section__grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(12, 1fr);
           gap: 2rem;
         }
 
-        /* CARDS */
+        /* CARDS - SIN BRILLOS EN HOVER */
         .values-card {
           position: relative;
           padding: 3rem;
@@ -192,50 +288,53 @@ export default function ValuesSection() {
           border: 1px solid rgba(212, 175, 55, 0.2);
           border-radius: 24px;
           backdrop-filter: blur(10px);
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          opacity: 0;
-          transform: translateY(50px);
           overflow: hidden;
+          
+          transition: border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                      box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          
+          will-change: transform, opacity;
         }
 
-        .values-card--visible {
-          animation: cardSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        /* Layout asimétrico */
+        .values-card--0 {
+          grid-column: 1 / 8;
         }
 
-        @keyframes cardSlideUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        .values-card--1 {
+          grid-column: 8 / 13;
         }
 
+        .values-card--2 {
+          grid-column: 1 / 5;
+        }
+
+        .values-card--3 {
+          grid-column: 5 / 13;
+        }
+
+        /* Hover SIN brillos - solo movimiento y borde */
         .values-card:hover {
-          transform: translateY(-10px);
+          transform: translateY(-10px) scale(1.02) !important;
           border-color: rgba(212, 175, 55, 0.5);
           box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
         }
 
-        /* Glow effect */
-        .values-card__glow {
+        /* Resplandor SOLO durante animación de entrada */
+        .values-card__entrance-glow {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 100%;
-          background: radial-gradient(
-            circle at 50% 0%,
-            rgba(212, 175, 55, 0.15) 0%,
-            transparent 50%
+          inset: -2px;
+          background: linear-gradient(135deg, 
+            transparent, 
+            rgba(212, 175, 55, 0.3), 
+            transparent
           );
-          opacity: 0;
-          transition: opacity 0.5s ease;
+          border-radius: 24px;
+          pointer-events: none;
+          z-index: -1;
         }
 
-        .values-card:hover .values-card__glow {
-          opacity: 1;
-        }
-
-        /* Icon */
+        /* Icon - SIN brillos en hover */
         .values-card__icon {
           width: 80px;
           height: 80px;
@@ -247,11 +346,12 @@ export default function ValuesSection() {
           border-radius: 20px;
           color: #d4af37;
           margin-bottom: 2rem;
-          transition: all 0.4s ease;
+          transition: background 0.4s ease, border-color 0.4s ease;
+          will-change: transform, opacity;
         }
 
         .values-card:hover .values-card__icon {
-          transform: scale(1.1) rotate(5deg);
+          transform: scale(1.1) rotate(5deg) !important;
           background: rgba(212, 175, 55, 0.2);
           border-color: rgba(212, 175, 55, 0.5);
         }
@@ -283,8 +383,8 @@ export default function ValuesSection() {
           width: 20px;
           height: 20px;
           border: 2px solid #d4af37;
-          opacity: 0;
-          transition: all 0.4s ease;
+          transition: top 0.4s ease, left 0.4s ease, bottom 0.4s ease, right 0.4s ease;
+          will-change: transform, opacity;
         }
 
         .values-card__corner--tl {
@@ -301,10 +401,6 @@ export default function ValuesSection() {
           border-top: none;
         }
 
-        .values-card:hover .values-card__corner {
-          opacity: 0.6;
-        }
-
         .values-card:hover .values-card__corner--tl {
           top: 0.5rem;
           left: 0.5rem;
@@ -315,33 +411,73 @@ export default function ValuesSection() {
           right: 0.5rem;
         }
 
-        /* RESPONSIVE */
+        /* ============================================
+           RESPONSIVE - TABLET
+           ============================================ */
         @media (max-width: 1024px) {
           .values-section__title {
             font-size: 3rem;
+          }
+
+          .values-card--0 {
+            grid-column: 1 / 7;
+          }
+
+          .values-card--1 {
+            grid-column: 7 / 13;
+          }
+
+          .values-card--2 {
+            grid-column: 1 / 7;
+          }
+
+          .values-card--3 {
+            grid-column: 7 / 13;
+          }
+
+          .values-section__grid {
+            gap: 1.5rem;
+          }
+        }
+
+        /* ============================================
+           RESPONSIVE - MÓVIL
+           ============================================ */
+        @media (max-width: 768px) {
+          .values-section {
+            padding: 5rem 1.5rem;
+            min-height: auto;
+          }
+
+          .values-section__header {
+            margin-bottom: 3rem;
+            gap: 1rem;
+          }
+
+          .values-section__badge {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.9rem;
+          }
+
+          .values-section__title {
+            font-size: 2.2rem;
+          }
+
+          .values-section__description {
+            font-size: 1rem;
+            max-width: 100%;
           }
 
           .values-section__grid {
             grid-template-columns: 1fr;
             gap: 1.5rem;
           }
-        }
 
-        @media (max-width: 768px) {
-          .values-section {
-            padding: 5rem 1.5rem;
-          }
-
-          .values-section__header {
-            margin-bottom: 3rem;
-          }
-
-          .values-section__title {
-            font-size: 2.5rem;
-          }
-
-          .values-section__description {
-            font-size: 1.1rem;
+          .values-card--0,
+          .values-card--1,
+          .values-card--2,
+          .values-card--3 {
+            grid-column: 1 / -1;
           }
 
           .values-card {
@@ -351,6 +487,7 @@ export default function ValuesSection() {
           .values-card__icon {
             width: 70px;
             height: 70px;
+            margin-bottom: 1.5rem;
           }
 
           .values-card__title {
@@ -359,15 +496,60 @@ export default function ValuesSection() {
 
           .values-card__description {
             font-size: 0.95rem;
+            line-height: 1.6;
+          }
+
+          .values-card__corner {
+            width: 15px;
+            height: 15px;
           }
         }
 
+        /* ============================================
+           MÓVIL PEQUEÑO
+           ============================================ */
+        @media (max-width: 480px) {
+          .values-section {
+            padding: 4rem 1rem;
+          }
+
+          .values-section__title {
+            font-size: 1.8rem;
+          }
+
+          .values-section__description {
+            font-size: 0.95rem;
+          }
+
+          .values-card {
+            padding: 1.5rem;
+          }
+
+          .values-card__icon {
+            width: 60px;
+            height: 60px;
+          }
+
+          .values-card__title {
+            font-size: 1.3rem;
+          }
+
+          .values-card__description {
+            font-size: 0.9rem;
+          }
+        }
+
+        /* Accesibilidad */
         @media (prefers-reduced-motion: reduce) {
           .values-card,
           .values-card__icon,
           .values-card__corner {
             transition: none !important;
-            animation: none !important;
+          }
+          
+          .values-card {
+            opacity: 1 !important;
+            transform: none !important;
           }
         }
       `}</style>

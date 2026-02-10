@@ -1,4 +1,6 @@
+// src/components/abaut/python.jsx
 import { useState, useEffect, useRef } from 'react';
+import { useContactDrawer } from '../../contexts/ContactDrawerContext';
 
 export default function Header() {
   const [displayedLines, setDisplayedLines] = useState([]);
@@ -14,6 +16,7 @@ export default function Header() {
   const [scrollProgress, setScrollProgress] = useState(0);
   
   const terminalRef = useRef(null);
+  const { openDrawer } = useContactDrawer();
 
   const targetProject = 92;
   const targetClient = 100;
@@ -154,6 +157,10 @@ export default function Header() {
     };
   };
 
+  const handleContactClick = () => {
+    openDrawer();
+  };
+
   return (
     <>
       <header className="header">
@@ -225,6 +232,19 @@ export default function Header() {
                 </div>
               </div>
             </div>
+
+            {/* FOOTER DE LA TERMINAL */}
+            <div className="terminal__footer">
+              <div className="contact-button-container">
+                <button 
+                  className="contact-button"
+                  onClick={handleContactClick}
+                >
+                  <span className="contact-button__icon">►</span>
+                  <span className="contact-button__text">INICIAR CONTACTO</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -287,8 +307,15 @@ export default function Header() {
           font-family: monospace;
           font-size: 0.95rem;
           min-height: 350px;
-          background: #222220;
+          background: #030C1D;
           position: relative;
+        }
+
+        /* FOOTER DE LA TERMINAL - CARBON COMO EL HEADER */
+        .terminal__footer {
+          background: #222220;
+          padding: 1.5rem;
+          border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         .terminal__content {
@@ -335,8 +362,70 @@ export default function Header() {
 
         .stat-box { line-height: 1.4; margin: 0; width: 100%; }
 
+        /* BOTÓN DE CONTACTO */
+        .contact-button-container {
+          display: flex;
+          justify-content: center;
+        }
+
+        .contact-button {
+          background: linear-gradient(135deg, #d4af37 0%, #b8921f 100%);
+          border: 2px solid #d4af37;
+          color: #000;
+          padding: 0.875rem 2rem;
+          font-family: monospace;
+          font-size: 0.9rem;
+          font-weight: bold;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .contact-button::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .contact-button:hover::before {
+          left: 100%;
+        }
+
+        .contact-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+          border-color: #f4d03f;
+        }
+
+        .contact-button:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);
+        }
+
+        .contact-button__icon {
+          font-size: 1.1rem;
+          animation: pulse-icon 2s infinite;
+        }
+
+        .contact-button__text {
+          position: relative;
+          z-index: 1;
+        }
+
         @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.8; } }
+        @keyframes pulse-icon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
         @media (min-width: 1280px) {
           .terminal__content { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2rem; }
@@ -364,6 +453,10 @@ export default function Header() {
             padding: 1rem;
             min-height: 280px;
             font-size: 0.75rem;
+          }
+
+          .terminal__footer {
+            padding: 1rem;
           }
 
           .terminal__header {
@@ -399,6 +492,11 @@ export default function Header() {
           .terminal__content {
             gap: 1rem;
           }
+
+          .contact-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.8rem;
+          }
         }
 
         /* MÓVILES PEQUEÑOS */
@@ -414,8 +512,17 @@ export default function Header() {
             font-size: 0.7rem;
           }
 
+          .terminal__footer {
+            padding: 0.75rem;
+          }
+
           .stat-box {
             font-size: 0.65rem;
+          }
+
+          .contact-button {
+            padding: 0.65rem 1.25rem;
+            font-size: 0.75rem;
           }
         }
       `}</style>

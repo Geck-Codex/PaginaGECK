@@ -1,6 +1,6 @@
 ---
 import Layout from '@/layouts/MainLayout.astro';
-import Python from '@/components/abaut/python.jsx';
+import HeaderWithProvider from '@/components/abaut/HeaderWithProvider.jsx'; // ← CAMBIO AQUÍ
 import Abouthero from '@/components/abaut/Abouthero.jsx';
 import Processtimeline from '@/components/abaut/Processtimeline.jsx';
 import Techstack from '@/components/abaut/Techstack.jsx';
@@ -11,31 +11,27 @@ import ColorTransition from '@/components/abaut/ColorTransition';
 
 <Layout>
     
-        <!-- ✅ Componentes en contenedor separado -->
-        <div class="components-container">
-            <Abouthero client:load />
-            <Techstack client:load />
-             <Python client:load />
-            
-        </div>
-        
-        <ColorTransition client:load />
-        <div class="dos">
+    <!-- ✅ Componentes en contenedor separado -->
+    <div class="components-container">
+        <Abouthero client:load />
+        <Techstack client:load />
+    </div>
+    
+    
+    <div class="dos">
         <Processtimeline client:load />    
-        <Valuessection client:load />
         
-        <Fin client:load />
-        </div>
+        <!-- ✅ AHORA USA HeaderWithProvider EN VEZ DE Python -->
+        <HeaderWithProvider client:load />
+    </div>
    
 </Layout>
 
 <style>
     .components-container {
         background: #030C1D;
-       
     }
     .dos {
         background: #222220;
     }
-    
 </style>

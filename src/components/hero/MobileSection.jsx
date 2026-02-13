@@ -1,4 +1,5 @@
-import ServiceSection from '@/components/hero/ServiceSection.jsx';
+// src/components/hero/MobileSection.jsx
+import ServiceSection from '@/components/hero/ServiceSection.jsx'; // ← AGREGAR
 
 export default function MobileSection() {
   return (
@@ -8,7 +9,7 @@ export default function MobileSection() {
       poster="/assets/image/cel-poster.jpg"
       title="Desarrollo Móvil"
       description="Apps móviles nativas y multiplataforma que tus usuarios amarán y usarán todos los días"
-      link="/servicios/mobile"
+      link="/servicios#mobile"
       buttonText="Explorar Móvil"
     />
   );

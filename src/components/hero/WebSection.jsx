@@ -1,3 +1,4 @@
+// WebSection.jsx
 import ServiceSection from './ServiceSection';
 
 export default function WebSection() {
@@ -8,7 +9,7 @@ export default function WebSection() {
       poster="/assets/image/web-poster.jpg"
       title="Desarrollo Web"
       description="Creamos aplicaciones web modernas, rápidas y escalables con las mejores tecnologías del mercado"
-      link="/servicios/web"
+      link="/servicios#web"  // ← AGREGAR HASH
       buttonText="Explorar Web"
     />
   );

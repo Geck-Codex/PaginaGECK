@@ -1,4 +1,5 @@
-import ServiceSection from '@/components/hero/ServiceSection.jsx';
+// src/components/hero/IASection.jsx
+import ServiceSection from '@/components/hero/ServiceSection.jsx'; // ← FALTABA ESTO
 
 export default function IASection() {
   return (
@@ -8,7 +9,7 @@ export default function IASection() {
       poster="/assets/image/ia-poster.jpg"
       title="IA & Computer Vision"
       description="Desarrollamos soluciones de inteligencia artificial y visión por computadora que transforman tu negocio"
-      link="/servicios/ia"
+      link="/servicios#ia"
       buttonText="Explorar IA"
     />
   );

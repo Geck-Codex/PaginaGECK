@@ -1,6 +1,6 @@
 // src/components/contacto/Contact.jsx
 import { useState } from 'react';
-import { Send, User, Mail, MessageSquare, Calendar, Linkedin } from 'lucide-react';
+import { Send, User, Mail, MessageSquare, Calendar, Linkedin, Instagram } from 'lucide-react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,10 +13,10 @@ export default function Contact() {
 
   // Configuración
   const contactConfig = {
-    whatsapp: '+34600000000',
-    calendly: 'https://calendly.com/tuempresa/30min',
-    email: 'contacto@tuempresa.com',
-    linkedin: 'https://linkedin.com/company/tuempresa',
+    whatsapp: '+52 6271745436',
+    calendly: 'geckcodexoficial@gmail.com',
+    email: 'geckcodexoficial@gmail.com',
+    linkedin: 'https://www.instagram.com/geckcodex/',
     slackWebhook: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL',
   };
 
@@ -28,6 +28,21 @@ export default function Contact() {
     const whatsappUrl = `https://wa.me/${contactConfig.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
+  const handleGmailContact = () => {
+  const subject = "Nuevo contacto desde la web";
+  
+  const body = `
+  Nombre: ${formData.name}
+  Email: ${formData.email}
+
+  Mensaje:
+  ${formData.message}
+    `;
+
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${contactConfig.email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  window.open(gmailUrl, "_blank");
+};
 
   const handleScheduleCall = () => {
     window.open(contactConfig.calendly, '_blank');
@@ -191,7 +206,7 @@ export default function Contact() {
                   maxWidth: '500px',
                   margin: '0 auto'
                 }}>
-                  <button onClick={handleScheduleCall} className="secondary-btn" style={{
+                  <button onClick={handleGmailContact} className="secondary-btn" style={{
                       padding: '20px 24px',
                       backgroundColor: 'rgba(12, 30, 60, 0.6)',
                       backdropFilter: 'blur(10px)',
@@ -207,8 +222,8 @@ export default function Contact() {
                       fontSize: '1rem',
                       transition: 'all 0.3s ease'
                     }}>
-                    <Calendar style={{ width: '22px', height: '22px', color: '#D4AF37' }} />
-                    <span>Agenda</span>
+                    <Mail style={{ width: '22px', height: '22px', color: '#D4AF37' }} />
+                    <span>Gmail</span>
                   </button>
 
                   <a href={contactConfig.linkedin} target="_blank" rel="noopener noreferrer" className="secondary-btn" style={{
@@ -227,8 +242,8 @@ export default function Contact() {
                       fontSize: '1rem',
                       transition: 'all 0.3s ease'
                     }}>
-                    <Linkedin style={{ width: '22px', height: '22px', color: '#0A66C2' }} />
-                    <span>LinkedIn</span>
+                    <Instagram style={{ width: '22px', height: '22px', color: '#0A66C2' }} />
+                    <span>Instagram</span>
                   </a>
                 </div>
               </div>

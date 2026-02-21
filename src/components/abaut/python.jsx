@@ -1,6 +1,6 @@
 // src/components/abaut/python.jsx
 import { useState, useEffect, useRef } from 'react';
-import { useContactDrawer } from '../../contexts/ContactDrawerContext';
+
 
 export default function Header() {
   const [displayedLines, setDisplayedLines] = useState([]);
@@ -16,7 +16,7 @@ export default function Header() {
   const [scrollProgress, setScrollProgress] = useState(0);
   
   const terminalRef = useRef(null);
-  const { openDrawer } = useContactDrawer();
+
 
   const targetProject = 92;
   const targetClient = 100;
@@ -157,9 +157,7 @@ export default function Header() {
     };
   };
 
-  const handleContactClick = () => {
-    openDrawer();
-  };
+ 
 
   return (
     <>
@@ -236,10 +234,7 @@ export default function Header() {
             {/* FOOTER DE LA TERMINAL */}
             <div className="terminal__footer">
               <div className="contact-button-container">
-                <button 
-                  className="contact-button"
-                  onClick={handleContactClick}
-                >
+               <button className="contact-button" onClick={() => window.location.href = '/contacto'}>
                   <span className="contact-button__icon">►</span>
                   <span className="contact-button__text">INICIAR CONTACTO</span>
                 </button>

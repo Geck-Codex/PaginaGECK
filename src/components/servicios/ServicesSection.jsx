@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useContactDrawer } from '../../contexts/ContactDrawerContext.jsx';
+
 
 /* ─── CATEGORY ICON COMPONENTS ─────────────────────────────── */
 const CategoryIconDesarrollo = () => (
@@ -244,7 +244,7 @@ const services = {
 };
 /* ─── MAIN COMPONENT ─────────────────────────────────────────── */
 export default function ImprovedServices() {
-  const { openDrawer } = useContactDrawer(); // ← INTEGRACIÓN CON EL DRAWER
+ 
   const [activeCategory, setActiveCategory] = useState(0);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -308,11 +308,8 @@ export default function ImprovedServices() {
     window.history.pushState(null, '', `#${service.slug}`);
   };
 
-  // ← NUEVO: cierra el modal de servicio y abre el drawer de contacto
- const handleCtaClick = () => {
-  openDrawer(); // abre primero
-  closeExpanded(); // luego cierra el modal
-};
+
+
 
   const getGridClass = (size) => {
     const sizes = { large: 'service-card--large', medium: 'service-card--medium', small: 'service-card--small', featured: 'service-card--featured' };
@@ -478,12 +475,12 @@ export default function ImprovedServices() {
                 </div>
                 <div className="service-modal__cta-wrapper">
                   {/* ← CAMBIO CLAVE: button con onClick en lugar de <a href> */}
-                  <button className="service-modal__cta" onClick={handleCtaClick}>
+                  <a href="/contacto" className="service-modal__cta">
                     <span>{expandedServiceData.id === 9 ? "Quiero Invertir" : "Hablemos de Tu Proyecto"}</span>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

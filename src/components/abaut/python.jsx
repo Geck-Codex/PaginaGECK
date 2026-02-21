@@ -131,9 +131,12 @@ export default function Header() {
   };
 
   const getOffset = (index) => {
-    const baseAmplitude = 3;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const baseAmplitude = isMobile ? 1.5 : 3;
     const frequency = 0.3;
-    const amplitudeMultiplier = Math.pow(index / 16, 2) * 10;
+    const amplitudeMultiplier = isMobile
+    ? Math.pow(index / 16, 2) * 4
+    : Math.pow(index / 16, 2) * 10;
     return Math.sin(phase + index * frequency) * (baseAmplitude + amplitudeMultiplier);
   };
 
@@ -304,11 +307,18 @@ export default function Header() {
 
         .terminal__body {
           padding: 1.5rem;
-          font-family: monospace;
+          font-family: 'Courier New', 'Consolas', 'Menlo', monospace;
           font-size: 0.95rem;
           min-height: 350px;
           background: #030C1D;
           position: relative;
+        }
+        .snake {
+          font-size: 0.95rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          font-variant-ligatures: none;
+          letter-spacing: 0;
+          white-space: pre;
         }
 
         /* FOOTER DE LA TERMINAL - CARBON COMO EL HEADER */
@@ -325,10 +335,16 @@ export default function Header() {
           gap: 1.5rem;
         }
 
-        .snake-container { width: 100%; overflow: hidden; }
-        .snake-line { line-height: 1.2; white-space: pre; position: relative; }
-        .snake-head { color: #d4af37; font-size: 1.05rem; }
-        .snake-tongue { color: #f4d03f; font-size: 1.05rem; }
+        .snake-container {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          overflow: hidden;
+          transform-origin: top center;
+        }
+        .snake-line { line-height: 1; white-space: pre; position: relative; }
+        .snake-head { color: #d4af37; font-size: inherit; }
+        .snake-tongue { color: #f4d03f; font-size: inherit; }
         .snake-body { color: #d4af37; }
         .snake-tail { color: #b8921f; }
 
@@ -443,11 +459,10 @@ export default function Header() {
           }
 
           /* TODO EL TERMINAL SE ESCALA */
-          .terminal {
-            transform-origin: center;
-            scale: 0.75;
-            margin: -2rem 0;
+          .snake {
+            font-size:0.75rem;
           }
+          
 
           .terminal__body {
             padding: 1rem;
@@ -476,11 +491,7 @@ export default function Header() {
             height: 0.6rem;
           }
 
-          .snake-head,
-          .snake-tongue {
-            font-size: 0.95rem;
-          }
-
+         
           .stat-box {
             font-size: 0.7rem;
           }
@@ -501,10 +512,10 @@ export default function Header() {
 
         /* MÓVILES PEQUEÑOS */
         @media (max-width: 480px) {
-          .terminal {
-            scale: 0.6;
-            margin: -3rem 0;
+          .snake {
+            
           }
+          
 
           .terminal__body {
             padding: 0.75rem;

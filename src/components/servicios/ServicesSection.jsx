@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useContactDrawer } from '../../contexts/ContactDrawerContext.jsx';
 
 /* ─── CATEGORY ICON COMPONENTS ─────────────────────────────── */
 const CategoryIconDesarrollo = () => (
@@ -76,28 +77,186 @@ const categories = [
 /* ─── SERVICES DATA ──────────────────────────────────────────── */
 const services = {
   0: [
-    { id: 0, slug: "web", name: "Desarrollo Web", tagline: "Tu Negocio en Internet, Pero Bien Hecho", description: "Creamos sitios web que venden mientras duermes. Con tecnologías modernas (React, Next.js) construimos páginas rápidas, optimizadas para Google y que funcionan perfecto en cualquier dispositivo.", features: ["Responsive design para móvil, tablet y desktop", "Optimización SEO para aparecer en Google", "Velocidad de carga ultrarrápida (Core Web Vitals)", "Integración con Google Analytics y CRM"], image: "/images/web-dev.jpg", size: "large" },
-    { id: 1, slug: "mobile", name: "Apps Móviles", tagline: "Apps que la Gente Usa Todos los Días", description: "Desarrollamos apps para iPhone y Android que tus clientes van a querer usar. Ya sea nativa (Swift/Kotlin) o híbrida (React Native), creamos experiencias móviles rápidas.", features: ["Desarrollo nativo iOS/Android o híbrido", "Notificaciones push para mantener engagement", "Diseño intuitivo siguiendo guidelines", "Te ayudamos a publicarla en Stores"], image: "/images/mobile-dev.jpg", size: "large" },
-    { id: 2, slug: "ia", name: "Inteligencia Artificial", tagline: "IA que Trabaja Por Ti", description: "Implementamos IA real que resuelve problemas de verdad. Chatbots que atienden clientes como humanos, sistemas que predicen ventas y herramientas inteligentes.", features: ["Chatbots con ChatGPT/Claude", "Predicción de demanda y forecasting", "OCR y procesamiento automático", "Integración con OpenAI o modelos propios"], image: "/images/ai.jpg", size: "large" },
-    { id: 3, slug: "ecommerce", name: "E-commerce", tagline: "Tienda Online que Vende de Verdad", description: "Montamos tu tienda online completa con Shopify, WooCommerce o custom. Carrito, pagos con tarjeta, envíos, inventario - todo integrado.", features: ["Catálogo con filtros y búsqueda", "Pagos (Stripe, MercadoPago, PayPal)", "Integración con envíos y tracking", "Panel de administración"], image: "/images/ecommerce.jpg", size: "medium" },
-    { id: 4, slug: "saas", name: "SaaS & Plataformas", tagline: "Plataformas que Cobran Solas", description: "Creamos plataformas tipo Netflix o Spotify: tus clientes pagan mensual, el sistema cobra automático y tú ves crecer los ingresos.", features: ["Suscripciones recurrentes automáticas", "Multi-tenant: miles de usuarios", "Dashboard con métricas en tiempo real", "API REST para integraciones"], image: "/images/saas.jpg", size: "medium" },
-    { id: 5, slug: "automatizacion", name: "Automatización", tagline: "Deja que el Software Haga el Trabajo", description: "Automatizamos procesos que te quitan horas. Conectamos tus sistemas para que trabajen solos. Menos trabajo manual = menos errores.", features: ["Workflows (Zapier, Make o n8n)", "Integración entre sistemas (APIs)", "Bots de tareas repetitivas (RPA)", "Ahorro de tiempo real"], image: "/images/automation.jpg", size: "small" },
-    { id: 6, slug: "custom", name: "Software a Medida", tagline: "Software Hecho Para Tu Negocio", description: "Desarrollamos sistemas empresariales personalizados 100% a tu medida. ERP, CRM, gestión de inventario, facturación - lo que necesites.", features: ["Análisis de procesos y necesidades", "Desarrollo custom desde cero", "Dashboards y reportes con KPIs", "Mantenimiento y soporte continuo"], image: "/images/custom.jpg", size: "small" }
+    { 
+      id: 0, 
+      slug: "web",            
+      name: "Desarrollo Web",          
+      tagline: "Tu Negocio en Internet, Pero Bien Hecho",  
+      description: "Desarrollamos soluciones web completas adaptadas a las necesidades reales de tu negocio. Desde plataformas corporativas hasta sistemas complejos, construimos productos digitales escalables, seguros y optimizados para un crecimiento sostenible. Utilizamos las tecnologías que mejor se ajusten a cada proyecto, garantizando rendimiento, estabilidad y una correcta evolución a largo plazo.", 
+      features: [
+        "Responsive design para móvil, tablet y desktop", 
+        "Optimización SEO para aparecer en Google", 
+        "Velocidad de carga ultrarrápida (Core Web Vitals)", 
+        "Integración con Google Analytics y CRM"
+      ], 
+      image: "/assets/image/servicios/webser.png",     
+      size: "large"    
+    },
+
+    { 
+      id: 1, 
+      slug: "mobile",         
+      name: "Apps Móviles",            
+      tagline: "Apps que la Gente Usa Todos los Días",     
+      description: "Desarrollamos aplicaciones móviles con Flutter para iOS y Android desde una sola base de código, reduciendo costos y acelerando el lanzamiento. Creamos apps rápidas, escalables y diseñadas para crecer junto con tu negocio.",               
+      features: [
+        "Desarrollo multiplataforma con Flutter", 
+        "Notificaciones push para mantener engagement", 
+        "Diseño intuitivo siguiendo guidelines", 
+        "Publicación en App Store y Google Play"
+      ],             
+      image: "/assets/image/servicios/celser.png",     
+      size: "large"    
+    },
+
+    { 
+      id: 2, 
+      slug: "ia",             
+      name: "Inteligencia Artificial", 
+      tagline: "IA Aplicada a Resultados Reales",                    
+      description: "Implementamos soluciones de Inteligencia Artificial orientadas a mejorar, analizar y eficientizar procesos dentro de tu negocio. Desde automatización inteligente y análisis predictivo hasta modelos que optimizan operaciones y reducen costos, integramos IA de forma estratégica para que tu empresa tome decisiones más precisas y opere con mayor eficiencia.",                         
+      features: [
+        "Automatización inteligente de procesos", 
+        "Modelos predictivos y análisis avanzado de datos", 
+        "Optimización operativa y reducción de costos", 
+        "Integración con sistemas y plataformas existentes"
+      ],                                    
+      image: "/assets/image/servicios/iaser.png",      
+      size: "large"    
+    },
+
+    { 
+      id: 3, 
+      slug: "ecommerce",      
+      name: "E-commerce",              
+      tagline: "Tienda Online que Vende de Verdad",        
+      description: "Montamos tu tienda online completa con Shopify, WooCommerce o custom. Carrito, pagos con tarjeta, envíos, inventario - todo integrado.",                                              
+      features: [
+        "Catálogo con filtros y búsqueda", 
+        "Pagos (Stripe, MercadoPago, PayPal)", 
+        "Integración con envíos y tracking", 
+        "Panel de administración"
+      ],                                              
+      image: "/assets/image/servicios/ecomersser.png", 
+      size: "medium"   
+    },
+
+    { 
+      id: 4, 
+      slug: "saas",           
+      name: "SaaS & Plataformas",      
+      tagline: "Plataformas que Cobran Solas",             
+      description: "Creamos plataformas tipo Netflix o Spotify: tus clientes pagan mensual, el sistema cobra automático y tú ves crecer los ingresos.",                                               
+      features: [
+        "Suscripciones recurrentes automáticas", 
+        "Multi-tenant: miles de usuarios", 
+        "Dashboard con métricas en tiempo real", 
+        "API REST para integraciones"
+      ],                                   
+      image: "/assets/image/servicios/saasser.png",     
+      size: "medium"   
+    },
+
+    { 
+      id: 5, 
+      slug: "automatizacion", 
+      name: "Automatización",          
+      tagline: "Deja que el Software Haga el Trabajo",     
+      description: "Automatizamos procesos que te quitan horas. Conectamos tus sistemas para que trabajen solos. Menos trabajo manual = menos errores.",                                                
+      features: [
+        "Workflows (Zapier, Make o n8n)", 
+        "Integración entre sistemas (APIs)", 
+        "Bots de tareas repetitivas (RPA)", 
+        "Ahorro de tiempo real"
+      ],                                                    
+      image: "/assets/image/servicios/autoserv.png",   
+      size: "small"    
+    },
+
+    { 
+      id: 6, 
+      slug: "custom",         
+      name: "Software a Medida",       
+      tagline: "Software Hecho Para Tu Negocio",           
+      description: "Desarrollamos sistemas empresariales personalizados 100% a tu medida. ERP, CRM, gestión de inventario, facturación - lo que necesites.",                                          
+      features: [
+        "Análisis de procesos y necesidades", 
+        "Desarrollo custom desde cero", 
+        "Dashboards y reportes con KPIs", 
+        "Mantenimiento y soporte continuo"
+      ],                                           
+      image: "/assets/image/servicios/medidaser.png",  
+      size: "small"    
+    },
   ],
+
   1: [
-    { id: 7, slug: "diseno", name: "Diseño UI/UX", tagline: "Diseño que Vende y Enamora", description: "Diseñamos interfaces que la gente entiende al instante y quiere usar. Combinamos diseño bonito con usabilidad real.", features: ["Research y testing con usuarios", "Diseño system escalable", "Prototipos interactivos", "Implementación pixel-perfect"], image: "/images/design.jpg", size: "large" },
-    { id: 8, slug: "redes-sociales", name: "Social Media", tagline: "Redes Sociales que Generan Negocio", description: "Gestionamos tus redes con estrategia. Creamos contenido que tu audiencia quiere ver y compartir.", features: ["Estrategia de contenido", "Calendario editorial y producción", "Community management", "Reportes mensuales de métricas"], image: "/images/social-media.jpg", size: "large" }
+    { 
+      id: 7, 
+      slug: "diseno",         
+      name: "Diseño UI/UX",            
+      tagline: "Diseño que Vende y Enamora",               
+      description: "Diseñamos interfaces que la gente entiende al instante y quiere usar. Combinamos diseño bonito con usabilidad real.",                                                               
+      features: [
+        "Research y testing con usuarios", 
+        "Diseño system escalable", 
+        "Prototipos interactivos", 
+        "Implementación pixel-perfect"
+      ],                                                               
+      image: "/assets/image/servicios/ui-ux.png",     
+      size: "large"    
+    },
+
+    { 
+      id: 8, 
+      slug: "redes-sociales", 
+      name: "Social Media",            
+      tagline: "Redes Sociales que Generan Negocio",       
+      description: "Gestionamos tus redes con estrategia. Creamos contenido que tu audiencia quiere ver y compartir.",                                                                               
+      features: [
+        "Estrategia de contenido", 
+        "Calendario editorial y producción", 
+        "Community management", 
+        "Reportes mensuales de métricas"
+      ],                                                             
+      image: "/assets/image/servicios/social.png",     
+      size: "large"    
+    },
   ],
+
   2: [
-    { id: 9, slug: "inversion", name: "Venture Studio", tagline: "Invierte en Productos Tech Reales", description: "Creamos nuestros propios productos digitales y buscamos inversionistas inteligentes para escalarlos. Productos con tracción real.", features: ["Usuarios reales y validación", "Modelos de negocio probados", "Proyecciones financieras claras", "Reportes de crecimiento"], image: "/images/ventures.jpg", size: "featured" }
+    { 
+      id: 9, 
+      slug: "inversion",      
+      name: "Venture Studio",          
+      tagline: "Invierte en Productos Tech Reales",        
+      description: "Creamos nuestros propios productos digitales y buscamos inversionistas inteligentes para escalarlos. Productos con tracción real.",                                               
+      features: [
+        "Usuarios reales y validación", 
+        "Modelos de negocio probados", 
+        "Proyecciones financieras claras", 
+        "Reportes de crecimiento"
+      ],                                                          
+      image: "/assets/image/servicios/inversion.png",   
+      size: "featured" 
+    },
   ]
 };
-
 /* ─── MAIN COMPONENT ─────────────────────────────────────────── */
 export default function ImprovedServices() {
+  const { openDrawer } = useContactDrawer(); // ← INTEGRACIÓN CON EL DRAWER
   const [activeCategory, setActiveCategory] = useState(0);
   const [expandedServiceId, setExpandedServiceId] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const expandedServiceData = useMemo(() => {
     if (expandedServiceId === null) return null;
@@ -149,6 +308,12 @@ export default function ImprovedServices() {
     window.history.pushState(null, '', `#${service.slug}`);
   };
 
+  // ← NUEVO: cierra el modal de servicio y abre el drawer de contacto
+ const handleCtaClick = () => {
+  openDrawer(); // abre primero
+  closeExpanded(); // luego cierra el modal
+};
+
   const getGridClass = (size) => {
     const sizes = { large: 'service-card--large', medium: 'service-card--medium', small: 'service-card--small', featured: 'service-card--featured' };
     return sizes[size] || 'service-card--medium';
@@ -163,84 +328,122 @@ export default function ImprovedServices() {
           <p className="improved-services__subtitle">Sin tecnicismos raros. Solo soluciones que funcionan.</p>
         </div>
 
-        {/* ─── CATEGORY BUTTONS ─── */}
-        <div className="improved-services__categories">
-          {categories.map((category) => {
-            const { IconComponent, gradient, accentColor, glowColor, borderActive } = category;
-            const isActive = activeCategory === category.id;
-            return (
-              <button
-                key={category.id}
-                onClick={() => { setActiveCategory(category.id); setExpandedServiceId(null); window.history.pushState(null, '', window.location.pathname); }}
-                className={`category-card ${isActive ? 'active' : ''}`}
-                aria-pressed={isActive}
-                style={{
-                  '--cat-accent': accentColor,
-                  '--cat-glow': glowColor,
-                  '--cat-border-active': borderActive,
-                  '--cat-gradient': gradient,
-                }}
-              >
-                <div className="category-card__bg" style={{ background: gradient }} />
-                {isActive && (
-                  <div className="category-card__glow-blob" style={{ background: glowColor }} />
-                )}
-                <div
-                  className="category-card__icon-wrap"
-                  style={{ color: isActive ? accentColor : 'rgba(244,228,188,0.55)' }}
+        {/* ─── CATEGORY BUTTONS — desktop cards / mobile tabs ─── */}
+        {isMobile ? (
+          <div className="mobile-tabs">
+            {categories.map((category) => {
+              const { IconComponent, accentColor } = category;
+              const isActive = activeCategory === category.id;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => { setActiveCategory(category.id); setExpandedServiceId(null); window.history.pushState(null, '', window.location.pathname); }}
+                  className={`mobile-tab ${isActive ? 'active' : ''}`}
                 >
-                  <IconComponent />
-                </div>
-                <div className="category-card__content">
-                  <h3
-                    className="category-card__name"
-                    style={{ color: isActive ? accentColor : 'var(--gold-light)' }}
-                  >
+                  <span className="mobile-tab__icon" style={{ color: isActive ? accentColor : 'rgba(244,228,188,0.45)' }}>
+                    <IconComponent />
+                  </span>
+                  <span className="mobile-tab__label" style={{ color: isActive ? accentColor : 'rgba(244,228,188,0.6)' }}>
                     {category.name}
-                  </h3>
-                  <p className="category-card__description">{category.description}</p>
-                </div>
-                <div
-                  className="category-card__line"
-                  style={{ background: isActive ? accentColor : 'var(--gold-border)' }}
-                />
-              </button>
-            );
-          })}
-        </div>
+                  </span>
+                  {isActive && <span className="mobile-tab__bar" />}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="improved-services__categories">
+            {categories.map((category) => {
+              const { IconComponent, gradient, accentColor, glowColor, borderActive } = category;
+              const isActive = activeCategory === category.id;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => { setActiveCategory(category.id); setExpandedServiceId(null); window.history.pushState(null, '', window.location.pathname); }}
+                  className={`category-card ${isActive ? 'active' : ''}`}
+                  aria-pressed={isActive}
+                  style={{
+                    '--cat-accent': accentColor,
+                    '--cat-glow': glowColor,
+                    '--cat-border-active': borderActive,
+                    '--cat-gradient': gradient,
+                  }}
+                >
+                  <div className="category-card__bg" style={{ background: gradient }} />
+                  {isActive && <div className="category-card__glow-blob" style={{ background: glowColor }} />}
+                  <div className="category-card__icon-wrap" style={{ color: isActive ? accentColor : 'rgba(244,228,188,0.55)' }}>
+                    <IconComponent />
+                  </div>
+                  <div className="category-card__content">
+                    <h3 className="category-card__name" style={{ color: isActive ? accentColor : 'var(--gold-light)' }}>
+                      {category.name}
+                    </h3>
+                    <p className="category-card__description">{category.description}</p>
+                  </div>
+                  <div className="category-card__line" style={{ background: isActive ? accentColor : 'var(--gold-border)' }} />
+                </button>
+              );
+            })}
+          </div>
+        )}
 
-        {/* ─── SERVICE GRID ─── */}
-        <div className="improved-services__grid" key={activeCategory}>
-          {services[activeCategory].map((service, index) => (
-            <div
-              key={service.id}
-              className={`service-card ${getGridClass(service.size)} ${expandedServiceId !== null && expandedServiceId !== service.id ? 'dimmed' : ''}`}
-              onClick={() => handleCardClick(service)}
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              <div className="service-card__bg">
-                <img src={service.image} alt="" className="service-card__image" loading="lazy" />
-                <div className="service-card__overlay"></div>
-              </div>
-              <div className="service-card__content">
-                <div className="service-card__header">
-                  <h3 className="service-card__name">{service.name}</h3>
-                  <p className="service-card__tagline">{service.tagline}</p>
+        {/* ─── SERVICE GRID — desktop grid / mobile carousel ─── */}
+        {isMobile ? (
+          <div className="mobile-carousel" ref={carouselRef} key={activeCategory}>
+            {services[activeCategory].map((service, index) => (
+              <div
+                key={service.id}
+                className="mobile-card"
+                onClick={() => handleCardClick(service)}
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="mobile-card__bg">
+                  <img src={service.image} alt="" className="mobile-card__image" loading="lazy" />
+                  <div className="mobile-card__overlay" />
                 </div>
-                <div className="service-card__hint">
-                  <span>+</span>
-                  <span>Ver detalles</span>
+                <div className="mobile-card__content">
+                  <p className="mobile-card__tagline">{service.tagline}</p>
+                  <h3 className="mobile-card__name">{service.name}</h3>
+                  <span className="mobile-card__cta">Ver detalles →</span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="improved-services__grid" key={activeCategory}>
+            {services[activeCategory].map((service, index) => (
+              <div
+                key={service.id}
+                className={`service-card ${getGridClass(service.size)} ${expandedServiceId !== null && expandedServiceId !== service.id ? 'dimmed' : ''}`}
+                onClick={() => handleCardClick(service)}
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="service-card__bg">
+                  <img src={service.image} alt="" className="service-card__image" loading="lazy" />
+                  <div className="service-card__overlay"></div>
+                </div>
+                <div className="service-card__content">
+                  <div className="service-card__header">
+                    <h3 className="service-card__name">{service.name}</h3>
+                    <p className="service-card__tagline">{service.tagline}</p>
+                  </div>
+                  <div className="service-card__hint">
+                    <span>+</span>
+                    <span>Ver detalles</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-        {/* ─── MODAL ─── */}
+        {/* ─── MODAL / BOTTOM SHEET ─── */}
         {expandedServiceData && (
-          <div className={`modal-container ${isClosing ? 'closing' : ''}`}>
+          <div className={`modal-container ${isClosing ? 'closing' : ''} ${isMobile ? 'is-mobile' : ''}`}>
             <div className="modal-overlay" onClick={closeExpanded} />
             <div className="service-modal" role="dialog" aria-modal="true">
+              {/* drag handle only on mobile */}
+              {isMobile && <div className="service-modal__handle" />}
               <button className="service-modal__close" onClick={closeExpanded} aria-label="Cerrar modal">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -274,12 +477,13 @@ export default function ImprovedServices() {
                   </div>
                 </div>
                 <div className="service-modal__cta-wrapper">
-                  <a href="/contacto" className="service-modal__cta">
+                  {/* ← CAMBIO CLAVE: button con onClick en lugar de <a href> */}
+                  <button className="service-modal__cta" onClick={handleCtaClick}>
                     <span>{expandedServiceData.id === 9 ? "Quiero Invertir" : "Hablemos de Tu Proyecto"}</span>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -301,7 +505,6 @@ export default function ImprovedServices() {
           --gold-glow:   rgba(212, 175, 55, 0.15);
           --gold-border: rgba(88, 74, 28, 0.35);
 
-          /* ── Timing tokens — tweak here to tune all animations ── */
           --dur-fast:    160ms;
           --dur-normal:  240ms;
           --dur-modal:   300ms;
@@ -593,7 +796,6 @@ export default function ImprovedServices() {
           display: flex; align-items: center; justify-content: center; padding: 1.5rem;
         }
 
-        /* ── Overlay: fade + blur in one smooth step ── */
         .modal-overlay {
           position: absolute; inset: 0;
           background: rgba(26, 26, 24, 0.92);
@@ -616,7 +818,6 @@ export default function ImprovedServices() {
           to   { opacity: 0; backdrop-filter: blur(0px); }
         }
 
-        /* ── Modal panel ── */
         .service-modal {
           position: relative; width: 100%; max-width: 850px;
           background: var(--navy); border-radius: 28px; z-index: 2001;
@@ -641,7 +842,6 @@ export default function ImprovedServices() {
           to   { opacity: 0; transform: scale(0.97) translateY(16px); }
         }
 
-        /* ── Close button ── */
         .service-modal__close {
           position: absolute; top: 1.5rem; right: 1.5rem;
           background: rgba(34,34,32,0.7); border: 1px solid var(--gold-border);
@@ -661,7 +861,6 @@ export default function ImprovedServices() {
         }
         .service-modal__close:hover svg { transform: rotate(90deg); }
 
-        /* ── Hero image ── */
         .service-modal__hero { height: 320px; position: relative; overflow: hidden; }
 
         .service-modal__hero img {
@@ -710,7 +909,6 @@ export default function ImprovedServices() {
         }
         @keyframes fadeOut { to { opacity: 0; } }
 
-        /* ── Body content ── */
         .service-modal__body { padding: 2.5rem; }
 
         .service-modal__description {
@@ -737,7 +935,6 @@ export default function ImprovedServices() {
           display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
         }
 
-        /* ── Feature cards: fast stagger, no offset bounce ── */
         .feature-card {
           display: flex; align-items: center; gap: 1rem;
           background: rgba(34,34,32,0.5);
@@ -784,14 +981,17 @@ export default function ImprovedServices() {
           animation: fadeOut var(--dur-close) ease both;
         }
 
+        /* ← ESTILOS ACTUALIZADOS PARA BUTTON (antes era <a>) */
         .service-modal__cta {
           display: flex; align-items: center; justify-content: center; gap: 0.75rem;
           background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold) 100%);
           color: var(--carbon); padding: 1.1rem 2rem; border-radius: 50px;
-          font-weight: 800; font-size: 0.95rem; text-decoration: none;
+          font-weight: 800; font-size: 0.95rem;
+          border: none; cursor: pointer; width: 100%;
           transition: transform var(--dur-fast) ease, box-shadow var(--dur-fast) ease, background var(--dur-normal) ease;
           box-shadow: 0 4px 20px rgba(88,74,28,0.4);
           position: relative; overflow: hidden;
+          text-decoration: none;
         }
 
         .service-modal__cta::after {
@@ -821,13 +1021,199 @@ export default function ImprovedServices() {
           .category-card__icon-wrap svg { width: 40px; height: 40px; }
         }
 
-        @media (max-width: 600px) {
-          .improved-services__categories { grid-template-columns: 1fr; }
-          .category-card { min-height: 130px; flex-direction: row; align-items: center; }
-          .category-card__icon-wrap { flex-shrink: 0; }
+        /* ─── MOBILE — tabs ──────────────────────────────────── */
+        .mobile-tabs {
+          display: flex;
+          align-items: stretch;
+          gap: 0;
+          margin: 0 -2rem 2rem;
+          padding: 0 1rem;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .mobile-tabs::-webkit-scrollbar { display: none; }
+
+        .mobile-tab {
+          flex: 1;
+          min-width: 100px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.9rem 0.5rem 1rem;
+          background: none;
+          border: none;
+          cursor: pointer;
+          position: relative;
+          transition: opacity var(--dur-fast) ease;
         }
 
-        /* Honor reduced motion preferences */
+        .mobile-tab__icon { display: flex; align-items: center; justify-content: center; }
+        .mobile-tab__icon svg { width: 28px; height: 28px; }
+
+        .mobile-tab__label {
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.03em;
+          text-align: center;
+          line-height: 1.2;
+          transition: color var(--dur-fast) ease;
+        }
+
+        .mobile-tab__bar {
+          position: absolute;
+          bottom: -1px;
+          left: 10%;
+          width: 80%;
+          height: 2px;
+          background: var(--gold);
+          border-radius: 2px 2px 0 0;
+          animation: tabBarIn 0.2s var(--ease-out) both;
+        }
+
+        @keyframes tabBarIn {
+          from { width: 0; left: 50%; }
+          to   { width: 80%; left: 10%; }
+        }
+
+        /* ─── MOBILE — carousel ──────────────────────────────── */
+        .mobile-carousel {
+          display: flex;
+          gap: 1rem;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          padding: 0.5rem 2rem 2rem;
+          margin: 0 -2rem;
+        }
+        .mobile-carousel::-webkit-scrollbar { display: none; }
+
+        .mobile-card {
+          flex: 0 0 78vw;
+          max-width: 320px;
+          height: 240px;
+          border-radius: 20px;
+          overflow: hidden;
+          position: relative;
+          scroll-snap-align: start;
+          cursor: pointer;
+          border: 1px solid rgba(3,12,29,0.8);
+          animation: cardFadeIn 0.35s var(--ease-out) backwards;
+          transition: transform var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+        }
+
+        .mobile-card:active { transform: scale(0.97); }
+
+        .mobile-card__bg { position: absolute; inset: 0; }
+        .mobile-card__image { width: 100%; height: 100%; object-fit: cover; }
+        .mobile-card__overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(to top, rgba(3,12,29,0.97) 0%, rgba(3,12,29,0.5) 50%, transparent 100%);
+        }
+
+        .mobile-card__content {
+          position: absolute; inset: 0;
+          padding: 1.5rem;
+          display: flex; flex-direction: column; justify-content: flex-end;
+          z-index: 2;
+        }
+
+        .mobile-card__tagline {
+          font-size: 0.65rem;
+          color: var(--gold);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin: 0 0 0.35rem;
+        }
+
+        .mobile-card__name {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: var(--gold-light);
+          margin: 0 0 0.75rem;
+          line-height: 1.2;
+        }
+
+        .mobile-card__cta {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: var(--gold);
+          letter-spacing: 0.05em;
+        }
+
+        /* ─── MOBILE — bottom sheet modal ────────────────────── */
+        .modal-container.is-mobile {
+          align-items: flex-end;
+          padding: 0;
+        }
+
+        .modal-container.is-mobile .modal-overlay {
+          background: rgba(3,12,29,0.7);
+          backdrop-filter: blur(8px);
+        }
+
+        .modal-container.is-mobile .service-modal {
+          width: 100%;
+          max-width: 100%;
+          max-height: 92vh;
+          border-radius: 24px 24px 0 0;
+          animation: sheetUp var(--dur-modal) var(--ease-spring) both;
+        }
+
+        @keyframes sheetUp {
+          from { transform: translateY(100%); opacity: 0.6; }
+          to   { transform: translateY(0);    opacity: 1; }
+        }
+
+        .modal-container.is-mobile.closing .service-modal {
+          animation: sheetDown var(--dur-close) var(--ease-out) both;
+        }
+
+        @keyframes sheetDown {
+          from { transform: translateY(0);    opacity: 1; }
+          to   { transform: translateY(100%); opacity: 0; }
+        }
+
+        .service-modal__handle {
+          width: 40px; height: 4px;
+          background: rgba(244,228,188,0.2);
+          border-radius: 2px;
+          margin: 12px auto 0;
+          flex-shrink: 0;
+        }
+
+        .modal-container.is-mobile .service-modal__hero { height: 200px; }
+        .modal-container.is-mobile .service-modal__hero-content h2 { font-size: 1.6rem; }
+        .modal-container.is-mobile .service-modal__body { padding: 1.5rem; }
+        .modal-container.is-mobile .service-modal__description { font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .modal-container.is-mobile .service-modal__features-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+        .modal-container.is-mobile .feature-card { padding: 1rem; }
+        .modal-container.is-mobile .service-modal__cta { font-size: 0.9rem; padding: 1rem 1.5rem; }
+        .modal-container.is-mobile .service-modal__close { top: 1rem; right: 1rem; }
+
+        /* hero section mobile */
+        @media (max-width: 768px) {
+          .improved-services {
+            padding: 3rem 1.5rem 4rem;
+          }
+          .improved-services__hero {
+            margin-bottom: 0;
+          }
+          .improved-services__title {
+            font-size: clamp(1.8rem, 8vw, 2.4rem);
+          }
+          .improved-services__subtitle {
+            font-size: 1rem;
+          }
+          .improved-services__pretitle {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after {
             animation-duration: 0.01ms !important;

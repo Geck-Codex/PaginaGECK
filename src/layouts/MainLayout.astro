@@ -1,6 +1,6 @@
 ---
 import Footer from '@/components/Footer.jsx';
-import AppWrapper from '@/components/AppWrapper.jsx';
+
 import '@/styles/global.css';
 ---
 
@@ -12,12 +12,7 @@ import '@/styles/global.css';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   </head>
   <body>
-    <!-- Un solo client:load para todo lo que necesita el contexto -->
-    <AppWrapper client:load />
     
-    <main>
-      <slot />
-    </main>
     
     <Footer client:load />
   </body>

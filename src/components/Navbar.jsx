@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Briefcase, Info, BookOpen, Globe, Mail } from "lucide-react";
+import { Menu, X, Briefcase, Info, BookOpen, Globe, Mail, Layers } from "lucide-react";
 import { useContactDrawer } from '../contexts/ContactDrawerContext';
 
 const translations = {
@@ -7,6 +7,7 @@ const translations = {
     portfolio: "Portfolio",
     about: "About Us",
     blog: "Blog",
+    services: "Services",
     contact: "Contact",
     language: "Language",
   },
@@ -14,6 +15,7 @@ const translations = {
     portfolio: "Portafolio",
     about: "Nosotros",
     blog: "Blog",
+    services: "Servicios",
     contact: "Contacto",
     language: "Idioma",
   },
@@ -21,6 +23,7 @@ const translations = {
     portfolio: "Portfólio",
     about: "Sobre Nós",
     blog: "Blog",
+    services: "Serviços",
     contact: "Contato",
     language: "Idioma",
   },
@@ -323,8 +326,10 @@ export default function GeckNavbar() {
     else setMobileMenuOpen(true);
   };
 
+  // ✅ "servicios" añadido como nueva sección
   const navLinks = [
     { key: "portfolio", icon: Briefcase, href: "/portafolio" },
+    { key: "services", icon: Layers, href: "/servicios" },
     { key: "about", icon: Info, href: "/nosotros" },
     { key: "blog", icon: BookOpen, href: "/blog" },
   ];

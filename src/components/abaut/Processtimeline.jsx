@@ -208,8 +208,8 @@ export default function ProcessTimeline() {
             })}
           </div>
         </div>
-
-        {/* Partículas flotantes */}
+{/*
+    
         <div className="floating-particles">
           {[...Array(20)].map((_, i) => (
             <div
@@ -224,6 +224,7 @@ export default function ProcessTimeline() {
             />
           ))}
         </div>
+*/}
 
         {/* Gradiente de fondo animado */}
         <div className="background-gradient"></div>

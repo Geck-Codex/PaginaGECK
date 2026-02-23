@@ -1,48 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Briefcase, Info, BookOpen, Globe, Mail } from "lucide-react";
-import { useContactDrawer } from '../contexts/ContactDrawerContext';
+import { Menu, X, Briefcase, Info, BookOpen, Globe, Mail, Layers } from "lucide-react";
 
 const translations = {
-  en: {
-    portfolio: "Portfolio",
-    about: "About Us",
-    blog: "Blog",
-    contact: "Contact",
-    language: "Language",
-  },
-  es: {
-    portfolio: "Portafolio",
-    about: "Nosotros",
-    blog: "Blog",
-    contact: "Contacto",
-    language: "Idioma",
-  },
-  pt: {
-    portfolio: "Portfólio",
-    about: "Sobre Nós",
-    blog: "Blog",
-    contact: "Contato",
-    language: "Idioma",
-  },
+  en: { portfolio: "Portfolio", about: "About Us", blog: "Blog", services: "Services", contact: "Contact", language: "Language" },
+  es: { portfolio: "Portafolio", about: "Nosotros", blog: "Blog", services: "Servicios", contact: "Contacto", language: "Idioma" },
+  pt: { portfolio: "Portfólio", about: "Sobre Nós", blog: "Blog", services: "Serviços", contact: "Contato", language: "Idioma" },
 };
 
 const languageOptions = [
   { code: "en", label: "English", flag: "🇺🇸" },
   { code: "es", label: "Español", flag: "🇪🇸" },
   { code: "pt", label: "Português", flag: "🇧🇷" },
-];
-
-const FIXED_PARTICLES = [
-  { left: "10%", delay: "0s", duration: "5s", color: "gold", width: "2px", height: "2px" },
-  { left: "25%", delay: "1s", duration: "6s", color: "navy", width: "3px", height: "3px" },
-  { left: "40%", delay: "2s", duration: "4s", color: "gold", width: "2px", height: "2px" },
-  { left: "55%", delay: "0.5s", duration: "5.5s", color: "navy", width: "2px", height: "3px" },
-  { left: "70%", delay: "1.5s", duration: "4.5s", color: "gold", width: "3px", height: "2px" },
-  { left: "85%", delay: "2.5s", duration: "6s", color: "navy", width: "2px", height: "2px" },
-  { left: "15%", delay: "3s", duration: "5s", color: "gold", width: "2px", height: "3px" },
-  { left: "30%", delay: "0.8s", duration: "5.8s", color: "navy", width: "3px", height: "2px" },
-  { left: "45%", delay: "1.8s", duration: "4.8s", color: "gold", width: "2px", height: "2px" },
-  { left: "60%", delay: "2.8s", duration: "5.2s", color: "navy", width: "2px", height: "3px" },
 ];
 
 function DisperseText({ text, isHovered }) {
@@ -79,9 +47,7 @@ function MagneticLink({ href, icon: Icon, text }) {
     const rect = linkRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const deltaX = (e.clientX - centerX) * 0.3;
-    const deltaY = (e.clientY - centerY) * 0.3;
-    setPosition({ x: deltaX, y: deltaY });
+    setPosition({ x: (e.clientX - centerX) * 0.3, y: (e.clientY - centerY) * 0.3 });
   };
 
   const handleMouseLeave = () => {
@@ -95,31 +61,17 @@ function MagneticLink({ href, icon: Icon, text }) {
       ref={linkRef}
       href={href}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => {
-        setHover(true);
-        setTimeout(() => setDisperseHover(true), 50);
-      }}
+      onMouseEnter={() => { setHover(true); setTimeout(() => setDisperseHover(true), 50); }}
       onMouseLeave={handleMouseLeave}
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        color: "var(--white-soft)",
-        fontSize: "1.25rem",
-        transition: "color 0.3s ease",
-        padding: "0.5rem 0",
+        display: "flex", alignItems: "center", gap: "0.5rem",
+        color: "var(--white-soft)", fontSize: "1.25rem",
+        transition: "color 0.3s ease", padding: "0.5rem 0",
         transform: `translate(${position.x}px, ${position.y}px)`,
-        textDecoration: "none",
-        cursor: "pointer",
+        textDecoration: "none", cursor: "pointer",
       }}
     >
-      <Icon
-        size={18}
-        style={{
-          transition: "all 0.3s ease",
-          color: hover ? "var(--gold)" : "inherit",
-        }}
-      />
+      <Icon size={18} style={{ transition: "all 0.3s ease", color: hover ? "var(--gold)" : "inherit" }} />
       <DisperseText text={text} isHovered={disperseHover} />
     </a>
   );
@@ -130,25 +82,11 @@ function AnimatedLogo({ text }) {
   const [disperseActive, setDisperseActive] = useState(false);
   const letters = text.split("");
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    setTimeout(() => setDisperseActive(true), 50);
-  };
-
-  const handleMouseLeave = () => {
-    setDisperseActive(false);
-    setTimeout(() => setIsHovered(false), 100);
-  };
-
   return (
     <span
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        display: "inline-block",
-        position: "relative",
-        cursor: "pointer",
-      }}
+      onMouseEnter={() => { setIsHovered(true); setTimeout(() => setDisperseActive(true), 50); }}
+      onMouseLeave={() => { setDisperseActive(false); setTimeout(() => setIsHovered(false), 100); }}
+      style={{ display: "inline-block", position: "relative", cursor: "pointer" }}
     >
       {letters.map((letter, index) => (
         <span
@@ -162,10 +100,8 @@ function AnimatedLogo({ text }) {
               : "translate(0, 0) rotate(0deg) scale(1)",
             opacity: disperseActive ? 0.4 : 1,
             background: "linear-gradient(135deg, var(--white), var(--gold))",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            color: "transparent",
+            backgroundClip: "text", WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent", color: "transparent",
           }}
         >
           {letter === " " ? "\u00A0" : letter}
@@ -184,10 +120,7 @@ function AnimatedWaves() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = 70;
-    };
+    const setCanvasSize = () => { canvas.width = window.innerWidth; canvas.height = 70; };
     setCanvasSize();
 
     class Wave {
@@ -196,16 +129,13 @@ function AnimatedWaves() {
         this.speed = speed; this.color = color; this.phase = Math.random() * Math.PI * 2;
       }
       draw(time) {
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height);
+        ctx.beginPath(); ctx.moveTo(0, canvas.height);
         for (let x = 0; x <= canvas.width; x += 5) {
           const y = this.y + Math.sin((x * this.frequency) + (time * this.speed) + this.phase) * this.amplitude;
           ctx.lineTo(x, y);
         }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.fillStyle = this.color;
-        ctx.fill();
+        ctx.lineTo(canvas.width, canvas.height); ctx.lineTo(0, canvas.height);
+        ctx.fillStyle = this.color; ctx.fill();
       }
     }
 
@@ -242,10 +172,7 @@ function AnimatedWaves() {
     }
     animate();
     window.addEventListener('resize', setCanvasSize);
-    return () => {
-      window.removeEventListener('resize', setCanvasSize);
-      if (animationId) cancelAnimationFrame(animationId);
-    };
+    return () => { window.removeEventListener('resize', setCanvasSize); if (animationId) cancelAnimationFrame(animationId); };
   }, []);
 
   return (
@@ -264,16 +191,6 @@ export default function GeckNavbar() {
   const navRef = useRef(null);
 
   const t = translations[language];
-  const { openDrawer } = useContactDrawer();
-
-  const cssVariables = `
-    :root {
-      --gold: #D4AF37;
-      --navy-dark: #0A1D35;
-      --white: #FFFFFF;
-      --white-soft: #F8FAFC;
-    }
-  `;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -289,9 +206,7 @@ export default function GeckNavbar() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
-        setLangMenuOpen(false);
-      }
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target)) setLangMenuOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -310,29 +225,23 @@ export default function GeckNavbar() {
 
   const closeMobileMenu = () => {
     setMobileMenuClosing(true);
-    setTimeout(() => {
-      setMobileMenuOpen(false);
-      setMobileMenuClosing(false);
-    }, 400);
+    setTimeout(() => { setMobileMenuOpen(false); setMobileMenuClosing(false); }, 400);
   };
 
   const handleNavLinkClick = () => { if (mobileMenuOpen) closeMobileMenu(); };
-
-  const toggleMobileMenu = () => {
-    if (mobileMenuOpen) closeMobileMenu();
-    else setMobileMenuOpen(true);
-  };
+  const toggleMobileMenu = () => { if (mobileMenuOpen) closeMobileMenu(); else setMobileMenuOpen(true); };
 
   const navLinks = [
     { key: "portfolio", icon: Briefcase, href: "/portafolio" },
+    { key: "services", icon: Layers, href: "/servicios" },
     { key: "about", icon: Info, href: "/nosotros" },
     { key: "blog", icon: BookOpen, href: "/blog" },
   ];
 
   return (
     <>
-      <style>{cssVariables}</style>
       <style>{`
+        :root { --gold: #D4AF37; --navy-dark: #0A1D35; --white: #FFFFFF; --white-soft: #F8FAFC; }
         * { box-sizing: border-box; }
         .nav-desktop { display: flex; }
         .mobile-menu-btn { display: none; }
@@ -343,17 +252,18 @@ export default function GeckNavbar() {
           .logo-text-desktop { display: none !important; }
           .nav-container { padding: 0 1rem !important; position: relative !important; }
         }
-        .mobile-menu { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(2, 6, 20, 0.45) 0%, rgba(2, 6, 20, 0.3) 100%); backdrop-filter: blur(60px) saturate(200%); z-index: 55; animation: slideDownFade 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .mobile-menu { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(2,6,20,0.45) 0%, rgba(2,6,20,0.3) 100%); backdrop-filter: blur(60px) saturate(200%); z-index: 55; animation: slideDownFade 0.5s cubic-bezier(0.34,1.56,0.64,1); }
         @keyframes slideDownFade { 0% { opacity: 0; transform: translateY(-50px); } 100% { opacity: 1; transform: translateY(0); } }
         .mobile-menu-closing { animation: slideUpFade 0.4s forwards; }
         @keyframes slideUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-50px); } }
         .nav-pulse-line { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold) 20%, #041934 50%, var(--gold) 80%, transparent); animation: pulseLine 4s infinite; z-index: 3; }
         @keyframes pulseLine { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-        .contact-button { position: relative; overflow: hidden; backdrop-filter: blur(25px); background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.08)); border: 2px solid var(--gold); animation: contactPulse 2s infinite; }
-        @keyframes contactPulse { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); } 50% { box-shadow: 0 0 35px rgba(212, 175, 55, 0.6); } }
-        .blur-button-navy { backdrop-filter: blur(25px); background: rgba(2, 6, 20, 0.2); border: 1px solid rgba(212, 175, 55, 0.25); transition: all 0.3s; }
-        .mobile-nav-link { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.15); transition: all 0.3s; }
-        .mobile-lang-btn.active { background: rgba(212, 175, 55, 0.25) !important; border: 1px solid var(--gold) !important; }
+        .contact-button { position: relative; overflow: hidden; backdrop-filter: blur(25px); background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.08)); border: 2px solid var(--gold); animation: contactPulse 2s infinite; text-decoration: none; }
+        @keyframes contactPulse { 0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.4); } 50% { box-shadow: 0 0 35px rgba(212,175,55,0.6); } }
+        .blur-button-navy { backdrop-filter: blur(25px); background: rgba(2,6,20,0.2); border: 1px solid rgba(212,175,55,0.25); transition: all 0.3s; }
+        .mobile-nav-link { backdrop-filter: blur(20px); background: rgba(255,255,255,0.02); border: 1px solid rgba(212,175,55,0.15); transition: all 0.3s; }
+        .mobile-lang-btn.active { background: rgba(212,175,55,0.25) !important; border: 1px solid var(--gold) !important; }
+        .mobile-contact-link { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.25rem; border-radius: 15px; background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08)); border: 2px solid var(--gold); color: var(--gold); font-size: 1.5rem; font-weight: bold; text-decoration: none; }
       `}</style>
 
       <nav
@@ -371,7 +281,7 @@ export default function GeckNavbar() {
         <div className="nav-pulse-line" />
 
         <div className="nav-container" style={{ padding: "0 2rem", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 2, maxWidth: "2200px", margin: "0 auto" }}>
-          
+
           <a href="/" className="logo-container" style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", zIndex: 3 }}>
             <img src="/assets/image/logo.png" alt="Geck Codex" style={{ width: "65px", height: "65px", objectFit: "contain" }} />
             <span className="logo-text logo-text-desktop" style={{ fontSize: "2rem", fontWeight: "bold" }}>
@@ -390,11 +300,11 @@ export default function GeckNavbar() {
           </div>
 
           <div className="nav-desktop" style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <button onClick={(e) => { e.preventDefault(); openDrawer(); }} className="contact-button" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--gold)", padding: "0.75rem 1.5rem", borderRadius: "10px", fontWeight: 700, cursor: "pointer", transition: "0.3s" }}>
+            {/* ← LINK en lugar de button con openDrawer */}
+            <a href="/contacto" className="contact-button" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--gold)", padding: "0.75rem 1.5rem", borderRadius: "10px", fontWeight: 700, cursor: "pointer", transition: "0.3s" }}>
               <Mail size={18} /> {t.contact}
-            </button>
+            </a>
 
-            {/* BOTÓN IDIOMA DESKTOP */}
             <div ref={langMenuRef} style={{ position: "relative" }}>
               <button
                 onClick={() => setLangMenuOpen(!langMenuOpen)}
@@ -406,12 +316,12 @@ export default function GeckNavbar() {
               </button>
 
               {langMenuOpen && (
-                <div style={{ position: "absolute", top: "120%", right: 0, background: "rgba(10, 29, 53, 0.95)", backdropFilter: "blur(20px)", borderRadius: "12px", padding: "0.5rem", border: "1px solid rgba(212, 175, 55, 0.3)", display: "flex", flexDirection: "column", gap: "4px", minWidth: "140px", zIndex: 100 }}>
+                <div style={{ position: "absolute", top: "120%", right: 0, background: "rgba(10,29,53,0.95)", backdropFilter: "blur(20px)", borderRadius: "12px", padding: "0.5rem", border: "1px solid rgba(212,175,55,0.3)", display: "flex", flexDirection: "column", gap: "4px", minWidth: "140px", zIndex: 100 }}>
                   {languageOptions.map((opt) => (
                     <button
                       key={opt.code}
                       onClick={() => handleLanguageChange(opt.code)}
-                      style={{ display: "flex", alignItems: "center", gap: "10px", padding: "0.75rem 1rem", background: language === opt.code ? "rgba(212, 175, 55, 0.2)" : "transparent", border: "none", color: "white", borderRadius: "8px", cursor: "pointer", transition: "0.2s" }}
+                      style={{ display: "flex", alignItems: "center", gap: "10px", padding: "0.75rem 1rem", background: language === opt.code ? "rgba(212,175,55,0.2)" : "transparent", border: "none", color: "white", borderRadius: "8px", cursor: "pointer", transition: "0.2s" }}
                     >
                       <span>{opt.flag}</span> {opt.label}
                     </button>
@@ -427,7 +337,6 @@ export default function GeckNavbar() {
         </div>
       </nav>
 
-      {/* MENÚ MÓVIL OVERLAY */}
       {mobileMenuOpen && (
         <div className={`mobile-menu ${mobileMenuClosing ? "mobile-menu-closing" : ""}`}>
           <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", marginTop: "2rem" }}>
@@ -436,9 +345,10 @@ export default function GeckNavbar() {
                 <Icon size={24} style={{ color: "var(--gold)" }} /> {t[key]}
               </a>
             ))}
-            <button onClick={openDrawer} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem", padding: "1.25rem", borderRadius: "15px", background: "linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08))", border: "2px solid var(--gold)", color: "var(--gold)", fontSize: "1.5rem", fontWeight: "bold" }}>
+            {/* ← LINK en lugar de button con openDrawer */}
+            <a href="/contacto" className="mobile-contact-link">
               <Mail size={24} /> {t.contact}
-            </button>
+            </a>
             <div style={{ marginTop: "2rem" }}>
               <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: "1rem" }}>{t.language}</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.5rem" }}>

@@ -1,8 +1,13 @@
+<!-- portafolio.astro -->
 ---
 import Layout from '@/layouts/MainLayout.astro';
 import PortfolioSection from '@/components/portafolio/Portafoliosection.jsx';
 ---
 
-<Layout>
-    <PortfolioSection client:load />
+<Layout
+  title="Portafolio | Proyectos de Apps, Web e IA — Geck Codex"
+  description="Explora nuestros proyectos: apps móviles en Google Play, sistemas de visión artificial, plataformas web, e-commerce y más. Casos de éxito reales de Geck Codex."
+  canonical="https://geckcodex.com/portafolio"
+>
+  <PortfolioSection client:load />
 </Layout>

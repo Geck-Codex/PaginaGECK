@@ -2,14 +2,130 @@
 import Footer from '@/components/Footer.jsx';
 import Navbar from '@/components/Navbar.jsx';
 import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+}
+
+const {
+  title = 'Geck Codex | Desarrollo Web, Apps y AI desde México',
+  description = 'Empresa de desarrollo web, apps móviles e inteligencia artificial en Parral, Chihuahua. Jóvenes mexicanos revolucionando la tecnología digital.',
+  image = 'https://geckcodex.com/assets/image/og-image.jpg',
+  canonical = Astro.url.href,
+  noindex = false,
+  type = 'website',
+} = Astro.props;
+
+const siteName = 'Geck Codex';
+const twitterHandle = '@geckcodex';
 ---
 
 <html lang="es">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="google-site-verification" content="zQdCDQH6eJc4lniZPIcpINIApecX4D-fwU3IgfSA2YQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GECK Codex</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- ═══════════════════════════════════════
+         BÁSICO SEO
+    ═══════════════════════════════════════ -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />}
+
+    <!-- ═══════════════════════════════════════
+         OPEN GRAPH (Facebook, WhatsApp, LinkedIn)
+    ═══════════════════════════════════════ -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="es_MX" />
+
+    <!-- ═══════════════════════════════════════
+         TWITTER CARD
+    ═══════════════════════════════════════ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={twitterHandle} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <!-- ═══════════════════════════════════════
+         FAVICON Y ICONOS
+    ═══════════════════════════════════════ -->
+    <link rel="icon" type="image/png" href="/assets/image/logo.png" />
+    <link rel="apple-touch-icon" href="/assets/image/logo.png" />
+
+    <!-- ═══════════════════════════════════════
+         SCHEMA.ORG (Datos Estructurados)
+    ═══════════════════════════════════════ -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Geck Codex",
+        "url": "https://geckcodex.com",
+        "logo": "https://geckcodex.com/assets/image/logo.png",
+        "description": "Empresa de desarrollo web, apps móviles e inteligencia artificial en Parral, Chihuahua, México.",
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Parral, Chihuahua, México"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+52-627-174-5436",
+          "contactType": "customer service",
+          "email": "geckcodexoficial@gmail.com",
+          "availableLanguage": ["Spanish", "English"]
+        },
+        "sameAs": [
+          "https://www.instagram.com/geckcodex/",
+          "https://github.com/geckcodex"
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Hidalgo del Parral",
+          "addressRegion": "Chihuahua",
+          "addressCountry": "MX"
+        },
+        "areaServed": {
+          "@type": "Country",
+          "name": "México"
+        },
+        "knowsAbout": [
+          "Desarrollo Web",
+          "Aplicaciones Móviles",
+          "Inteligencia Artificial",
+          "Computer Vision",
+          "E-commerce",
+          "SaaS",
+          "UI/UX Design"
+        ]
+      }
+    </script>
+
+    <!-- ═══════════════════════════════════════
+         PERFORMANCE
+    ═══════════════════════════════════════ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
+
+    <!-- Fuentes de icon (ya lo tenías) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   </head>
   <body>
     <Navbar client:load />

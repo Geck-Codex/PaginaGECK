@@ -1,8 +1,15 @@
+<!-- ══════════════════════════════════════════
+     servicios.astro
+════════════════════════════════════════════ -->
 ---
 import Layout from '@/layouts/MainLayout.astro';
 import ServicesSection from '@/components/servicios/ServicesSection.jsx';
 ---
 
-<Layout>
-    <ServicesSection client:load />
+<Layout
+  title="Servicios | Desarrollo Web, Apps, IA y Marketing Digital — Geck Codex"
+  description="Ofrecemos desarrollo web, apps móviles, inteligencia artificial, e-commerce, SaaS, automatización y marketing digital. Soluciones tecnológicas a la medida para tu negocio."
+  canonical="https://geckcodex.com/servicios"
+>
+  <ServicesSection client:load />
 </Layout>

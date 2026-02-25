@@ -2,23 +2,23 @@
 import Layout from '@/layouts/MainLayout.astro';
 import VideoBackground from '@/components/VideoBackground.jsx';
 import Header from '@/components/hero/Header.jsx';
-
 import Carrusel from '@/components/hero/Carrusel.jsx';
 import IASection from '@/components/hero/IASection.jsx';
 import WebSection from '@/components/hero/WebSection.jsx';
 import MobileSection from '@/components/hero/MobileSection.jsx';
-import IntroSpecialties  from '@/components/hero/IntroSpecialties.jsx';
+import IntroSpecialties from '@/components/hero/IntroSpecialties.jsx';
 import OutroSpecialties from '@/components/hero/OutroSpecialties.jsx';
 ---
 
-<Layout>
-  <!-- Video solo para estas dos secciones -->
+<Layout
+  title="Geck Codex | Desarrollo Web, Apps Móviles e IA en México"
+  description="Agencia de desarrollo tecnológico en Parral, Chihuahua. Creamos sitios web, apps móviles, soluciones de IA y e-commerce para empresas en México y Estados Unidos."
+  canonical="https://geckcodex.com/"
+>
   <VideoBackground client:load>
     <Header client:load />
-    
   </VideoBackground>
-  
-  <!-- Estas ya NO tienen video de fondo -->
+
   <IntroSpecialties client:load />
   <IASection client:load />
   <WebSection client:load />

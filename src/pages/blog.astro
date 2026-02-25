@@ -3,6 +3,10 @@ import Layout from '@/layouts/MainLayout.astro';
 import EnConstruccioin from '@/components/EnConstruccioin.jsx';
 ---
 
-<Layout>
+<Layout
+  title="Blog | Geck Codex"
+  description="Blog de tecnología, desarrollo web e IA de Geck Codex."
+  noindex={true}
+>
     <EnConstruccioin client:load />
 </Layout>

@@ -307,6 +307,33 @@ export default function PortfolioSection() {
       fullDesc: "Sistema de punto de venta en la nube para restaurantes, tiendas y negocios en general. Gestión de mesas, pedidos, inventario, caja, reportes y múltiples sucursales desde cualquier dispositivo. Una alternativa moderna y accesible a soluciones como Soft Restaurant.",
       technologies: ["React", "Node.js", "PostgreSQL", "Stripe", "WebSockets", "PWA"],
       image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop"
+    },
+    {
+      id: 16,
+      title: "Agend-In",
+      type: "Bot / Automatización",
+      shortDesc: "Bot para agendar citas directo desde WhatsApp o Telegram",
+      fullDesc: "Agend-In automatiza toda la gestión de citas de tu negocio sin que el cliente tenga que descargar nada. Mediante conversación natural en WhatsApp o Telegram, el bot agenda, reprograma, cancela y envía recordatorios automáticos. Se integra con tu calendario y notifica en tiempo real.",
+      technologies: ["Node.js", "WhatsApp Business API", "Telegram Bot API", "MongoDB", "OpenAI API"],
+      image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=600&fit=crop"
+    },
+    {
+      id: 17,
+      title: "BizPilot",
+      type: "Bot / Automatización",
+      shortDesc: "Controla y consulta tu empresa desde WhatsApp en lenguaje natural",
+      fullDesc: "BizPilot conecta tu base de datos empresarial con WhatsApp para que puedas hacer consultas en lenguaje natural: ¿cuáles son los productos más bajos de inventario?, ¿cómo van las ventas del día?, ¿cuántos pedidos pendientes hay? Respuestas inmediatas sin abrir ningún sistema.",
+      technologies: ["Node.js", "WhatsApp Business API", "OpenAI API", "PostgreSQL", "LangChain"],
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop"
+    },
+    {
+      id: 18,
+      title: "SocialFlow",
+      type: "Bot / Automatización",
+      shortDesc: "Automatiza la creación y publicación de contenido en todas tus redes",
+      fullDesc: "SocialFlow genera, programa y publica contenido personalizado para Facebook, Instagram y TikTok de forma automática. Analiza el estilo de tu marca, genera textos e imágenes adaptados a cada plataforma y optimiza los horarios de publicación para maximizar el alcance.",
+      technologies: ["Python", "OpenAI API", "Meta Graph API", "TikTok API", "Stable Diffusion"],
+      image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop"
     }
   ];
 

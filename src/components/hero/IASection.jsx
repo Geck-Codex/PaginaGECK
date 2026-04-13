@@ -7,7 +7,7 @@ export default function IASection() {
       videoDesktop="/assets/video/ia.mp4"
       videoMobile="/assets/video/ia-movil.mp4"
       poster="/assets/image/ia-poster.jpg"
-      title="IA & Computer Vision"
+      title="IA & Automatización"
       description="Desarrollamos soluciones de inteligencia artificial y visión por computadora que transforman tu negocio"
       link="/servicios#ia"
       buttonText="Explorar IA"

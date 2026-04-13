@@ -398,7 +398,7 @@ const ClientCarousel = () => {
           ref={containerRef}
           className="flex items-center gap-8 md:gap-12 lg:gap-16 h-full"
           style={{
-            transition: hoveredIndex !== null ? 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'none',
+            transition: 'none',
             willChange: 'transform'
           }}
         >

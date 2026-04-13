@@ -1,5 +1,13 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Github, Linkedin, Twitter, Mail, ArrowUp } from "lucide-react";
+import { Github, Instagram, Facebook, ArrowUp } from "lucide-react";
+
+function TikTokIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.78a4.85 4.85 0 01-1-.09z"/>
+    </svg>
+  );
+}
 
 // --- COMPONENTE DE OLVAS Y PARTÍCULAS (Mismo que la Navbar) ---
 function AnimatedWaves() {
@@ -121,10 +129,10 @@ export default function GeckFooter() {
   };
 
   const socialLinks = [
-    { Icon: Github, name: 'github', label: 'GitHub', url: 'https://github.com' },
-    { Icon: Linkedin, name: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com' },
-    { Icon: Twitter, name: 'twitter', label: 'Twitter', url: 'https://twitter.com' },
-    { Icon: Mail, name: 'mail', label: 'Email', url: 'mailto:contacto@geckcodex.com' }
+    { Icon: Github,    name: 'github',    label: 'GitHub',    url: '#' },
+    { Icon: Instagram, name: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/geckcodex?igsh=MTV5YWY5Nnh4OWQ2Mw==' },
+    { Icon: Facebook,  name: 'facebook',  label: 'Facebook',  url: 'https://www.facebook.com/share/1Dt3nBrVgm/' },
+    { Icon: TikTokIcon, name: 'tiktok',   label: 'TikTok',    url: '#' },
   ];
 
   return (

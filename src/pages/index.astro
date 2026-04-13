@@ -2,12 +2,10 @@
 import Layout from '@/layouts/MainLayout.astro';
 import VideoBackground from '@/components/VideoBackground.jsx';
 import Header from '@/components/hero/Header.jsx';
+import ProjectCarousel from '@/components/hero/ProjectCarousel.jsx';
+import SpecialtiesShowcase from '@/components/hero/SpecialtiesShowcase.jsx';
 import Carrusel from '@/components/hero/Carrusel.jsx';
-import IASection from '@/components/hero/IASection.jsx';
-import WebSection from '@/components/hero/WebSection.jsx';
-import MobileSection from '@/components/hero/MobileSection.jsx';
-import IntroSpecialties from '@/components/hero/IntroSpecialties.jsx';
-import OutroSpecialties from '@/components/hero/OutroSpecialties.jsx';
+import StatsSection from '@/components/hero/StatsSection.jsx';
 ---
 
 <Layout
@@ -19,10 +17,8 @@ import OutroSpecialties from '@/components/hero/OutroSpecialties.jsx';
     <Header client:load />
   </VideoBackground>
 
-  <IntroSpecialties client:load />
-  <IASection client:load />
-  <WebSection client:load />
-  <MobileSection client:load />
-  <OutroSpecialties client:load />
+  <ProjectCarousel client:load />
+  <SpecialtiesShowcase client:load />
   <Carrusel client:load />
+  <StatsSection client:load />
 </Layout>

@@ -1,261 +1,200 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function VideoHero() {
-  const [isLoaded, setIsLoaded] = useState(false);
+export default function Header() {
+  const containerRef = useRef(null);
+  const scrollRef    = useRef(null);
+  const rafRef       = useRef(null);
 
+  /* ── Fade de entrada ── */
   useEffect(() => {
-    // Animación de entrada
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    
+    const el = containerRef.current;
+    if (!el) return;
+    const t = setTimeout(() => {
+      el.style.opacity = '1';
+    }, 150);
+    return () => clearTimeout(t);
+  }, []);
+
+  /* ── Transición de salida con scroll (DOM directo, sin setState) ── */
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const container = containerRef.current;
+    const scrollHint = scrollRef.current;
+
+    const handleScroll = () => {
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(() => {
+        const progress = Math.min(1, window.scrollY / (window.innerHeight * 0.55));
+
+        // Contenido: fade out + drift suave hacia arriba
+        if (container) {
+          container.style.opacity  = String(1 - progress);
+          container.style.transform = `translate(-50%, calc(-50% - ${progress * 22}px))`;
+        }
+
+        // Scroll hint desaparece antes
+        if (scrollHint) {
+          const hintProgress = Math.min(1, window.scrollY / (window.innerHeight * 0.25));
+          scrollHint.style.opacity = String((1 - hintProgress) * 0.35);
+        }
+
+        rafRef.current = null;
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
     <>
-      <div className="video-hero-container">
-        {/* Texto en esquina inferior izquierda */}
-        <div className="video-subtitle-corner">
-          <p className="video-subtitle">Arquitectos Digitales</p>
+      <div ref={containerRef} className="hdr">
+
+        <p className="hdr__phrase">
+          Democratizando el uso de tecnologías
+          <br />
+          que transforman vidas y negocios,
+          <br />
+          de México para el mundo
+        </p>
+
+        <div className="hdr__ctas">
+          <a href="/portafolio" className="hdr__cta hdr__cta--solid">Ver nuestro trabajo</a>
+          <a href="/contacto"   className="hdr__cta hdr__cta--ghost">Hablemos</a>
         </div>
 
-        {/* Flecha hacia abajo en esquina inferior derecha */}
-        <div className="scroll-arrow-corner">
-          <div className="arrow-container">
-            <svg className="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-        </div>
       </div>
 
-      <style jsx>{`
-        /* ============================================
-           CONTENEDOR PRINCIPAL (SIN VIDEO)
-           ============================================ */
-        .video-hero-container {
-          position: relative;
+      {/* Scroll hint */}
+      <div ref={scrollRef} className="hdr-scroll">
+        <div className="hdr-scroll__line" />
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+      </div>
+
+      <style>{`
+        .hdr {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
           width: 100%;
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          max-width: 720px;
+          padding: 0 2rem;
+          opacity: 0;
+          transition: opacity 1.4s ease;
+          will-change: opacity, transform;
         }
 
-        /* ============================================
-           SUBTÍTULO EN ESQUINA INFERIOR IZQUIERDA
-           ============================================ */
-        .video-subtitle-corner {
-          position: absolute;
-          bottom: 60px;
-          left: 60px;
-          z-index: 10;
-        }
-
-        .video-subtitle {
-          font-size: 1.5rem;
+        /* ── Frase ── */
+        .hdr__phrase {
+          font-size: clamp(1.4rem, 2.8vw, 2.2rem);
           font-weight: 300;
-          letter-spacing: 0.15em;
+          line-height: 1.65;
+          letter-spacing: 0.01em;
           color: #F4E4BC;
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-          margin: 0;
-          opacity: 0;
-          transform: translateX(-20px);
-          animation: slideInLeft 1s ease-out 0.5s forwards;
+          margin-bottom: 2.5rem;
         }
 
-        @keyframes slideInLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        /* ============================================
-           FLECHA EN ESQUINA INFERIOR DERECHA
-           ============================================ */
-        .scroll-arrow-corner {
-          position: absolute;
-          bottom: 60px;
-          right: 60px;
-          z-index: 10;
-        }
-
-        .arrow-container {
-          width: 50px;
-          height: 50px;
+        /* ── CTAs ── */
+        .hdr__ctas {
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 2px solid rgba(212, 175, 55, 0.5);
-          border-radius: 50%;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .hdr__cta {
+          display: inline-block;
+          padding: 0.75rem 1.875rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          text-decoration: none;
+          border-radius: 8px;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hdr__cta:hover {
+          opacity: 0.85;
+          transform: translateY(-1px);
+        }
+
+        .hdr__cta--solid {
+          background: #D4AF37;
+          color: #0B1D33;
+          border: 1px solid #D4AF37;
+        }
+
+        .hdr__cta--ghost {
+          background: transparent;
+          color: #F4E4BC;
+          border: 1px solid rgba(244, 228, 188, 0.35);
+        }
+
+        /* ── Scroll hint ── */
+        .hdr-scroll {
+          position: absolute;
+          bottom: 2.5rem;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.4rem;
+          color: rgba(244, 228, 188, 0.35);
           opacity: 0;
-          transform: translateY(-20px);
-          animation: fadeInDown 1s ease-out 0.8s forwards, arrowBounce 2s ease-in-out 1.8s infinite;
+          will-change: opacity;
+          animation: hdr-scroll-in 1s ease-out 1.8s both,
+                     hdr-scroll-bob 2.5s ease-in-out 2.8s infinite;
         }
 
-        .arrow-icon {
-          width: 28px;
+        .hdr-scroll__line {
+          width: 1px;
           height: 28px;
-          color: #D4AF37;
-          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+          background: linear-gradient(to bottom, transparent, rgba(244, 228, 188, 0.35));
         }
 
-        @keyframes fadeInDown {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        @keyframes hdr-scroll-in {
+          from { opacity: 0; }
+          to   { opacity: 0.35; }
         }
 
-        @keyframes arrowBounce {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(10px);
-          }
+        @keyframes hdr-scroll-bob {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50%       { transform: translateX(-50%) translateY(5px); }
         }
 
-        /* ============================================
-           RESPONSIVE - MÓVIL MEJORADO
-           ============================================ */
+        /* ── Mobile ── */
         @media (max-width: 767px) {
-          .video-subtitle-corner {
-            bottom: 80px; /* Aumentado desde 40px */
-            left: 20px;
+          .hdr__phrase {
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
           }
 
-          .video-subtitle {
-            font-size: 1.1rem;
-            letter-spacing: 0.1em;
-          }
-
-          .scroll-arrow-corner {
-            bottom: 80px; /* Aumentado desde 40px */
-            right: 20px;
-          }
-
-          .arrow-container {
-            width: 44px;
-            height: 44px;
-            border-width: 2.5px; /* Borde más visible */
-          }
-
-          .arrow-icon {
-            width: 24px;
-            height: 24px;
-          }
-
-          /* Asegurar que la animación de bounce sea más visible en móvil */
-          @keyframes arrowBounce {
-            0%, 100% {
-              transform: translateY(0);
-            }
-            50% {
-              transform: translateY(12px); /* Más movimiento en móvil */
-            }
+          .hdr__cta {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.8rem;
           }
         }
 
-        /* ============================================
-           RESPONSIVE - MÓVILES PEQUEÑOS
-           ============================================ */
-        @media (max-width: 374px) {
-          .video-subtitle-corner {
-            bottom: 70px;
-            left: 16px;
-          }
-
-          .video-subtitle {
-            font-size: 0.95rem;
-          }
-
-          .scroll-arrow-corner {
-            bottom: 70px;
-            right: 16px;
-          }
-
-          .arrow-container {
-            width: 40px;
-            height: 40px;
-          }
-
-          .arrow-icon {
-            width: 22px;
-            height: 22px;
-          }
-        }
-
-        /* ============================================
-           RESPONSIVE - TABLET
-           ============================================ */
-        @media (min-width: 768px) and (max-width: 1023px) {
-          .video-subtitle-corner {
-            bottom: 70px; /* Ajustado desde 50px */
-            left: 40px;
-          }
-
-          .video-subtitle {
-            font-size: 1.25rem;
-          }
-
-          .scroll-arrow-corner {
-            bottom: 70px; /* Ajustado desde 50px */
-            right: 40px;
-          }
-
-          .arrow-container {
-            width: 46px;
-            height: 46px;
-          }
-
-          .arrow-icon {
-            width: 26px;
-            height: 26px;
-          }
-        }
-
-        /* ============================================
-           RESPONSIVE - DESKTOP
-           ============================================ */
-        @media (min-width: 1024px) {
-          .video-subtitle {
-            font-size: 1.75rem;
-          }
-        }
-
-        /* ============================================
-           AJUSTE PARA PANTALLAS MUY CORTAS
-           ============================================ */
-        @media (max-height: 667px) and (max-width: 767px) {
-          .video-subtitle-corner {
-            bottom: 60px;
-          }
-
-          .scroll-arrow-corner {
-            bottom: 60px;
-          }
-        }
-
-        /* ============================================
-           ACCESIBILIDAD
-           ============================================ */
+        /* ── Reduced motion ── */
         @media (prefers-reduced-motion: reduce) {
-          .video-subtitle,
-          .arrow-container {
-            animation: none !important;
+          .hdr {
+            transition: none;
             opacity: 1;
-            transform: none;
+          }
+          .hdr-scroll {
+            animation: none;
+            opacity: 0.35;
           }
         }
       `}</style>

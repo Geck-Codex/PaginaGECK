@@ -5,6 +5,7 @@ import ServicesPaths from './ServicesPaths.jsx';
 import ForkCompare from './ForkCompare.jsx';
 import { SERVICES_STATIC } from '../../data/services.js';
 import '../../styles/servicios-paths.css';
+import { trackLead } from '../../data/track.js';
 
 /* ─── SERVICIOS (lista plana, una sola hélice) ──────────────────────────
  * cat = índice de categoría (0 Desarrollo · 1 Marketing · 2 Inversión)
@@ -144,6 +145,10 @@ export default function ImprovedServices({ lang }) {
   };
 
   const openWhatsApp = (who, serviceName) => {
+    // Se registra ANTES de abrir: `window.open` puede llevarse el foco a otra
+    // pestaña y, en movil, sacar al navegador de en medio. Lo que quede a
+    // medias que sea la analitica, nunca el WhatsApp.
+    trackLead('whatsapp', 'services');
     const msg = t.services.modal.waMsg(serviceName);
     const num = WA_NUMBERS[who].replace(/[^0-9]/g, '');
     window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');

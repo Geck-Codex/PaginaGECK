@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, User, Mail, MessageSquare, Instagram } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
+import { trackLead } from '../../data/track.js';
 
 export default function Contact({ lang }) {
   const { t } = useLanguage(lang);
@@ -36,16 +37,10 @@ export default function Contact({ lang }) {
   // Access key de Web3Forms: vive en .env (PUBLIC_WEB3FORMS_KEY), no en el código.
   const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
-  /**
-   * Registra la conversión en GA4 / Google Ads. `gcTrack` la define
-   * Analytics.astro y solo existe si hay IDs configurados, por eso la llamada
-   * es opcional: sin tracking, esto no hace nada y no rompe nada.
-   */
-  const track = (method) => {
-    if (typeof window !== 'undefined' && typeof window.gcTrack === 'function') {
-      window.gcTrack('generate_lead', { method, page: window.location.pathname });
-    }
-  };
+  // El registro vive en `data/track.js`, compartido con el pie y con
+  // servicios: cuando estaba escrito aqui, los enlaces de esos dos no
+  // contaban nada y los reportes solo veian esta pagina.
+  const track = (method) => trackLead(method, 'contact');
 
   const handleWhatsApp = () => {
     track('whatsapp');

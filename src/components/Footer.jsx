@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { Github, Instagram, Facebook, Linkedin, ArrowUp } from "lucide-react";
 import { useLanguage } from "../hooks/useLanguage";
 import { localizedPath, LOCALES, LOCALE_META } from '../i18n/routes';
+import { trackLead } from '../data/track.js';
 
 // --- DISPERSIÓN DE TEXTO (mismo patrón que el logo del Navbar) ---
 function DisperseFooterText({ text, isHovered }) {
@@ -123,12 +124,30 @@ export default function GeckFooter({ lang, pageKey }) {
           <div className="footer-col">
             <p className="footer-col__title">{t.footer.contactTitle}</p>
             <ul className="footer-list">
+              {/* Estos dos si cuentan.
+                  Eran enlaces mudos: quien escribia desde el pie no aparecia en
+                  ningun reporte, asi que el pie parecia no traer a nadie cuando
+                  en realidad nadie lo estaba midiendo. `onClick` no interfiere
+                  con la navegacion del enlace —trackLead no bloquea— y si la
+                  analitica no esta cargada, el clic sigue funcionando igual. */}
               <li>
-                <a href="https://wa.me/526271745436" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://wa.me/526271745436"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackLead('whatsapp', 'footer')}
+                >
                   +52 627 174 5436
                 </a>
               </li>
-              <li><a href="mailto:ventas@geckcodex.com">ventas@geckcodex.com</a></li>
+              <li>
+                <a
+                  href="mailto:ventas@geckcodex.com"
+                  onClick={() => trackLead('email', 'footer')}
+                >
+                  ventas@geckcodex.com
+                </a>
+              </li>
               <li>
                 <address className="footer-address">
                   Hidalgo del Parral, Chihuahua, México

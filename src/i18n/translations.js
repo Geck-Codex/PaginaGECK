@@ -149,7 +149,7 @@ export const translations = {
       eyebrow: 'Quiénes somos',
       title: 'Tu proyecto tiene',
       highlight: 'un responsable con nombre',
-      body: 'No somos cuarenta personas rotando tickets. Somos un equipo chico, y uno de nosotros se queda con tu proyecto de principio a fin: lo diseña, lo programa, lo sube y contesta cuando algo falla.',
+      body: 'Uno de nosotros se queda con tu proyecto de principio a fin: lo diseña, lo programa, lo publica y te contesta cuando algo falla. No vas a repetir tu historia en cada llamada ni te van a pasar de un área a otra.',
       role: 'Fundador',
       proof: [
         { k: 'El código es tuyo', d: 'Al liquidar te entregamos todo: código, accesos y el dominio a tu nombre.' },
@@ -627,7 +627,7 @@ export const translations = {
       eyebrow: 'Who we are',
       title: 'Your project gets',
       highlight: 'one person who owns it',
-      body: 'We are not forty people passing tickets around. We are a small team, and one of us stays with your project from start to finish: designs it, builds it, ships it and answers when something breaks.',
+      body: 'One of us stays with your project from start to finish: designs it, builds it, ships it and answers when something breaks. You will not repeat your story on every call or get handed from one department to the next.',
       role: 'Founder',
       proof: [
         { k: 'The code is yours', d: 'On final payment you get everything: code, access and the domain in your name.' },
@@ -1105,7 +1105,7 @@ export const translations = {
       eyebrow: 'Quem somos',
       title: 'Seu projeto tem',
       highlight: 'um responsável com nome',
-      body: 'Não somos quarenta pessoas passando chamados adiante. Somos uma equipe pequena, e um de nós fica com o seu projeto do início ao fim: desenha, programa, publica e responde quando algo falha.',
+      body: 'Um de nós fica com o seu projeto do início ao fim: desenha, programa, publica e responde quando algo falha. Você não vai repetir a sua história a cada ligação nem ser passado de uma área para outra.',
       role: 'Fundador',
       proof: [
         { k: 'O código é seu', d: 'Ao quitar, entregamos tudo: código, acessos e o domínio no seu nome.' },

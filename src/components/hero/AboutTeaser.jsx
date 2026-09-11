@@ -21,9 +21,17 @@ import { TEAM } from '../../data/team.js';
  * QUE DICE AHORA. El argumento que ya estaba escrito en data/team.js y que no
  * se estaba usando: los fundadores no llevan rol tecnico porque no tienen roles
  * fijos, y ponerles "Frontend Developer" seria meterse a competir en el terreno
- * donde una agencia de cuarenta personas siempre gana. El argumento es el
- * contrario — TU PROYECTO TIENE UN RESPONSABLE CON NOMBRE— y las caras son la
- * prueba: se puede ver a quien le vas a marcar.
+ * donde una agencia grande siempre gana. El argumento es el contrario — TU
+ * PROYECTO TIENE UN RESPONSABLE CON NOMBRE— y las caras son la prueba: se puede
+ * ver a quien le vas a marcar.
+ *
+ * EL TAMANO DEL EQUIPO NO SE MENCIONA, y es deliberado. La primera version
+ * abria con "no somos cuarenta personas rotando tickets, somos un equipo
+ * chico". Suena honesto, pero quien esta evaluando un proyecto de decenas de
+ * miles de pesos no lee honestidad: lee "son pocos, a lo mejor no aguantan" —
+ * y esa duda se la estabamos sembrando nosotros antes de que se le ocurriera.
+ * La ventaja se cuenta por el lado del cliente (no repites tu historia, no te
+ * pasan de area en area), que es donde se siente, y no por el nuestro.
  *
  * Las tres afirmaciones de abajo son verificables y estan en otras paginas del
  * sitio: el codigo se entrega, la garantia es de por vida, y se viaja dentro de

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { localizedPath } from '../../i18n/routes';
+import { useAutoplay } from '../../hooks/useAutoplay';
 
 /* La bifurcacion del hub: ecosistema o a medida, cara a cara.
  *
@@ -35,10 +36,45 @@ import { localizedPath } from '../../i18n/routes';
    tengo, que decido yo, que me pregunto, y como se ve en concreto. */
 const ROWS = ['price', 'start', 'decide', 'ask', 'example'];
 
+/* El interruptor se ensena solo una vez: pasa al otro camino y vuelve.
+ *
+ * No es un carrusel, son dos opciones — y dos opciones alternandose para
+ * siempre no informan, molestan a quien esta leyendo. Con un viaje de ida y
+ * vuelta basta para que se entienda que eso se toca, que es lo unico que hace
+ * falta: un interruptor en reposo no dice que se pueda tocar.
+ *
+ * Es el mismo gesto que la demostracion del "Que hacemos" de la portada, y a
+ * proposito: son el mismo patron y deben sentirse igual. */
+const DEMO_MS = 2600;
+
 export default function ForkCompare({ fork, lang }) {
   const [focus, setFocus] = useState(null);
   /* Solo manda en movil; en escritorio se ven los dos y esto no pinta nada. */
   const [shown, setShown] = useState('eco');
+  const rootRef = useRef(null);
+
+  const { stop } = useAutoplay(rootRef, {
+    interval: DEMO_MS,
+    onTick: () => {
+      /* En escritorio se ven los dos caminos a la vez y el interruptor esta
+         oculto: no hay nada que demostrar, y mover `shown` solo provocaria
+         recalculos de estilo que nadie ve. El corte va aqui y no en el CSS
+         porque es el unico sitio que conoce el ancho real. */
+      if (!window.matchMedia('(max-width: 860px)').matches) return false;
+
+      let done = false;
+      setShown((p) => {
+        // Segundo paso: ya volvio a 'eco', la demostracion cumplio.
+        if (p === 'custom') done = true;
+        return p === 'eco' ? 'custom' : 'eco';
+      });
+      return !done;
+    },
+  });
+
+  /* Cualquier toque manda: si el visitante ya eligio, la pagina deja de
+     moverle la tarjeta debajo de la vista. */
+  const choose = (id) => { stop(); setShown(id); };
 
   const cols = [
     { id: 'eco', d: fork.eco, href: localizedPath('ecosystem', lang) },
@@ -49,7 +85,7 @@ export default function ForkCompare({ fork, lang }) {
      hermanas repartiendose el mismo espacio, y eso solo lo puede arbitrar el
      padre. Las columnas se limitan a decir si estan arriba o apartadas. */
   return (
-    <div className="svcx" onMouseLeave={() => setFocus(null)}>
+    <div className="svcx" ref={rootRef} onMouseLeave={() => setFocus(null)}>
       <p className="svcx__hint">{fork.compareHint}</p>
 
       {/* Interruptor de movil. `type="button"` explicito: dentro de un formulario
@@ -62,7 +98,7 @@ export default function ForkCompare({ fork, lang }) {
             role="tab"
             aria-selected={shown === id}
             className={`svcx__sw${shown === id ? ' is-on' : ''}`}
-            onClick={() => setShown(id)}
+            onClick={() => choose(id)}
           >
             {d.k}
             {/* El filete no se desliza de una palabra a otra: cada boton tiene

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useAutoplay } from '../../hooks/useAutoplay';
 
 /* Catalogo de servicios como fichero giratorio (rolodex).
  *
@@ -99,15 +100,39 @@ function useHashIndex(services, goTo) {
   }, [services, goTo]);
 }
 
+/* Cada cuanto se reparte sola. Cuatro segundos y medio es lo que tarda en
+   leerse el titulo y el parrafo de una ficha sin prisa: mas corto atropella al
+   lector, mas largo y el visitante ya decidio que la seccion no se mueve. */
+const AUTO_MS = 4500;
+
 export default function ServiceRolodex({ services, cats, labels }) {
   const [i, setI] = useState(0);
   const reduce = useReducedMotion();
-  const stageRef = useRef(null);
+  const rootRef = useRef(null);
 
   const total = services.length;
   const clamp = useCallback((n) => Math.max(0, Math.min(total - 1, n)), [total]);
-  const goTo = useCallback((n) => setI(clamp(n)), [clamp]);
-  const step = useCallback((d) => setI((p) => clamp(p + d)), [clamp]);
+
+  /* El ciclo automatico se corta al primer gesto manual —boton, punto, tecla,
+     arrastre o un ancla de la URL—. Por eso TODO lo manual pasa por aqui. */
+  const { stop } = useAutoplay(rootRef, {
+    interval: AUTO_MS,
+    onTick: () => {
+      let last = false;
+      setI((p) => {
+        const next = p + 1;
+        /* Se detiene al llegar a la ultima en vez de volver al principio: la
+           demostracion ya cumplio —enseno que hay siete y como se pasan— y
+           repetirla en bucle solo compite con quien esta leyendo. */
+        if (next >= total - 1) last = true;
+        return clamp(next);
+      });
+      return !last;
+    },
+  });
+
+  const goTo = useCallback((n) => { stop(); setI(clamp(n)); }, [clamp, stop]);
+  const step = useCallback((d) => { stop(); setI((p) => clamp(p + d)); }, [clamp, stop]);
 
   useHashIndex(services, goTo);
 
@@ -134,7 +159,7 @@ export default function ServiceRolodex({ services, cats, labels }) {
   const pad = (n) => String(n + 1).padStart(2, '0');
 
   return (
-    <div className="rlx" onKeyDown={onKeyDown}>
+    <div className="rlx" ref={rootRef} onKeyDown={onKeyDown}>
       {/* Marcador: en cual vas y cuantas quedan, sin contarlas. */}
       <div className="rlx__hud">
         <span className="rlx__hud-n"><b>{pad(i)}</b><i>/ {pad(total - 1)}</i></span>
@@ -147,7 +172,7 @@ export default function ServiceRolodex({ services, cats, labels }) {
         </span>
       </div>
 
-      <div className="rlx__stage" ref={stageRef}>
+      <div className="rlx__stage">
         {services.map((x, idx) => {
           const offset = idx - i;
           const front = offset === 0;
@@ -175,6 +200,7 @@ export default function ServiceRolodex({ services, cats, labels }) {
                   : { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
               }
               drag={front && !reduce ? 'x' : false}
+              onDragStart={stop}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.14}
               onDragEnd={onDragEnd}

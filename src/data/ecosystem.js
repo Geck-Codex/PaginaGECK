@@ -39,6 +39,37 @@ export const MODULES = [
 ];
 
 /**
+ * Segunda disposicion, para pantallas angostas: dos columnas por tres filas.
+ *
+ * No es la de arriba encogida. El diagrama ancho mide 808 de viewBox, y
+ * meterlo en los ~310 px utiles de un telefono lo deja al 38%: los nombres de
+ * los modulos quedan en cuatro pixeles y el diagrama deja de decir nada. Antes
+ * se resolvia con `min-width: 520px` y scroll lateral, que es de donde venia
+ * que los modulos de las orillas aparecieran cortados por el contenedor.
+ *
+ * El emparejamiento tambien esta pensado para que los cables se crucen lo menos
+ * posible EN ESTA forma: menu-pos arriba (van juntos), nuki-crm en medio, y
+ * cita-nfc abajo colgando del CRM.
+ */
+export const NARROW_POS = {
+  menu: { x: 20,  y: 20  },
+  pos:  { x: 297, y: 20  },
+  nuki: { x: 20,  y: 135 },
+  crm:  { x: 297, y: 135 },
+  cita: { x: 20,  y: 250 },
+  nfc:  { x: 297, y: 250 },
+};
+
+/** viewBox de cada disposicion, con 24 de aire alrededor. */
+export const VIEWBOX = {
+  wide:   '-24 -24 808 378',
+  narrow: '-24 -24 510 358',
+};
+
+/** Ancho por debajo del cual se usa la disposicion angosta. */
+export const NARROW_AT = 620;
+
+/**
  * `confirmed: true` = el usuario confirmo que esa conexion existe por diseno.
  * `false` = la supongo yo y esta pendiente de confirmar; se marca en pantalla.
  *

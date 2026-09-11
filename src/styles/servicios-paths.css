@@ -283,11 +283,18 @@
 /* El diagrama se lleva el ancho: es lo que vende. El lateral solo carga con
    lo que cambia al pulsar, asi que le basta una columna estrecha. */
 .eco__rig-main { display: grid; grid-template-columns: minmax(0, 1fr) 330px; }
+/* Sin `min-width` ni scroll lateral: el diagrama SIEMPRE cabe entero.
+   Antes el SVG se plantaba en 520px y el sobrante se salia del contenedor, que
+   es de donde venia que los modulos de las orillas aparecieran cortados por la
+   mitad. Ahora el que se adapta es el diagrama: por debajo de 620px cambia a
+   dos columnas por tres filas (ver NARROW_POS en data/ecosystem.js) en vez de
+   encogerse hasta ser ilegible. */
 .eco__stage {
   display: flex; align-items: center; justify-content: center;
-  padding: clamp(1.6rem, 3.6vw, 3rem); overflow-x: auto;
+  padding: clamp(1rem, 3.6vw, 3rem);
+  min-width: 0;
 }
-.eco__stage svg { display: block; width: 100%; height: auto; min-width: 520px; }
+.eco__stage svg { display: block; width: 100%; height: auto; }
 
 .eco__side {
   border-left: 1px solid var(--border); background: var(--surface);
@@ -348,19 +355,24 @@
   border-bottom: 1px solid var(--border); background: var(--surface);
 }
 .eco__rig-top-head { min-width: 0; }
+/* La cabecera de los atajos baja de escalon con ellos: si el titulo se queda
+   grande, achicar solo las pastillas deja el bloque descompensado. */
 .eco__rig-top-title {
   font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
   letter-spacing: -0.015em; margin: 0;
 }
 .eco__rig-top-hint { margin: 0.3rem 0 0; font-size: 0.82rem; color: var(--text-muted); max-width: 46ch; }
 
-.eco__presets { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+/* Los atajos por rubro son el PUNTO DE PARTIDA, no el plato fuerte: quien ya
+   sabe lo que quiere va directo al diagrama. Se achicaron para que dejen de
+   competir por atencion con lo que si vende, que es el aparato de abajo. */
+.eco__presets { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 /* Pastillas con peso: son el punto de partida, no una fila de filtros. */
 .eco__chip {
-  display: inline-flex; align-items: center; gap: 0.55rem;
-  padding: 0.7rem 1.15rem; border-radius: 50px;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.42rem 0.75rem; border-radius: 50px;
   border: 1px solid var(--border-strong); background: var(--surface-2);
-  color: var(--text); font: inherit; font-size: 0.88rem; font-weight: 600;
+  color: var(--text); font: inherit; font-size: 0.76rem; font-weight: 600;
   cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.2s;
 }
 .eco__chip:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -371,9 +383,9 @@
 /* Cuantas piezas enciende: evita pulsarlo a ciegas. */
 .eco__chip-n {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 1.35em; height: 1.35em; padding: 0 0.3em; border-radius: 50px;
+  min-width: 1.3em; height: 1.3em; padding: 0 0.28em; border-radius: 50px;
   background: var(--border); color: var(--text-muted);
-  font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  font-size: 0.64rem; font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .eco__chip.is-on .eco__chip-n { background: var(--accent); color: var(--on-accent, #1F1F1E); }
 
@@ -624,168 +636,94 @@
 
 /* ════════ La bifurcacion, cara a cara (ForkCompare) ════════
  *
- * Dos columnas que comparten las filas: el precio de un camino queda a la
- * altura del precio del otro, y la diferencia se lee sin buscarla. La
- * alineacion la sostiene `subgrid` — cada columna hereda las filas del grid
- * de fuera, asi que una celda que crece a dos lineas empuja a su pareja del
- * otro lado. Donde no haya subgrid las columnas siguen siendo legibles, solo
- * que cada una con sus propias alturas.
+ * Sin cajas, como la rejilla de "Que hacemos" de la portada: las celdas se
+ * apoyan en el fondo de la pagina y solo las separan filetes de un pixel. El
+ * aire lo dan los paddings. Antes cada columna era una tarjeta con fondo y
+ * borde, y en pantallas estrechas el contenido chocaba contra ese contenedor.
  *
- * El foco no se pinta, se reparte: al pasar el cursor cambia el reparto de
- * columnas del grid y la tarjeta mirada se lleva el ancho de la otra. Donde
- * el navegador no interpole `grid-template-columns` el cambio es instantaneo
- * en vez de suave, que sigue siendo la lectura correcta.
+ * La alineacion la sostiene `subgrid`: cada columna hereda las filas del grid
+ * de fuera, asi que una celda que crece a dos lineas empuja a su pareja del
+ * otro lado y "Arranque" queda siempre a la altura de "Arranque". Donde no
+ * haya subgrid las columnas siguen siendo legibles, solo que cada una con sus
+ * propias alturas.
+ *
+ * DOS COLUMNAS SIEMPRE, en cualquier ancho. Lo que se ajusta es el cuerpo del
+ * texto, nunca el numero de columnas: apiladas dejan de comparar, que es lo
+ * unico que esta seccion viene a hacer.
  */
-.svcx { margin-top: clamp(2.4rem, 5vw, 3.6rem); }
-.svcx__hint {
-  text-align: center; font-size: 0.82rem; color: var(--text-muted);
-  margin: 0 0 1.4rem;
-}
+.svcx { margin-top: clamp(2.2rem, 5vw, 3.6rem); }
+
+/* El eje de etiquetas y la pista de hover se fueron: la etiqueta ahora vive
+   dentro de cada celda y el reparto de ancho ya no cambia al pasar el cursor. */
+.svcx__hint, .svcx__labels { display: none; }
+
 .svcx__grid {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: auto repeat(5, auto) auto;
-  gap: 0 1.1rem;
-  transition: grid-template-columns 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.svcx__grid.on-eco    { grid-template-columns: auto minmax(0, 1.55fr) minmax(0, 0.75fr); }
-.svcx__grid.on-custom { grid-template-columns: auto minmax(0, 0.75fr) minmax(0, 1.55fr); }
-
-.svcx__labels, .svcx__col { display: grid; grid-row: 1 / -1; grid-template-rows: subgrid; }
-
-/* Las etiquetas viven fuera de las columnas para no repetirse a los dos
-   lados: son el eje sobre el que se compara. */
-.svcx__lbl {
-  display: flex; align-items: center; justify-content: flex-end;
-  text-align: right; padding: 0.9rem 0;
-  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--text-muted);
-}
-.svcx__lbl--head, .svcx__lbl--foot { padding: 0; }
-
-.svcx__col {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-  color: inherit; text-decoration: none; cursor: pointer;
-  transition: border-color 0.32s ease, transform 0.32s ease, opacity 0.32s ease, box-shadow 0.32s ease;
-}
-.svcx__col:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-/* El camino que estas mirando se levanta; el otro se aparta sin irse. */
-.svcx__col.is-up {
-  border-color: var(--accent); transform: translateY(-6px);
-  box-shadow: 0 18px 48px -22px rgba(0, 0, 0, 0.6);
-}
-.svcx__col.is-dim { opacity: 0.42; transform: scale(0.98); }
-
-.svcx__cell {
-  display: flex; align-items: center; min-height: 3.2rem;
-  padding: 0.9rem clamp(1.2rem, 2.4vw, 1.8rem);
   border-top: 1px solid var(--border);
 }
-.svcx__cell--head {
-  display: block; border-top: 0;
-  padding: clamp(1.5rem, 3vw, 2.2rem) clamp(1.2rem, 2.4vw, 1.8rem) clamp(1.2rem, 2.4vw, 1.6rem);
+
+.svcx__col {
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  color: inherit; text-decoration: none; cursor: pointer;
+  transition: background-color 0.24s ease;
 }
+/* Filete vertical solo entre las dos columnas, no alrededor. */
+.svcx__col--eco { border-right: 1px solid var(--border); }
+.svcx__col:hover { background: var(--surface-2); }
+.svcx__col:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.svcx__cell {
+  display: block;
+  padding: clamp(0.7rem, 1.7vw, 1.05rem) clamp(0.8rem, 2.2vw, 1.6rem);
+  border-bottom: 1px solid var(--border);
+}
+.svcx__cell--head { padding-top: clamp(1.1rem, 2.6vw, 1.9rem); }
+.svcx__cell--foot { border-bottom: 0; padding-bottom: clamp(1.1rem, 2.6vw, 1.7rem); }
+
+/* La etiqueta de la fila, encima del dato. Cabecera y pie no llevan `data-k`,
+   y sin esta regla pintarian una linea vacia que desalinearia las columnas. */
+.svcx__cell::before {
+  content: attr(data-k);
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: clamp(0.54rem, 1.1vw, 0.6rem);
+  font-weight: 800; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.svcx__cell--head::before, .svcx__cell--foot::before { content: none; }
+
 .svcx__k {
-  display: block; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.16em;
+  display: block;
+  font-size: clamp(0.54rem, 1.1vw, 0.62rem);
+  font-weight: 800; letter-spacing: 0.15em;
   text-transform: uppercase; color: var(--accent-text);
 }
 .svcx__t {
   display: block; font-family: var(--font-display);
-  margin-block: 0;
-  font-size: clamp(1.35rem, 2.6vw, 1.7rem);
-  font-weight: 700; letter-spacing: -0.02em; margin: 0.55rem 0 0;
-  transition: font-size 0.32s ease;
+  font-size: clamp(1rem, 2.6vw, 1.7rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+  margin: 0.45rem 0 0;
 }
-.svcx__col.is-up .svcx__t { font-size: clamp(1.5rem, 3vw, 2rem); }
-.svcx__d { display: block; color: var(--text-muted); font-size: 0.92rem; margin: 0.6rem 0 0; }
-.svcx__v { font-size: 0.92rem; font-weight: 600; }
-.svcx__cell--foot { padding-top: 1.2rem; padding-bottom: clamp(1.4rem, 2.6vw, 1.8rem); }
-/* El pie es la promesa del enlace, no el enlace: la tarjeta entera lo es. */
-.svcx__go { color: var(--accent-text); font-weight: 700; }
-.svcx__col.is-up .svcx__go { text-decoration: underline; }
-
-/* En movil las dos columnas SIGUEN una al lado de la otra.
- *
- * Antes se apilaban como dos tarjetas sueltas, y con eso se perdia lo unico
- * que esta seccion viene a hacer: comparar. Apiladas hay que bajar, memorizar
- * "dias", subir, y contrastar contra "semanas o meses" — que es exactamente el
- * ir y venir que la version de escritorio elimina. Se quedan lado a lado.
- *
- * Lo que cambia respecto a escritorio, porque en un telefono no cabe igual:
- *   · Desaparece la columna de etiquetas y cada celda pone la suya ARRIBA del
- *     dato, no a la izquierda: en ~170 px de ancho, etiqueta y valor en la
- *     misma linea no caben sin romperse los dos.
- *   · El subgrid se conserva, y es lo que sostiene todo: la fila "Arranque" de
- *     una columna queda a la altura de la de enfrente aunque una ocupe dos
- *     lineas y la otra una.
- *   · No hay hover en tactil, asi que el reparto de ancho se congela en mitad
- *     y mitad. Tocar la columna sigue navegando: la tarjeta entera es el enlace.
- */
-@media (max-width: 860px) {
-  .svcx { margin-top: 2rem; }
-  .svcx__hint { display: none; }
-
-  .svcx__grid,
-  .svcx__grid.on-eco,
-  .svcx__grid.on-custom {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0 0.7rem;
-  }
-  .svcx__labels { display: none; }
-
-  /* El realce del hover no aplica en tactil: las dos se ven igual siempre. */
-  .svcx__col.is-dim, .svcx__col.is-up {
-    opacity: 1; transform: none; box-shadow: none; border-color: var(--border);
-  }
-
-  .svcx__cell {
-    display: block;
-    min-height: 0;
-    padding: 0.75rem 0.85rem;
-  }
-  .svcx__cell--head {
-    padding: 1.15rem 0.85rem 1rem;
-  }
-  .svcx__cell--foot {
-    padding-top: 1rem; padding-bottom: 1.15rem;
-  }
-
-  .svcx__cell::before {
-    content: attr(data-k);
-    display: block;
-    margin-bottom: 0.3rem;
-    font-size: 0.55rem; font-weight: 800; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text-muted);
-  }
-  /* Cabecera y pie no llevan data-k, y sin esto pintarian una linea vacia
-     que desalinearia las dos columnas entre si. */
-  .svcx__cell--head::before, .svcx__cell--foot::before { content: none; }
-
-  .svcx__k { font-size: 0.55rem; letter-spacing: 0.12em; }
-  .svcx__t,
-  .svcx__col.is-up .svcx__t { font-size: 1.02rem; line-height: 1.2; margin-top: 0.4rem; }
-  .svcx__d { font-size: 0.78rem; line-height: 1.45; margin-top: 0.45rem; }
-  .svcx__v { font-size: 0.82rem; line-height: 1.35; }
-  .svcx__go { font-size: 0.78rem; }
+.svcx__d {
+  display: block; color: var(--text-muted);
+  font-size: clamp(0.76rem, 1.5vw, 0.92rem); line-height: 1.5;
+  margin: 0.5rem 0 0;
 }
-
-/* Telefono angosto: el texto baja otro escalon antes que romper la comparacion.
-   Preferimos letra chica a columnas apiladas — apiladas ya no comparan nada. */
-@media (max-width: 400px) {
-  .svcx__grid,
-  .svcx__grid.on-eco,
-  .svcx__grid.on-custom { gap: 0 0.5rem; }
-  .svcx__cell { padding: 0.65rem 0.6rem; }
-  .svcx__cell--head { padding: 1rem 0.6rem 0.85rem; }
-  .svcx__t, .svcx__col.is-up .svcx__t { font-size: 0.94rem; }
-  .svcx__d { font-size: 0.74rem; }
-  .svcx__v { font-size: 0.78rem; }
+.svcx__v {
+  font-size: clamp(0.8rem, 1.5vw, 0.92rem); font-weight: 600; line-height: 1.35;
 }
+.svcx__go {
+  color: var(--accent-text); font-weight: 700;
+  font-size: clamp(0.78rem, 1.5vw, 0.92rem);
+}
+.svcx__col:hover .svcx__go { text-decoration: underline; }
 
 @media (prefers-reduced-motion: reduce) {
-  .svcx__grid, .svcx__col, .svcx__t { transition: none; }
-  .svcx__col.is-up { transform: none; }
-  .svcx__col.is-dim { transform: none; }
+  .svcx__col { transition: none; }
 }
 
 

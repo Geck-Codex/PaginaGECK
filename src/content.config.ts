@@ -2,9 +2,9 @@
  * Colecciones de contenido — por ahora solo el blog.
  *
  * Los artículos viven como Markdown en `src/content/blog/` y no en una base de
- * datos: el panel de /admin escribe estos mismos archivos vía commit, así que
- * el contenido queda versionado en git junto al código. Si el panel dejara de
- * existir, los artículos siguen aquí y se editan a mano.
+ * datos, así que el contenido queda versionado en git junto al código: se
+ * escriben, se revisan y se despliegan por el mismo camino que todo lo demás.
+ * Un artículo es un archivo; publicarlo es un commit.
  *
  * El esquema no es decoración: `@astrojs/content` valida cada archivo en el
  * build y lo revienta si falta un campo o si una fecha no es fecha. Un

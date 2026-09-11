@@ -9,11 +9,6 @@ Allow: /
 # /blog YA NO lleva noindex: dejo de ser un placeholder y ahora es la seccion
 # que mas se actualiza, justo la que conviene que se rastree seguido.
 
-# El panel de edicion no es contenido: es una pantalla de login que no sirve a
-# nadie en los resultados. Aqui si conviene bloquear el rastreo, porque no hay
-# ninguna etiqueta que se quiera hacer llegar al buscador.
-Disallow: /admin/
-
 # ── Motores de busqueda con IA (AEO / GEO) ────────────────
 # Se permiten explicitamente para que el sitio pueda ser
 # citado como fuente en respuestas generativas.

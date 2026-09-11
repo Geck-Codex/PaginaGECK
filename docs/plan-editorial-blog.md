@@ -223,9 +223,16 @@ hipótesis.
 
 ## Cómo publicar
 
-1. Entra a `geckcodex.com/admin` con tu cuenta de GitHub.
-2. **Artículos del blog → nuevo.**
-3. Llena título, descripción y fecha. El panel no te deja guardar si la
-   descripción se sale del rango que Google muestra sin cortar.
-4. Escribe. Si no lo terminas, enciende **Guardar como borrador**.
-5. Publicar. En más o menos un minuto está en línea.
+Los artículos se escriben en el repo, no en un panel. El camino es el mismo que
+el de cualquier cambio de código, y eso es deliberado: el artículo pasa por
+revisión antes de salir, igual que todo lo demás.
+
+1. El artículo se escribe como `.md` en `src/content/blog/`, siguiendo la skill
+   `escribir-articulo`.
+2. `node scripts/generate-blog-cover.mjs <slug>` para la portada.
+3. `npm run build` — valida el frontmatter y falla si algo no cumple.
+4. Commit en `astro` y pull request a `main`.
+5. Netlify reconstruye al hacer merge. En minutos está en línea.
+
+Para guardar un artículo a medias sin publicarlo, `draft: true` en el
+frontmatter: queda fuera del blog, del sitemap y del feed hasta que se apague.

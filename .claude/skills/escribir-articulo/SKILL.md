@@ -143,6 +143,3 @@ cientos de kilobytes y se ven igual en el blog de cualquier agencia del mundo.
   `/en/blog/` y `/pt/blog/` sin plantilla y rompería el build.
 - **No poner `lastmod` global en el sitemap** ni tocar `readBlogDates()` de
   `astro.config.mjs` sin leer por qué está así.
-- **No editar desde `astro` un artículo que el usuario haya publicado desde el
-  panel `/admin`** sin antes sincronizar con `git merge origin/main`: el panel
-  escribe en `main`.

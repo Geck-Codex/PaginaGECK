@@ -30,31 +30,31 @@ export interface PageMeta {
 export const PAGE_META: Record<PageKey, Record<Locale, PageMeta>> = {
   home: {
     es: {
-      title: 'Desarrollo Web, Apps Móviles e IA en México | Geck Codex',
+      title: 'Desarrollo Web, Apps Móviles e IA en Chihuahua | Geck Codex',
       description:
-        'Agencia de desarrollo de software en Parral, Chihuahua. Sitios web, apps móviles, IA y e-commerce a la medida. Cotización sin costo y respuesta en 24 h.',
-      ogTitle: 'Desarrollo web, apps e IA — Parral y Chihuahua',
+        'Desarrollo de software en Chihuahua: sitios web, apps móviles, IA y e-commerce a la medida para la capital, Ciudad Juárez y todo México. Cotiza sin costo.',
+      ogTitle: 'Desarrollo web, apps e IA — Chihuahua y Ciudad Juárez',
       ogDescription:
         'Software a la medida para empresas de México y Estados Unidos. Cotización sin costo y respuesta en menos de 24 horas.',
-      h1: 'Geck Codex — Desarrollo web, apps móviles e inteligencia artificial en Parral, Chihuahua, México',
+      h1: 'Geck Codex — Desarrollo web, apps móviles e inteligencia artificial en Chihuahua, Ciudad Juárez y todo México',
     },
     en: {
       title: 'Web Development, Mobile Apps & AI in Mexico | Geck Codex',
       description:
-        'Software development agency in Parral, Chihuahua. Custom websites, mobile apps, AI and e-commerce. Free quote and a reply in under 24 hours.',
-      ogTitle: 'Web development, apps and AI — Parral, Mexico',
+        'Software development agency in Chihuahua, Mexico. Custom websites, mobile apps, AI and e-commerce. Free quote and a reply in under 24 hours.',
+      ogTitle: 'Web development, apps and AI — Chihuahua, Mexico',
       ogDescription:
         'Custom software for companies in Mexico and the United States. Free quote and a reply in under 24 hours.',
-      h1: 'Geck Codex — Web development, mobile apps and artificial intelligence in Parral, Chihuahua, Mexico',
+      h1: 'Geck Codex — Web development, mobile apps and artificial intelligence in Chihuahua and Ciudad Juárez, Mexico',
     },
     pt: {
       title: 'Desenvolvimento Web, Apps e IA no México | Geck Codex',
       description:
-        'Agência de desenvolvimento de software em Parral, Chihuahua. Sites, aplicativos móveis, IA e e-commerce sob medida. Orçamento grátis e resposta em 24 h.',
-      ogTitle: 'Desenvolvimento web, apps e IA — Parral, México',
+        'Agência de desenvolvimento de software em Chihuahua, México. Sites, aplicativos móveis, IA e e-commerce sob medida. Orçamento grátis e resposta em 24 h.',
+      ogTitle: 'Desenvolvimento web, apps e IA — Chihuahua, México',
       ogDescription:
         'Software sob medida para empresas do México e dos Estados Unidos. Orçamento sem custo e resposta em menos de 24 horas.',
-      h1: 'Geck Codex — Desenvolvimento web, aplicativos móveis e inteligência artificial em Parral, Chihuahua, México',
+      h1: 'Geck Codex — Desenvolvimento web, aplicativos móveis e inteligência artificial em Chihuahua e Ciudad Juárez, México',
     },
   },
 
@@ -142,13 +142,13 @@ export const PAGE_META: Record<PageKey, Record<Locale, PageMeta>> = {
 
   about: {
     es: {
-      title: 'Nosotros: Equipo Tecnológico en Parral, Chihuahua | Geck Codex',
+      title: 'Nosotros: Equipo de Desarrollo en Chihuahua | Geck Codex',
       description:
         'Conoce al equipo de Geck Codex: desarrolladores mexicanos expertos en React, Node.js, Python, Flutter e IA, con sede en Hidalgo del Parral, Chihuahua.',
       breadcrumb: 'Nosotros',
     },
     en: {
-      title: 'About Us: Tech Team in Parral, Chihuahua | Geck Codex',
+      title: 'About Us: Software Team in Chihuahua, Mexico | Geck Codex',
       description:
         'Meet the team behind Geck Codex: Mexican developers specializing in React, Node.js, Python, Flutter and AI, based in Hidalgo del Parral, Chihuahua.',
       breadcrumb: 'About',

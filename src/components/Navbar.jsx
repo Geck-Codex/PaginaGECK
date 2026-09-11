@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Menu, X, Briefcase, Info, BookOpen, Mail, Layers, ArrowUpRight, Sun, Moon } from "lucide-react";
+import { FLAGS } from "./Flags.jsx";
 import { translations as allTranslations } from "../i18n/translations";
 import { localizedPath, resolvePath, DEFAULT_LOCALE } from "../i18n/routes";
 
@@ -9,10 +10,13 @@ const navTranslations = {
   pt: allTranslations.pt.nav,
 };
 
+/* El espanol va con la bandera de MEXICO, no la de Espana: la variante del
+   sitio es es-MX y el mercado esta en Chihuahua, no en Madrid. Las banderas se
+   dibujan en `Flags.jsx` — el emoji no sirve, en Windows no existe el glifo. */
 const languageOptions = [
-  { code: "en", label: "English", flag: "🇺🇸" },
-  { code: "es", label: "Español", flag: "🇪🇸" },
-  { code: "pt", label: "Português", flag: "🇧🇷" },
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+  { code: "pt", label: "Português" },
 ];
 
 export default function GeckNavbar({ lang, pageKey }) {
@@ -286,8 +290,16 @@ export default function GeckNavbar({ lang, pageKey }) {
         .mr-link:hover .mr-link__arrow { opacity: 1; transform: translate(0, 0); }
 
         /* ── Pie: idioma + tema ── */
+        /* Los dos mandos —idioma y tema— van en la MISMA fila y repartidos.
+           Apilados, cada uno arrancaba pegado al margen izquierdo y el pie del
+           menu se veia cargado hacia ese lado, con un hueco muerto a la
+           derecha. En fila el peso queda repartido y el bloque se cierra solo.
+           Van repartidos y no centrados: son dos mandos distintos, y
+           separarlos evita que se lean como un solo control de cinco botones. */
         .mr-footer {
-          display: flex; flex-wrap: wrap; gap: 2.5rem;
+          display: flex; flex-wrap: wrap;
+          justify-content: space-between; align-items: flex-end;
+          gap: 1.25rem 1.5rem;
           margin-top: clamp(2rem, 5vh, 3.5rem);
           opacity: 0; transform: translateY(20px);
           transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -307,14 +319,24 @@ export default function GeckNavbar({ lang, pageKey }) {
           background: var(--navy-deep);
           border: 1px solid var(--border);
         }
+        /* Con los dos mandos en una fila el ancho ya no sobra: los botones
+           dejan de pedir 3rem fijos y se ajustan a su contenido. */
         .mr-seg__btn {
           display: inline-flex; align-items: center; justify-content: center;
-          min-width: 3rem; height: 2.6rem; padding: 0 1rem;
+          gap: 0.4rem;
+          min-width: 2.6rem; height: 2.5rem; padding: 0 0.7rem;
           border: none; border-radius: 999px;
           background: transparent; cursor: pointer;
           color: rgba(255,255,255,0.6);
           font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.05em;
           transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        }
+        .mr-seg__btn--lang { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; }
+        /* Filete tenue: sobre el blanco de la bandera de Mexico, el borde del
+           rectangulo desaparecia contra el fondo claro del boton activo. */
+        .mr-flag {
+          display: block; border-radius: 2px; flex: none;
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22);
         }
         .mr-seg__btn:hover { color: var(--white-soft); transform: translateY(-1px); }
         .mr-seg__btn.active { background: var(--accent); color: var(--on-accent); }
@@ -437,17 +459,24 @@ export default function GeckNavbar({ lang, pageKey }) {
                       abrir en pestana nueva, no se copia con clic derecho y
                       ningun rastreador lo sigue. El destino se calcula aqui
                       mismo en el render en vez de dentro del onClick. */}
-                  {languageOptions.map((opt) => (
-                    <a
-                      key={opt.code}
-                      href={languageHref(opt.code)}
-                      className={`mr-seg__btn ${language === opt.code ? "active" : ""}`}
-                      aria-label={opt.label}
-                      aria-current={language === opt.code ? "true" : undefined}
-                    >
-                      {opt.code.toUpperCase()}
-                    </a>
-                  ))}
+                  {languageOptions.map((opt) => {
+                    const Flag = FLAGS[opt.code];
+                    return (
+                      <a
+                        key={opt.code}
+                        href={languageHref(opt.code)}
+                        className={`mr-seg__btn mr-seg__btn--lang ${language === opt.code ? "active" : ""}`}
+                        aria-label={opt.label}
+                        aria-current={language === opt.code ? "true" : undefined}
+                      >
+                        {/* La bandera acompana al codigo, nunca lo sustituye:
+                            un idioma no es un pais, y el codigo es lo que de
+                            verdad informa. */}
+                        {Flag && <Flag className="mr-flag" />}
+                        {opt.code.toUpperCase()}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
 

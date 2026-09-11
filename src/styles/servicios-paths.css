@@ -926,12 +926,19 @@
 /* ── Escenario ── */
 .rlx__stage {
   position: relative;
-  max-width: 900px; margin: 0 auto;
+  max-width: 900px;
+  /* Aire ARRIBA, y no es margen decorativo: las fichas de atras asoman por
+     encima de la de enfrente, y sin este hueco se meterian debajo del
+     marcador. Es el precio de que la pila se vea, y se paga. */
+  margin: clamp(3.2rem, 8vw, 5rem) auto 0;
   /* El alto lo manda el escenario, no la ficha: con `auto` la pagina saltaria
      cada vez que una tarjeta mas larga pasa al frente. */
   height: clamp(430px, 62vh, 540px);
-  perspective: 1500px;
-  perspective-origin: 50% 30%;
+  /* Perspectiva corta = fuga marcada. Con un valor alto el escalonado se
+     aplana y la pila deja de leerse como pila. El punto de fuga va arriba
+     porque es por donde salen las fichas. */
+  perspective: 1100px;
+  perspective-origin: 50% 18%;
 }
 
 .rlx__card {
@@ -946,6 +953,9 @@
   display: grid; grid-template-rows: minmax(0, 1fr) auto;
   will-change: transform, opacity;
 }
+/* La sombra la llevan TODAS, no solo la de enfrente: es lo que separa una
+   ficha de la de atras. Sin ella el escalonado se ve como bordes pegados. */
+.rlx__card { box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.5); }
 .rlx__card.is-front {
   border-color: var(--border-strong);
   box-shadow: 0 26px 60px -30px rgba(0, 0, 0, 0.55);

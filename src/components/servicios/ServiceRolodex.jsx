@@ -7,12 +7,16 @@ import { motion, useReducedMotion } from 'framer-motion';
  * otra eran siete pantallas de scroll para leer siete parrafos, y quien no
  * bajaba hasta el final no sabia que existian los ultimos.
  *
- * Las fichas cuelgan de un eje HORIZONTAL por su borde superior, como las de
- * un fichero de escritorio o las aletas de un tablero de aeropuerto. Al
- * avanzar, la de enfrente cae hacia el lector y sale por arriba mientras la
- * siguiente se endereza. No es un fundido disfrazado: el giro pasa por el
- * canto, y ver ese canto es lo que convierte el cambio en un movimiento y no
- * en un parpadeo.
+ * Es una PILA con fondo visible: detras de la ficha de enfrente asoman las tres
+ * siguientes, escalonadas hacia arriba y hacia atras. Ese escalonado es lo que
+ * mas aporta —se ve de un vistazo que hay mas y cuantas— y por eso manda sobre
+ * el resto del diseno: el alto del escenario, el aire de arriba y los tamanos
+ * estan puestos para que se vea, tambien en el telefono.
+ *
+ * Al avanzar, la de enfrente se levanta y sale por arriba mientras las de atras
+ * dan un paso adelante enderezandose. Todas con la misma curva y la misma
+ * duracion, para que el gesto se lea como una pila moviendose y no como cuatro
+ * tarjetas animandose cada una por su lado.
  *
  * DOS COSAS QUE NO SE PUEDEN ROMPER, y que condicionan todo el diseno:
  *
@@ -28,32 +32,48 @@ import { motion, useReducedMotion } from 'framer-motion';
  *      una tarjeta invisible. De eso se encarga `useHashIndex`.
  */
 
-/* Cuantas fichas se ven asomando detras de la de enfrente. Mas de dos y el
-   fondo se convierte en ruido; ninguna y el fichero parece de una sola hoja. */
-const DEPTH = 2;
+/* Cuantas fichas asoman detras de la de enfrente.
+ *
+ * Tres es lo que hace que se lea como una PILA y no como dos hojas sueltas: el
+ * ojo necesita ver que el escalonado sigue para entender que hay mas atras.
+ * La cuarta ya no aporta profundidad, solo ruido en el borde superior. */
+const DEPTH = 3;
 
 /**
  * Posicion de una ficha segun su distancia a la de enfrente.
  *
- * `origin: top` en el CSS hace que todas giren colgadas de su borde superior.
- * Un `rotateX` positivo inclina la ficha hacia atras —es la pila que espera— y
- * uno negativo la tumba hacia el lector, que es la que se esta yendo.
+ * La bisagra esta en el borde superior (`transform-origin: center top` en el
+ * CSS). Un `rotateX` positivo inclina la ficha hacia atras, que es como espera
+ * la pila; la que sale se va HACIA ARRIBA, no volteandose encima del lector.
+ *
+ * El giro brusco de antes —la ficha tumbandose 104 grados hacia adelante— se
+ * retiro: llamaba mas la atencion el aspaviento que la tarjeta que llegaba, y
+ * en un telefono, con la cara tan cerca, mareaba. Ahora el movimiento es el de
+ * una pila que avanza: la de enfrente se levanta y se va, y las de atras dan
+ * un paso adelante enderezandose. Eso es lo que se queria ver.
+ *
+ * Los escalones son grandes a proposito —6% de alto y 6% de escala entre una
+ * ficha y la siguiente— porque un escalonado sutil a esta distancia no se
+ * distingue de un borde mal alineado.
  */
 function poseOf(offset) {
   if (offset === 0) return { rotateX: 0, y: '0%', scale: 1, opacity: 1, zIndex: 30 };
 
-  // Ya paso: cae hacia el lector y sale por arriba.
+  /* Ya paso: se levanta y sale por arriba, girando apenas lo justo para que se
+     note que es una ficha y no un rectangulo que se desvanece. */
   if (offset < 0) {
-    return { rotateX: -104, y: '-14%', scale: 1, opacity: 0, zIndex: 10 };
+    return { rotateX: -22, y: '-58%', scale: 1.04, opacity: 0, zIndex: 10 };
   }
 
-  // Todavia no llega: espera inclinada hacia atras, cada vez mas tumbada.
-  if (offset > DEPTH) return { rotateX: 52, y: '-9%', scale: 0.9, opacity: 0, zIndex: 1 };
+  // Todavia no llega: espera escalonada hacia atras y hacia arriba.
+  if (offset > DEPTH) {
+    return { rotateX: 20, y: '-19%', scale: 0.78, opacity: 0, zIndex: 1 };
+  }
   return {
-    rotateX: 16 + (offset - 1) * 14,
-    y: `${-3.5 * offset}%`,
-    scale: 1 - offset * 0.04,
-    opacity: offset === 1 ? 0.4 : 0.16,
+    rotateX: 5 + offset * 4,
+    y: `${-6 * offset}%`,
+    scale: 1 - offset * 0.06,
+    opacity: [0, 0.62, 0.34, 0.15][offset],
     zIndex: 30 - offset,
   };
 }
@@ -132,10 +152,18 @@ export default function ServiceRolodex({ services, cats, labels }) {
               aria-hidden={front ? undefined : 'true'}
               animate={reduce ? { opacity: front ? 1 : 0, zIndex: front ? 30 : 1 } : poseOf(offset)}
               initial={false}
+              /* Curva, no muelle. El muelle rebotaba al final y cada ficha
+                 llegaba en un tiempo distinto segun su recorrido, asi que la
+                 pila se movia descoordinada. Con la misma curva y la misma
+                 duracion para todas, las cuatro dan el paso a la vez — que es
+                 lo que hace que se lea como una pila y no como cuatro tarjetas
+                 animandose por su cuenta.
+
+                 Es la curva del resto del sitio (AboutTeaser, StatsSection). */
               transition={
                 reduce
                   ? { duration: 0 }
-                  : { type: 'spring', stiffness: 260, damping: 32, mass: 0.9 }
+                  : { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
               }
               drag={front && !reduce ? 'y' : false}
               dragConstraints={{ top: 0, bottom: 0 }}

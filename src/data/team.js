@@ -22,8 +22,8 @@
  * siempre gana. El argumento es el contrario: tu proyecto tiene UN responsable.
  *
  * `photo: null` dibuja las iniciales. Es un estado valido y definitivo, no un
- * hueco: la seccion se ve terminada sin foto y mejora cuando la haya. Hoy solo
- * Arleth esta asi.
+ * hueco: la seccion se ve terminada sin foto y mejora cuando la haya. Hoy no
+ * lo usa nadie: los cinco tienen retrato.
  *
  * Los retratos son verticales (~2:3) y de estudio sobre fondo blanco. El
  * componente los encuadra a 2/3 anclados arriba: recorta por abajo, que es
@@ -64,11 +64,8 @@ export const TEAM = [
    * El componente descarta a quien no tenga nombre, asi que una entrada a
    * medias no rompe la pagina: se queda fuera hasta que se complete. */
   { id: 'ventas', name: 'Sergio Alfonso Borrego Soto',    founder: false, photo: '/assets/image/equipo/sergio.webp' },
-  { id: 'admin',  name: 'Arleth Jaqueline Heredia Estrada', founder: false, photo: null },
+  { id: 'admin',  name: 'Arleth Jaqueline Heredia Estrada', founder: false, photo: '/assets/image/equipo/arleth.webp' },
 ];
-
-/** Lo que salio de los tres a la vez. Va aparte porque no es de nadie. */
-export const TEAM_TOGETHER = [7];
 
 /** Cuantos proyectos se listan antes de resumir el resto en "y N mas". */
 export const PROJECTS_SHOWN = 4;

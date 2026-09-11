@@ -163,17 +163,25 @@ export default function EcosystemPicker({ t, contactHref }) {
           </div>
 
           <aside className="eco__side">
-            <div className="eco__fig">
-              <span className="eco__fig-k">{t.eco.cntK}</span>
-              <span className="eco__fig-v">{on.size}</span>
-              <span className="eco__fig-s">{t.eco.cntS(on.size ? pickable.length : 0)}</span>
-            </div>
-            {/* Una sola cifra: la del mes. Antes habia dos —alta y
+            {/* Cuantos y cuanto, en la MISMA fila: son las dos mitades de una
+                sola frase —"tres modulos, novecientos al mes"— y separadas en
+                dos bloques obligaban a leerlas como dos datos sueltos. Juntas
+                se ve la cuenta moverse al encender una pieza, que es lo que
+                convence.
+
+                Una sola cifra de dinero: la del mes. Antes habia dos —alta y
                 suscripcion— y la grande, la del alta, era la que frenaba. */}
-            <div className="eco__fig">
-              <span className="eco__fig-k">{t.eco.subK}</span>
-              <span className="eco__fig-v is-accent">{mxn(sub)}</span>
-              <span className="eco__fig-s">{t.eco.subS}</span>
+            <div className="eco__figs">
+              <div className="eco__fig">
+                <span className="eco__fig-k">{t.eco.cntK}</span>
+                <span className="eco__fig-v">{on.size}</span>
+                <span className="eco__fig-s">{t.eco.cntS(on.size ? pickable.length : 0)}</span>
+              </div>
+              <div className="eco__fig">
+                <span className="eco__fig-k">{t.eco.subK}</span>
+                <span className="eco__fig-v is-accent">{mxn(sub)}</span>
+                <span className="eco__fig-s">{t.eco.subS}</span>
+              </div>
             </div>
             <div className="eco__fig">
               <span className="eco__fig-k">{t.eco.setupK}</span>

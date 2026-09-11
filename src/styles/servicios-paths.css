@@ -76,6 +76,39 @@
 .paths__plan-feats li { font-size: 0.86rem; color: var(--text-muted); display: flex; gap: 0.6rem; }
 .paths__plan-feats li::before { content: "·"; color: var(--accent); flex: none; }
 
+/* ── Planes en movil: se deslizan, no se apilan ──
+ *
+ * Con `minmax(250px, 1fr)` un telefono cabe una sola columna, asi que los tres
+ * planes quedaban uno debajo de otro: tres pantallazos de scroll, y el tercero
+ * sencillamente no existe para quien no baja hasta el final. Pero la decision
+ * aqui no es "¿me sirve este plan?", es "¿cual de los tres?" — y eso exige
+ * verlos juntos.
+ *
+ * En fila con arrastre se comparan igual que en escritorio. El 80% de ancho
+ * deja asomar el siguiente: es lo que le avisa al dedo que hay mas a la
+ * derecha, sin gastar flechas ni puntitos.
+ *
+ * El scroll vive DENTRO del contenedor, nunca en <body>: global.css usa
+ * `overflow-x: clip` en la pagina justo para que nada arrastre de lado. */
+@media (max-width: 720px) {
+  .paths__plans {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    gap: 0.9rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+  .paths__plans::-webkit-scrollbar { display: none; }
+  .paths__plan { scroll-snap-align: start; }
+  /* En tactil el hover se queda pegado tras el toque: la tarjeta se quedaria
+     levantada sin razon. */
+  .paths__card:hover { transform: none; }
+}
+
 /* ── Dudas ── */
 .paths__faq { max-width: 780px; margin: 2.2rem auto 0; }
 .paths__faq details { border-bottom: 1px solid var(--border); padding: 1.15rem 0; }
@@ -250,18 +283,32 @@
 /* El diagrama se lleva el ancho: es lo que vende. El lateral solo carga con
    lo que cambia al pulsar, asi que le basta una columna estrecha. */
 .eco__rig-main { display: grid; grid-template-columns: minmax(0, 1fr) 330px; }
+/* Sin `min-width` ni scroll lateral: el diagrama SIEMPRE cabe entero.
+   Antes el SVG se plantaba en 520px y el sobrante se salia del contenedor, que
+   es de donde venia que los modulos de las orillas aparecieran cortados por la
+   mitad. Ahora el que se adapta es el diagrama: por debajo de 620px cambia a
+   dos columnas por tres filas (ver NARROW_POS en data/ecosystem.js) en vez de
+   encogerse hasta ser ilegible. */
 .eco__stage {
   display: flex; align-items: center; justify-content: center;
-  padding: clamp(1.6rem, 3.6vw, 3rem); overflow-x: auto;
+  padding: clamp(1rem, 3.6vw, 3rem);
+  min-width: 0;
 }
-.eco__stage svg { display: block; width: 100%; height: auto; min-width: 520px; }
+.eco__stage svg { display: block; width: 100%; height: auto; }
 
 .eco__side {
   border-left: 1px solid var(--border); background: var(--surface);
   padding: clamp(1.6rem, 3vw, 2.2rem);
   display: flex; flex-direction: column; gap: 1.4rem;
 }
-.eco__fig { display: flex; flex-direction: column; }
+/* Cuantos modulos y cuanto cuestan, lado a lado: son las dos mitades de la
+   misma frase. El conteo se lleva menos ancho porque es un digito; el precio
+   necesita el resto. */
+.eco__figs {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.4rem; align-items: start;
+}
+.eco__fig { display: flex; flex-direction: column; min-width: 0; }
 .eco__fig-k { font-size: 0.56rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
 .eco__fig-v {
   font-family: var(--font-display); font-size: 1.7rem; font-weight: 700;
@@ -315,19 +362,24 @@
   border-bottom: 1px solid var(--border); background: var(--surface);
 }
 .eco__rig-top-head { min-width: 0; }
+/* La cabecera de los atajos baja de escalon con ellos: si el titulo se queda
+   grande, achicar solo las pastillas deja el bloque descompensado. */
 .eco__rig-top-title {
   font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
   letter-spacing: -0.015em; margin: 0;
 }
 .eco__rig-top-hint { margin: 0.3rem 0 0; font-size: 0.82rem; color: var(--text-muted); max-width: 46ch; }
 
-.eco__presets { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+/* Los atajos por rubro son el PUNTO DE PARTIDA, no el plato fuerte: quien ya
+   sabe lo que quiere va directo al diagrama. Se achicaron para que dejen de
+   competir por atencion con lo que si vende, que es el aparato de abajo. */
+.eco__presets { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 /* Pastillas con peso: son el punto de partida, no una fila de filtros. */
 .eco__chip {
-  display: inline-flex; align-items: center; gap: 0.55rem;
-  padding: 0.7rem 1.15rem; border-radius: 50px;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.42rem 0.75rem; border-radius: 50px;
   border: 1px solid var(--border-strong); background: var(--surface-2);
-  color: var(--text); font: inherit; font-size: 0.88rem; font-weight: 600;
+  color: var(--text); font: inherit; font-size: 0.76rem; font-weight: 600;
   cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.2s;
 }
 .eco__chip:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -338,9 +390,9 @@
 /* Cuantas piezas enciende: evita pulsarlo a ciegas. */
 .eco__chip-n {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 1.35em; height: 1.35em; padding: 0 0.3em; border-radius: 50px;
+  min-width: 1.3em; height: 1.3em; padding: 0 0.28em; border-radius: 50px;
   background: var(--border); color: var(--text-muted);
-  font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  font-size: 0.64rem; font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .eco__chip.is-on .eco__chip-n { background: var(--accent); color: var(--on-accent, #1F1F1E); }
 
@@ -604,6 +656,10 @@
  * en vez de suave, que sigue siendo la lectura correcta.
  */
 .svcx { margin-top: clamp(2.4rem, 5vw, 3.6rem); }
+
+/* Interruptor: solo en movil. En escritorio se ven los dos caminos a la vez y
+   no hay nada que elegir. */
+.svcx__switch { display: none; }
 .svcx__hint {
   text-align: center; font-size: 0.82rem; color: var(--text-muted);
   margin: 0 0 1.4rem;
@@ -677,7 +733,47 @@
   .svcx__hint { display: none; }
   .svcx__grid { display: block; }
   .svcx__labels { display: none; }
-  .svcx__col { display: block; margin-bottom: 1.2rem; }
+  .svcx__col { display: block; margin-bottom: 0; }
+
+  /* ── Uno a la vez, en el mismo hueco ──
+     El camino que no toca sigue en el HTML —un rastreador lee los dos— pero no
+     se pinta. Al cambiar, el dato de uno cae justo donde estaba el del otro:
+     comparar deja de exigir media pantalla de memoria. */
+  .svcx__grid.show-eco .svcx__col--custom,
+  .svcx__grid.show-custom .svcx__col--eco { display: none; }
+
+  .svcx__switch {
+    display: flex; justify-content: center;
+    gap: clamp(1.2rem, 5vw, 2rem);
+    margin: 0 0 1.2rem;
+  }
+  .svcx__sw {
+    position: relative; border: 0; background: none; cursor: pointer;
+    padding: 0 0 0.5rem; font: inherit;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(0.95rem, 3.6vw, 1.1rem);
+    color: var(--text-muted);
+    transition: color 0.24s ease;
+  }
+  .svcx__sw.is-on { color: var(--text); }
+  .svcx__sw:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+  /* Cada boton lleva su filete y lo escala; uno solo deslizandose obligaria a
+     medir anchos con JS. */
+  .svcx__sw-bar {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    border-radius: 2px; background: var(--accent);
+    transform: scaleX(0); transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .svcx__sw.is-on .svcx__sw-bar { transform: scaleX(1); }
+
+  /* La tarjeta que entra se anuncia: sin esto el cambio se lee como un salto
+     de texto y no como que algo se movio. */
+  .svcx__grid.show-eco .svcx__col--eco,
+  .svcx__grid.show-custom .svcx__col--custom {
+    animation: svcx-in 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  }
   .svcx__col.is-dim, .svcx__col.is-up {
     opacity: 1; transform: none; box-shadow: none;
   }
@@ -691,10 +787,17 @@
   .svcx__v { text-align: right; }
 }
 
+@keyframes svcx-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .svcx__grid, .svcx__col, .svcx__t { transition: none; }
+  .svcx__grid, .svcx__col, .svcx__t, .svcx__sw, .svcx__sw-bar { transition: none; }
   .svcx__col.is-up { transform: none; }
   .svcx__col.is-dim { transform: none; }
+  .svcx__grid.show-eco .svcx__col--eco,
+  .svcx__grid.show-custom .svcx__col--custom { animation: none; }
 }
 
 
@@ -777,3 +880,180 @@
 .pkgall__n { font-size: 0.95rem; font-weight: 700; margin: 0; }
 .pkgall__d { font-size: 0.86rem; color: var(--text-muted); margin: 0.35rem 0 0; }
 .pkgall__l { font-size: 0.78rem; color: var(--text-muted); opacity: 0.8; margin: 0.35rem 0 0; }
+
+
+/* ════════ Fichero de servicios (ServiceRolodex) ════════
+ *
+ * Una baraja: la ficha de enfrente se reparte deslizandose de lado y la pila
+ * da un paso al frente. Detras asoman las tres siguientes, escalonadas hacia
+ * arriba y hacia atras — ese escalonado es lo que mas aporta y manda sobre el
+ * resto del diseno.
+ *
+ * `perspective` en el contenedor es lo que convierte el escalonado en
+ * profundidad: sin ella las fichas de atras solo se ven mas chicas, como un
+ * dibujo plano, en vez de mas lejos.
+ *
+ * `transform-origin: center top` hace que al encogerse conserven el borde de
+ * arriba y asomen por ahi, que es de donde sale el efecto de pila.
+ *
+ * Las fichas se apilan en el MISMO hueco con posicion absoluta, asi que el
+ * alto lo fija el escenario. Si lo marcara la ficha de enfrente, la pagina
+ * daria un salto cada vez que una mas larga pasara al frente.
+ */
+.rlx { margin-top: clamp(1.4rem, 3vw, 2.2rem); }
+
+.paths__hint {
+  text-align: center; font-size: 0.82rem; color: var(--text-muted);
+  margin: 1.6rem 0 0;
+}
+
+/* ── Marcador ── */
+.rlx__hud {
+  display: flex; align-items: center; gap: 0.9rem;
+  max-width: 900px; margin: 0 auto 1.1rem;
+}
+.rlx__hud-n { font-size: 0.72rem; color: var(--text-muted); font-variant-numeric: tabular-nums; flex: none; }
+.rlx__hud-n b { color: var(--accent-text); font-weight: 800; }
+.rlx__hud-n i { font-style: normal; margin-left: 0.2rem; }
+.rlx__hud-t {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(0.9rem, 2vw, 1.05rem); color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rlx__hud-bar { flex: 1; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.rlx__hud-bar span { display: block; height: 100%; background: var(--accent); }
+
+/* ── Escenario ── */
+.rlx__stage {
+  position: relative;
+  /* La ficha repartida sale del escenario por la derecha. `clip` la recorta en
+     el borde sin crear un contenedor de scroll —`hidden` si lo crearia— y sin
+     tapar las de atras, que asoman por ARRIBA: el recorte lateral se abre con
+     un margen generoso para que solo muerda a los lados.
+     Si el navegador no entiende `overflow-clip-margin`, la ficha simplemente
+     sale volando como antes; se ve bien igual, solo menos contenida. */
+  overflow: clip;
+  overflow-clip-margin: 120px;
+  max-width: 900px;
+  /* Aire ARRIBA, y no es margen decorativo: las fichas de atras asoman por
+     encima de la de enfrente, y sin este hueco se meterian debajo del
+     marcador. Es el precio de que la pila se vea, y se paga. */
+  margin: clamp(3.2rem, 8vw, 5rem) auto 0;
+  /* El alto lo manda el escenario, no la ficha: con `auto` la pagina saltaria
+     cada vez que una tarjeta mas larga pasa al frente. */
+  height: clamp(430px, 62vh, 540px);
+  /* Perspectiva corta = fuga marcada. Con un valor alto el escalonado se
+     aplana y la pila deja de leerse como pila. El punto de fuga va arriba
+     porque es por donde salen las fichas. */
+  perspective: 1100px;
+  perspective-origin: 50% 18%;
+}
+
+.rlx__card {
+  position: absolute; inset: 0;
+  transform-origin: center top;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  will-change: transform, opacity;
+}
+/* La sombra la llevan TODAS, no solo la de enfrente: es lo que separa una
+   ficha de la de atras. Sin ella el escalonado se ve como bordes pegados. */
+.rlx__card { box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.5); }
+.rlx__card.is-front {
+  border-color: var(--border-strong);
+  box-shadow: 0 26px 60px -30px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+}
+.rlx__card.is-front:active { cursor: grabbing; }
+
+/* El canto: una linea clara en el borde de arriba, que es justo por donde pasa
+   la bisagra. Sin grosor, el giro parece una hoja de papel. */
+.rlx__edge {
+  position: absolute; inset: 0 0 auto; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.55;
+}
+
+.rlx__shot { position: relative; overflow: hidden; background: var(--surface-2); }
+.rlx__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Velo hacia abajo: el texto se apoya en la imagen sin pelearse con ella. */
+.rlx__shot::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 45%;
+  background: linear-gradient(to bottom, transparent, var(--surface));
+}
+
+.rlx__body {
+  padding: clamp(1rem, 2.6vw, 1.6rem) clamp(1.1rem, 3vw, 1.9rem) clamp(1.2rem, 3vw, 1.8rem);
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.rlx__n {
+  font-size: 0.68rem; color: var(--text-muted); font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+.rlx__n i { font-style: normal; margin-left: 0.2rem; opacity: 0.7; }
+.rlx__title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.15rem, 3vw, 1.6rem); letter-spacing: -0.02em;
+  margin: 0.15rem 0 0; color: var(--text);
+}
+.rlx__tagline { margin: 0; color: var(--accent-text); font-size: clamp(0.8rem, 1.8vw, 0.92rem); font-weight: 600; }
+.rlx__desc {
+  margin: 0.2rem 0 0; color: var(--text-muted);
+  font-size: clamp(0.82rem, 1.8vw, 0.94rem); line-height: 1.6;
+}
+
+/* ── Mandos ── */
+.rlx__nav {
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  margin-top: 1.3rem;
+}
+.rlx__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text); cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.rlx__btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-text); }
+.rlx__btn:disabled { opacity: 0.3; cursor: default; }
+.rlx__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.rlx__dots { display: flex; gap: 0.45rem; }
+.rlx__dot {
+  width: 8px; height: 8px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: none; cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.rlx__dot.is-on { background: var(--accent); border-color: var(--accent); transform: scale(1.25); }
+.rlx__dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* En pantallas anchas la ficha reparte imagen y texto a lo ancho: alto fijo y
+   una foto vertical dejarian una franja muerta debajo del parrafo. */
+@media (min-width: 760px) {
+  .rlx__card { grid-template-rows: none; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .rlx__shot::after {
+    inset: 0 0 0 auto; height: auto; width: 45%;
+    background: linear-gradient(to right, transparent, var(--surface));
+  }
+  .rlx__body { justify-content: center; }
+}
+
+/* En el telefono solo asoma UNA ficha detras (ver DEPTH en ServiceRolodex), asi
+   que el hueco de arriba se recorta: reservar sitio para tres deja una franja
+   vacia que separa el marcador de la pila y rompe el conjunto. */
+@media (max-width: 720px) {
+  .rlx__stage { margin-top: 2.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rlx__card, .rlx__dot, .rlx__btn { transition: none; }
+  /* Sin perspectiva no hay giro que marear: el cambio queda en un corte seco,
+     que es lo que pide quien apago el movimiento. */
+  .rlx__stage { perspective: none; }
+  .rlx__card { transform: none !important; }
+}

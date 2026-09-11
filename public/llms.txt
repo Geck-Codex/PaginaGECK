@@ -128,9 +128,22 @@ Sí. Trabaja tanto con negocios locales de Parral y Chihuahua como con empresas 
 - [Desarrollo a medida](https://geckcodex.com/servicios/a-medida/) — Software hecho a la medida de la operación: los siete servicios en detalle, los paquetes de referencia y la garantía.
 - [Portafolio](https://geckcodex.com/portafolio/) — Proyectos reales por categoría (landing, móvil, web, software e IA).
 - [Nosotros](https://geckcodex.com/nosotros/) — Equipo, misión, visión, stack tecnológico y proceso.
+- [Blog](https://geckcodex.com/blog/) — Artículos sobre precios reales, decisiones de tecnología y errores frecuentes al contratar desarrollo. Solo en español.
 - [Contacto](https://geckcodex.com/contacto/) — Formulario, WhatsApp, correo e Instagram.
 - [Privacidad](https://geckcodex.com/privacidad/) — Aviso de privacidad.
 - [Términos](https://geckcodex.com/terminos/) — Términos y condiciones.
+
+## Blog
+
+Geck Codex publica artículos que responden con datos las preguntas que la mayoría
+de las agencias evita contestar en público: cuánto cuesta realmente cada cosa, qué
+conviene a cada negocio y qué errores salen caros. Las cifras que aparecen en los
+artículos son las mismas que la empresa cobra.
+
+- [¿Cuánto cuesta una página web en Chihuahua en 2026?](https://geckcodex.com/blog/cuanto-cuesta-una-pagina-web-en-chihuahua/) — Rangos reales de precio para una página web en Chihuahua capital y Ciudad Juárez: plantilla desde $1,500 MXN, sitio a medida desde $5,000 y hasta $22,000 cuando el trabajo de posicionamiento es a fondo. Explica qué mueve el precio, los costos recurrentes (dominio, hosting, mantenimiento) y cómo comparar cotizaciones.
+- [¿Por qué mi página web no me trae clientes?](https://geckcodex.com/blog/por-que-mi-pagina-web-no-me-trae-clientes/) — Las cinco razones por las que una página no genera clientes —falta de tráfico, ausencia de un siguiente paso claro, lentitud, textos que hablan de la empresa y no del cliente, y falta de medición— con la forma de comprobar cada una sin costo.
+
+Feed del blog: https://geckcodex.com/blog/rss.xml
 
 ## Versiones en otros idiomas
 

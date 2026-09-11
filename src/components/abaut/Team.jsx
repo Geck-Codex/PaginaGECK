@@ -9,7 +9,7 @@ import {
 } from 'framer-motion';
 import { useLanguage } from '../../hooks/useLanguage';
 import { localizedPath } from '../../i18n/routes';
-import { visibleTeam, TEAM_TOGETHER, PROJECTS_SHOWN } from '../../data/team.js';
+import { visibleTeam, PROJECTS_SHOWN } from '../../data/team.js';
 import { projectById } from '../../data/projects.js';
 
 /**
@@ -199,13 +199,10 @@ export default function Team({ lang }) {
 
   const headOpacity = useTransform(progress, [0, 0.12, 0.72, 0.86], [0, 1, 1, 0]);
   const headY = useTransform(progress, [0, 0.12, 0.72, 0.86], [40, 0, 0, -40]);
-  const noteOpacity = useTransform(progress, [0.34, 0.46, 0.74, 0.86], [0, 1, 1, 0]);
-  const noteY = useTransform(progress, [0.34, 0.46, 0.74, 0.86], [26, 0, 0, -26]);
 
   const people = visibleTeam();
   const builders = people.filter((m) => m.founder);
   const care = people.filter((m) => !m.founder);
-  const together = TEAM_TOGETHER.map(projectById).filter(Boolean);
 
   return (
     <>
@@ -233,16 +230,6 @@ export default function Team({ lang }) {
             </Person>
           ))}
         </div>
-
-        {together.length > 0 && (
-          <motion.p
-            className="tm__together"
-            style={reduce ? undefined : { opacity: noteOpacity, y: noteY }}
-          >
-            <span className="tm__togetherlabel">{tm.togetherLabel}</span>
-            {tm.togetherText}
-          </motion.p>
-        )}
 
         {care.length > 0 && (
           <>
@@ -389,20 +376,8 @@ export default function Team({ lang }) {
         .tm__sep { opacity: .45; }
         .tm__more { opacity: .65; }
 
-        /* ── La nota de los tres juntos ── */
-        .tm__together {
-          margin: clamp(1.6rem, 4vh, 2.4rem) auto clamp(2.2rem, 5vh, 3rem);
-          font-size: clamp(.88rem, 1.1vw, .98rem);
-          line-height: 1.6; color: var(--text-muted);
-          max-width: 60ch;
-          text-align: center;
-        }
-        .tm__togetherlabel {
-          display: block;
-          font-size: .64rem; font-weight: 800; letter-spacing: .16em;
-          text-transform: uppercase; color: var(--accent-text);
-          margin-bottom: .35rem;
-        }
+        /* El aire que antes ponia la nota intermedia entre los dos bloques. */
+        .tm__grid + .tm__label { margin-top: clamp(2.2rem, 5vh, 3rem); }
 
         /* ── Los que atienden ──
            Mismo formato que los de arriba y solo un punto más chicos. A 62 px de
@@ -413,6 +388,10 @@ export default function Team({ lang }) {
           grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 18vw, 200px), 1fr));
           gap: clamp(1.2rem, 2.6vw, 2rem);
           max-width: 640px;
+          /* Son dos: centrados debajo del filete se leen como bloque propio y no
+             como una fila de fundadores a la que le faltan huecos. */
+          margin-inline: auto;
+          justify-content: center;
         }
         .tm__row .tm__initials { font-size: clamp(1.3rem, 2.6vw, 1.9rem); }
       `}</style>

@@ -189,6 +189,16 @@ const jsonLdGraph = [
     {alternates.map((alt) => (
       <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
     ))}
+    <!-- Feed del blog. Va en TODAS las páginas, no solo en /blog/: es como
+         los agregadores y varios rastreadores descubren contenido nuevo, y
+         llegan al sitio por cualquier puerta. -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Blog de Geck Codex"
+      href={`${SITE_URL}/blog/rss.xml`}
+    />
+
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {!noindex && <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />}
 
@@ -224,10 +234,13 @@ const jsonLdGraph = [
          FAVICON Y ICONOS
          Usar los PNG recortados (32/192/512) en vez del logo de 261 KB.
     ═══════════════════════════════════════ -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/image/favicon-192x192.png" />
-    <link rel="apple-touch-icon" href="/assets/image/favicon-192x192.png" />
+    {/* iOS no soporta transparencia: el icono va opaco, cuadrado y a 180px
+        (el sistema aplica su propia máscara redondeada). */}
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/apple-touch-icon.png" />
     <meta name="theme-color" content="#0B1D33" />
 
     <!-- ═══════════════════════════════════════
@@ -267,7 +280,7 @@ const jsonLdGraph = [
     ═══════════════════════════════════════ -->
     <div id="gc-preloader" class="gc-preloader" aria-hidden="true" transition:persist>
       <div class="gc-preloader__inner">
-        <img src="/assets/image/logo.png" alt="" class="gc-preloader__logo" width="72" height="72" />
+        <img src="/assets/image/logo.png" alt="" class="gc-preloader__logo" width="240" height="240" />
         <span class="gc-preloader__bar"><span class="gc-preloader__bar-fill"></span></span>
       </div>
     </div>
@@ -290,8 +303,12 @@ const jsonLdGraph = [
         gap: 22px;
       }
       .gc-preloader__logo {
-        width: 72px;
-        height: 72px;
+        /* Crece con la pantalla en vez de quedarse en 72px fijos: en el
+           telefono manda el ancho, en escritorio topa en 260px para no
+           comerse el alto disponible junto con la barra. */
+        width: clamp(150px, 26vw, 260px);
+        height: auto;
+        aspect-ratio: 1 / 1;
         object-fit: contain;
         animation: gc-pl-pulse 1.6s ease-in-out infinite;
       }
@@ -300,7 +317,9 @@ const jsonLdGraph = [
         50%      { opacity: 1;   transform: scale(1); }
       }
       .gc-preloader__bar {
-        width: 140px;
+        /* La barra acompana al logo: con el gecko grande, 140px se veian
+           como un hilo suelto debajo. */
+        width: clamp(160px, 22vw, 220px);
         height: 2px;
         border-radius: 2px;
         background: color-mix(in srgb, var(--accent) 20%, transparent);

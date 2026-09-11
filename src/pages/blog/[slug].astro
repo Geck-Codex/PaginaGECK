@@ -1,0 +1,258 @@
+---
+/**
+ * Página de un artículo.
+ *
+ * El `id` de la colección —el nombre del archivo sin extensión— es el slug de
+ * la URL. Renombrar un archivo publicado cambia su URL y tira la indexación
+ * que ya tenía: si hay que hacerlo, va con redirección 301 desde la anterior,
+ * igual que con los slugs de `routes-map.js`.
+ */
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '@/layouts/MainLayout.astro';
+import Prose from '@/components/blog/Prose.astro';
+import PostCta from '@/components/blog/PostCta.astro';
+import PostCard from '@/components/blog/PostCard.astro';
+import { BLOG_INDEX, formatDate, estimateReadingTime } from '@/i18n/blog.js';
+import { SITE_URL } from '@/data/seo';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  /* Los relacionados se calculan aquí, en el build, y no en el cliente: son
+     tres enlaces fijos por artículo, y resolverlos con JavaScript los volvería
+     invisibles para el rastreador, que es justamente para quien sirven —el
+     enlazado interno es lo que reparte autoridad entre artículos. */
+  return posts.map((post) => {
+    const related = posts
+      .filter((other) => other.id !== post.id)
+      .map((other) => ({
+        post: other,
+        // Se ordena por etiquetas en común y, a igualdad, por fecha.
+        score: other.data.tags.filter((tag) => post.data.tags.includes(tag)).length,
+      }))
+      .sort((a, b) => b.score - a.score || b.post.data.date.valueOf() - a.post.data.date.valueOf())
+      .slice(0, 2)
+      .map((entry) => entry.post);
+
+    return { params: { slug: post.id }, props: { post, related } };
+  });
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  related: CollectionEntry<'blog'>[];
+}
+
+const { post, related } = Astro.props;
+const { Content } = await render(post);
+
+const url = `${SITE_URL}/blog/${post.id}/`;
+const readingTime = post.data.readingTime ?? estimateReadingTime(post.body);
+const cover = post.data.cover ? `${SITE_URL}${post.data.cover}` : undefined;
+
+/* `dateModified` solo se emite si el artículo declara `updated`. Repetir ahí
+   la fecha de publicación sería inventar una revisión que no ocurrió, y es el
+   mismo error que tenía el sitemap estampando `new Date()` en las 27 URLs. */
+const articleSchema: Record<string, unknown> = {
+  '@type': 'BlogPosting',
+  '@id': `${url}#article`,
+  headline: post.data.title,
+  description: post.data.description,
+  url,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  inLanguage: 'es-MX',
+  datePublished: post.data.date.toISOString(),
+  ...(post.data.updated ? { dateModified: post.data.updated.toISOString() } : {}),
+  ...(cover ? { image: cover } : {}),
+  keywords: post.data.tags.join(', '),
+  wordCount: post.body?.trim().split(/\s+/).filter(Boolean).length,
+  isPartOf: { '@id': `${SITE_URL}/blog/#blog` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  /* El autor por defecto es la empresa, que es la entidad que Google ya
+     conoce por el resto del sitio. Una persona suelta sin perfil propio no
+     aporta señal de autoría y sí abre una entidad huérfana en el grafo. */
+  author:
+    post.data.author === 'Geck Codex'
+      ? { '@id': `${SITE_URL}/#organization` }
+      : { '@type': 'Person', name: post.data.author },
+};
+---
+
+<Layout
+  title={`${post.data.title} | Geck Codex`}
+  description={post.data.description}
+  canonical={url}
+  type="article"
+  image={cover}
+  breadcrumbs={[
+    { name: BLOG_INDEX.breadcrumb, url: `${SITE_URL}/blog/` },
+    { name: post.data.title, url },
+  ]}
+  schema={[articleSchema]}
+>
+  <article class="post">
+    <div class="post__inner">
+      <a class="post__back" href="/blog/">← {BLOG_INDEX.backToIndex}</a>
+
+      <header class="post__head">
+        <p class="post__meta">
+          <time datetime={post.data.date.toISOString()}>
+            {BLOG_INDEX.publishedLabel} {formatDate(post.data.date)}
+          </time>
+          <span aria-hidden="true">·</span>
+          <span>{BLOG_INDEX.readingTime(readingTime)}</span>
+        </p>
+
+        <h1 class="post__title">{post.data.title}</h1>
+        <p class="post__desc">{post.data.description}</p>
+
+        {
+          post.data.updated && (
+            <p class="post__updated">
+              {BLOG_INDEX.updatedLabel} {formatDate(post.data.updated)}
+            </p>
+          )
+        }
+      </header>
+
+      {
+        post.data.cover && (
+          <img
+            class="post__cover"
+            src={post.data.cover}
+            alt={post.data.coverAlt ?? ''}
+            width="1200"
+            height="630"
+            loading="eager"
+            decoding="async"
+          />
+        )
+      }
+
+      <Prose>
+        <Content />
+      </Prose>
+
+      <PostCta />
+
+      {
+        related.length > 0 && (
+          <section class="post__related">
+            <h2 class="post__related-heading">{BLOG_INDEX.relatedHeading}</h2>
+            <div class="post__related-grid">
+              {related.map((other) => (
+                <PostCard
+                  href={`/blog/${other.id}/`}
+                  title={other.data.title}
+                  description={other.data.description}
+                  date={other.data.date}
+                  readingTime={other.data.readingTime ?? estimateReadingTime(other.body)}
+                  cover={other.data.cover}
+                  coverAlt={other.data.coverAlt}
+                  tags={other.data.tags}
+                />
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .post {
+    background: var(--background);
+    color: var(--text);
+    padding: clamp(120px, 16vh, 180px) 1.5rem 100px;
+  }
+
+  .post__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .post__back {
+    display: inline-block;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+  }
+
+  .post__back:hover {
+    color: var(--accent-text);
+  }
+
+  .post__head {
+    max-width: 720px;
+    margin: 0 0 2.5rem;
+  }
+
+  .post__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem;
+  }
+
+  .post__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.12;
+    margin: 0 0 1.1rem;
+    color: var(--text);
+  }
+
+  .post__desc {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .post__updated {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 1rem 0 0;
+  }
+
+  .post__cover {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    margin: 0 0 2.75rem;
+    display: block;
+  }
+
+  .post__related {
+    max-width: 1080px;
+    margin: 4rem 0 0;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .post__related-heading {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--text);
+    margin: 0 0 1.5rem;
+  }
+
+  .post__related-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 860px) {
+    .post__related-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

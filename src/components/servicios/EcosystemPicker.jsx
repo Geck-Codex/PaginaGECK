@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react';
-import { MODULES, LINKS, PRESETS, linkKey } from '../../data/ecosystem.js';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
+import {
+  MODULES, LINKS, PRESETS, linkKey, NARROW_POS, VIEWBOX, NARROW_AT,
+} from '../../data/ecosystem.js';
 
 /* Selector del ecosistema.
  *
@@ -16,12 +19,17 @@ import { MODULES, LINKS, PRESETS, linkKey } from '../../data/ecosystem.js';
 
 const W = 165;
 const H = 60;
-const cx = (m) => m.x + W / 2;
-const cy = (m) => m.y + H / 2;
+
+const posOf = (m, narrow) => (narrow ? NARROW_POS[m.id] ?? m : m);
+const cx = (m, narrow) => posOf(m, narrow).x + W / 2;
+const cy = (m, narrow) => posOf(m, narrow).y + H / 2;
 
 const mxn = (n) => '$' + n.toLocaleString('es-MX');
 
 export default function EcosystemPicker({ t, contactHref }) {
+  /* En pantallas angostas el diagrama se REACOMODA a dos columnas en vez de
+     encogerse. Ver `NARROW_POS` en data/ecosystem.js para el porque. */
+  const narrow = useMediaQuery(`(max-width: ${NARROW_AT}px)`);
   const [on, setOn] = useState(() => new Set());
   const toggle = (id) =>
     setOn((prev) => {
@@ -91,7 +99,7 @@ export default function EcosystemPicker({ t, contactHref }) {
 
         <div className="eco__rig-main">
           <div className="eco__stage">
-            <svg viewBox="-24 -24 808 378" role="img" aria-label={t.eco.title}>
+            <svg viewBox={narrow ? VIEWBOX.narrow : VIEWBOX.wide} role="img" aria-label={t.eco.title}>
               <g fill="none" strokeLinecap="round">
                 {LINKS.map((l) => {
                   const A = MODULES.find((m) => m.id === l.a);
@@ -100,7 +108,7 @@ export default function EcosystemPicker({ t, contactHref }) {
                   return (
                     <line
                       key={linkKey(l)}
-                      x1={cx(A)} y1={cy(A)} x2={cx(B)} y2={cy(B)}
+                      x1={cx(A, narrow)} y1={cy(A, narrow)} x2={cx(B, narrow)} y2={cy(B, narrow)}
                       className={`eco__link${live ? ' is-on' : ''}`}
                     />
                   );
@@ -113,7 +121,7 @@ export default function EcosystemPicker({ t, contactHref }) {
                   <g
                     key={m.id}
                     className={`eco__node${active ? ' is-on' : ''}${m.soon ? ' is-soon' : ''}`}
-                    transform={`translate(${m.x},${m.y})`}
+                    transform={`translate(${posOf(m, narrow).x},${posOf(m, narrow).y})`}
                     role={m.soon ? undefined : 'button'}
                     tabIndex={m.soon ? undefined : 0}
                     aria-pressed={m.soon ? undefined : active}
@@ -137,17 +145,25 @@ export default function EcosystemPicker({ t, contactHref }) {
           </div>
 
           <aside className="eco__side">
-            <div className="eco__fig">
-              <span className="eco__fig-k">{t.eco.cntK}</span>
-              <span className="eco__fig-v">{on.size}</span>
-              <span className="eco__fig-s">{t.eco.cntS(on.size ? pickable.length : 0)}</span>
-            </div>
-            {/* Una sola cifra: la del mes. Antes habia dos —alta y
+            {/* Cuantos y cuanto, en la MISMA fila: son las dos mitades de una
+                sola frase —"tres modulos, novecientos al mes"— y separadas en
+                dos bloques obligaban a leerlas como dos datos sueltos. Juntas
+                se ve la cuenta moverse al encender una pieza, que es lo que
+                convence.
+
+                Una sola cifra de dinero: la del mes. Antes habia dos —alta y
                 suscripcion— y la grande, la del alta, era la que frenaba. */}
-            <div className="eco__fig">
-              <span className="eco__fig-k">{t.eco.subK}</span>
-              <span className="eco__fig-v is-accent">{mxn(sub)}</span>
-              <span className="eco__fig-s">{t.eco.subS}</span>
+            <div className="eco__figs">
+              <div className="eco__fig">
+                <span className="eco__fig-k">{t.eco.cntK}</span>
+                <span className="eco__fig-v">{on.size}</span>
+                <span className="eco__fig-s">{t.eco.cntS(on.size ? pickable.length : 0)}</span>
+              </div>
+              <div className="eco__fig">
+                <span className="eco__fig-k">{t.eco.subK}</span>
+                <span className="eco__fig-v is-accent">{mxn(sub)}</span>
+                <span className="eco__fig-s">{t.eco.subS}</span>
+              </div>
             </div>
             <div className="eco__fig">
               <span className="eco__fig-k">{t.eco.setupK}</span>
@@ -177,31 +193,12 @@ export default function EcosystemPicker({ t, contactHref }) {
             columna estrecha se convertia en una lista larga que empujaba el
             boton fuera de pantalla. El precio es cerrado porque el alcance lo
             es, y decirlo aqui evita la sorpresa en la cotizacion. */}
-        {/* Se pintan los SEIS siempre, no solo los elegidos: escondidos tras
-            un clic, quien llega no veia ni una foto del producto —y Google
-            tampoco—. Los seleccionados se destacan; el resto invita. */}
-        {true && (
-          <div className="eco__scopes">
-            <h4 className="eco__block-title">{t.eco.scopesTitle}</h4>
-            {/* Con la captura real: sin ella son seis cajas con nombre y
-                nadie sabe que esta comprando. */}
-            <ul className="eco__scopes-list">
-              {MODULES.map((m) => (
-                <li key={m.id} className={`eco__scope${on.has(m.id) ? ' is-on' : ''}`}>
-                  {m.img && (
-                    <span className="eco__scope-shot">
-                      <img src={m.img} alt="" loading="lazy" decoding="async" />
-                    </span>
-                  )}
-                  <span className="eco__scope-txt">
-                    <b>{t.eco.modules[m.id]}</b>
-                    {t.eco.scopes[m.id]}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Aqui vivia "Hasta donde llega cada uno": las seis fichas de alcance
+            con su captura. Se retiro por decision del usuario, en las dos
+            medidas —no solo en movil—. El bloque repetia en prosa lo que el
+            diagrama ya dice al encender un modulo, y alargaba la pagina justo
+            despues del precio, que es donde se decide. El texto sigue en
+            `t.eco.scopes` por si vuelve; las capturas, en `MODULES[].img`. */}
 
         <div className="eco__rig-foot">
           <a href={contactHref} className="eco__cta">{t.eco.cta}</a>

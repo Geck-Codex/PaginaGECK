@@ -1,0 +1,217 @@
+---
+/**
+ * Tarjeta de artículo en el índice del blog.
+ *
+ * El enlace envuelve la tarjeta entera y no solo el título: en móvil el área
+ * de toque de un título de dos líneas es incómoda, y el resto de la tarjeta
+ * queda muerto. El <h2> sigue siendo el que lleva el texto del enlace, que es
+ * lo que leen los buscadores y los lectores de pantalla.
+ *
+ * La portada es opcional a propósito: exigirla obligaría a inventar una imagen
+ * para cada artículo, y una imagen de relleno pesa igual que una buena.
+ */
+import { BLOG_INDEX, formatDate } from '@/i18n/blog.js';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date: Date;
+  readingTime: number;
+  cover?: string;
+  coverAlt?: string;
+  tags?: string[];
+  /** El primero del índice se pinta más grande. */
+  featured?: boolean;
+}
+
+const { href, title, description, date, readingTime, cover, coverAlt, tags = [], featured = false } =
+  Astro.props;
+---
+
+<article class:list={['card', featured && 'card--featured']}>
+  <a class="card__link" href={href}>
+    {
+      cover && (
+        <div class="card__media">
+          {/* `loading` eager solo en el destacado: es lo único que entra en
+              pantalla de inmediato, y precargar el resto retrasa el LCP. */}
+          <img
+            src={cover}
+            alt={coverAlt ?? ''}
+            loading={featured ? 'eager' : 'lazy'}
+            decoding="async"
+            width="1200"
+            height="630"
+          />
+        </div>
+      )
+    }
+
+    <div class="card__body">
+      <p class="card__meta">
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{BLOG_INDEX.readingTime(readingTime)}</span>
+      </p>
+
+      <h2 class="card__title">{title}</h2>
+      <p class="card__desc">{description}</p>
+
+      {
+        tags.length > 0 && (
+          <ul class="card__tags">
+            {tags.slice(0, 3).map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+
+      <span class="card__more">{BLOG_INDEX.readMore} <span aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card__media {
+    aspect-ratio: 1200 / 630;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  .card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card__body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.6rem;
+  }
+
+  .card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .card__title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--text);
+  }
+
+  .card__desc {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+  }
+
+  .card__tags li {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .card__more {
+    margin-top: auto;
+    padding-top: 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-text);
+  }
+
+  /* El destacado ocupa las dos columnas y pone la imagen al lado del texto. */
+  @media (min-width: 860px) {
+    .card--featured {
+      grid-column: 1 / -1;
+    }
+
+    .card--featured .card__link {
+      flex-direction: row;
+    }
+
+    .card--featured .card__media {
+      flex: 0 0 52%;
+      aspect-ratio: auto;
+    }
+
+    .card--featured .card__body {
+      padding: 2.25rem;
+      justify-content: center;
+    }
+
+    .card--featured .card__title {
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
+    }
+
+    .card--featured .card__desc {
+      font-size: 1.02rem;
+    }
+  }
+
+  /* El hover se anuncia con borde y elevación, no con color: el oro como
+     texto sobre fondo claro está prohibido por la regla del oro. */
+  @media (prefers-reduced-motion: no-preference) {
+    .card {
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.08);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  .card__link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+</style>

@@ -31,13 +31,28 @@ export const BUSINESS = {
   latitude: 26.9319,
   longitude: -105.6664,
   instagram: 'https://www.instagram.com/geckcodex/',
+  // Sin los parametros `?_r` y `?_t` con los que TikTok entrega el enlace desde
+  // la app: son de rastreo de esa sesion, no forman parte de la direccion del
+  // perfil. Un `sameAs` con basura pegada es una señal mas debil, porque no
+  // coincide byte a byte con la URL canonica del perfil.
+  tiktok: 'https://www.tiktok.com/@geck_codex_oficial',
   github: 'https://github.com/Geck-Codex',
-  facebook: 'https://www.facebook.com/share/1Dt3nBrVgm/',
+  // La forma canonica del perfil, no el enlace `/share/` que genera el boton de
+  // compartir: ese es un codigo de redireccion, y Google Business lo rechaza
+  // como perfil no valido. Si algun dia se le asigna nombre de usuario a la
+  // pagina, conviene cambiarlo aqui por `facebook.com/<usuario>`.
+  facebook: 'https://www.facebook.com/profile.php?id=61578121934306',
   linkedin: 'https://www.linkedin.com/in/geckcodex-2647a4417/',
 } as const;
 
 /** Perfiles externos que confirman la identidad de la entidad (sameAs). */
-const SAME_AS = [BUSINESS.instagram, BUSINESS.facebook, BUSINESS.linkedin, BUSINESS.github];
+const SAME_AS = [
+  BUSINESS.instagram,
+  BUSINESS.facebook,
+  BUSINESS.linkedin,
+  BUSINESS.tiktok,
+  BUSINESS.github,
+];
 
 /* ─────────────────────────────────────────────────────────────────
    Entidad principal — ProfessionalService es un subtipo de

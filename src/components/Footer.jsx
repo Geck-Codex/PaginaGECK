@@ -2,6 +2,31 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { Github, Instagram, Facebook, Linkedin, ArrowUp } from "lucide-react";
 import { useLanguage } from "../hooks/useLanguage";
 import { localizedPath, LOCALES, LOCALE_META } from '../i18n/routes';
+import { trackLead } from '../data/track.js';
+import { BUSINESS } from '../data/seo';
+
+/**
+ * TikTok, como SVG propio: Lucide retiró los iconos de marca y no lo trae.
+ *
+ * Va relleno y no de trazo como sus vecinos porque el logotipo de TikTok es una
+ * forma sólida — dibujarlo en contorno lo vuelve irreconocible a 24 px. Recibe
+ * `size` para responder a la misma llamada que los iconos de Lucide, y hereda
+ * el color del botón con `currentColor`.
+ */
+function TiktokIcon({ size = 24 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06v-3.13a5.7 5.7 0 0 0-.77-.05A5.66 5.66 0 1 0 15.54 15.4V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.28 4.28 0 0 1-3.24-1.48Z" />
+    </svg>
+  );
+}
 
 // --- DISPERSIÓN DE TEXTO (mismo patrón que el logo del Navbar) ---
 function DisperseFooterText({ text, isHovered }) {
@@ -80,11 +105,18 @@ export default function GeckFooter({ lang, pageKey }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /* Las direcciones salen de `data/seo.ts` y ya no se escriben aquí. Estaban
+     duplicadas, y duplicadas se desincronizan: el Instagram de este pie llevaba
+     pegado un `?igsh=…` de rastreo que el de `seo.ts` no tiene, así que el
+     sitio enseñaba una dirección y el JSON-LD declaraba otra. Para un buscador
+     que cruza esos perfiles para confirmar la identidad de la empresa, dos
+     versiones de la misma cuenta es una señal más débil que una sola. */
   const socialLinks = [
-    { Icon: Github,    name: 'github',    label: 'GitHub',    url: 'https://github.com/Geck-Codex' },
-    { Icon: Instagram, name: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/geckcodex?igsh=MTV5YWY5Nnh4OWQ2Mw==' },
-    { Icon: Facebook,  name: 'facebook',  label: 'Facebook',  url: 'https://www.facebook.com/share/1Dt3nBrVgm/' },
-    { Icon: Linkedin,  name: 'linkedin',  label: 'LinkedIn',  url: 'https://www.linkedin.com/in/geckcodex-2647a4417/' },
+    { Icon: Github,      name: 'github',    label: 'GitHub',    url: BUSINESS.github },
+    { Icon: Instagram,   name: 'instagram', label: 'Instagram', url: BUSINESS.instagram },
+    { Icon: TiktokIcon,  name: 'tiktok',    label: 'TikTok',    url: BUSINESS.tiktok },
+    { Icon: Facebook,    name: 'facebook',  label: 'Facebook',  url: BUSINESS.facebook },
+    { Icon: Linkedin,    name: 'linkedin',  label: 'LinkedIn',  url: BUSINESS.linkedin },
     // TikTok retirado: apuntaba a '#'. Un perfil enlazado a ningún lado resta
     // confianza y no suma al sameAs del schema. Restaurar cuando exista la URL.
   ];
@@ -115,6 +147,13 @@ export default function GeckFooter({ lang, pageKey }) {
               <li><a href={localizedPath("services", lang)}>{t.nav.services}</a></li>
               <li><a href={localizedPath("portfolio", lang)}>{t.nav.portfolio}</a></li>
               <li><a href={localizedPath("about", lang)}>{t.nav.about}</a></li>
+              {/* El blog va SIN localizedPath porque solo existe en español y no
+                  está en SLUGS —ver src/i18n/blog.js—. Y va aquí, no solo en el
+                  menú del Navbar: ese menú se pinta cuando el usuario lo abre,
+                  así que su enlace nunca llega al HTML inicial. Sin esta línea
+                  el blog se queda sin un solo enlace interno y depende del
+                  sitemap, que es la señal más débil que hay para descubrirlo. */}
+              <li><a href="/blog/">{t.nav.blog}</a></li>
               <li><a href={localizedPath("contact", lang)}>{t.nav.contact}</a></li>
             </ul>
           </nav>
@@ -123,12 +162,30 @@ export default function GeckFooter({ lang, pageKey }) {
           <div className="footer-col">
             <p className="footer-col__title">{t.footer.contactTitle}</p>
             <ul className="footer-list">
+              {/* Estos dos si cuentan.
+                  Eran enlaces mudos: quien escribia desde el pie no aparecia en
+                  ningun reporte, asi que el pie parecia no traer a nadie cuando
+                  en realidad nadie lo estaba midiendo. `onClick` no interfiere
+                  con la navegacion del enlace —trackLead no bloquea— y si la
+                  analitica no esta cargada, el clic sigue funcionando igual. */}
               <li>
-                <a href="https://wa.me/526271745436" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://wa.me/526271745436"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackLead('whatsapp', 'footer')}
+                >
                   +52 627 174 5436
                 </a>
               </li>
-              <li><a href="mailto:ventas@geckcodex.com">ventas@geckcodex.com</a></li>
+              <li>
+                <a
+                  href="mailto:ventas@geckcodex.com"
+                  onClick={() => trackLead('email', 'footer')}
+                >
+                  ventas@geckcodex.com
+                </a>
+              </li>
               <li>
                 <address className="footer-address">
                   Hidalgo del Parral, Chihuahua, México

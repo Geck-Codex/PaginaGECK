@@ -2,7 +2,7 @@ import { cubicBezier, motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../hooks/useLanguage';
 import { localizedPath } from '../../i18n/routes';
 import { SERVICES_STATIC } from '../../data/services.js';
-import ServiceFocus from './ServiceFocus.jsx';
+import ServiceRolodex from './ServiceRolodex.jsx';
 import PackagesAct from './PackagesAct.jsx';
 import '../../styles/servicios-paths.css';
 
@@ -67,11 +67,17 @@ export default function CustomPage({ lang }) {
           <h2 className="paths__title">{s.detail.title}</h2>
           <p className="paths__lead">{s.detail.subtitle}</p>
         </header>
-        {/* Una nitida y el resto fuera de foco, como la helice pero en
-            vertical y en el scroll normal. La logica vive en su propio
-            componente porque muta estilos por fotograma y no debe arrastrar
-            a React en cada scroll. */}
-        <ServiceFocus services={services} cats={cats} />
+        {/* Fichero giratorio: las tarjetas cuelgan de un eje horizontal y la
+            de enfrente cae hacia el lector al pasar a la siguiente. Sustituye
+            al recorrido vertical con desenfoque, que gastaba siete pantallas
+            de scroll para ensenar siete parrafos — y quien no bajaba hasta el
+            final no sabia que existian los ultimos. */}
+        <p className="paths__hint">{s.detail.hint}</p>
+        <ServiceRolodex
+          services={services}
+          cats={cats}
+          labels={{ prev: s.detail.prev, next: s.detail.next, list: s.detail.list }}
+        />
       </section>
 
       {/* Paquetes de referencia. Van DESPUES del catalogo: primero se ve

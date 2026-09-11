@@ -313,6 +313,10 @@ export const translations = {
       detail: {
         title: 'Nuestros servicios en detalle',
         subtitle: 'Qué construimos en cada área cuando se hace a la medida de tu operación.',
+        hint: 'Arrastra o usa las flechas para pasar las fichas.',
+        prev: 'Servicio anterior',
+        next: 'Servicio siguiente',
+        list: 'Ir a un servicio',
       },
       modal: {
         featuresTitle: '¿Qué Incluye?',
@@ -783,6 +787,10 @@ export const translations = {
       detail: {
         title: 'Our services in detail',
         subtitle: 'What we build in each area when it is made to fit your operation.',
+        hint: 'Drag or use the arrows to flip through.',
+        prev: 'Previous service',
+        next: 'Next service',
+        list: 'Go to a service',
       },
       modal: {
         featuresTitle: 'What\'s Included?',
@@ -1253,6 +1261,10 @@ export const translations = {
       detail: {
         title: 'Nossos serviços em detalhe',
         subtitle: 'O que construímos em cada área quando é feito sob medida para a sua operação.',
+        hint: 'Arraste ou use as setas para passar as fichas.',
+        prev: 'Serviço anterior',
+        next: 'Próximo serviço',
+        list: 'Ir para um serviço',
       },
       modal: {
         featuresTitle: 'O Que Inclui?',

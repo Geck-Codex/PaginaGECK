@@ -880,3 +880,155 @@
 .pkgall__n { font-size: 0.95rem; font-weight: 700; margin: 0; }
 .pkgall__d { font-size: 0.86rem; color: var(--text-muted); margin: 0.35rem 0 0; }
 .pkgall__l { font-size: 0.78rem; color: var(--text-muted); opacity: 0.8; margin: 0.35rem 0 0; }
+
+
+/* ════════ Fichero giratorio de servicios (ServiceRolodex) ════════
+ *
+ * Las fichas cuelgan de un eje HORIZONTAL por su borde superior, como las de
+ * un fichero de escritorio. Al avanzar, la de enfrente se tumba hacia el
+ * lector y sale por arriba mientras la siguiente se endereza.
+ *
+ * Que el giro se VEA depende de tres cosas, y quitando cualquiera se convierte
+ * en un fundido con pasos de mas:
+ *   · `perspective` en el contenedor — sin ella el rotateX solo aplasta.
+ *   · `transform-origin: center top` — la bisagra esta en el borde de arriba,
+ *     no en el centro; es la diferencia entre una ficha y una moneda girando.
+ *   · `backface-visibility: hidden` — para que al pasar de los 90 grados la
+ *     ficha desaparezca en vez de ensenar su reverso espejeado.
+ *
+ * Las fichas se apilan en el MISMO hueco con posicion absoluta, asi que el
+ * alto lo fija el escenario. Si lo marcara la ficha de enfrente, la pagina
+ * daria un salto cada vez que una mas larga pasara al frente.
+ */
+.rlx { margin-top: clamp(1.4rem, 3vw, 2.2rem); }
+
+.paths__hint {
+  text-align: center; font-size: 0.82rem; color: var(--text-muted);
+  margin: 1.6rem 0 0;
+}
+
+/* ── Marcador ── */
+.rlx__hud {
+  display: flex; align-items: center; gap: 0.9rem;
+  max-width: 900px; margin: 0 auto 1.1rem;
+}
+.rlx__hud-n { font-size: 0.72rem; color: var(--text-muted); font-variant-numeric: tabular-nums; flex: none; }
+.rlx__hud-n b { color: var(--accent-text); font-weight: 800; }
+.rlx__hud-n i { font-style: normal; margin-left: 0.2rem; }
+.rlx__hud-t {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(0.9rem, 2vw, 1.05rem); color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rlx__hud-bar { flex: 1; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.rlx__hud-bar span { display: block; height: 100%; background: var(--accent); }
+
+/* ── Escenario ── */
+.rlx__stage {
+  position: relative;
+  max-width: 900px; margin: 0 auto;
+  /* El alto lo manda el escenario, no la ficha: con `auto` la pagina saltaria
+     cada vez que una tarjeta mas larga pasa al frente. */
+  height: clamp(430px, 62vh, 540px);
+  perspective: 1500px;
+  perspective-origin: 50% 30%;
+}
+
+.rlx__card {
+  position: absolute; inset: 0;
+  transform-origin: center top;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  will-change: transform, opacity;
+}
+.rlx__card.is-front {
+  border-color: var(--border-strong);
+  box-shadow: 0 26px 60px -30px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+}
+.rlx__card.is-front:active { cursor: grabbing; }
+
+/* El canto: una linea clara en el borde de arriba, que es justo por donde pasa
+   la bisagra. Sin grosor, el giro parece una hoja de papel. */
+.rlx__edge {
+  position: absolute; inset: 0 0 auto; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.55;
+}
+
+.rlx__shot { position: relative; overflow: hidden; background: var(--surface-2); }
+.rlx__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Velo hacia abajo: el texto se apoya en la imagen sin pelearse con ella. */
+.rlx__shot::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 45%;
+  background: linear-gradient(to bottom, transparent, var(--surface));
+}
+
+.rlx__body {
+  padding: clamp(1rem, 2.6vw, 1.6rem) clamp(1.1rem, 3vw, 1.9rem) clamp(1.2rem, 3vw, 1.8rem);
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.rlx__n {
+  font-size: 0.68rem; color: var(--text-muted); font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+.rlx__n i { font-style: normal; margin-left: 0.2rem; opacity: 0.7; }
+.rlx__title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.15rem, 3vw, 1.6rem); letter-spacing: -0.02em;
+  margin: 0.15rem 0 0; color: var(--text);
+}
+.rlx__tagline { margin: 0; color: var(--accent-text); font-size: clamp(0.8rem, 1.8vw, 0.92rem); font-weight: 600; }
+.rlx__desc {
+  margin: 0.2rem 0 0; color: var(--text-muted);
+  font-size: clamp(0.82rem, 1.8vw, 0.94rem); line-height: 1.6;
+}
+
+/* ── Mandos ── */
+.rlx__nav {
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  margin-top: 1.3rem;
+}
+.rlx__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text); cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.rlx__btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-text); }
+.rlx__btn:disabled { opacity: 0.3; cursor: default; }
+.rlx__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.rlx__dots { display: flex; gap: 0.45rem; }
+.rlx__dot {
+  width: 8px; height: 8px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: none; cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.rlx__dot.is-on { background: var(--accent); border-color: var(--accent); transform: scale(1.25); }
+.rlx__dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* En pantallas anchas la ficha reparte imagen y texto a lo ancho: alto fijo y
+   una foto vertical dejarian una franja muerta debajo del parrafo. */
+@media (min-width: 760px) {
+  .rlx__card { grid-template-rows: none; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .rlx__shot::after {
+    inset: 0 0 0 auto; height: auto; width: 45%;
+    background: linear-gradient(to right, transparent, var(--surface));
+  }
+  .rlx__body { justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rlx__card, .rlx__dot, .rlx__btn { transition: none; }
+  /* Sin perspectiva no hay giro que marear: el cambio queda en un corte seco,
+     que es lo que pide quien apago el movimiento. */
+  .rlx__stage { perspective: none; }
+  .rlx__card { transform: none !important; }
+}

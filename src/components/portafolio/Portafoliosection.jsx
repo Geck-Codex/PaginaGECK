@@ -937,6 +937,11 @@ export default function PortfolioSection({ lang }) {
           --pf-dim: rgba(241,237,228,0.34);
         }
         .gc-detail__scrim { position: fixed; inset: 0; background: rgba(4,6,10,0.86); }
+        /* Red de seguridad: en una columna flex, un hijo con contenido ancho
+           (una fila de chips, una imagen) se niega a encoger salvo que se le
+           quite el minimo automatico. Es lo que sacaba la ficha de cuadro. */
+        .gc-detail__wrap, .gc-detail__wrap * { min-width: 0; }
+        .gc-detail__chips { max-width: 100%; }
         .gc-detail__x {
           position: fixed; top: 1.5rem; right: 1.5rem; z-index: 10;
           width: 40px; height: 40px; border-radius: 50%;
@@ -993,6 +998,10 @@ export default function PortfolioSection({ lang }) {
           z-index: 4; display: flex; gap: 0.5rem;
         }
         .gc-gal__thumb {
+          /* 'flex: none' + 'min-width: 0': sin esto el boton no encoge (un
+             flex item con imagen dentro mide lo que la imagen) y la fila de
+             miniaturas se sale de la pantalla en cuanto hay cuatro o mas. */
+          flex: none; min-width: 0;
           width: 92px; height: 62px; padding: 0; border-radius: 9px; overflow: hidden; cursor: pointer;
           border: 1px solid rgba(255,255,255,0.22); background: none; opacity: 0.5;
           transition: opacity .2s, border-color .2s, transform .2s;
@@ -1024,6 +1033,9 @@ export default function PortfolioSection({ lang }) {
         .gc-detail__title {
           font-size: clamp(2.3rem, 4.4vw, 3.8rem); font-weight: 700; color: var(--pf-text);
           margin: 0; line-height: 0.96; letter-spacing: -0.035em;
+          /* Un nombre largo sin espacios se sale de la caja en pantallas
+             estrechas por muy grande que sea la fuente. */
+          overflow-wrap: anywhere;
         }
         .gc-detail__tagline {
           margin: 0; font-size: 0.72rem; font-weight: 700;
@@ -1081,8 +1093,18 @@ export default function PortfolioSection({ lang }) {
             padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none;
             font-size: 0.78rem; color: var(--pf-muted);
           }
-          .gc-gal__thumbs { position: static; margin: 0 1.3rem; }
-          .gc-gal__thumb { width: 72px; height: 48px; }
+          /* Fila deslizable, no fila que desborda: el ancho lo pone la
+             pantalla y las capturas que no caben se alcanzan arrastrando.
+             Con margin no se podia — el scroll cortaba el aire lateral, asi
+             que el respiro va en padding. */
+          .gc-gal__thumbs {
+            position: static; margin: 0; padding: 0 1.3rem;
+            max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain;
+            scroll-snap-type: x proximity;
+            scrollbar-width: none; -ms-overflow-style: none;
+          }
+          .gc-gal__thumbs::-webkit-scrollbar { display: none; }
+          .gc-gal__thumb { width: 72px; height: 48px; scroll-snap-align: start; }
           .gc-detail__content {
             width: 100%; height: auto; justify-content: flex-start; overflow: visible;
             padding-top: 1.1rem;
@@ -1103,16 +1125,37 @@ export default function PortfolioSection({ lang }) {
           .screw__count-num { font-size: 2.4rem; }
           .screw__hud-title { font-size: 1.1rem; }
           .screw__rail { height: 30vh; right: 0.7rem; }
-          .gc-detail { padding: 0.9rem 0.7rem; align-items: flex-start; }
-          .gc-detail__wrap { max-width: 100%; max-height: 94vh; border-radius: 16px; box-shadow: none; }
-          .gc-detail__x { top: 0.9rem; right: 0.9rem; width: 36px; height: 36px; }
-          /* En el telefono la captura es lo primero y ocupa media pantalla:
+          /* En el telefono el detalle deja de ser una tarjeta flotando con
+             0.7rem de margen —que era lo que hacia que todo se viera apretado
+             y desbordado— y pasa a ser una hoja a pantalla completa. */
+          .gc-detail { padding: 0; align-items: stretch; }
+          .gc-detail__wrap {
+            width: 100%; max-width: 100%;
+            /* dvh, no vh: con vh normal la barra de direcciones de Safari/Chrome
+               se come el final del modal y el CTA queda debajo del borde. */
+            height: 100dvh; max-height: none;
+            border-radius: 0; border: none; box-shadow: none;
+          }
+          .gc-detail__wrap--solo {
+            height: auto; min-height: 100dvh; border-radius: 0;
+            justify-content: center;
+          }
+          .gc-detail__x {
+            top: calc(0.9rem + env(safe-area-inset-top)); right: 0.9rem;
+            width: 36px; height: 36px;
+          }
+          /* La captura es lo primero y ocupa poco menos de media pantalla:
              el texto viene despues, al desplazar. */
-          .gc-gal__stage, .gc-gal__veil { height: 50vh; min-height: 300px; }
+          .gc-gal__stage, .gc-gal__veil { height: 42dvh; min-height: 240px; }
           .gc-gal { gap: 0.6rem; }
+          .gc-gal__thumbs { padding: 0 1.1rem; }
           .gc-gal__thumb { width: 64px; height: 44px; }
-          .gc-detail__content { padding: 1rem 1.3rem 1.6rem; gap: 0.85rem; }
-          .gc-detail__title { font-size: clamp(2rem, 9vw, 2.6rem); }
+          .gc-gal__cap { margin: 0 1.1rem; }
+          .gc-detail__content {
+            padding: 1rem 1.1rem calc(1.8rem + env(safe-area-inset-bottom));
+            gap: 0.85rem;
+          }
+          .gc-detail__title { font-size: clamp(1.9rem, 8vw, 2.5rem); }
           .gc-detail__cta { width: 100%; justify-content: center; }
         }
 

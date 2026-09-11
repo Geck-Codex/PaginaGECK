@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Menu, X, Briefcase, Info, BookOpen, Mail, Layers, ArrowUpRight, Sun, Moon } from "lucide-react";
+import { Menu, X, Briefcase, Info, BookOpen, Mail, Layers, ArrowUpRight } from "lucide-react";
 import { FLAGS } from "./Flags.jsx";
 import { translations as allTranslations } from "../i18n/translations";
 import { localizedPath, resolvePath, DEFAULT_LOCALE } from "../i18n/routes";
@@ -34,14 +34,16 @@ export default function GeckNavbar({ lang, pageKey }) {
     setTheme(current);
   }, []);
 
+  // El cambio de tema es un fundido de color, sin barrido en pantalla: la
+  // clase `theme-anim` activa la transicion global de color durante ~360ms
+  // y se retira sola. Toda la animacion visible vive en el switch.
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     const root = document.documentElement;
-    // Activa la transición de color global solo durante el cambio de tema.
     root.classList.add('theme-anim');
     setTheme(next);
     root.setAttribute('data-theme', next);
-    localStorage.setItem('geck-theme', next);
+    try { localStorage.setItem('geck-theme', next); } catch (e) { /* modo privado */ }
     window.setTimeout(() => root.classList.remove('theme-anim'), 360);
   };
 
@@ -104,7 +106,8 @@ export default function GeckNavbar({ lang, pageKey }) {
   const closeMenu = () => {
     setRevealOpen(false);
     setMenuClosing(true);
-    setTimeout(() => { setMenuOpen(false); setMenuClosing(false); }, 650);
+    // La capa dorada es la ultima en irse: 0.16s de retardo + 0.66s de barrido.
+    setTimeout(() => { setMenuOpen(false); setMenuClosing(false); }, 840);
   };
 
   const toggleMenu = () => { if (menuOpen) closeMenu(); else openMenu(); };
@@ -168,7 +171,7 @@ export default function GeckNavbar({ lang, pageKey }) {
           -webkit-backdrop-filter: blur(24px) saturate(160%);
           font-weight: 700; font-size: 1.5rem;
           text-decoration: none; cursor: pointer;
-          transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.45s ease;
+          transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.45s ease, color 0.45s ease;
           white-space: nowrap;
         }
 
@@ -189,6 +192,17 @@ export default function GeckNavbar({ lang, pageKey }) {
         .nav-pill-menu:hover {
           transform: translateY(-3px);
         }
+        /* Con el menú abierto la píldora se invierte y acompaña al barrido:
+           el oro se va al icono y el fondo se funde con la capa que acaba de
+           cubrir la pantalla, en vez de quedarse dorada sobre dorado. */
+        .nav-pill-menu[aria-expanded="true"] {
+          background: var(--navy-dark);
+          color: var(--accent);
+        }
+        .nav-pill-menu[aria-expanded="true"] .nav-pill-icon {
+          background: var(--accent);
+          color: var(--on-accent);
+        }
 
         /* ── Círculo que encierra el icono de cada píldora ── */
         .nav-pill-icon {
@@ -199,6 +213,7 @@ export default function GeckNavbar({ lang, pageKey }) {
           height: 3.1rem;
           border-radius: 50%;
           flex-shrink: 0;
+          transition: background 0.45s ease, color 0.45s ease;
         }
         /* Contacto (navy): círculo dorado tenue */
         .nav-pill-contact .nav-pill-icon {
@@ -227,25 +242,70 @@ export default function GeckNavbar({ lang, pageKey }) {
         }
         .menu-toggle-track[data-open="true"] { transform: translateY(-50%); }
 
-        /* ── Menú: reveal circular ── */
+        /* ── Menú: reveal en capas ──
+           El fondo no cambia de color de un tirón. Tres capas crecen desde el
+           botón con retardos distintos: primero barre el oro, detrás entra un
+           tono intermedio y al final se asienta el navy. Lo que se ve es un
+           destello dorado cruzando la pantalla que deja el fondo definitivo,
+           no un círculo de un solo color. Al cerrar el orden se invierte: se
+           va el navy primero y el oro sale al último, así que el destello
+           también aparece de salida. */
         .menu-reveal {
           position: fixed; inset: 0; z-index: 59;
-          background: var(--navy-dark);
           display: flex; align-items: center; justify-content: center;
-          clip-path: circle(0px at var(--cx) var(--cy));
-          transition: clip-path 0.62s cubic-bezier(0.76, 0, 0.24, 1);
+          background: transparent;
           overflow-y: auto;
+          pointer-events: none;
         }
-        .menu-reveal.is-open {
+        .menu-reveal.is-open { pointer-events: auto; }
+
+        .mr-layer {
+          position: fixed; inset: 0;
+          clip-path: circle(0px at var(--cx) var(--cy));
+          transition: clip-path 0.66s cubic-bezier(0.76, 0, 0.24, 1);
+          transition-delay: var(--out-delay);
+          pointer-events: none;
+        }
+        .menu-reveal.is-open .mr-layer {
           clip-path: circle(var(--r) at var(--cx) var(--cy));
+          transition-delay: var(--in-delay);
+        }
+        .mr-layer--gold {
+          background: var(--accent);
+          --in-delay: 0s; --out-delay: 0.16s;
+        }
+        .mr-layer--mid {
+          background: color-mix(in srgb, var(--accent) 28%, var(--navy-dark));
+          --in-delay: 0.09s; --out-delay: 0.08s;
+        }
+        .mr-layer--base {
+          background: var(--navy-dark);
+          --in-delay: 0.18s; --out-delay: 0s;
         }
         /* Halo dorado radial sutil centrado en el origen del círculo */
-        .menu-reveal::before {
+        .mr-layer--base::after {
           content: "";
           position: absolute; inset: 0;
           background: radial-gradient(circle at var(--cx) var(--cy),
             color-mix(in srgb, var(--accent) 16%, transparent), transparent 55%);
           pointer-events: none;
+        }
+
+        /* Anillo que sale disparado del botón al abrir: deja claro de dónde
+           nace el barrido y se desvanece solo, sin dejar nada que limpiar. */
+        .mr-ring {
+          position: fixed; left: var(--cx); top: var(--cy);
+          width: 0; height: 0; border-radius: 50%;
+          border: 2px solid var(--accent);
+          transform: translate(-50%, -50%);
+          opacity: 0; pointer-events: none;
+        }
+        .menu-reveal.is-open .mr-ring {
+          animation: mr-ring-out 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes mr-ring-out {
+          0%   { width: 0; height: 0; opacity: 0.85; }
+          100% { width: calc(var(--r) * 2.1); height: calc(var(--r) * 2.1); opacity: 0; }
         }
 
         .menu-reveal__inner {
@@ -262,13 +322,14 @@ export default function GeckNavbar({ lang, pageKey }) {
           border-bottom: 1px solid rgba(255,255,255,0.08);
           text-decoration: none;
           color: var(--white-soft);
-          opacity: 0; transform: translateY(26px);
+          opacity: 0; transform: translateY(26px); filter: blur(8px);
           transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-                      color 0.3s ease, padding-left 0.3s ease;
+                      filter 0.5s ease, color 0.3s ease, padding-left 0.3s ease;
         }
+        /* Entran cuando el navy ya se asentó, no encima del barrido dorado. */
         .menu-reveal.is-open .mr-link {
-          opacity: 1; transform: translateY(0);
-          transition-delay: calc(0.22s + var(--i) * 0.07s);
+          opacity: 1; transform: translateY(0); filter: blur(0);
+          transition-delay: calc(0.34s + var(--i) * 0.07s);
         }
         .mr-link__num {
           font-family: var(--font-body);
@@ -306,32 +367,44 @@ export default function GeckNavbar({ lang, pageKey }) {
         }
         .menu-reveal.is-open .mr-footer {
           opacity: 1; transform: translateY(0);
-          transition-delay: calc(0.22s + 4 * 0.07s);
+          transition-delay: calc(0.34s + 4 * 0.07s);
         }
+        /* El alto lo fija el pie, no cada mando: idioma y tema tienen
+           formas distintas (una tira de tres, un switch) y si cada uno
+           calculara su altura por su cuenta quedarian desalineados en la
+           fila, que es justo como se veian. */
+        .mr-footer { --mr-ctl-h: 42px; }
         .mr-control { display: flex; flex-direction: column; gap: 0.85rem; }
         .mr-control__label {
           font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase;
           color: rgba(255,255,255,0.45); font-weight: 600;
         }
         .mr-seg {
-          display: inline-flex; gap: 0.3rem;
-          padding: 0.35rem; border-radius: 999px;
+          position: relative;
+          display: inline-flex; gap: 0.25rem;
+          height: var(--mr-ctl-h); padding: 0.25rem;
+          border-radius: 999px;
           background: var(--navy-deep);
           border: 1px solid var(--border);
         }
-        /* Con los dos mandos en una fila el ancho ya no sobra: los botones
-           dejan de pedir 3rem fijos y se ajustan a su contenido. */
+
+        /* Las tres lenguas: una tira de pastillas, la activa en oro.
+           Son enlaces y no botones a proposito —un <button> que navega no se
+           abre en pestana nueva, no se copia con clic derecho y ningun
+           rastreador lo sigue— asi que hay que apagarles el subrayado y
+           heredar la tipografia a mano. */
         .mr-seg__btn {
           display: inline-flex; align-items: center; justify-content: center;
           gap: 0.4rem;
-          min-width: 2.6rem; height: 2.5rem; padding: 0 0.7rem;
+          min-width: 2.6rem; height: 100%; padding: 0 0.7rem;
           border: none; border-radius: 999px;
-          background: transparent; cursor: pointer;
-          color: rgba(255,255,255,0.6);
-          font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.05em;
+          background: transparent; cursor: pointer; text-decoration: none;
+          color: rgba(255, 255, 255, 0.6);
+          font-family: var(--font-body); font-size: 0.95rem;
+          font-weight: 700; letter-spacing: 0.05em;
           transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
         }
-        .mr-seg__btn--lang { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; }
+        .mr-seg__btn--lang { font-size: 0.82rem; letter-spacing: 0.04em; }
         /* Filete tenue: sobre el blanco de la bandera de Mexico, el borde del
            rectangulo desaparecia contra el fondo claro del boton activo. */
         .mr-flag {
@@ -340,6 +413,160 @@ export default function GeckNavbar({ lang, pageKey }) {
         }
         .mr-seg__btn:hover { color: var(--white-soft); transform: translateY(-1px); }
         .mr-seg__btn.active { background: var(--accent); color: var(--on-accent); }
+
+        /* ── Toggle de tema: un solo astro que se transforma ──
+           El mismo cuerpo viaja de un extremo al otro y por el camino el sol
+           se convierte en luna.
+
+           REGLA DE ORO AQUI: solo se animan transform y opacity. Son las
+           dos unicas propiedades que el navegador resuelve en el compositor,
+           sin volver a calcular ni repintar nada. La version anterior animaba
+           background y box-shadow del astro —un glow con blur repintado
+           en cada frame, dentro de un contorno circular que tambien hay que
+           recortar en cada frame— y por eso se veia a tirones. El color ya no
+           se interpola: hay dos capas, una dorada y una palida, y lo que
+           cambia es cual esta visible.
+
+           La otra mitad del efecto es el ORDEN. Las piezas no se mueven a la
+           vez: al ir a oscuro los rayos se apagan, el astro sale, la mordida
+           lo alcanza a medio camino y las estrellas asoman cuando ya llego;
+           al volver, la mordida se cierra ANTES de que el astro emprenda el
+           regreso y los rayos salen al final. Para acelerar o frenar todo,
+           los numeros estan aqui arriba. */
+        .tsw {
+          --tsw-w: 84px; --tsw-h: var(--mr-ctl-h); --tsw-orb: 30px; --tsw-pad: 6px;
+          --tsw-travel: 1400ms;  /* recorrido del astro */
+          --tsw-morph: 1100ms;   /* la mordida */
+          --tsw-rays: 900ms;     /* los rayos */
+          /* Arranca con calma, acelera, frena largo. A esta duracion un
+             overshoot se notaria como un tropiezo, asi que no lo lleva. */
+          --tsw-ease: cubic-bezier(0.62, 0.02, 0.22, 1);
+          --tsw-ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+          --tsw-track: color-mix(in srgb, var(--accent) 42%, var(--brand-ivory));
+          position: relative;
+          width: var(--tsw-w); height: var(--tsw-h);
+          padding: 0; border-radius: 999px; cursor: pointer;
+          border: 1px solid var(--border);
+          background: var(--tsw-track);
+          overflow: hidden;
+          /* El carril es lo unico que aun interpola color, y puede: es un
+             fondo plano, sin blur ni recorte, una sola capa. */
+          transition: background var(--tsw-travel) var(--tsw-ease-soft),
+                      border-color var(--tsw-travel) var(--tsw-ease-soft),
+                      transform 0.3s ease;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .tsw[data-on="dark"] { --tsw-track: var(--navy-deep); }
+        .tsw:hover { transform: translateY(-1px); }
+        .tsw:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+        /* El cuerpo que viaja. Lleva dentro el disco, el halo y los rayos:
+           los dos ultimos van FUERA del disco porque este recorta (necesita
+           recortar para que la mordida no se salga de su contorno). */
+        .tsw__orb {
+          position: absolute; top: 50%; left: var(--tsw-pad);
+          width: var(--tsw-orb); height: var(--tsw-orb);
+          transform: translateY(-50%);
+          transition: transform var(--tsw-travel) var(--tsw-ease);
+          transition-delay: 260ms;  /* de vuelta espera a que cierre la mordida */
+          will-change: transform;
+        }
+        .tsw[data-on="dark"] .tsw__orb {
+          transform: translate(calc(var(--tsw-w) - var(--tsw-orb) - var(--tsw-pad) * 2), -50%);
+          transition-delay: 0ms;
+        }
+
+        /* El disco: palido de base (la luna) con la capa dorada encima. */
+        .tsw__astro {
+          position: absolute; inset: 0; border-radius: 50%;
+          overflow: hidden;
+          background: var(--brand-ivory);
+          transition: transform 0.3s ease;
+        }
+        /* El sol. Se apaga por opacidad en vez de interpolar el color de
+           fondo: un fundido entre dos capas planas no cuesta repintado. */
+        .tsw__astro::before {
+          content: ""; position: absolute; inset: 0;
+          background: var(--accent);
+          transition: opacity calc(var(--tsw-travel) * 0.6) var(--tsw-ease-soft);
+          transition-delay: 180ms;
+        }
+        .tsw[data-on="dark"] .tsw__astro::before { opacity: 0; transition-delay: 0ms; }
+        .tsw:hover .tsw__astro { transform: scale(1.06); }
+
+        /* El halo, en su propia capa. El box-shadow es fijo y lo que se
+           anima es la opacidad: asi el blur se rasteriza UNA vez. */
+        .tsw__glow {
+          position: absolute; inset: 0; border-radius: 50%;
+          box-shadow: 0 0 16px 1px rgba(195, 173, 133, 0.65);
+          transition: opacity calc(var(--tsw-travel) * 0.6) var(--tsw-ease-soft);
+          transition-delay: 180ms;
+          pointer-events: none;
+        }
+        .tsw[data-on="dark"] .tsw__glow { opacity: 0; transition-delay: 0ms; }
+        /* El halo palido de la luna, debajo del dorado y al reves. */
+        .tsw__glow--moon {
+          box-shadow: 0 0 14px 1px rgba(245, 241, 232, 0.4);
+          opacity: 0; transition-delay: 0ms;
+        }
+        .tsw[data-on="dark"] .tsw__glow--moon { opacity: 1; transition-delay: 420ms; }
+
+        /* La mordida: un circulo del color del carril que crece dentro del
+           disco. Al ser el mismo color del fondo, lo que se ve no es un
+           circulo encima sino el astro vaciandose en creciente. */
+        .tsw__bite {
+          position: absolute; top: -26%; left: 32%;
+          width: 100%; height: 100%; border-radius: 50%;
+          background: var(--tsw-track);
+          transform: scale(0);
+          transition: transform var(--tsw-morph) var(--tsw-ease),
+                      background var(--tsw-travel) var(--tsw-ease-soft);
+          transition-delay: 0ms;  /* de vuelta cierra primero */
+          will-change: transform;
+        }
+        /* De ida alcanza al astro a medio recorrido, no sale con el. */
+        .tsw[data-on="dark"] .tsw__bite { transform: scale(1); transition-delay: 320ms; }
+
+        /* Ocho rayos en corona. Van en box-shadow de un solo nodo en vez de
+           ocho spans: es un elemento, y escalarlo los retrae todos a la vez.
+           El box-shadow no cambia nunca — se mueve el nodo entero. */
+        .tsw__rays {
+          position: absolute; top: 50%; left: 50%;
+          width: 3.5px; height: 3.5px; margin: -1.75px 0 0 -1.75px;
+          border-radius: 50%; background: transparent;
+          box-shadow:
+            0 -17px 0 var(--accent),      12px -12px 0 var(--accent),
+            17px 0 0 var(--accent),       12px 12px 0 var(--accent),
+            0 17px 0 var(--accent),      -12px 12px 0 var(--accent),
+            -17px 0 0 var(--accent),     -12px -12px 0 var(--accent);
+          transition: transform var(--tsw-rays) var(--tsw-ease),
+                      opacity calc(var(--tsw-rays) * 0.5) ease;
+          transition-delay: 700ms;  /* salen cuando el astro ya volvio */
+          will-change: transform;
+        }
+        /* Se retraen girando: caen hacia el centro en espiral, no en linea.
+           De ida se van de inmediato — el sol se apaga y luego viaja. */
+        .tsw[data-on="dark"] .tsw__rays {
+          transform: scale(0.3) rotate(-60deg); opacity: 0;
+          transition-delay: 0ms;
+        }
+
+        /* Estrellas del lado que el astro deja libre al irse a la derecha.
+           Escalonadas: aparecer las tres a la vez se lee como un parpadeo. */
+        .tsw__star {
+          position: absolute; border-radius: 50%;
+          background: var(--brand-ivory);
+          opacity: 0; transform: scale(0);
+          transition: opacity 300ms ease, transform 500ms var(--tsw-ease);
+          transition-delay: 0ms;  /* se apagan juntas; lo escalonado es entrar */
+        }
+        .tsw__star--a { width: 3px; height: 3px; left: 15px; top: 11px; }
+        .tsw__star--b { width: 2px; height: 2px; left: 25px; top: 27px; }
+        .tsw__star--c { width: 2.5px; height: 2.5px; left: 33px; top: 16px; }
+        .tsw[data-on="dark"] .tsw__star { opacity: 0.9; transform: scale(1); }
+        .tsw[data-on="dark"] .tsw__star--a { transition-delay: 760ms; }
+        .tsw[data-on="dark"] .tsw__star--b { transition-delay: 900ms; }
+        .tsw[data-on="dark"] .tsw__star--c { transition-delay: 1040ms; }
 
         /* ── Responsive ── */
         /* En móvil/tablet Contacto pasa al menú → la barra deja solo logo + Menú */
@@ -358,10 +585,14 @@ export default function GeckNavbar({ lang, pageKey }) {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .menu-reveal { transition: none !important; }
+          /* Sin barrido: las capas aparecen ya cubiertas y el anillo no sale. */
+          .mr-layer { transition: none !important; transition-delay: 0s !important; }
+          .mr-ring { display: none !important; }
           .menu-reveal .mr-link,
-          .menu-reveal .mr-footer { transition: none !important; opacity: 1 !important; transform: none !important; }
+          .menu-reveal .mr-footer { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
           .nav-pill, .mr-link, .mr-seg__btn { transition: none !important; }
+          .tsw, .tsw__orb, .tsw__astro, .tsw__astro::before, .tsw__glow,
+          .tsw__bite, .tsw__rays, .tsw__star { transition: none !important; }
         }
       `}</style>
 
@@ -434,6 +665,13 @@ export default function GeckNavbar({ lang, pageKey }) {
           aria-modal="true"
           aria-label={t.menu}
         >
+          {/* Las tres capas del barrido + el anillo del origen. Van antes del
+              contenido para que este pinte encima sin pelear por z-index. */}
+          <div className="mr-layer mr-layer--gold" />
+          <div className="mr-layer mr-layer--mid" />
+          <div className="mr-layer mr-layer--base" />
+          <span className="mr-ring" />
+
           <div className="menu-reveal__inner">
             <nav className="mr-links">
               {navLinks.map(({ key, href }, i) => (
@@ -482,24 +720,28 @@ export default function GeckNavbar({ lang, pageKey }) {
 
               <div className="mr-control">
                 <span className="mr-control__label">{t.theme}</span>
-                <div className="mr-seg">
-                  <button
-                    onClick={() => theme !== "light" && toggleTheme()}
-                    className={`mr-seg__btn ${theme === "light" ? "active" : ""}`}
-                    aria-label={t.themeLight}
-                    aria-pressed={theme === "light"}
-                  >
-                    <Sun size={20} />
-                  </button>
-                  <button
-                    onClick={() => theme !== "dark" && toggleTheme()}
-                    className={`mr-seg__btn ${theme === "dark" ? "active" : ""}`}
-                    aria-label={t.themeDark}
-                    aria-pressed={theme === "dark"}
-                  >
-                    <Moon size={20} />
-                  </button>
-                </div>
+                {/* La etiqueta dice a dónde te lleva pulsar, no en dónde
+                    estás: es lo único accionable del control y en un lector
+                    de pantalla "modo claro" es mas util que "modo oscuro,
+                    activado". El estado lo lleva aria-pressed. */}
+                <button
+                  type="button"
+                  className="tsw"
+                  data-on={theme}
+                  onClick={toggleTheme}
+                  aria-label={theme === "dark" ? t.themeLight : t.themeDark}
+                  aria-pressed={theme === "dark"}
+                >
+                  <span className="tsw__star tsw__star--a" aria-hidden="true" />
+                  <span className="tsw__star tsw__star--b" aria-hidden="true" />
+                  <span className="tsw__star tsw__star--c" aria-hidden="true" />
+                  <span className="tsw__orb" aria-hidden="true">
+                    <span className="tsw__glow tsw__glow--moon" />
+                    <span className="tsw__glow" />
+                    <span className="tsw__astro"><span className="tsw__bite" /></span>
+                    <span className="tsw__rays" />
+                  </span>
+                </button>
               </div>
             </div>
           </div>

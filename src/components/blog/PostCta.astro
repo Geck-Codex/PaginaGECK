@@ -1,0 +1,68 @@
+---
+/**
+ * Cierre comercial al pie de cada artículo.
+ *
+ * El blog atrae a alguien que está investigando, no comprando. Este bloque es
+ * el único punto del artículo donde se le pide algo, y va al final a propósito:
+ * interrumpir la lectura con llamadas a la acción a media página es lo que hace
+ * que la gente cierre la pestaña.
+ */
+import { BLOG_INDEX } from '@/i18n/blog.js';
+
+interface Props {
+  href?: string;
+}
+
+const { href = '/contacto/' } = Astro.props;
+---
+
+<aside class="cta">
+  <h2 class="cta__heading">{BLOG_INDEX.cta.heading}</h2>
+  <p class="cta__body">{BLOG_INDEX.cta.body}</p>
+  <a class="cta__button" href={href}>{BLOG_INDEX.cta.button}</a>
+</aside>
+
+<style>
+  .cta {
+    max-width: 720px;
+    margin: 3.5rem 0 0;
+    padding: 2rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+
+  .cta__heading {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--text);
+    margin: 0 0 0.6rem;
+  }
+
+  .cta__body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin: 0 0 1.35rem;
+  }
+
+  .cta__button {
+    display: inline-block;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+
+  .cta__button:hover {
+    background: var(--btn-primary-hover);
+  }
+
+  .cta__button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+</style>

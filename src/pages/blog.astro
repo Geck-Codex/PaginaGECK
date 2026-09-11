@@ -1,12 +1,149 @@
 ---
+/**
+ * Índice del blog.
+ *
+ * Sustituye al placeholder "en construcción" que llevaba `noindex`. Ese
+ * noindex y el filtro de `/blog` en el sitemap de astro.config.mjs eran
+ * coherentes mientras la página estaba vacía; ahora que hay contenido, ambos
+ * se retiran o el trabajo no sirve de nada.
+ *
+ * Solo existe en español — el porqué está documentado en `src/i18n/blog.js`.
+ */
+import { getCollection } from 'astro:content';
 import Layout from '@/layouts/MainLayout.astro';
-import EnConstruccioin from '@/components/EnConstruccioin.jsx';
+import PostCard from '@/components/blog/PostCard.astro';
+import { BLOG_INDEX, estimateReadingTime } from '@/i18n/blog.js';
+import { SITE_URL } from '@/data/seo';
+
+/* Los borradores nunca salen publicados. El filtro va aquí y no en el esquema
+   porque el artículo debe seguir existiendo en el repo: es lo que permite
+   guardarlo a medias desde el panel y retomarlo otro día. */
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const url = `${SITE_URL}/blog/`;
+
+/* El índice se declara como Blog con sus entradas. `blogPost` lista las URLs
+   para que un motor que solo lea esta página sepa qué más hay, sin depender de
+   que rastree cada artículo primero. */
+const blogSchema = {
+  '@type': 'Blog',
+  '@id': `${url}#blog`,
+  url,
+  name: BLOG_INDEX.title,
+  description: BLOG_INDEX.description,
+  inLanguage: 'es-MX',
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  blogPost: posts.map((post) => ({
+    '@type': 'BlogPosting',
+    '@id': `${SITE_URL}/blog/${post.id}/#article`,
+    headline: post.data.title,
+    url: `${SITE_URL}/blog/${post.id}/`,
+    datePublished: post.data.date.toISOString(),
+  })),
+};
 ---
 
 <Layout
-  title="Blog | Geck Codex"
-  description="Blog de tecnología, desarrollo web e IA de Geck Codex."
-  noindex={true}
+  title={BLOG_INDEX.title}
+  description={BLOG_INDEX.description}
+  canonical={url}
+  breadcrumbs={[{ name: BLOG_INDEX.breadcrumb, url }]}
+  schema={[blogSchema]}
 >
-    <EnConstruccioin client:load />
+  <section class="blog">
+    <div class="blog__inner">
+      <header class="blog__head">
+        <p class="blog__eyebrow">{BLOG_INDEX.eyebrow}</p>
+        <h1 class="blog__title">{BLOG_INDEX.heading}</h1>
+        <p class="blog__intro">{BLOG_INDEX.intro}</p>
+      </header>
+
+      {
+        posts.length === 0 ? (
+          <p class="blog__empty">{BLOG_INDEX.empty}</p>
+        ) : (
+          <div class="blog__grid">
+            {posts.map((post, i) => (
+              <PostCard
+                href={`/blog/${post.id}/`}
+                title={post.data.title}
+                description={post.data.description}
+                date={post.data.date}
+                readingTime={post.data.readingTime ?? estimateReadingTime(post.body)}
+                cover={post.data.cover}
+                coverAlt={post.data.coverAlt}
+                tags={post.data.tags}
+                featured={i === 0}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .blog {
+    background: var(--background);
+    color: var(--text);
+    padding: clamp(120px, 16vh, 180px) 1.5rem 100px;
+    min-height: 100vh;
+  }
+
+  .blog__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .blog__head {
+    max-width: 720px;
+    margin: 0 0 3.25rem;
+  }
+
+  .blog__eyebrow {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--accent-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .blog__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+    margin: 0 0 1.25rem;
+    color: var(--text);
+  }
+
+  .blog__intro {
+    font-size: 1.075rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .blog__grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 860px) {
+    .blog__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .blog__empty {
+    font-size: 1rem;
+    color: var(--text-muted);
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+  }
+</style>

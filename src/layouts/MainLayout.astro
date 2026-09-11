@@ -189,6 +189,16 @@ const jsonLdGraph = [
     {alternates.map((alt) => (
       <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
     ))}
+    <!-- Feed del blog. Va en TODAS las páginas, no solo en /blog/: es como
+         los agregadores y varios rastreadores descubren contenido nuevo, y
+         llegan al sitio por cualquier puerta. -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Blog de Geck Codex"
+      href={`${SITE_URL}/blog/rss.xml`}
+    />
+
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {!noindex && <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />}
 

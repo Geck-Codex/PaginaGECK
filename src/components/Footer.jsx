@@ -116,6 +116,13 @@ export default function GeckFooter({ lang, pageKey }) {
               <li><a href={localizedPath("services", lang)}>{t.nav.services}</a></li>
               <li><a href={localizedPath("portfolio", lang)}>{t.nav.portfolio}</a></li>
               <li><a href={localizedPath("about", lang)}>{t.nav.about}</a></li>
+              {/* El blog va SIN localizedPath porque solo existe en español y no
+                  está en SLUGS —ver src/i18n/blog.js—. Y va aquí, no solo en el
+                  menú del Navbar: ese menú se pinta cuando el usuario lo abre,
+                  así que su enlace nunca llega al HTML inicial. Sin esta línea
+                  el blog se queda sin un solo enlace interno y depende del
+                  sitemap, que es la señal más débil que hay para descubrirlo. */}
+              <li><a href="/blog/">{t.nav.blog}</a></li>
               <li><a href={localizedPath("contact", lang)}>{t.nav.contact}</a></li>
             </ul>
           </nav>

@@ -76,6 +76,39 @@
 .paths__plan-feats li { font-size: 0.86rem; color: var(--text-muted); display: flex; gap: 0.6rem; }
 .paths__plan-feats li::before { content: "·"; color: var(--accent); flex: none; }
 
+/* ── Planes en movil: se deslizan, no se apilan ──
+ *
+ * Con `minmax(250px, 1fr)` un telefono cabe una sola columna, asi que los tres
+ * planes quedaban uno debajo de otro: tres pantallazos de scroll, y el tercero
+ * sencillamente no existe para quien no baja hasta el final. Pero la decision
+ * aqui no es "¿me sirve este plan?", es "¿cual de los tres?" — y eso exige
+ * verlos juntos.
+ *
+ * En fila con arrastre se comparan igual que en escritorio. El 80% de ancho
+ * deja asomar el siguiente: es lo que le avisa al dedo que hay mas a la
+ * derecha, sin gastar flechas ni puntitos.
+ *
+ * El scroll vive DENTRO del contenedor, nunca en <body>: global.css usa
+ * `overflow-x: clip` en la pagina justo para que nada arrastre de lado. */
+@media (max-width: 720px) {
+  .paths__plans {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    gap: 0.9rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+  .paths__plans::-webkit-scrollbar { display: none; }
+  .paths__plan { scroll-snap-align: start; }
+  /* En tactil el hover se queda pegado tras el toque: la tarjeta se quedaria
+     levantada sin razon. */
+  .paths__card:hover { transform: none; }
+}
+
 /* ── Dudas ── */
 .paths__faq { max-width: 780px; margin: 2.2rem auto 0; }
 .paths__faq details { border-bottom: 1px solid var(--border); padding: 1.15rem 0; }
@@ -671,24 +704,82 @@
 .svcx__go { color: var(--accent-text); font-weight: 700; }
 .svcx__col.is-up .svcx__go { text-decoration: underline; }
 
-/* En movil no hay hover ni eje de etiquetas: dos tarjetas, una debajo de
-   otra, cada celda dice de que dato habla, y se toca la que se quiere. */
+/* En movil las dos columnas SIGUEN una al lado de la otra.
+ *
+ * Antes se apilaban como dos tarjetas sueltas, y con eso se perdia lo unico
+ * que esta seccion viene a hacer: comparar. Apiladas hay que bajar, memorizar
+ * "dias", subir, y contrastar contra "semanas o meses" — que es exactamente el
+ * ir y venir que la version de escritorio elimina. Se quedan lado a lado.
+ *
+ * Lo que cambia respecto a escritorio, porque en un telefono no cabe igual:
+ *   · Desaparece la columna de etiquetas y cada celda pone la suya ARRIBA del
+ *     dato, no a la izquierda: en ~170 px de ancho, etiqueta y valor en la
+ *     misma linea no caben sin romperse los dos.
+ *   · El subgrid se conserva, y es lo que sostiene todo: la fila "Arranque" de
+ *     una columna queda a la altura de la de enfrente aunque una ocupe dos
+ *     lineas y la otra una.
+ *   · No hay hover en tactil, asi que el reparto de ancho se congela en mitad
+ *     y mitad. Tocar la columna sigue navegando: la tarjeta entera es el enlace.
+ */
 @media (max-width: 860px) {
+  .svcx { margin-top: 2rem; }
   .svcx__hint { display: none; }
-  .svcx__grid { display: block; }
-  .svcx__labels { display: none; }
-  .svcx__col { display: block; margin-bottom: 1.2rem; }
-  .svcx__col.is-dim, .svcx__col.is-up {
-    opacity: 1; transform: none; box-shadow: none;
+
+  .svcx__grid,
+  .svcx__grid.on-eco,
+  .svcx__grid.on-custom {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 0.7rem;
   }
-  .svcx__col.is-up .svcx__t { font-size: clamp(1.35rem, 2.6vw, 1.7rem); }
-  .svcx__cell { justify-content: space-between; gap: 1.2rem; }
+  .svcx__labels { display: none; }
+
+  /* El realce del hover no aplica en tactil: las dos se ven igual siempre. */
+  .svcx__col.is-dim, .svcx__col.is-up {
+    opacity: 1; transform: none; box-shadow: none; border-color: var(--border);
+  }
+
+  .svcx__cell {
+    display: block;
+    min-height: 0;
+    padding: 0.75rem 0.85rem;
+  }
+  .svcx__cell--head {
+    padding: 1.15rem 0.85rem 1rem;
+  }
+  .svcx__cell--foot {
+    padding-top: 1rem; padding-bottom: 1.15rem;
+  }
+
   .svcx__cell::before {
     content: attr(data-k);
-    font-size: 0.6rem; font-weight: 800; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--text-muted); flex: none;
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.55rem; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted);
   }
-  .svcx__v { text-align: right; }
+  /* Cabecera y pie no llevan data-k, y sin esto pintarian una linea vacia
+     que desalinearia las dos columnas entre si. */
+  .svcx__cell--head::before, .svcx__cell--foot::before { content: none; }
+
+  .svcx__k { font-size: 0.55rem; letter-spacing: 0.12em; }
+  .svcx__t,
+  .svcx__col.is-up .svcx__t { font-size: 1.02rem; line-height: 1.2; margin-top: 0.4rem; }
+  .svcx__d { font-size: 0.78rem; line-height: 1.45; margin-top: 0.45rem; }
+  .svcx__v { font-size: 0.82rem; line-height: 1.35; }
+  .svcx__go { font-size: 0.78rem; }
+}
+
+/* Telefono angosto: el texto baja otro escalon antes que romper la comparacion.
+   Preferimos letra chica a columnas apiladas — apiladas ya no comparan nada. */
+@media (max-width: 400px) {
+  .svcx__grid,
+  .svcx__grid.on-eco,
+  .svcx__grid.on-custom { gap: 0 0.5rem; }
+  .svcx__cell { padding: 0.65rem 0.6rem; }
+  .svcx__cell--head { padding: 1rem 0.6rem 0.85rem; }
+  .svcx__t, .svcx__col.is-up .svcx__t { font-size: 0.94rem; }
+  .svcx__d { font-size: 0.74rem; }
+  .svcx__v { font-size: 0.78rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

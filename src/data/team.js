@@ -30,6 +30,10 @@
  * donde no hay cara.
  */
 
+/* El ORDEN de este array es el que se pinta y el que numera las fichas
+ * (01, 02, 03) en la seccion de equipo. No es alfabetico ni por antiguedad:
+ * Kevin va en medio por decision del usuario. Reordenar aqui reordena la
+ * pagina. */
 export const TEAM = [
   {
     id: 'carlos',
@@ -39,18 +43,18 @@ export const TEAM = [
     projects: [22, 19, 17, 18, 3, 23, 21, 2, 9],
   },
   {
-    id: 'eric',
-    name: 'Eric Martín Ayala Argüello',
-    founder: true,
-    photo: '/assets/image/equipo/eric.webp',
-    projects: [6, 25, 26],
-  },
-  {
     id: 'kevin',
     name: 'Kevin Eduardo Haros Araujo',
     founder: true,
     photo: '/assets/image/equipo/kevin.webp',
     projects: [24, 1, 11],
+  },
+  {
+    id: 'eric',
+    name: 'Eric Martín Ayala Argüello',
+    founder: true,
+    photo: '/assets/image/equipo/eric.webp',
+    projects: [6, 25, 26],
   },
 
   /* Estos dos no construyen: el cliente los trata, y por eso van en un bloque

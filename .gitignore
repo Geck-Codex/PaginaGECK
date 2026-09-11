@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Originales pesados fuera del sitio publicado (no se despliegan)
+originales/

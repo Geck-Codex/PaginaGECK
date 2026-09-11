@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useAutoplay } from '../../hooks/useAutoplay';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 /* Catalogo de servicios como fichero giratorio (rolodex).
  *
@@ -39,12 +40,18 @@ import { useAutoplay } from '../../hooks/useAutoplay';
  *      una tarjeta invisible. De eso se encarga `useHashIndex`.
  */
 
-/* Cuantas fichas asoman detras de la de enfrente.
+/* Cuantas fichas asoman detras de la de enfrente, segun el ancho.
  *
- * Tres es lo que hace que se lea como una PILA y no como dos hojas sueltas: el
- * ojo necesita ver que el escalonado sigue para entender que hay mas atras.
- * La cuarta ya no aporta profundidad, solo ruido en el borde superior. */
-const DEPTH = 3;
+ * En escritorio, tres: el ojo necesita ver que el escalonado SIGUE para
+ * entender que hay mas atras, y con dos parecen hojas sueltas.
+ *
+ * En un telefono, UNA. El mismo escalonado que en una pantalla ancha se lee
+ * como profundidad, ahi se amontona —tres bordes en los pocos pixeles que
+ * quedan sobre la ficha— y acaba pareciendo un error de alineacion en vez de
+ * una pila. Una sola basta para decir "hay mas", que es todo lo que tiene que
+ * decir. */
+const DEPTH = { wide: 3, narrow: 1 };
+const NARROW_Q = '(max-width: 720px)';
 
 /**
  * Posicion de una ficha segun su distancia a la de enfrente.
@@ -59,7 +66,7 @@ const DEPTH = 3;
  * regresando a la baraja". Si saliera por un lado y volviera por el otro,
  * parecerian dos barajas distintas.
  */
-function poseOf(offset) {
+function poseOf(offset, depth) {
   if (offset === 0) {
     return { x: '0%', rotate: 0, rotateX: 0, y: '0%', scale: 1, opacity: 1, zIndex: 30 };
   }
@@ -71,7 +78,7 @@ function poseOf(offset) {
   }
 
   // Todavia no le toca: espera en la pila.
-  if (offset > DEPTH) {
+  if (offset > depth) {
     return { x: '0%', rotate: 0, rotateX: 20, y: '-19%', scale: 0.78, opacity: 0, zIndex: 1 };
   }
   return {
@@ -109,6 +116,7 @@ export default function ServiceRolodex({ services, cats, labels }) {
   const [i, setI] = useState(0);
   const reduce = useReducedMotion();
   const rootRef = useRef(null);
+  const depth = useMediaQuery(NARROW_Q) ? DEPTH.narrow : DEPTH.wide;
 
   const total = services.length;
   const clamp = useCallback((n) => Math.max(0, Math.min(total - 1, n)), [total]);
@@ -184,7 +192,7 @@ export default function ServiceRolodex({ services, cats, labels }) {
               /* Fuera de foco para el teclado y mudas para el lector de
                  pantalla, pero presentes en el HTML para el buscador. */
               aria-hidden={front ? undefined : 'true'}
-              animate={reduce ? { opacity: front ? 1 : 0, zIndex: front ? 30 : 1 } : poseOf(offset)}
+              animate={reduce ? { opacity: front ? 1 : 0, zIndex: front ? 30 : 1 } : poseOf(offset, depth)}
               initial={false}
               /* Curva, no muelle. El muelle rebotaba al final y cada ficha
                  llegaba en un tiempo distinto segun su recorrido, asi que la

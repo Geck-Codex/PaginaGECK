@@ -1043,6 +1043,13 @@
   .rlx__body { justify-content: center; }
 }
 
+/* En el telefono solo asoma UNA ficha detras (ver DEPTH en ServiceRolodex), asi
+   que el hueco de arriba se recorta: reservar sitio para tres deja una franja
+   vacia que separa el marcador de la pila y rompe el conjunto. */
+@media (max-width: 720px) {
+  .rlx__stage { margin-top: 2.4rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rlx__card, .rlx__dot, .rlx__btn { transition: none; }
   /* Sin perspectiva no hay giro que marear: el cambio queda en un corte seco,

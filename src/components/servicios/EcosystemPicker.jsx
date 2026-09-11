@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import {
   MODULES, LINKS, PRESETS, linkKey, NARROW_POS, VIEWBOX, NARROW_AT,
 } from '../../data/ecosystem.js';
@@ -19,27 +20,6 @@ import {
 const W = 165;
 const H = 60;
 
-/**
- * En pantallas angostas el diagrama se REACOMODA a dos columnas, no se encoge.
- * Ver `NARROW_POS` en data/ecosystem.js para el porque.
- *
- * Arranca en `false` a proposito: el HTML del servidor no sabe el ancho de la
- * pantalla, y pintar la version angosta por defecto le daria a un rastreador
- * —que mide como escritorio— la disposicion equivocada. Se corrige en el
- * primer efecto tras hidratar.
- */
-function useNarrow() {
-  const [narrow, setNarrow] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${NARROW_AT}px)`);
-    const sync = () => setNarrow(mq.matches);
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-  return narrow;
-}
-
 const posOf = (m, narrow) => (narrow ? NARROW_POS[m.id] ?? m : m);
 const cx = (m, narrow) => posOf(m, narrow).x + W / 2;
 const cy = (m, narrow) => posOf(m, narrow).y + H / 2;
@@ -47,7 +27,9 @@ const cy = (m, narrow) => posOf(m, narrow).y + H / 2;
 const mxn = (n) => '$' + n.toLocaleString('es-MX');
 
 export default function EcosystemPicker({ t, contactHref }) {
-  const narrow = useNarrow();
+  /* En pantallas angostas el diagrama se REACOMODA a dos columnas en vez de
+     encogerse. Ver `NARROW_POS` en data/ecosystem.js para el porque. */
+  const narrow = useMediaQuery(`(max-width: ${NARROW_AT}px)`);
   const [on, setOn] = useState(() => new Set());
   const toggle = (id) =>
     setOn((prev) => {

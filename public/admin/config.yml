@@ -1,0 +1,140 @@
+# ═══════════════════════════════════════════════════════════
+#  Panel de contenido — Sveltia CMS
+#
+#  Este archivo describe QUÉ campos se ven al escribir un artículo. Tiene que
+#  coincidir con el esquema de `src/content.config.ts`: si aquí falta un campo
+#  que allá es obligatorio, el artículo se guarda pero el build del sitio falla
+#  y el artículo no sale publicado. Al tocar uno, tocar el otro.
+# ═══════════════════════════════════════════════════════════
+
+backend:
+  name: github
+  repo: Geck-Codex/PaginaGECK
+
+  # Se publica contra `main`, NO contra `astro`.
+  #
+  # `astro` es la rama de desarrollo y llega a producción por pull request. Si
+  # el panel escribiera ahí, publicar un artículo exigiría abrir y aprobar un
+  # PR, que es exactamente la fricción que este panel viene a quitar: el punto
+  # es que escribas y se publique.
+  #
+  # La contrapartida, y hay que tenerla presente: los artículos nacen en `main`,
+  # así que antes de seguir desarrollando en `astro` conviene traerlos con
+  # `git merge origin/main`. Si algún día prefieres revisar cada artículo antes
+  # de que salga, cambia esto a `astro` y vuelve el paso del PR.
+  branch: main
+
+  # Mensaje de commit legible. Sin esto el historial de git se llena de
+  # "Update blog" y deja de servir para saber qué pasó.
+  commit_messages:
+    create: 'contenido: publica "{{slug}}"'
+    update: 'contenido: actualiza "{{slug}}"'
+    delete: 'contenido: elimina "{{slug}}"'
+    uploadMedia: 'contenido: sube la imagen {{path}}'
+    deleteMedia: 'contenido: elimina la imagen {{path}}'
+
+# Las imágenes que subas desde el panel caen aquí dentro del repo. `media_folder`
+# es la ruta en disco; `public_folder` es la ruta con la que el navegador las
+# pide, y por eso empieza en / y no lleva `public`.
+media_folder: public/assets/image/blog
+public_folder: /assets/image/blog
+
+# El idioma del panel. El blog es solo en español (ver src/i18n/blog.js).
+locale: es
+
+collections:
+  - name: blog
+    label: Artículos del blog
+    label_singular: Artículo
+    folder: src/content/blog
+    create: true
+    format: frontmatter
+    extension: md
+
+    # El nombre del archivo ES la URL del artículo. `{{slug}}` lo deriva del
+    # título, así que un título claro da una URL clara. Cambiar el título de un
+    # artículo YA publicado no renombra el archivo, y está bien: la URL
+    # indexada se conserva.
+    slug: '{{slug}}'
+
+    # Vista de lista: con el título solo no se distingue un borrador de algo
+    # publicado, que es justo lo que necesitas ver de un vistazo.
+    summary: '{{title}} — {{date | date("d MMM yyyy")}}{{#if draft}} · BORRADOR{{/if}}'
+    sortable_fields: [date, title]
+
+    fields:
+      - name: title
+        label: Título
+        hint: 'Es el H1 y la primera línea del resultado en Google. Entre 10 y 90 caracteres. No le pongas "| Geck Codex": eso se agrega solo.'
+        widget: string
+        pattern:
+          - '^.{10,90}$'
+          - 'El título debe tener entre 10 y 90 caracteres.'
+
+      - name: description
+        label: Descripción para Google
+        hint: 'El párrafo gris bajo el título en los resultados. Entre 120 y 170 caracteres: por debajo Google lo rellena solo, por encima lo corta a media frase.'
+        widget: text
+        pattern:
+          - '^[\s\S]{120,170}$'
+          - 'La descripción debe tener entre 120 y 170 caracteres.'
+
+      - name: date
+        label: Fecha de publicación
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: true
+        default: ''
+
+      - name: updated
+        label: Fecha de última revisión
+        hint: 'Ponla SOLO si cambiaste el contenido de fondo. Corregir una coma no cuenta. Esta fecha le dice a Google que vuelva a pasar, y usarla de más hace que deje de creerte.'
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: true
+        required: false
+
+      - name: cover
+        label: Imagen de portada
+        hint: 'También es la imagen que se ve al compartir el enlace en WhatsApp o LinkedIn. Lo ideal es 1200×630 píxeles.'
+        widget: image
+        required: false
+
+      - name: coverAlt
+        label: Descripción de la portada
+        hint: 'Qué se ve en la imagen. Lo leen los lectores de pantalla y Google. Déjalo vacío solo si la imagen es puramente decorativa.'
+        widget: string
+        required: false
+
+      - name: author
+        label: Autor
+        widget: string
+        default: 'Geck Codex'
+        required: false
+
+      - name: tags
+        label: Etiquetas
+        hint: 'Dos o tres bastan. Se usan para enlazar artículos relacionados entre sí.'
+        widget: list
+        required: false
+
+      - name: readingTime
+        label: Minutos de lectura
+        hint: 'Déjalo vacío y se calcula solo a partir del texto.'
+        widget: number
+        value_type: int
+        min: 1
+        required: false
+
+      - name: draft
+        label: Guardar como borrador
+        hint: 'Encendido, el artículo se guarda pero NO se publica: no sale en el blog, ni en el sitemap, ni en el feed.'
+        widget: boolean
+        default: false
+
+      - name: body
+        label: Artículo
+        hint: 'Usa los encabezados para partirlo en secciones: son los que Google lee para entender de qué trata.'
+        widget: markdown

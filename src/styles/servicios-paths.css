@@ -882,19 +882,19 @@
 .pkgall__l { font-size: 0.78rem; color: var(--text-muted); opacity: 0.8; margin: 0.35rem 0 0; }
 
 
-/* ════════ Fichero giratorio de servicios (ServiceRolodex) ════════
+/* ════════ Fichero de servicios (ServiceRolodex) ════════
  *
- * Las fichas cuelgan de un eje HORIZONTAL por su borde superior, como las de
- * un fichero de escritorio. Al avanzar, la de enfrente se tumba hacia el
- * lector y sale por arriba mientras la siguiente se endereza.
+ * Una baraja: la ficha de enfrente se reparte deslizandose de lado y la pila
+ * da un paso al frente. Detras asoman las tres siguientes, escalonadas hacia
+ * arriba y hacia atras — ese escalonado es lo que mas aporta y manda sobre el
+ * resto del diseno.
  *
- * Que el giro se VEA depende de tres cosas, y quitando cualquiera se convierte
- * en un fundido con pasos de mas:
- *   · `perspective` en el contenedor — sin ella el rotateX solo aplasta.
- *   · `transform-origin: center top` — la bisagra esta en el borde de arriba,
- *     no en el centro; es la diferencia entre una ficha y una moneda girando.
- *   · `backface-visibility: hidden` — para que al pasar de los 90 grados la
- *     ficha desaparezca en vez de ensenar su reverso espejeado.
+ * `perspective` en el contenedor es lo que convierte el escalonado en
+ * profundidad: sin ella las fichas de atras solo se ven mas chicas, como un
+ * dibujo plano, en vez de mas lejos.
+ *
+ * `transform-origin: center top` hace que al encogerse conserven el borde de
+ * arriba y asomen por ahi, que es de donde sale el efecto de pila.
  *
  * Las fichas se apilan en el MISMO hueco con posicion absoluta, asi que el
  * alto lo fija el escenario. Si lo marcara la ficha de enfrente, la pagina
@@ -926,6 +926,14 @@
 /* ── Escenario ── */
 .rlx__stage {
   position: relative;
+  /* La ficha repartida sale del escenario por la derecha. `clip` la recorta en
+     el borde sin crear un contenedor de scroll —`hidden` si lo crearia— y sin
+     tapar las de atras, que asoman por ARRIBA: el recorte lateral se abre con
+     un margen generoso para que solo muerda a los lados.
+     Si el navegador no entiende `overflow-clip-margin`, la ficha simplemente
+     sale volando como antes; se ve bien igual, solo menos contenida. */
+  overflow: clip;
+  overflow-clip-margin: 120px;
   max-width: 900px;
   /* Aire ARRIBA, y no es margen decorativo: las fichas de atras asoman por
      encima de la de enfrente, y sin este hueco se meterian debajo del

@@ -13,10 +13,16 @@ import { motion, useReducedMotion } from 'framer-motion';
  * el resto del diseno: el alto del escenario, el aire de arriba y los tamanos
  * estan puestos para que se vea, tambien en el telefono.
  *
- * Al avanzar, la de enfrente se levanta y sale por arriba mientras las de atras
- * dan un paso adelante enderezandose. Todas con la misma curva y la misma
- * duracion, para que el gesto se lea como una pila moviendose y no como cuatro
- * tarjetas animandose cada una por su lado.
+ * Al avanzar, la de enfrente SE REPARTE: se desliza de lado y sale, como la
+ * carta que sacas de encima de la baraja, y la pila da un paso al frente. Se
+ * probaron antes dos versiones con giro —la ficha tumbandose hacia el lector y
+ * luego levantandose por arriba— y las dos fallaban por lo mismo: el giro se
+ * llevaba la atencion que tenia que llevarse la tarjeta que estaba llegando.
+ * Un movimiento lateral se entiende sin mirarlo.
+ *
+ * Todas las fichas comparten curva y duracion, para que el gesto se lea como
+ * una pila moviendose y no como cuatro tarjetas animandose cada una por su
+ * lado.
  *
  * DOS COSAS QUE NO SE PUEDEN ROMPER, y que condicionan todo el diseno:
  *
@@ -42,34 +48,34 @@ const DEPTH = 3;
 /**
  * Posicion de una ficha segun su distancia a la de enfrente.
  *
- * La bisagra esta en el borde superior (`transform-origin: center top` en el
- * CSS). Un `rotateX` positivo inclina la ficha hacia atras, que es como espera
- * la pila; la que sale se va HACIA ARRIBA, no volteandose encima del lector.
+ * La pila espera escalonada hacia arriba y hacia atras; la ficha repartida sale
+ * DE LADO. Los escalones son grandes a proposito —6% de alto y 6% de escala
+ * entre una ficha y la siguiente— porque un escalonado sutil a esta distancia
+ * no se distingue de un borde mal alineado.
  *
- * El giro brusco de antes —la ficha tumbandose 104 grados hacia adelante— se
- * retiro: llamaba mas la atencion el aspaviento que la tarjeta que llegaba, y
- * en un telefono, con la cara tan cerca, mareaba. Ahora el movimiento es el de
- * una pila que avanza: la de enfrente se levanta y se va, y las de atras dan
- * un paso adelante enderezandose. Eso es lo que se queria ver.
- *
- * Los escalones son grandes a proposito —6% de alto y 6% de escala entre una
- * ficha y la siguiente— porque un escalonado sutil a esta distancia no se
- * distingue de un borde mal alineado.
+ * Que la salida sea siempre hacia el mismo lado no es un descuido: al retroceder
+ * la ficha vuelve entrando desde ese mismo lado, y eso se lee como "la estoy
+ * regresando a la baraja". Si saliera por un lado y volviera por el otro,
+ * parecerian dos barajas distintas.
  */
 function poseOf(offset) {
-  if (offset === 0) return { rotateX: 0, y: '0%', scale: 1, opacity: 1, zIndex: 30 };
-
-  /* Ya paso: se levanta y sale por arriba, girando apenas lo justo para que se
-     note que es una ficha y no un rectangulo que se desvanece. */
-  if (offset < 0) {
-    return { rotateX: -22, y: '-58%', scale: 1.04, opacity: 0, zIndex: 10 };
+  if (offset === 0) {
+    return { x: '0%', rotate: 0, rotateX: 0, y: '0%', scale: 1, opacity: 1, zIndex: 30 };
   }
 
-  // Todavia no llega: espera escalonada hacia atras y hacia arriba.
+  /* Ya se repartio: sale de lado girando un poco sobre si misma, que es lo que
+     hace una carta al deslizarse sobre las de abajo. */
+  if (offset < 0) {
+    return { x: '116%', rotate: 7, rotateX: 0, y: '2%', scale: 0.98, opacity: 0, zIndex: 10 };
+  }
+
+  // Todavia no le toca: espera en la pila.
   if (offset > DEPTH) {
-    return { rotateX: 20, y: '-19%', scale: 0.78, opacity: 0, zIndex: 1 };
+    return { x: '0%', rotate: 0, rotateX: 20, y: '-19%', scale: 0.78, opacity: 0, zIndex: 1 };
   }
   return {
+    x: '0%',
+    rotate: 0,
     rotateX: 5 + offset * 4,
     y: `${-6 * offset}%`,
     scale: 1 - offset * 0.06,
@@ -113,11 +119,14 @@ export default function ServiceRolodex({ services, cats, labels }) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); step(-1); }
   };
 
-  /* Arrastre vertical, que es como se pasa un fichero de verdad. El umbral
-     mezcla distancia y velocidad: un tiron corto y rapido cuenta igual que uno
-     largo y lento, porque los dos significan "pasala". */
+  /* Arrastre HORIZONTAL: el gesto tiene que ser el mismo que hace la ficha al
+     salir, o el dedo y la pantalla dicen cosas distintas. Arrastrar hacia la
+     izquierda reparte la de enfrente; hacia la derecha la regresa.
+
+     El umbral mezcla distancia y velocidad: un tiron corto y rapido cuenta
+     igual que uno largo y lento, porque los dos significan "pasala". */
   const onDragEnd = (_, info) => {
-    const force = info.offset.y + info.velocity.y * 0.18;
+    const force = info.offset.x + info.velocity.x * 0.18;
     if (force < -60) step(1);
     else if (force > 60) step(-1);
   };
@@ -165,8 +174,8 @@ export default function ServiceRolodex({ services, cats, labels }) {
                   ? { duration: 0 }
                   : { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
               }
-              drag={front && !reduce ? 'y' : false}
-              dragConstraints={{ top: 0, bottom: 0 }}
+              drag={front && !reduce ? 'x' : false}
+              dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.14}
               onDragEnd={onDragEnd}
             >

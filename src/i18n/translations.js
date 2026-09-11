@@ -301,7 +301,7 @@ export const translations = {
           { q: '¿Quién paga el hosting y el dominio?', a: 'Tú, y a tu nombre. Te asesoramos en la compra, pero no queremos ser intermediarios de algo que debe ser tuyo: si un día te vas, te llevas todo sin pedirnos permiso.' },
           { q: '¿Puedo empezar con un módulo y agregar después?', a: 'Sí, es la idea. Cada módulo funciona solo y se conecta con los que añadas más adelante sin rehacer nada de lo anterior.' },
           { q: '¿Y si se rompe algo?', a: 'Si el fallo viene de nuestro código, lo arreglamos gratis siempre, tengas o no plan de mantenimiento. Si viene de un cambio de un tercero o de la operación diaria, lo cubre el plan.' },
-          { q: '¿Trabajan con clientes fuera de Parral?', a: 'Sí. Estamos en Parral y conocemos la región, pero el proceso funciona igual a distancia: videollamadas para las decisiones, avances que puedes ver en línea y WhatsApp para el día a día.' },
+          { q: '¿Trabajan con clientes fuera de Parral?', a: 'Sí. Estamos en Parral, pero en todo Chihuahua vamos a donde estés y sin cobrarte el viaje: el arranque y el cierre se hacen viéndonos, que es como se cierra un trato. Fuera del estado también viajamos, solo hay que acomodarlo con tiempo. El día a día sí corre a distancia —avances en línea y WhatsApp—, que para eso es más ágil.' },
         ],
       },
       closing: { title: '¿Empezamos?', lead: 'Te decimos qué necesitas y cuánto cuesta. Si lo que buscas ya existe y sale más barato, también te lo decimos.', cta: 'Agenda un discovery' },
@@ -431,7 +431,7 @@ export const translations = {
         },
         {
           q: '¿Dónde están ubicados y atienden fuera de Parral?',
-          a: 'Estamos en Hidalgo del Parral, Chihuahua, México. Trabajamos con clientes de todo México —Chihuahua, Ciudad Juárez, Monterrey, CDMX, Guadalajara— y de Estados Unidos. Todo el proceso puede llevarse a distancia por videollamada y WhatsApp; con clientes locales también nos vemos en persona.',
+          a: 'Estamos en Hidalgo del Parral, Chihuahua. En todo el estado vamos a donde estés —Juárez, la capital, Delicias, Cuauhtémoc— sin cobrarte el viaje, porque un trato se cierra en persona. Fuera del estado también viajamos, solo hay que acomodarlo con tiempo: trabajamos con clientes de todo México y de Estados Unidos. El día a día del proyecto sí corre por videollamada y WhatsApp, que para eso es más ágil para los dos.',
         },
         {
           q: '¿Qué servicios ofrecen exactamente?',
@@ -771,7 +771,7 @@ export const translations = {
           { q: 'Who pays for hosting and the domain?', a: 'You do, in your name. We advise you on the purchase, but we do not want to be the middleman for something that should be yours: if you leave one day, you take everything without asking us.' },
           { q: 'Can I start with one module and add more later?', a: 'Yes, that is the idea. Each module works on its own and connects to whatever you add later without redoing any of it.' },
           { q: 'What if something breaks?', a: 'If the fault comes from our code, we fix it for free, always, whether or not you hold a maintenance plan. If it comes from a third-party change or from day-to-day operations, the plan covers it.' },
-          { q: 'Do you work with clients outside Parral?', a: 'Yes. We are in Parral and we know the region, but the process works just the same at a distance: video calls for decisions, progress you can follow online and WhatsApp for the day-to-day.' },
+          { q: 'Do you work with clients outside Parral?', a: 'Yes. We are in Parral, but anywhere in Chihuahua we come to you at no travel cost: the kickoff and the closing happen face to face, which is how a deal gets closed. We travel outside the state too, it just needs some notice. The day-to-day does run remotely —progress you follow online and WhatsApp—, which is quicker for that.' },
         ],
       },
       closing: { title: 'Shall we start?', lead: 'We will tell you what you need and what it costs. If what you are after already exists and costs less, we will tell you that too.', cta: 'Book a discovery call' },
@@ -901,7 +901,7 @@ export const translations = {
         },
         {
           q: 'Where are you located, and do you work outside Parral?',
-          a: 'We are based in Hidalgo del Parral, Chihuahua, Mexico. We work with clients across Mexico — Chihuahua, Ciudad Juárez, Monterrey, Mexico City, Guadalajara — and in the United States. The whole process can run remotely over video calls and WhatsApp; with local clients we also meet in person.',
+          a: 'We are based in Hidalgo del Parral, Chihuahua. Anywhere in the state we come to you — Juárez, the capital, Delicias, Cuauhtémoc — at no travel cost, because a deal is closed face to face. We travel outside the state too, it just needs some notice: we work with clients across Mexico and in the United States. The day-to-day of the project does run over video calls and WhatsApp, which is quicker for both sides.',
         },
         {
           q: 'What services do you offer exactly?',
@@ -1241,7 +1241,7 @@ export const translations = {
           { q: 'Quem paga a hospedagem e o domínio?', a: 'Você, e no seu nome. A gente te orienta na compra, mas não queremos ser intermediários de algo que deve ser seu: se um dia você sair, leva tudo sem nos pedir permissão.' },
           { q: 'Posso começar com um módulo e adicionar depois?', a: 'Sim, essa é a ideia. Cada módulo funciona sozinho e se conecta com os que você adicionar depois sem refazer nada do anterior.' },
           { q: 'E se algo quebrar?', a: 'Se a falha vem do nosso código, consertamos de graça sempre, tendo ou não plano de manutenção. Se vem de uma mudança de terceiros ou da operação do dia a dia, o plano cobre.' },
-          { q: 'Vocês atendem clientes fora de Parral?', a: 'Sim. Estamos em Parral e conhecemos a região, mas o processo funciona igual à distância: videochamadas para as decisões, avanços que você acompanha online e WhatsApp para o dia a dia.' },
+          { q: 'Vocês atendem clientes fora de Parral?', a: 'Sim. Estamos em Parral, mas em todo o Chihuahua vamos até você sem cobrar a viagem: o início e o fechamento são pessoalmente, que é como se fecha um acordo. Fora do estado também viajamos, só é preciso combinar com antecedência. O dia a dia corre à distância —avanços online e WhatsApp—, que para isso é mais ágil.' },
         ],
       },
       closing: { title: 'Vamos começar?', lead: 'Dizemos o que você precisa e quanto custa. Se o que você procura já existe e sai mais barato, também dizemos.', cta: 'Agende um discovery' },
@@ -1371,7 +1371,7 @@ export const translations = {
         },
         {
           q: 'Onde vocês ficam e atendem fora de Parral?',
-          a: 'Estamos em Hidalgo del Parral, Chihuahua, México. Trabalhamos com clientes de todo o México — Chihuahua, Ciudad Juárez, Monterrey, Cidade do México, Guadalajara — e dos Estados Unidos. Todo o processo pode ser feito à distância por videochamada e WhatsApp; com clientes locais também nos encontramos pessoalmente.',
+          a: 'Estamos em Hidalgo del Parral, Chihuahua. Em todo o estado vamos até você — Juárez, a capital, Delicias, Cuauhtémoc — sem cobrar a viagem, porque um acordo se fecha pessoalmente. Fora do estado também viajamos, só é preciso combinar com antecedência: atendemos clientes de todo o México e dos Estados Unidos. O dia a dia do projeto corre por videochamada e WhatsApp, que para isso é mais ágil para os dois.',
         },
         {
           q: 'Quais serviços vocês oferecem exatamente?',

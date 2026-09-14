@@ -370,6 +370,7 @@ export const translations = {
         desc: 'Descripción', stack: 'Stack técnico',
         gallery: 'Por dentro', prev: 'Captura anterior', next: 'Siguiente captura',
         shotOf: (i, n) => `Captura ${i} de ${n}`,
+        playVideo: 'Reproducir video', pauseVideo: 'Pausar video',
       },
       catLabels: { landing: 'Landing Page', mobile: 'App Móvil', webapp: 'Plataforma Web', software: 'Software & IA' },
       projects: {
@@ -846,6 +847,7 @@ export const translations = {
         desc: 'Description', stack: 'Tech stack',
         gallery: 'Inside the product', prev: 'Previous screen', next: 'Next screen',
         shotOf: (i, n) => `Screen ${i} of ${n}`,
+        playVideo: 'Play video', pauseVideo: 'Pause video',
       },
       catLabels: { landing: 'Landing Page', mobile: 'Mobile App', webapp: 'Web Platform', software: 'Software & AI' },
       projects: {
@@ -1322,6 +1324,7 @@ export const translations = {
         desc: 'Descrição', stack: 'Stack técnico',
         gallery: 'Por dentro', prev: 'Captura anterior', next: 'Próxima captura',
         shotOf: (i, n) => `Captura ${i} de ${n}`,
+        playVideo: 'Reproduzir vídeo', pauseVideo: 'Pausar vídeo',
       },
       catLabels: { landing: 'Landing Page', mobile: 'App Mobile', webapp: 'Plataforma Web', software: 'Software & IA' },
       projects: {

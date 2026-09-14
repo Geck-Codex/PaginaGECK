@@ -16,6 +16,10 @@
  *   gallery    capturas del producto por dentro. El pie de cada una se traduce
  *              en `projects[id].shots`, en el MISMO orden que este array. Sin
  *              `gallery`, la ficha cae a la imagen unica y no dibuja controles.
+ *   video      demo en video dentro de un mockup de telefono (PhoneMockup).
+ *              Graba en vertical. Tiene prioridad sobre `gallery`: donde hay
+ *              video no se monta la galeria. `videoPoster` es el primer
+ *              fotograma, que se ve mientras el video no se ha descargado.
  *   link       demo publica. Solo la mitad del portafolio la tiene: en el resto
  *              la galeria es lo unico que ensena el producto por dentro.
  */
@@ -26,7 +30,10 @@ export const PROJECTS_STATIC = [
   { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Firebase', 'SQLite'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp',
     gallery: ['/assets/image/portafolio/ganova-1.webp', '/assets/image/portafolio/ganova-2.webp', '/assets/image/portafolio/ganova-3.webp'] },
   { id: 24, cat: 'software', title: 'Bot de Atención al Cliente', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'], gradient: 'linear-gradient(145deg, #1e1e1c 0%, #0B1D33 50%, #B8941F 100%)', image: '/assets/image/portafolio/nomda.webp' },
-  { id: 21, cat: 'software', title: 'Bot Calificador de Leads', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'],                                                                  gradient: 'linear-gradient(145deg, #222220 0%, #0B1D33 50%, #D4AF37 100%)', image: '/assets/image/portafolio/seguiar_resized.webp', cardFit: 'contain' },
+  { id: 21, cat: 'software', title: 'Bot Calificador de Leads', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'],                                                                  gradient: 'linear-gradient(145deg, #222220 0%, #0B1D33 50%, #D4AF37 100%)', image: '/assets/image/portafolio/seguiar_resized.webp', cardFit: 'contain',
+    /* PROVISIONAL: video de relleno para ver el mockup en su sitio. Sustituir
+       por la grabacion real de la conversacion del bot. */
+    video: '/assets/video/cel-movil.mp4' },
   { id: 6,  cat: 'landing',  title: 'Mi Caja POS',           tech: ['Astro', 'React', 'Tailwind CSS'],                                   link: 'https://mi-caja.geckcodex.com/',            gradient: 'linear-gradient(145deg, #1c1917 0%, #92400e 45%, #d97706 100%)', image: '/assets/image/portafolio/micaja.webp', cardImage: '/assets/image/portafolio/mi-caja.webp',
     gallery: ['/assets/image/portafolio/micaja-movil-1.webp', '/assets/image/portafolio/micaja-movil-2.webp', '/assets/image/portafolio/micaja-movil-3.webp'] },
   { id: 25, cat: 'webapp',   title: 'Mi Caja Restaurante',   tech: ['React', 'Node.js', 'PostgreSQL', 'Flutter'],                                                                          gradient: 'linear-gradient(145deg, #0c1e3c 0%, #14532d 45%, #0B1D33 100%)', image: '/assets/image/portafolio/micaja-res.webp', cardFit: 'contain', cardBg: '#D4D4CC',

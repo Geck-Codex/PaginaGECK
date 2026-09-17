@@ -23,10 +23,18 @@ interface Props {
   tags?: string[];
   /** El primero del índice se pinta más grande. */
   featured?: boolean;
+  /**
+   * Carga la portada sin diferir. Va aparte de `featured` porque la primera
+   * tarjeta es la que entra en pantalla —y por tanto la que decide el LCP—
+   * sea o no la destacada; cuando no hay destacado seguía quedando `lazy`.
+   */
+  eager?: boolean;
 }
 
-const { href, title, description, date, readingTime, cover, coverAlt, tags = [], featured = false } =
-  Astro.props;
+const {
+  href, title, description, date, readingTime, cover, coverAlt,
+  tags = [], featured = false, eager = featured,
+} = Astro.props;
 ---
 
 <article class:list={['card', featured && 'card--featured']}>
@@ -34,12 +42,12 @@ const { href, title, description, date, readingTime, cover, coverAlt, tags = [],
     {
       cover && (
         <div class="card__media">
-          {/* `loading` eager solo en el destacado: es lo único que entra en
-              pantalla de inmediato, y precargar el resto retrasa el LCP. */}
+          {/* Solo la primera tarjeta carga sin diferir: es lo único que entra
+              en pantalla de inmediato, y precargar el resto retrasa el LCP. */}
           <img
             src={cover}
             alt={coverAlt ?? ''}
-            loading={featured ? 'eager' : 'lazy'}
+            loading={eager ? 'eager' : 'lazy'}
             decoding="async"
             width="1200"
             height="630"
@@ -172,9 +180,15 @@ const { href, title, description, date, readingTime, cover, coverAlt, tags = [],
       flex-direction: row;
     }
 
+    /* La portada del destacado conserva su proporción 1200x630 y se centra
+       en la fila, en vez de estirarse a lo alto de la tarjeta. Al ocupar el
+       alto completo, `object-fit: cover` recortaba los lados de una imagen
+       que ya es horizontal: se veía una franja del centro y se perdía tanto
+       el título impreso como el sujeto de la derecha. Más chica y entera se
+       aprecia mejor que grande y cortada. */
     .card--featured .card__media {
-      flex: 0 0 52%;
-      aspect-ratio: auto;
+      flex: 0 0 46%;
+      align-self: center;
     }
 
     .card--featured .card__body {

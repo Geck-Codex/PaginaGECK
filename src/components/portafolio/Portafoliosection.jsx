@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../hooks/useLanguage';
 import { localizedPath } from '../../i18n/routes';
 import { PROJECTS_STATIC } from '../../data/projects.js';
+import DeviceMockup from './DeviceMockup.jsx';
 
 /* Acentos de categoría dentro de la paleta oro/bronce (sin arcoíris),
  * consistentes con el ProjectCarousel de la home. */
@@ -245,7 +246,35 @@ function Detail({ project, onClose, catMeta, strings, lang }) {
         exit="exit"
         onClick={(e) => e.stopPropagation()}
       >
-        {shots.length > 0 && (
+        {/* Una automatizacion no se entiende con una captura fija: lo que hay
+            que ensenar es la conversacion ocurriendo. Cuando el proyecto trae
+            `video`, el telefono ocupa la misma franja que ocuparia la galeria
+            y la galeria no se monta.
+
+            El telon va SIN color propio, por lo mismo que lo va el de las
+            capturas: cualquier fondo distinto al del modal dibuja una costura
+            vertical justo donde empieza la franja. Dejandolo transparente el
+            telefono flota sobre la misma superficie que el texto y la ficha se
+            lee como una sola pieza. A cambio de no tener imagen que llene la
+            franja, el mockup se dibuja mas grande. */}
+        {project.video ? (
+          <div className={`gc-phone-stage gc-phone-stage--${project.device || 'phone'}`}>
+            <DeviceMockup
+              device={project.device || 'phone'}
+              src={project.video}
+              poster={project.videoPoster}
+              label={project.title}
+              caption={project.videoCaption}
+              labels={strings.detail}
+              /* El telefono lo limita el alto de la franja y la tablet el
+                 ancho: son proporciones opuestas y el mismo tope dejaria a una
+                 de las dos diminuta. */
+              width={project.device === 'tablet'
+                ? 'min(clamp(320px, 54vw, 900px), 112dvh)'
+                : 'min(clamp(260px, 34vw, 430px), 44dvh)'}
+            />
+          </div>
+        ) : shots.length > 0 && (
           <Gallery
             shots={shots}
             captions={project.shots || []}
@@ -968,6 +997,21 @@ export default function PortfolioSection({ lang }) {
           box-shadow: 0 40px 100px rgba(0,0,0,0.6);
         }
 
+        /* ── Capa del mockup en video ── */
+        /* Mismas coordenadas que .gc-gal__stage: el detalle no cambia de forma
+           segun el proyecto tenga video o capturas. Sin background: el telon
+           es el fondo del modal, asi no hay costura donde empieza la franja.
+           Tampoco lleva velo — el velo existe para fundir una captura que
+           llega a los bordes, y aqui no hay nada que fundir. */
+        .gc-phone-stage {
+          position: absolute; top: 0; right: 0; bottom: 0; left: 34%; z-index: 0;
+          display: grid; place-items: center;
+          padding: 1.2rem 1rem;
+          /* El halo dorado desborda al telefono a proposito; recortarlo aqui
+             lo convertiria en un rectangulo de luz con bordes rectos. */
+          overflow: visible;
+        }
+
         /* ── Capa de la captura ── */
         .gc-gal { position: absolute; inset: 0; z-index: 0; touch-action: pan-y; }
         /* La captura vive en la franja derecha, no en toda la tarjeta: asi
@@ -1080,6 +1124,10 @@ export default function PortfolioSection({ lang }) {
             padding: 0 0 0.2rem;
           }
           .gc-gal__stage { position: relative; inset: auto; left: 0; height: 52vh; min-height: 320px; flex: none; }
+          .gc-phone-stage {
+            position: relative; inset: auto; left: 0; flex: none;
+            height: auto; padding: 1.6rem 0 0.4rem;
+          }
           /* El velo se limita al alto de la captura y funde hacia abajo, que
              es por donde ahora sigue el contenido. */
           .gc-gal__veil {
@@ -1147,6 +1195,7 @@ export default function PortfolioSection({ lang }) {
           /* La captura es lo primero y ocupa poco menos de media pantalla:
              el texto viene despues, al desplazar. */
           .gc-gal__stage, .gc-gal__veil { height: 42dvh; min-height: 240px; }
+          .gc-phone-stage { padding: 1.2rem 0 0.2rem; }
           .gc-gal { gap: 0.6rem; }
           .gc-gal__thumbs { padding: 0 1.1rem; }
           .gc-gal__thumb { width: 64px; height: 44px; }

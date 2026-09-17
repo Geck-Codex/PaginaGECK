@@ -75,6 +75,13 @@ const valueNoise = (x, y) => {
 /* Parte una frase en 'lead' (todo menos la última palabra, fino/tenue) + 'key'
  * (la última palabra, en peso display). Si es una sola palabra, va solo el key.
  * 'Lo que hacemos' → { lead: 'Lo que', key: 'hacemos' }. Funciona en es/en/pt. */
+/* Cuánto puede crecer la palabra clave sin salirse de su tercio, como fracción
+ * del ancho del tercio. ~0.62em es el avance medio por carácter de la display a
+ * peso 900 en caja alta. Se divide aquí y no en el calc() del CSS porque la
+ * división por una var() dentro de calc() es soporte reciente y, si el navegador
+ * la descarta, la palabra se queda sin tamaño. */
+const keyFit = (word) => (1 / (Math.max(word.length, 1) * 0.62)).toFixed(4);
+
 const splitDisplay = (text) => {
   const words = text.trim().split(/\s+/);
   if (words.length === 1) return { lead: '', key: words[0] };
@@ -339,13 +346,18 @@ export default function VideoBackground({ children, lang }) {
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <span className="hero-word-lead">{labelParts.lead || ' '}</span>
-                  <span className="hero-word-key">{labelParts.key}</span>
+                  <span className="hero-word-key" style={{ '--key-fit': keyFit(labelParts.key) }}>{labelParts.key}</span>
                 </motion.span>
               </AnimatePresence>
             </span>
           </p>
 
-          {/* Tercio 3 — rodillo: entra desde arriba, sale por abajo */}
+          {/* Tercio 3 — rodillo: entra desde arriba, sale por abajo.
+              La celda envuelve al enlace en vez de ser el enlace: es ella la que
+              se estira a lo ancho del tercio y sirve de referencia a las
+              unidades cqw. El <a> sigue ajustado al texto para no volver
+              clicable medio hero. */}
+          <span className="hero-services-cell">
           <a ref={servicesRef} href={localizedPath("services", lang)} className="hero-services" aria-label={`${labels[labelIdx]}: ${services[svcIdx]}`}>
             <span className="hero-rotator">
               <AnimatePresence initial={false} mode="wait">
@@ -358,11 +370,12 @@ export default function VideoBackground({ children, lang }) {
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <span className="hero-word-lead">{svcParts.lead || ' '}</span>
-                  <span className="hero-word-key">{svcParts.key}</span>
+                  <span className="hero-word-key" style={{ '--key-fit': keyFit(svcParts.key) }}>{svcParts.key}</span>
                 </motion.span>
               </AnimatePresence>
             </span>
           </a>
+          </span>
           {children}
         </div>
 
@@ -490,6 +503,16 @@ export default function VideoBackground({ children, lang }) {
           animation: hero-copy-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
+        /* Referencia para las unidades cqw de .hero-word-key: la palabra se mide
+         * contra el ancho real de su tercio, no contra el viewport.
+         * OJO: container-type contiene el eje inline, así que una caja que se
+         * ajusta a su contenido (justify-self: center) colapsaría a 0 y la
+         * palabra se quedaría sin tamaño. Sólo va en cajas que se estiran. */
+        .hero-label,
+        .hero-services-cell {
+          container-type: inline-size;
+        }
+
         @keyframes hero-copy-in {
           from { opacity: 0; transform: translateY(18px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -504,9 +527,13 @@ export default function VideoBackground({ children, lang }) {
         }
 
         /* Tercio 3: servicio que rota — dorado en claro, marfil en oscuro */
-        .hero-services {
+        .hero-services-cell {
           grid-column: 3;
-          justify-self: center;
+          display: block;
+          text-align: center;
+        }
+        .hero-services {
+          display: inline-block;
           text-align: center;
           pointer-events: auto;
           text-decoration: none;
@@ -540,11 +567,20 @@ export default function VideoBackground({ children, lang }) {
           color: var(--text-muted);
           white-space: nowrap;
         }
-        /* Palabra clave en peso display — eco luminoso al ASCII */
+        /* Palabra clave en peso display — eco luminoso al ASCII.
+         * El tamaño se topa contra el ancho del tercio: las palabras largas
+         * (DESARROLLAMOS, AUTOMATIZACIÓN) no caben a cuerpo completo y con
+         * white-space: nowrap + el recorte del rodillo se cortaban por el
+         * costado (el tope lo calcula keyFit). El line-height nunca baja de 1:
+         * con 0.9 la tilde de la Ñ/Ó mayúscula se salía de su caja y se montaba
+         * sobre la línea fina de arriba. */
         .hero-word-key {
-          font-size: clamp(1.9rem, 4vw, 3.3rem);
+          font-size: min(
+            clamp(1.9rem, 4vw, 3.3rem),
+            calc(100cqw * var(--key-fit, 0.16))
+          );
           font-weight: 900;
-          line-height: 0.9;
+          line-height: 1.04;
           letter-spacing: -0.03em;
           text-transform: uppercase;
           white-space: nowrap;
@@ -563,10 +599,15 @@ export default function VideoBackground({ children, lang }) {
             align-content: space-between;
             padding: clamp(7rem, 14vh, 9rem) clamp(1.4rem, 5vw, 2rem) clamp(4rem, 10vh, 6rem);
           }
-          .hero-label    { grid-column: 1; }
-          .hero-services { grid-column: 1; justify-self: center; }
+          .hero-label         { grid-column: 1; }
+          .hero-services-cell { grid-column: 1; }
           .hero-rotator  { height: clamp(3.4rem, 17vw, 5rem); }
-          .hero-word-key  { font-size: clamp(1.7rem, 8.5vw, 2.8rem); }
+          .hero-word-key  {
+            font-size: min(
+              clamp(1.7rem, 8.5vw, 2.8rem),
+              calc(100cqw * var(--key-fit, 0.16))
+            );
+          }
           .hero-word-lead { font-size: clamp(0.85rem, 3.6vw, 1.2rem); }
         }
 

@@ -45,6 +45,15 @@ const BLOG_INDEX_LASTMOD = Object.values(BLOG_DATES).sort().pop();
 
 export default defineConfig({
   site: 'https://geckcodex.com', // <--- ¡ASEGÚRATE DE QUE ESTO ESTÉ AQUÍ!
+  markdown: {
+    // Shiki le mete al <pre> un style inline con los colores de GitHub Dark,
+    // y un style inline le gana a cualquier hoja de estilos: el bloque salía
+    // como una caja negra ajena a la marca que en tema oscuro se perdía
+    // contra el fondo. Este blog no es de código —el único bloque que hay son
+    // dos URLs de ejemplo—, así que el resaltado no vale lo que cuesta.
+    // Sin él, Astro emite un <pre> limpio y manda el CSS de Prose.astro.
+    syntaxHighlight: false,
+  },
   // Prefetch: precarga el HTML de los links internos al pasar el mouse, así el
   // cambio de página con ClientRouter se siente instantáneo.
   prefetch: {

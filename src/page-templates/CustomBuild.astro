@@ -24,6 +24,7 @@ const parent = PAGE_META.services[lang];
 const items = Object.values(translations[lang].services.items);
 const services = serviceListSchema(
   items.map((s) => ({ name: s.name, description: s.description })),
+  lang,
 );
 
 /* Los diez paquetes, en el mismo orden en que los lista la pagina. Salen del

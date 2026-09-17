@@ -3,16 +3,33 @@ import { Send, User, Mail, MessageSquare, Instagram } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { trackLead } from '../../data/track.js';
 
+/**
+ * Contacto.
+ *
+ * MISMO LENGUAJE QUE EL RESTO DEL SITIO (WhatWeDo, Processtimeline): no hay
+ * tarjetas, ni sombras, ni orbes de fondo, ni iconos con colores de marca
+ * ajenos a la paleta. Solo filetes de un pixel, `--font-display` en los
+ * titulares y una sola pieza dorada maciza: el boton de enviar.
+ *
+ * El dorado queda como acento minimo — el filete del metodo activo, el numero,
+ * la palabra destacada del titular. El verde de WhatsApp y el rosa de
+ * Instagram no pertenecen a la paleta, asi que los iconos van monocromos y se
+ * encienden en dorado al pasar por encima.
+ *
+ * Los campos son subrayados, no cajas: una caja con borde y radio seria el
+ * unico contenedor de una seccion que no tiene ninguno, y se leeria como un
+ * widget pegado encima.
+ */
 export default function Contact({ lang }) {
   const { t } = useLanguage(lang);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState(false);
-  const [visible, setVisible] = useState({ header: false, card: false });
+  const [visible, setVisible] = useState({ header: false, body: false });
 
   const headerRef = useRef(null);
-  const cardRef   = useRef(null);
+  const bodyRef   = useRef(null);
 
   const contactConfig = {
     whatsapp: '+52 6271745436',
@@ -30,7 +47,7 @@ export default function Contact({ lang }) {
       },
       { threshold: 0.1, rootMargin: '-40px 0px -40px 0px' }
     );
-    [headerRef, cardRef].forEach(r => { if (r.current) obs.observe(r.current); });
+    [headerRef, bodyRef].forEach(r => { if (r.current) obs.observe(r.current); });
     return () => obs.disconnect();
   }, []);
 
@@ -102,247 +119,367 @@ export default function Contact({ lang }) {
 
   return (
     <>
+      <section className="ct">
+        <div className="ct-wrap">
+
+          {/* ── ENCABEZADO ── */}
+          <header
+            className={`ct-head${visible.header ? ' is-in' : ''}`}
+            ref={headerRef}
+            data-reveal="header"
+          >
+            <h1 className="ct-h1">
+              {t.contact.title} <span className="ct-accent">{t.contact.titleSpan}</span>
+            </h1>
+            <p className="ct-desc">{t.contact.desc}</p>
+          </header>
+
+          {/* ── CUERPO: dos columnas separadas por un filete ── */}
+          <div
+            className={`ct-grid${visible.body ? ' is-in' : ''}`}
+            ref={bodyRef}
+            data-reveal="body"
+          >
+
+            {/* ── IZQUIERDA: cómo escribirnos ── */}
+            <div className="ct-col ct-col--left">
+              <span className="ct-eyebrow">{t.contact.eyebrow}</span>
+
+              <h2 className="ct-h2">
+                {t.contact.chooseTitle.split('\n').map((line, i) => (
+                  <span key={i}>{line}{i === 0 && <br />}</span>
+                ))}
+              </h2>
+              <p className="ct-sub">{t.contact.chooseSub}</p>
+
+              <div className="ct-methods">
+                <button type="button" className="ct-method" onClick={handleWhatsApp}>
+                  <span className="ct-num" aria-hidden="true">01</span>
+                  <span className="ct-mi" aria-hidden="true">
+                    <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                  </span>
+                  <span className="ct-mt">
+                    <span className="ct-mlabel">WhatsApp</span>
+                    <span className="ct-msub">{t.contact.waSub}</span>
+                  </span>
+                  <span className="ct-marrow" aria-hidden="true">→</span>
+                </button>
+
+                <button type="button" className="ct-method" onClick={handleGmail}>
+                  <span className="ct-num" aria-hidden="true">02</span>
+                  <span className="ct-mi" aria-hidden="true">
+                    <Mail width={17} height={17} />
+                  </span>
+                  <span className="ct-mt">
+                    <span className="ct-mlabel">{t.contact.emailLabel}</span>
+                    <span className="ct-msub">{contactConfig.email}</span>
+                  </span>
+                  <span className="ct-marrow" aria-hidden="true">→</span>
+                </button>
+
+                <a className="ct-method" href={contactConfig.instagram} target="_blank" rel="noopener noreferrer">
+                  <span className="ct-num" aria-hidden="true">03</span>
+                  <span className="ct-mi" aria-hidden="true">
+                    <Instagram width={17} height={17} />
+                  </span>
+                  <span className="ct-mt">
+                    <span className="ct-mlabel">Instagram</span>
+                    <span className="ct-msub">@geckcodex</span>
+                  </span>
+                  <span className="ct-marrow" aria-hidden="true">→</span>
+                </a>
+              </div>
+
+              <p className="ct-avail">
+                <span className="ct-dot" aria-hidden="true" />
+                {t.contact.available}
+              </p>
+            </div>
+
+            {/* ── DERECHA: formulario ── */}
+            <div className="ct-col ct-col--right">
+              <span className="ct-eyebrow">{t.contact.formLabel}</span>
+
+              <form onSubmit={handleSubmit} className="ct-form">
+                {/* Honeypot de Web3Forms: invisible para las personas, los bots
+                    lo rellenan y el envío se descarta del lado del servicio. */}
+                <input
+                  type="checkbox"
+                  name="botcheck"
+                  className="ct-botcheck"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+
+                <div className="ct-field">
+                  <label className="ct-flabel" htmlFor="ct-name">{t.contact.name}</label>
+                  <div className="ct-iw">
+                    <User className="ct-ii" aria-hidden="true" />
+                    <input id="ct-name" type="text" name="name" value={formData.name}
+                      onChange={handleChange} placeholder={t.contact.namePh} required className="ct-input" />
+                  </div>
+                </div>
+
+                <div className="ct-field">
+                  <label className="ct-flabel" htmlFor="ct-email">Email</label>
+                  <div className="ct-iw">
+                    <Mail className="ct-ii" aria-hidden="true" />
+                    <input id="ct-email" type="email" name="email" value={formData.email}
+                      onChange={handleChange} placeholder={t.contact.emailPh} required className="ct-input" />
+                  </div>
+                </div>
+
+                <div className="ct-field ct-field--grow">
+                  <label className="ct-flabel" htmlFor="ct-msg">{t.contact.msg}</label>
+                  <div className="ct-iw">
+                    <MessageSquare className="ct-ii ct-ii--top" aria-hidden="true" />
+                    <textarea id="ct-msg" name="message" value={formData.message}
+                      onChange={handleChange} placeholder={t.contact.msgPh}
+                      required className="ct-ta" />
+                    <span className="ct-char" aria-hidden="true">{formData.message.length}</span>
+                  </div>
+                </div>
+
+                <div className="ct-row">
+                  <button type="submit" className="ct-btn" disabled={loading}>
+                    {loading
+                      ? <><span className="ct-spinner" />{t.contact.sending}</>
+                      : <><Send width={15} height={15} />{t.contact.send}</>
+                    }
+                  </button>
+                  <p className="ct-hint">{t.contact.noSpam.split('\n').map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}</p>
+                </div>
+
+                {error && <p className="ct-error">{t.contact.error}</p>}
+              </form>
+
+              {submitted && (
+                <div className="ct-success">
+                  <span className="ct-sring">
+                    <svg className="ct-check" width="30" height="30" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                  <p className="ct-stitle">{t.contact.successTitle}</p>
+                  <p className="ct-ssub">{t.contact.successSub}</p>
+                </div>
+              )}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       <style>{`
-        * { box-sizing: border-box; }
-
-        .ct-root {
+        /* ── Sección ──
+           Sin fondo propio ni orbes: se apoya en el fondo de la página, igual
+           que el resto de las secciones del sitio. */
+        .ct {
           position: relative;
-          width: 100%;
-          background: var(--background);
-          padding: 8rem 2rem;
-          overflow: hidden;
-          font-family: inherit;
+          padding: clamp(3.2rem, 8vh, 6rem) 1.25rem clamp(2.6rem, 6vh, 4.5rem);
         }
-
-        /* Orbes dorados de fondo — mismo lenguaje que Servicios/Portafolio */
-        .ct-bg {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          overflow: hidden;
-        }
-        .ct-bg::before, .ct-bg::after { content: ''; position: absolute; border-radius: 50%; }
-        .ct-bg::before {
-          width: 80vw; height: 60vw; top: -18%; left: 50%; transform: translateX(-50%);
-          background: radial-gradient(ellipse at center, rgba(195,173,133,0.06) 0%, transparent 60%);
-        }
-        .ct-bg::after {
-          width: 55vw; height: 55vw; bottom: 2%; right: -15%;
-          background: radial-gradient(circle at center, rgba(195,173,133,0.04) 0%, transparent 65%);
-        }
-
         .ct-wrap {
-          max-width: 1100px;
+          max-width: 1060px;
           margin: 0 auto;
-          position: relative;
-          z-index: 2;
-          display: flex;
-          flex-direction: column;
-          gap: 5rem;
         }
 
-        /* ── HEADER ── */
-        .ct-header {
+        /* ── Encabezado ── */
+        .ct-head {
           text-align: center;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1.25rem;
+          margin-bottom: clamp(2rem, 5vh, 3.4rem);
           opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.8s cubic-bezier(0.23,1,0.32,1), transform 0.8s cubic-bezier(0.23,1,0.32,1);
+          transform: translateY(20px);
+          transition: opacity .6s ease, transform .7s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .ct-header.ct-in {
-          opacity: 1; transform: translateY(0);
-        }
+        .ct-head.is-in { opacity: 1; transform: none; }
 
         .ct-h1 {
-          font-size: 4.2rem;
+          font-family: var(--font-display);
+          font-size: clamp(1.9rem, 2.6vw + 1vh, 3rem);
           font-weight: 900;
-          line-height: 1.04;
-          letter-spacing: -0.025em;
-          margin: 0;
+          line-height: 1.12;
+          letter-spacing: -0.02em;
           color: var(--text);
+          margin: 0 auto .8rem;
+          max-width: 18ch;
+          text-wrap: balance;
         }
-        .ct-h1 span {
-          color: var(--accent-text);
-        }
+        .ct-accent { color: var(--accent-text); }
 
         .ct-desc {
-          font-size: 1rem;
-          color: var(--text-muted);
-          margin: 0;
-          max-width: 480px;
-          line-height: 1.7;
-          letter-spacing: 0.03em;
-        }
-
-        /* ── CARD principal ── */
-        /* Sin tarjeta flotante: las dos columnas viven sobre el fondo,
-           separadas por un divisor dorado fino (look inmersivo del sitio). */
-        .ct-card {
-          display: grid;
-          grid-template-columns: 1fr 1px 1fr;
-          max-width: 1040px;
           margin: 0 auto;
+          max-width: 46ch;
+          font-size: clamp(.86rem, 1vw, .96rem);
+          line-height: 1.6;
+          color: var(--text-muted);
+        }
+
+        /* ── Rejilla: dos columnas y un filete, sin tarjeta ── */
+        .ct-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
           opacity: 0;
-          transform: translateY(50px);
-          transition: opacity 0.8s cubic-bezier(0.23,1,0.32,1) 0.15s, transform 0.8s cubic-bezier(0.23,1,0.32,1) 0.15s;
+          transform: translateY(24px);
+          transition: opacity .6s ease .1s, transform .7s cubic-bezier(0.22, 1, 0.36, 1) .1s;
         }
-        .ct-card.ct-in {
-          opacity: 1; transform: translateY(0);
-        }
+        .ct-grid.is-in { opacity: 1; transform: none; }
 
-        /* divisor vertical dorado */
-        .ct-divider {
-          background: linear-gradient(to bottom, transparent, rgba(195,173,133,0.2) 20%, rgba(195,173,133,0.2) 80%, transparent);
-        }
-
-        /* ── PANEL COMPARTIDO ── */
-        .ct-left, .ct-right {
-          padding: 52px 48px;
-        }
-
-        /* ── LEFT ── */
-        .ct-left {
+        .ct-col {
           display: flex;
           flex-direction: column;
+          padding: clamp(1.8rem, 4vh, 2.8rem) 0;
+        }
+        .ct-col--left {
+          border-right: 1px solid var(--border);
+          padding-right: clamp(1.3rem, 3.5vw, 2.8rem);
+        }
+        .ct-col--right {
+          position: relative;
+          padding-left: clamp(1.3rem, 3.5vw, 2.8rem);
         }
 
+        /* ── Cejilla, compartida por las dos columnas ── */
         .ct-eyebrow {
-          font-size: 0.62rem;
+          font-size: clamp(.66rem, .8vw, .73rem);
           font-weight: 700;
-          letter-spacing: 0.3em;
+          letter-spacing: .28em;
           text-transform: uppercase;
-          color: var(--text-muted);
-          margin-bottom: 24px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .ct-eyebrow::before {
-          content: ''; width: 26px; height: 1px;
-          background: var(--accent); display: block; flex-shrink: 0;
+          color: var(--accent-text);
+          margin-bottom: .85rem;
         }
 
-        .ct-left-title {
-          font-size: 3rem;
-          font-weight: 900;
-          line-height: 1.05;
-          letter-spacing: -0.025em;
-          margin: 0 0 10px;
+        .ct-h2 {
+          font-family: var(--font-display);
+          font-size: clamp(1.35rem, 1.8vw + .6vh, 2rem);
+          font-weight: 800;
+          line-height: 1.14;
+          letter-spacing: -0.02em;
           color: var(--text);
+          margin: 0 0 .45rem;
+          text-wrap: balance;
         }
-
-        .ct-left-sub {
-          font-size: 0.8rem;
+        .ct-sub {
+          margin: 0 0 clamp(1.4rem, 3.5vh, 2.2rem);
+          font-size: clamp(.8rem, .95vw, .88rem);
+          line-height: 1.55;
           color: var(--text-muted);
-          margin: 0 0 44px;
-          letter-spacing: 0.04em;
         }
 
+        /* ── Métodos: filas con filete, no tarjetas ── */
         .ct-methods {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          border-top: 1px solid var(--border);
           margin-bottom: auto;
         }
-
         .ct-method {
-          display: flex;
+          display: grid;
+          grid-template-columns: auto auto minmax(0, 1fr) auto;
           align-items: center;
-          gap: 14px;
-          padding: 15px 16px;
-          background: var(--surface-2);
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          cursor: pointer;
+          gap: clamp(.7rem, 1.6vw, 1rem);
+          width: 100%;
+          padding: clamp(.85rem, 2vh, 1.1rem) .2rem;
+          border: 0;
+          border-bottom: 1px solid var(--border);
+          border-radius: 0;
+          background: none;
+          text-align: left;
           text-decoration: none;
-          transition: all 0.28s cubic-bezier(0.23,1,0.32,1);
+          font: inherit;
+          cursor: pointer;
           position: relative;
-          overflow: hidden;
+          transition: padding-left .3s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .ct-method::after {
+        /* El único adorno: un filete dorado que crece a la izquierda. */
+        .ct-method::before {
           content: '';
           position: absolute;
-          left: 0; top: 0; bottom: 0; width: 3px;
+          left: 0; top: 0; bottom: 0;
+          width: 2px;
           background: var(--accent);
           transform: scaleY(0);
-          transition: transform 0.25s cubic-bezier(0.23,1,0.32,1);
           transform-origin: center;
+          transition: transform .3s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .ct-method:hover {
-          border-color: rgba(195,173,133,0.28);
-          transform: translateX(6px);
-          background: rgba(195,173,133,0.06);
-          box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        .ct-method:hover::after { transform: scaleY(1); }
+        .ct-method:hover::before,
+        .ct-method:focus-visible::before { transform: scaleY(1); }
+        .ct-method:hover,
+        .ct-method:focus-visible { padding-left: .85rem; outline: none; }
+        .ct-method:focus-visible .ct-mlabel { text-decoration: underline; }
 
-        .ct-icon {
-          width: 42px; height: 42px;
-          border-radius: 11px;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-          transition: all 0.28s ease;
+        .ct-num {
+          font-family: var(--font-display);
+          font-size: .68rem;
+          font-weight: 800;
+          letter-spacing: .16em;
+          color: var(--accent-text);
+          font-variant-numeric: tabular-nums;
         }
-        .ct-icon.wa { background: rgba(16,185,129,0.12); }
-        .ct-icon.gm { background: rgba(195,173,133,0.1); border: 1px solid rgba(195,173,133,0.14); }
-        .ct-icon.ig { background: rgba(193,53,132,0.12); }
-        .ct-method:hover .ct-icon.wa { background: rgba(16,185,129,0.2); box-shadow: 0 0 16px rgba(16,185,129,0.2); }
-        .ct-method:hover .ct-icon.gm { background: rgba(195,173,133,0.18); box-shadow: 0 0 16px rgba(195,173,133,0.15); }
-        .ct-method:hover .ct-icon.ig { background: rgba(193,53,132,0.2); box-shadow: 0 0 16px rgba(193,53,132,0.2); }
+        /* Iconos monocromos: el verde de WhatsApp y el rosa de Instagram no
+           están en la paleta. Se encienden en dorado al pasar por encima. */
+        .ct-mi {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-muted);
+          transition: color .25s ease;
+        }
+        .ct-method:hover .ct-mi,
+        .ct-method:focus-visible .ct-mi { color: var(--accent); }
 
-        .ct-mlabel   { font-size: 0.9rem; font-weight: 600; color: var(--text); display: block; }
-        .ct-msub     { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 2px; }
+        .ct-mt { display: flex; flex-direction: column; min-width: 0; }
+        .ct-mlabel {
+          font-family: var(--font-display);
+          font-size: clamp(.9rem, 1vw, .98rem);
+          font-weight: 700;
+          color: var(--text);
+          line-height: 1.25;
+        }
+        .ct-msub {
+          font-size: .74rem;
+          color: var(--text-muted);
+          margin-top: .12rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
 
         .ct-marrow {
-          margin-left: auto; font-size: 1rem;
+          font-size: .95rem;
           color: var(--text-muted);
-          transition: all 0.25s ease; flex-shrink: 0;
+          transition: color .25s ease, transform .25s ease;
         }
-        .ct-method:hover .ct-marrow { color: var(--accent); transform: translateX(4px); }
+        .ct-method:hover .ct-marrow,
+        .ct-method:focus-visible .ct-marrow { color: var(--accent); transform: translateX(4px); }
 
         .ct-avail {
-          margin-top: 36px;
-          padding-top: 24px;
-          border-top: 1px solid var(--border);
-          display: flex; align-items: center; gap: 8px;
-          font-size: 0.7rem;
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+          margin: clamp(1.4rem, 3.5vh, 2rem) 0 0;
+          font-size: .72rem;
+          letter-spacing: .06em;
           color: var(--text-muted);
-          letter-spacing: 0.06em;
         }
         .ct-dot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: var(--success); flex-shrink: 0;
-          box-shadow: 0 0 8px rgba(16,185,129,0.7);
-          animation: dotPulse 2s ease-in-out infinite;
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: var(--success);
+          flex-shrink: 0;
+          animation: ctPulse 2.4s ease-in-out infinite;
         }
-        @keyframes dotPulse {
-          0%,100% { box-shadow: 0 0 6px rgba(16,185,129,0.7); }
-          50%      { box-shadow: 0 0 16px rgba(16,185,129,1); }
-        }
-
-        /* ── RIGHT / FORM ── */
-        .ct-right {
-          display: flex;
-          flex-direction: column;
-          position: relative;
+        @keyframes ctPulse {
+          0%, 100% { opacity: 1; }
+          50%      { opacity: .35; }
         }
 
-        .ct-flabel {
-          font-size: 0.62rem;
-          font-weight: 700;
-          letter-spacing: 0.3em;
-          text-transform: uppercase;
-          color: var(--text-muted);
-          margin-bottom: 32px;
-          display: flex; align-items: center; gap: 12px;
-        }
-        .ct-flabel::after {
-          content: ''; flex: 1; height: 1px;
-          background: var(--border);
-        }
+        /* ── Formulario ── */
+        .ct-form { display: flex; flex-direction: column; flex: 1; }
 
         /* Honeypot: fuera de la vista y del recorrido de foco, pero presente en
            el DOM para que los bots que rellenan todo caigan en él. No usar
@@ -357,413 +494,191 @@ export default function Contact({ lang }) {
           pointer-events: none;
         }
 
-        .ct-field { margin-bottom: 18px; }
+        .ct-field { margin-bottom: clamp(1rem, 2.4vh, 1.4rem); }
+        .ct-field--grow { flex: 1; display: flex; flex-direction: column; }
+        .ct-field--grow .ct-iw { flex: 1; display: flex; }
 
-        .ct-field-label {
+        .ct-flabel {
           display: block;
-          font-size: 0.64rem; font-weight: 700;
-          letter-spacing: 0.16em; text-transform: uppercase;
+          font-size: .64rem;
+          font-weight: 700;
+          letter-spacing: .16em;
+          text-transform: uppercase;
           color: var(--text-muted);
-          margin-bottom: 7px;
-          transition: color 0.2s;
+          margin-bottom: .4rem;
+          transition: color .2s ease;
         }
-        .ct-field:focus-within .ct-field-label { color: var(--accent-text); }
+        .ct-field:focus-within .ct-flabel { color: var(--accent-text); }
 
         .ct-iw { position: relative; }
-
         .ct-ii {
-          position: absolute; left: 13px; top: 50%;
+          position: absolute;
+          left: 0; top: 50%;
           transform: translateY(-50%);
           width: 15px; height: 15px;
           color: var(--text-muted);
-          pointer-events: none; transition: color 0.2s;
+          pointer-events: none;
+          transition: color .2s ease;
         }
-        .ct-txi { top: 15px; transform: none; }
+        .ct-ii--top { top: 12px; transform: none; }
         .ct-field:focus-within .ct-ii { color: var(--accent); }
 
+        /* Campos subrayados: una caja con borde y radio sería el único
+           contenedor de la sección. */
         .ct-input, .ct-ta {
           width: 100%;
-          background: var(--surface);
-          border: 1px solid var(--border-strong);
-          border-radius: 11px;
+          background: none;
+          border: 0;
+          border-bottom: 1px solid var(--border-strong);
+          border-radius: 0;
           color: var(--text);
           font-family: inherit;
-          font-size: 0.9rem;
+          font-size: .92rem;
           outline: none;
-          padding: 13px 14px 13px 42px;
-          transition: border-color 0.22s, box-shadow 0.22s, background 0.22s;
+          padding: .6rem 0 .55rem 1.6rem;
+          transition: border-color .25s ease;
         }
-        .ct-input:focus, .ct-ta:focus {
-          border-color: var(--accent);
-          background: var(--surface);
-          box-shadow: 0 0 0 3px rgba(195,173,133,0.12);
-        }
-        .ct-input::placeholder, .ct-ta::placeholder {
-          color: var(--text-muted);
-        }
+        .ct-input:focus, .ct-ta:focus { border-bottom-color: var(--accent); }
+        .ct-input::placeholder, .ct-ta::placeholder { color: var(--text-muted); opacity: .75; }
         .ct-ta {
-          resize: vertical; min-height: 130px;
-          line-height: 1.7; padding-top: 13px;
+          resize: vertical;
+          min-height: 118px;
+          line-height: 1.6;
+          padding-top: .6rem;
         }
         .ct-char {
-          position: absolute; bottom: 10px; right: 12px;
-          font-size: 0.62rem; color: var(--text-muted);
+          position: absolute;
+          bottom: .55rem; right: 0;
+          font-size: .62rem;
+          color: var(--text-muted);
           pointer-events: none;
+          font-variant-numeric: tabular-nums;
         }
 
+        /* ── Envío: la única pieza dorada maciza de la sección ── */
         .ct-row {
-          display: flex; align-items: center;
-          gap: 14px; margin-top: 8px;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-top: clamp(.6rem, 2vh, 1.2rem);
         }
-
         .ct-btn {
-          flex: 1; padding: 15px 24px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: .55rem;
+          padding: .78rem 1.6rem;
+          border: 0;
+          border-radius: 100px;
           background: var(--accent);
-          border: none; border-radius: 11px;
           color: var(--on-accent);
-          font-family: inherit; font-size: 0.82rem;
-          font-weight: 800; letter-spacing: 0.1em;
-          text-transform: uppercase; cursor: pointer;
-          display: flex; align-items: center;
-          justify-content: center; gap: 10px;
-          transition: all 0.28s cubic-bezier(0.23,1,0.32,1);
-          box-shadow: 0 4px 24px rgba(195,173,133,0.35);
-          position: relative; overflow: hidden;
+          font-family: inherit;
+          font-size: .86rem;
+          font-weight: 800;
+          letter-spacing: .02em;
+          cursor: pointer;
+          transition: transform .25s ease, filter .25s ease;
         }
-        .ct-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(195,173,133,0.5); background: var(--brand-bronze); }
-        .ct-btn:active { transform: translateY(0); }
+        .ct-btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
+        .ct-btn:disabled { opacity: .65; cursor: not-allowed; transform: none; }
 
         .ct-hint {
-          font-size: 0.66rem; color: var(--text-muted);
-          text-align: right; line-height: 1.6; flex-shrink: 0;
+          margin: 0 0 0 auto;
+          font-size: .68rem;
+          line-height: 1.5;
+          color: var(--text-muted);
+          text-align: right;
         }
-        .ct-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
+
         .ct-spinner {
-          width: 14px; height: 14px; border-radius: 50%;
-          border: 2px solid rgba(31,31,30,0.3);
+          width: 14px; height: 14px;
+          border-radius: 50%;
+          border: 2px solid rgba(31,31,30,.25);
           border-top-color: var(--on-accent);
-          animation: ct-spin 0.7s linear infinite;
+          animation: ctSpin .7s linear infinite;
           flex-shrink: 0;
         }
-        @keyframes ct-spin { to { transform: rotate(360deg); } }
+        @keyframes ctSpin { to { transform: rotate(360deg); } }
+
         .ct-error {
-          font-size: 0.72rem; color: #f87171;
-          margin-top: 8px; text-align: center;
+          margin: .8rem 0 0;
+          font-size: .74rem;
+          color: #d9534f;
         }
 
-        /* ── SUCCESS ── */
+        /* ── Éxito: cubre la columna del formulario ── */
         .ct-success {
-          position: absolute; inset: 0;
-          background: var(--surface-2);
-          display: flex; flex-direction: column;
-          align-items: center; justify-content: center;
-          z-index: 20;
-          animation: ctIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+          position: absolute;
+          inset: 0;
+          background: var(--background);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          z-index: 5;
+          animation: ctFade .4s ease both;
         }
-        @keyframes ctIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to   { opacity: 1; transform: scale(1); }
+        @keyframes ctFade {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
-
         .ct-sring {
-          width: 88px; height: 88px; border-radius: 50%;
-          border: 2px solid rgba(195,173,133,0.45);
-          display: flex; align-items: center; justify-content: center;
-          margin-bottom: 24px; position: relative;
-          animation: ctRingIn 0.55s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 72px; height: 72px;
+          border-radius: 50%;
+          border: 1px solid var(--accent);
+          color: var(--accent);
+          margin-bottom: 1.2rem;
+          animation: ctRing .5s .08s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
-        @keyframes ctRingIn {
-          from { transform: scale(0) rotate(-90deg); opacity: 0; }
-          to   { transform: scale(1) rotate(0); opacity: 1; }
-        }
-        .ct-sring::before, .ct-sring::after {
-          content: ''; position: absolute; inset: -14px;
-          border: 1.5px solid var(--accent);
-          border-radius: 50%; opacity: 0;
-          animation: ctRingExp 2.2s ease-out infinite;
-        }
-        .ct-sring::after { animation-delay: 0.6s; }
-        @keyframes ctRingExp {
-          0%   { transform: scale(1); opacity: 0.6; }
-          100% { transform: scale(2.4); opacity: 0; }
-        }
-
-        .ct-check { color: var(--accent); animation: ctPop 0.35s 0.5s both; }
-        @keyframes ctPop {
-          from { transform: scale(0); opacity: 0; }
+        @keyframes ctRing {
+          from { transform: scale(.9); opacity: 0; }
           to   { transform: scale(1); opacity: 1; }
         }
-
         .ct-stitle {
-          font-size: 2.2rem; font-weight: 900;
+          font-family: var(--font-display);
+          font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+          font-weight: 800;
           color: var(--text);
-          margin: 0 0 8px;
-          animation: ctUp 0.4s 0.6s both;
+          margin: 0 0 .35rem;
         }
         .ct-ssub {
-          font-size: 0.75rem; color: var(--text-muted);
-          letter-spacing: 0.12em;
-          animation: ctUp 0.4s 0.7s both;
-        }
-        @keyframes ctUp {
-          from { opacity: 0; transform: translateY(10px); }
-          to   { opacity: 1; transform: translateY(0); }
+          margin: 0;
+          font-size: .78rem;
+          letter-spacing: .06em;
+          color: var(--text-muted);
         }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 900px) {
-          /* Card pasa a una sola columna */
-          .ct-card {
-            grid-template-columns: 1fr;
+        /* ── Tableta y teléfono: una columna, el filete se acuesta ── */
+        @media (max-width: 860px) {
+          .ct-grid { grid-template-columns: minmax(0, 1fr); }
+          .ct-col--left {
+            border-right: 0;
+            border-bottom: 1px solid var(--border);
+            padding-right: 0;
           }
-
-          /* El divisor vertical se convierte en horizontal */
-          .ct-divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(to right, transparent, rgba(195,173,133,0.2) 20%, rgba(195,173,133,0.2) 80%, transparent);
-          }
-
-          .ct-left { padding: 40px 32px 36px; }
-          .ct-right { padding: 36px 32px 40px; }
-
-          .ct-left-title { font-size: 2.2rem; }
-
-          /* En móvil los botones de contacto en grid 2 columnas
-             para aprovechar el espacio horizontal */
-          .ct-methods {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-          }
-
-          /* Cada método se adapta a layout vertical */
-          .ct-method {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 16px 14px;
-          }
-
-          /* Ocultar flecha en móvil — no hay hover */
-          .ct-marrow { display: none; }
-
-          /* La línea dorada pasa a ser superior */
-          .ct-method::after {
-            left: 0; right: 0; top: 0; bottom: auto;
-            width: 100%; height: 3px;
-            transform: scaleX(0);
-            transform-origin: left;
-          }
-          .ct-method:hover::after { transform: scaleX(1); }
-          .ct-method:hover { transform: translateX(0) translateY(-3px); }
-
-          .ct-mlabel { font-size: 0.82rem; }
-          .ct-msub   { font-size: 0.66rem; }
-
-          /* Disponibilidad ocupa la fila completa */
-          .ct-avail {
-            grid-column: 1 / -1;
-            margin-top: 20px;
-          }
+          .ct-col--right { padding-left: 0; }
         }
 
-        @media (max-width: 600px) {
-          .ct-root { padding: 5rem 1rem; }
-
-          .ct-h1 { font-size: 2.4rem; }
-          .ct-desc { font-size: 0.9rem; }
-
-          .ct-left  { padding: 32px 20px 28px; }
-          .ct-right { padding: 28px 20px 32px; }
-
-          .ct-left-title { font-size: 1.9rem; }
-
-          /* En pantallas muy pequeñas volvemos a una columna para los métodos */
-          .ct-methods { grid-template-columns: 1fr; }
-          .ct-method  {
-            flex-direction: row;
-            align-items: center;
-            gap: 12px;
-            padding: 13px 14px;
-          }
-          .ct-marrow { display: block; }
-          .ct-method::after {
-            left: 0; top: 0; right: auto; bottom: 0;
-            width: 3px; height: auto;
-            transform: scaleY(0);
-            transform-origin: center;
-          }
-          .ct-method:hover::after { transform: scaleY(1); }
-          .ct-method:hover { transform: translateX(4px) translateY(0); }
-          .ct-avail { grid-column: auto; }
+        @media (max-width: 560px) {
+          .ct { padding-inline: 1rem; }
+          .ct-method { gap: .65rem; padding-block: .9rem; }
+          .ct-msub { font-size: .7rem; }
+          .ct-row { flex-direction: column; align-items: stretch; gap: .7rem; }
+          .ct-btn { width: 100%; }
+          .ct-hint { text-align: center; margin-left: 0; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; transition-duration: 0.01ms !important; }
+          .ct-head, .ct-grid, .ct-method, .ct-mi, .ct-marrow, .ct-btn,
+          .ct-input, .ct-ta { transition: none; }
+          .ct-head, .ct-grid { opacity: 1; transform: none; }
+          .ct-dot, .ct-sring, .ct-success, .ct-spinner { animation: none; }
         }
       `}</style>
-
-      <section className="ct-root">
-        <div className="ct-bg" />
-
-        <div className="ct-wrap">
-
-          {/* HEADER */}
-          <div
-            className={`ct-header ${visible.header ? 'ct-in' : ''}`}
-            ref={headerRef}
-            data-reveal="header"
-          >
-            <h1 className="ct-h1">
-              {t.contact.title}{' '}
-              <span>{t.contact.titleSpan}</span>
-            </h1>
-
-            <p className="ct-desc">
-              {t.contact.desc}
-            </p>
-          </div>
-
-          {/* CARD */}
-          <div
-            className={`ct-card ${visible.card ? 'ct-in' : ''}`}
-            ref={cardRef}
-            data-reveal="card"
-          >
-
-            {/* LEFT */}
-            <div className="ct-left">
-              <span className="ct-eyebrow">{t.contact.eyebrow}</span>
-
-              <h3 className="ct-left-title">
-                {t.contact.chooseTitle.split('\n').map((line, i) => (
-                  <span key={i}>{line}{i === 0 && <br />}</span>
-                ))}
-              </h3>
-              <p className="ct-left-sub">{t.contact.chooseSub}</p>
-
-              <div className="ct-methods">
-                <button className="ct-method" onClick={handleWhatsApp}>
-                  <div className="ct-icon wa">
-                    <svg width="18" height="18" fill="#10b981" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="ct-mlabel">WhatsApp</span>
-                    <span className="ct-msub">{t.contact.waSub}</span>
-                  </div>
-                  <span className="ct-marrow">→</span>
-                </button>
-
-                <button className="ct-method" onClick={handleGmail}>
-                  <div className="ct-icon gm">
-                    <Mail width={18} height={18} color="var(--accent)" />
-                  </div>
-                  <div>
-                    <span className="ct-mlabel">{t.contact.emailLabel}</span>
-                    <span className="ct-msub">{contactConfig.email}</span>
-                  </div>
-                  <span className="ct-marrow">→</span>
-                </button>
-
-                <a className="ct-method" href={contactConfig.instagram} target="_blank" rel="noopener noreferrer">
-                  <div className="ct-icon ig">
-                    <Instagram width={18} height={18} color="#c13584" />
-                  </div>
-                  <div>
-                    <span className="ct-mlabel">Instagram</span>
-                    <span className="ct-msub">@geckcodex</span>
-                  </div>
-                  <span className="ct-marrow">→</span>
-                </a>
-              </div>
-
-              <div className="ct-avail">
-                <span className="ct-dot" />
-                {t.contact.available}
-              </div>
-            </div>
-
-            {/* DIVISOR */}
-            <div className="ct-divider" />
-
-            {/* RIGHT */}
-            <div className="ct-right">
-              <span className="ct-flabel">{t.contact.formLabel}</span>
-
-              <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', flex:1 }}>
-                {/* Honeypot de Web3Forms: invisible para las personas, los bots
-                    lo rellenan y el envío se descarta del lado del servicio. */}
-                <input
-                  type="checkbox"
-                  name="botcheck"
-                  className="ct-botcheck"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  aria-hidden="true"
-                />
-
-                <div className="ct-field">
-                  <label className="ct-field-label" htmlFor="ct-name">{t.contact.name}</label>
-                  <div className="ct-iw">
-                    <User className="ct-ii" />
-                    <input id="ct-name" type="text" name="name" value={formData.name}
-                      onChange={handleChange} placeholder={t.contact.namePh} required className="ct-input" />
-                  </div>
-                </div>
-
-                <div className="ct-field">
-                  <label className="ct-field-label" htmlFor="ct-email">Email</label>
-                  <div className="ct-iw">
-                    <Mail className="ct-ii" />
-                    <input id="ct-email" type="email" name="email" value={formData.email}
-                      onChange={handleChange} placeholder={t.contact.emailPh} required className="ct-input" />
-                  </div>
-                </div>
-
-                <div className="ct-field" style={{ flex:1 }}>
-                  <label className="ct-field-label" htmlFor="ct-msg">{t.contact.msg}</label>
-                  <div className="ct-iw">
-                    <MessageSquare className="ct-ii ct-txi" />
-                    <textarea id="ct-msg" name="message" value={formData.message}
-                      onChange={handleChange} placeholder={t.contact.msgPh}
-                      required className="ct-ta" />
-                    <span className="ct-char">{formData.message.length}</span>
-                  </div>
-                </div>
-
-                <div className="ct-row">
-                  <button type="submit" className="ct-btn" disabled={loading}>
-                    {loading
-                      ? <><span className="ct-spinner" />{t.contact.sending}</>
-                      : <><Send width={14} height={14} />{t.contact.send}</>
-                    }
-                  </button>
-                  <p className="ct-hint">{t.contact.noSpam.split('\n').map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}</p>
-                </div>
-                {error && (
-                  <p className="ct-error">{t.contact.error}</p>
-                )}
-              </form>
-
-              {submitted && (
-                <div className="ct-success">
-                  <div className="ct-sring">
-                    <svg className="ct-check" width="34" height="34" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="ct-stitle">{t.contact.successTitle}</h3>
-                  <p className="ct-ssub">{t.contact.successSub}</p>
-                </div>
-              )}
-            </div>
-
-          </div>
-        </div>
-      </section>
     </>
   );
 }

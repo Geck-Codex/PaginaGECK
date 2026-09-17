@@ -22,6 +22,16 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
+/*
+ * El destacado a ancho completo solo se pinta si los artículos restantes
+ * llenan filas completas de la rejilla de dos columnas —es decir, si el total
+ * es impar—. Con dos artículos, el primero salía horizontal a ancho completo y
+ * el segundo quedaba suelto en media fila, con un hueco al lado: se veía roto,
+ * no destacado. Así, 2 y 4 artículos se pintan parejos, y 3 y 5 con portada
+ * grande arriba.
+ */
+const featureFirst = posts.length >= 3 && posts.length % 2 === 1;
+
 const url = `${SITE_URL}/blog/`;
 
 /* El índice se declara como Blog con sus entradas. `blogPost` lista las URLs
@@ -76,7 +86,8 @@ const blogSchema = {
                 cover={post.data.cover}
                 coverAlt={post.data.coverAlt}
                 tags={post.data.tags}
-                featured={i === 0}
+                featured={featureFirst && i === 0}
+                eager={i === 0}
               />
             ))}
           </div>

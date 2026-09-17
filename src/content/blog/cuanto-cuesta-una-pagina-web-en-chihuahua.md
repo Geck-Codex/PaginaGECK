@@ -66,7 +66,7 @@ Nuestra postura es sencilla: si lo único que necesitas es existir en internet, 
 
 Los rangos de arriba son los mismos en las dos ciudades, pero el mercado no lo es.
 
-En **Ciudad Juárez** hay algo que no existe en el resto del estado: la cercanía con El Paso. Muchos negocios necesitan el sitio en inglés y en español desde el día uno, cobrar en dólares, o verse creíbles ante un cliente del otro lado. Eso no encarece el desarrollo tanto como la gente supone —es trabajo de contenido y de configuración, no de programación— pero sí hay que decidirlo antes de empezar, porque rehacerlo después cuesta el doble.
+En **Ciudad Juárez** hay algo que no existe en el resto del estado: la cercanía con El Paso. Muchos negocios necesitan el sitio en inglés y en español desde el día uno, cobrar en dólares, o verse creíbles ante un cliente del otro lado. Eso no encarece el desarrollo tanto como la gente supone —es trabajo de contenido y de configuración, no de programación— pero sí hay que decidirlo antes de empezar, porque rehacerlo después cuesta el doble. Lo desglosamos en [página web bilingüe para negocios en la frontera](/blog/pagina-web-bilingue-para-negocios-en-la-frontera/).
 
 En **Chihuahua capital** la competencia entre proveedores es mayor y vas a encontrar cotizaciones muy distintas por el mismo trabajo. Ahí el consejo es sencillo: lo que separa una propuesta de $6,000 de una de $20,000 casi nunca es el diseño. Es cuánto trabajo de posicionamiento trae encima y qué pasa después de entregarla — y eso rara vez viene escrito.
 

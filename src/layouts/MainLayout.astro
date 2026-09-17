@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar.jsx';
 import Analytics from '@/components/Analytics.astro';
 import '@/styles/global.css';
 
-import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, breadcrumbSchema, BUSINESS, SITE_URL } from '@/data/seo';
+import { organizationSchema, websiteSchema, breadcrumbSchema, BUSINESS, SITE_URL } from '@/data/seo';
 import { LOCALE_META, alternatesFor, DEFAULT_LOCALE } from '@/i18n/routes';
 import type { Locale, PageKey } from '@/i18n/routes';
 
@@ -77,8 +77,8 @@ const socialDescription = ogDescription ?? description;
 // Se emite como un solo @graph: los motores (y los buscadores con IA) resuelven
 // mejor las relaciones entre entidades cuando comparten un único bloque.
 const jsonLdGraph = [
-  ORGANIZATION_SCHEMA,
-  WEBSITE_SCHEMA,
+  organizationSchema(lang),
+  websiteSchema(lang),
   ...(breadcrumbs.length ? [breadcrumbSchema(breadcrumbs)] : []),
   ...schema,
 ];

@@ -102,7 +102,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
 - **Conecta con:** artículo 1 (ya trae una versión corta de este argumento),
   `/servicios/a-medida/`
 
-### 3. Páginas web bilingües en Ciudad Juárez: qué cambia cuando tu cliente está en El Paso
+### 3. Página web bilingüe para negocios en la frontera ✅ PUBLICADO
 
 - **Búsqueda:** "pagina web bilingue juarez", "sitio web ingles y español empresa"
 - **Intención:** comercial, nicho geográfico muy definido.
@@ -113,6 +113,15 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   ANTES de empezar porque rehacerlo después cuesta el doble.
 - **Ventaja extra:** el sitio ya está en tres idiomas — es prueba viva.
 - **Conecta con:** `/servicios/a-medida/`, artículos 1 y 2
+- **Publicado como** `/blog/pagina-web-bilingue-para-negocios-en-la-frontera/`.
+  Se generalizó a toda la franja fronteriza —con una tabla de ciudades hermanas,
+  de Tijuana a Matamoros— usando Juárez–El Paso como el ejemplo que ilustra
+  todo, más una sección sobre cómo cambia la jugada según el tamaño de la ciudad
+  de enfrente. El ángulo son
+  cuatro decisiones que hay que tomar antes de empezar: dónde vive cada idioma
+  (dirección propia y slug traducido, no un botón de traductor), en qué moneda
+  se cotiza, qué se escribe en inglés en vez de traducirse, y cómo te contactan
+  del otro lado. El artículo 1 ya lo enlaza desde su sección de Juárez.
 
 ### 4. ¿Necesito una app o me basta con una página web?
 

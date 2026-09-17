@@ -1,4 +1,5 @@
 import { TEAM } from './team.js';
+import { localizedPath } from '../i18n/routes-map.js';
 
 /* ══════════════════════════════════════════════════════════════════
    seo.ts — Fuente única de verdad para datos estructurados (JSON-LD)
@@ -11,6 +12,83 @@ import { TEAM } from './team.js';
    ══════════════════════════════════════════════════════════════════ */
 
 export const SITE_URL = 'https://geckcodex.com';
+
+/** Idiomas del sitio, en la forma corta que usa el mapa de rutas. */
+export type SchemaLocale = 'es' | 'en' | 'pt';
+
+/* ─────────────────────────────────────────────────────────────────
+   Texto del schema por idioma.
+
+   Existe porque el grafo se emite en las TRES variantes de cada página
+   con el mismo `@id` —es la misma entidad descrita tres veces— y hasta
+   ahora la describía en español incluso en /en/ y /pt/. El texto visible
+   sí estaba traducido; solo el JSON-LD se quedó atrás.
+
+   Lo que NO se traduce y no debe traducirse: `areaServed` y la dirección.
+   "México" o "Hidalgo del Parral" son nombres propios de lugar, no texto
+   de interfaz — traducirlos rompe el emparejamiento con la entidad
+   geográfica real que hacen los motores.
+   ───────────────────────────────────────────────────────────────── */
+const SCHEMA_TEXT: Record<SchemaLocale, {
+  orgDescription: string;
+  slogan: string;
+  siteDescription: string;
+  knowsAbout: string[];
+  offers: string[];
+  serviceListName: string;
+}> = {
+  es: {
+    orgDescription:
+      'Agencia mexicana de desarrollo tecnológico en Hidalgo del Parral, Chihuahua. Desarrollamos sitios web, aplicaciones móviles, soluciones de inteligencia artificial, e-commerce, plataformas SaaS y software a la medida para empresas de México y Estados Unidos.',
+    slogan: 'Tecnología de primer nivel, para todos.',
+    siteDescription:
+      'Sitio oficial de Geck Codex: desarrollo web, apps móviles, inteligencia artificial y software a la medida desde Parral, Chihuahua.',
+    knowsAbout: [
+      'Desarrollo Web', 'Diseño de páginas web', 'Aplicaciones Móviles', 'Flutter', 'React',
+      'Inteligencia Artificial', 'Visión por Computadora', 'Automatización de procesos',
+      'E-commerce', 'SaaS', 'Software a la medida', 'CRM', 'Diseño UI/UX', 'Marketing Digital', 'SEO',
+    ],
+    offers: [
+      'Desarrollo Web', 'Apps Móviles', 'Inteligencia Artificial', 'E-commerce',
+      'SaaS y Plataformas', 'Automatización de procesos', 'Software a Medida',
+    ],
+    serviceListName: 'Servicios de Geck Codex',
+  },
+  en: {
+    orgDescription:
+      'Mexican technology development agency based in Hidalgo del Parral, Chihuahua. We build websites, mobile apps, artificial intelligence solutions, e-commerce, SaaS platforms and custom software for companies in Mexico and the United States.',
+    slogan: 'World-class technology, for everyone.',
+    siteDescription:
+      'Official site of Geck Codex: web development, mobile apps, artificial intelligence and custom software from Parral, Chihuahua.',
+    knowsAbout: [
+      'Web Development', 'Website Design', 'Mobile Apps', 'Flutter', 'React',
+      'Artificial Intelligence', 'Computer Vision', 'Process Automation',
+      'E-commerce', 'SaaS', 'Custom Software', 'CRM', 'UI/UX Design', 'Digital Marketing', 'SEO',
+    ],
+    offers: [
+      'Web Development', 'Mobile Apps', 'Artificial Intelligence', 'E-commerce',
+      'SaaS & Platforms', 'Automation', 'Custom Software',
+    ],
+    serviceListName: 'Geck Codex Services',
+  },
+  pt: {
+    orgDescription:
+      'Agência mexicana de desenvolvimento de tecnologia em Hidalgo del Parral, Chihuahua. Desenvolvemos sites, aplicativos móveis, soluções de inteligência artificial, e-commerce, plataformas SaaS e software sob medida para empresas do México e dos Estados Unidos.',
+    slogan: 'Tecnologia de primeiro nível, para todos.',
+    siteDescription:
+      'Site oficial da Geck Codex: desenvolvimento web, apps mobile, inteligência artificial e software sob medida de Parral, Chihuahua.',
+    knowsAbout: [
+      'Desenvolvimento Web', 'Design de sites', 'Aplicativos Móveis', 'Flutter', 'React',
+      'Inteligência Artificial', 'Visão Computacional', 'Automação de processos',
+      'E-commerce', 'SaaS', 'Software sob medida', 'CRM', 'Design UI/UX', 'Marketing Digital', 'SEO',
+    ],
+    offers: [
+      'Desenvolvimento Web', 'Apps Mobile', 'Inteligência Artificial', 'E-commerce',
+      'SaaS & Plataformas', 'Automação', 'Software Sob Medida',
+    ],
+    serviceListName: 'Serviços da Geck Codex',
+  },
+};
 
 /** NAP y datos de negocio. Reutilizables también en componentes visibles. */
 export const BUSINESS = {
@@ -237,6 +315,37 @@ export const WEBSITE_SCHEMA: Record<string, unknown> = {
 };
 
 /* ─────────────────────────────────────────────────────────────────
+   Las dos entidades base, dichas en el idioma de la página.
+
+   Las constantes de arriba siguen siendo la forma en español y la
+   estructura común; estas funciones solo sustituyen los campos que son
+   prosa. El `@id` NO cambia: es la misma entidad, y ese identificador
+   es justo lo que permite a los motores unificar las tres variantes.
+   ───────────────────────────────────────────────────────────────── */
+export function organizationSchema(lang: SchemaLocale = 'es'): Record<string, unknown> {
+  const tx = SCHEMA_TEXT[lang] ?? SCHEMA_TEXT.es;
+  return {
+    ...ORGANIZATION_SCHEMA,
+    description: tx.orgDescription,
+    slogan: tx.slogan,
+    knowsAbout: tx.knowsAbout,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: tx.serviceListName,
+      itemListElement: tx.offers.map((name) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name, provider: { '@id': `${SITE_URL}/#organization` } },
+      })),
+    },
+  };
+}
+
+export function websiteSchema(lang: SchemaLocale = 'es'): Record<string, unknown> {
+  const tx = SCHEMA_TEXT[lang] ?? SCHEMA_TEXT.es;
+  return { ...WEBSITE_SCHEMA, description: tx.siteDescription };
+}
+
+/* ─────────────────────────────────────────────────────────────────
    Helpers de schema por página
    ───────────────────────────────────────────────────────────────── */
 
@@ -282,10 +391,18 @@ export interface ServiceItem {
   category?: string;
 }
 
-export function serviceListSchema(services: ServiceItem[]): Record<string, unknown> {
+/**
+ * Los servicios que ofrece la página, en su idioma.
+ *
+ * `lang` también decide el `serviceUrl`: antes apuntaba siempre a
+ * `/contacto/`, así que el schema de /en/ mandaba al formulario en español.
+ */
+export function serviceListSchema(services: ServiceItem[], lang: SchemaLocale = 'es'): Record<string, unknown> {
+  const tx = SCHEMA_TEXT[lang] ?? SCHEMA_TEXT.es;
+  const contactUrl = `${SITE_URL}${localizedPath('contact', lang)}`;
   return {
     '@type': 'ItemList',
-    name: 'Servicios de Geck Codex',
+    name: tx.serviceListName,
     itemListElement: services.map((s, i) => ({
       '@type': 'ListItem',
       position: i + 1,
@@ -301,7 +418,7 @@ export function serviceListSchema(services: ServiceItem[]): Record<string, unkno
         ],
         availableChannel: {
           '@type': 'ServiceChannel',
-          serviceUrl: `${SITE_URL}/contacto/`,
+          serviceUrl: contactUrl,
           servicePhone: { '@type': 'ContactPoint', telephone: BUSINESS.phone },
         },
       },

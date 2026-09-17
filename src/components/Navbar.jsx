@@ -56,6 +56,7 @@ export default function GeckNavbar({ lang, pageKey }) {
   const [isMobile, setIsMobile] = useState(false);
   const lastScrollYRef = useRef(0);
   const menuBtnRef = useRef(null);
+  const closeTimerRef = useRef(null);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 860px)');
@@ -103,12 +104,60 @@ export default function GeckNavbar({ lang, pageKey }) {
     setMenuOpen(true);
   };
 
+  /*
+   * El desmontaje espera a que la capa dorada TERMINE de encogerse, en vez de
+   * a un temporizador calculado a mano.
+   *
+   * Antes eran 840ms fijos contra una animacion que dura 820 (0.16s de retardo
+   * + 0.66s de barrido): veinte milisegundos de margen, o sea un frame. En
+   * movil, donde animar tres clip-path a pantalla completa pierde frames de
+   * sobra, el overlay se desmontaba con el circulo dorado todavia visible y se
+   * veia como un flashazo al final del cierre.
+   */
+  const finishClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setMenuOpen(false);
+    setMenuClosing(false);
+  };
+
   const closeMenu = () => {
+    // Sin reentradas: un segundo toque durante el cierre reiniciaba el
+    // temporizador y dejaba el menu a medio camino.
+    if (menuClosing) return;
+
     setRevealOpen(false);
     setMenuClosing(true);
-    // La capa dorada es la ultima en irse: 0.16s de retardo + 0.66s de barrido.
-    setTimeout(() => { setMenuOpen(false); setMenuClosing(false); }, 840);
+
+    // Sin animacion no hay `transitionend` que esperar (el bloque de
+    // prefers-reduced-motion anula la transicion de .mr-layer), asi que ahi se
+    // cierra en el acto en lugar de quedarse 1.1s en pantalla.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setMenuOpen(false);
+      setMenuClosing(false);
+      return;
+    }
+
+    // Respaldo por si el evento no llega: una pestana en segundo plano congela
+    // las transiciones, y sin esto el menu se quedaria abierto para siempre.
+    closeTimerRef.current = setTimeout(finishClose, 1100);
   };
+
+  /* Solo la capa dorada cierra el menu: es la ultima del barrido de salida.
+     El evento burbujea desde la capa hasta el contenedor. */
+  const handleRevealTransitionEnd = (e) => {
+    if (
+      menuClosing &&
+      e.propertyName === 'clip-path' &&
+      e.target.classList.contains('mr-layer--gold')
+    ) {
+      finishClose();
+    }
+  };
+
+  useEffect(() => () => clearTimeout(closeTimerRef.current), []);
 
   const toggleMenu = () => { if (menuOpen) closeMenu(); else openMenu(); };
 
@@ -265,6 +314,14 @@ export default function GeckNavbar({ lang, pageKey }) {
           transition: clip-path 0.66s cubic-bezier(0.76, 0, 0.24, 1);
           transition-delay: var(--out-delay);
           pointer-events: none;
+          /* Tres capas a pantalla completa recortandose a la vez es lo mas caro
+             que hace el sitio. Avisar al navegador le deja promoverlas a su
+             propia capa de composicion antes de empezar, que es la diferencia
+             entre un barrido limpio y uno que se traba en movil. */
+          will-change: clip-path;
+          /* El recorte no afecta al layout de nada de fuera: se lo decimos para
+             que no recalcule el resto de la pagina en cada frame. */
+          contain: strict;
         }
         .menu-reveal.is-open .mr-layer {
           clip-path: circle(var(--r) at var(--cx) var(--cy));
@@ -286,9 +343,15 @@ export default function GeckNavbar({ lang, pageKey }) {
         .mr-layer--base::after {
           content: "";
           position: absolute; inset: 0;
+          /* Un gradiente radial a pantalla completa repintandose dentro de un
+             clip-path animado es justo el trabajo que sobra en un telefono. El
+             halo es decorativo, asi que se queda solo donde hay GPU de sobra. */
           background: radial-gradient(circle at var(--cx) var(--cy),
             color-mix(in srgb, var(--accent) 16%, transparent), transparent 55%);
           pointer-events: none;
+        }
+        @media (max-width: 860px) {
+          .mr-layer--base::after { display: none; }
         }
 
         /* Anillo que sale disparado del botón al abrir: deja claro de dónde
@@ -586,7 +649,10 @@ export default function GeckNavbar({ lang, pageKey }) {
 
         @media (prefers-reduced-motion: reduce) {
           /* Sin barrido: las capas aparecen ya cubiertas y el anillo no sale. */
-          .mr-layer { transition: none !important; transition-delay: 0s !important; }
+          .mr-layer {
+            transition: none !important; transition-delay: 0s !important;
+            will-change: auto !important;
+          }
           .mr-ring { display: none !important; }
           .menu-reveal .mr-link,
           .menu-reveal .mr-footer { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
@@ -661,6 +727,7 @@ export default function GeckNavbar({ lang, pageKey }) {
         <div
           className={`menu-reveal ${revealOpen && !menuClosing ? "is-open" : ""}`}
           style={{ "--cx": `${reveal.x}px`, "--cy": `${reveal.y}px`, "--r": `${reveal.r}px` }}
+          onTransitionEnd={handleRevealTransitionEnd}
           role="dialog"
           aria-modal="true"
           aria-label={t.menu}

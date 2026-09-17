@@ -1,0 +1,156 @@
+---
+/**
+ * Enlaces a artículos del blog desde las páginas comerciales.
+ *
+ * El motivo está documentado en `BLOG_INDEX.teaser` (src/i18n/blog.js): los
+ * artículos estaban huérfanos —solo los enlazaba /blog/— y Google los dejaba
+ * en "Descubierta: actualmente sin indexar". Este bloque los cuelga de las
+ * páginas que ya tienen autoridad.
+ *
+ * NO se pinta fuera del español. El blog existe solo en español por decisión
+ * (ver la cabecera de src/i18n/blog.js), así que enlazarlo desde /en/ o /pt/
+ * mandaría al visitante a un texto que no puede leer y crearía enlaces entre
+ * idiomas que contradicen el hreflang. Devolver nada es el comportamiento
+ * correcto, no una carencia.
+ */
+import { getCollection } from 'astro:content';
+import PostCard from '@/components/blog/PostCard.astro';
+import { BLOG_INDEX, estimateReadingTime } from '@/i18n/blog.js';
+import type { Locale } from '@/i18n/routes';
+
+interface Props {
+  lang: Locale;
+  /**
+   * Artículos a destacar, por slug y en orden. Se elige a mano porque el
+   * enlace relevante depende de la página: en /servicios/ el que importa es
+   * el de precios, no el más reciente. Los slugs que no existan se ignoran en
+   * silencio —borrar un artículo no debe reventar el build de otra página— y
+   * el hueco lo rellenan los más recientes.
+   */
+  slugs?: string[];
+  limit?: number;
+  heading?: string;
+  intro?: string;
+}
+
+const { lang, slugs = [], limit = 2, heading, intro } = Astro.props;
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+/* Primero los pedidos por slug, en el orden pedido; luego los más recientes
+   hasta completar `limit`. Así la página siempre muestra algo aunque el
+   artículo que pedía se haya despublicado. */
+const picked = slugs.map((slug) => posts.find((p) => p.id === slug)).filter((p) => p !== undefined);
+const rest = posts.filter((p) => !picked.includes(p));
+const selected = [...picked, ...rest].slice(0, limit);
+
+const show = lang === 'es' && selected.length > 0;
+---
+
+{
+  show && (
+    <section class="teaser" aria-labelledby="blog-teaser-heading">
+      <div class="teaser__inner">
+        <header class="teaser__head">
+          <p class="teaser__eyebrow">{BLOG_INDEX.teaser.eyebrow}</p>
+          {/* h2 y no h1: estas páginas ya tienen el suyo. */}
+          <h2 class="teaser__title" id="blog-teaser-heading">
+            {heading ?? BLOG_INDEX.teaser.heading}
+          </h2>
+          <p class="teaser__intro">{intro ?? BLOG_INDEX.teaser.intro}</p>
+        </header>
+
+        <div class="teaser__grid">
+          {selected.map((post) => (
+            <PostCard
+              href={`/blog/${post.id}/`}
+              title={post.data.title}
+              description={post.data.description}
+              date={post.data.date}
+              readingTime={post.data.readingTime ?? estimateReadingTime(post.body)}
+              cover={post.data.cover}
+              coverAlt={post.data.coverAlt}
+              tags={post.data.tags}
+            />
+          ))}
+        </div>
+
+        <a class="teaser__all" href="/blog/">
+          {BLOG_INDEX.teaser.all} <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .teaser {
+    background: var(--background);
+    color: var(--text);
+    padding: clamp(72px, 10vw, 110px) 1.5rem;
+  }
+
+  .teaser__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .teaser__head {
+    max-width: 680px;
+    margin: 0 0 2.5rem;
+  }
+
+  .teaser__eyebrow {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--accent-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .teaser__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.65rem, 3.6vw, 2.25rem);
+    line-height: 1.15;
+    margin: 0 0 1rem;
+    color: var(--text);
+  }
+
+  .teaser__intro {
+    font-size: 1.03rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .teaser__grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 860px) {
+    .teaser__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .teaser__all {
+    display: inline-block;
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--accent-text);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .teaser__all:hover,
+  .teaser__all:focus-visible {
+    border-bottom-color: var(--accent-text);
+  }
+</style>

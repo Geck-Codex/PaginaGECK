@@ -54,6 +54,28 @@ export const BLOG_INDEX = {
   publishedLabel: 'Publicado el',
   updatedLabel: 'Actualizado el',
 
+  /**
+   * Bloque que enlaza artículos desde las páginas comerciales.
+   *
+   * Existe por una razón medible: Search Console reportaba los artículos como
+   * "Descubierta: actualmente sin indexar", el estado que Google usa cuando
+   * conoce una URL por el sitemap pero no la considera prioritaria para
+   * rastrear. Los artículos solo recibían enlaces desde /blog/ —una página
+   * nueva y de poca autoridad—, así que estaban huérfanos en la práctica. Un
+   * sitemap dice "esta URL existe"; un enlace desde una página ya indexada
+   * dice "esta URL importa", y es la segunda señal la que faltaba.
+   *
+   * El copy vive aquí y no en translations.js porque el bloque solo se pinta
+   * en español — ver la nota de arriba sobre por qué el blog no se traduce.
+   */
+  teaser: {
+    eyebrow: 'Del blog',
+    heading: 'Antes de decidir, léete esto',
+    intro:
+      'Escribimos lo que normalmente se responde en una llamada: cuánto cuesta de verdad y qué hace que un proyecto funcione o no.',
+    all: 'Ver todos los artículos',
+  },
+
   /** Cierre comercial al pie de cada artículo. El blog trae tráfico; esto es
    *  lo que lo convierte en conversación. */
   cta: {

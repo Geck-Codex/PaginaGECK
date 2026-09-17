@@ -15,6 +15,7 @@ import Processtimeline from '@/components/abaut/Processtimeline.jsx';
 import Carrusel from '@/components/hero/Carrusel.jsx';
 import StatsSection from '@/components/hero/StatsSection.jsx';
 import FaqSection from '@/components/FaqSection.jsx';
+import BlogTeaser from '@/components/blog/BlogTeaser.astro';
 import { translations } from '@/i18n/translations';
 import { faqSchema, serviceListSchema, SITE_URL } from '@/data/seo';
 import { PAGE_META } from '@/i18n/seo-meta';
@@ -36,6 +37,7 @@ const faq = faqSchema(t.faq.items.map((i) => ({ question: i.q, answer: i.a })));
 
 const services = serviceListSchema(
   Object.values(t.services.items).map((s) => ({ name: s.name, description: s.description })),
+  lang,
 );
 ---
 
@@ -82,6 +84,11 @@ const services = serviceListSchema(
     <Carrusel client:visible lang={lang} />
     <StatsSection client:visible lang={lang} />
     <FaqSection client:visible lang={lang} />
+
+    {/* Va después de la FAQ, al final del recorrido: quien llegó hasta aquí y
+        no escribió está investigando, y el blog es lo que le sirve. En /en/ y
+        /pt/ el componente no pinta nada — el blog solo existe en español. */}
+    <BlogTeaser lang={lang} />
   </div>
 </Layout>
 

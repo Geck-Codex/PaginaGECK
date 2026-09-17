@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../hooks/useLanguage';
 import { localizedPath } from '../../i18n/routes';
 import { PROJECTS_STATIC } from '../../data/projects.js';
-import PhoneMockup from './PhoneMockup.jsx';
+import DeviceMockup from './DeviceMockup.jsx';
 
 /* Acentos de categoría dentro de la paleta oro/bronce (sin arcoíris),
  * consistentes con el ProjectCarousel de la home. */
@@ -258,14 +258,20 @@ function Detail({ project, onClose, catMeta, strings, lang }) {
             lee como una sola pieza. A cambio de no tener imagen que llene la
             franja, el mockup se dibuja mas grande. */}
         {project.video ? (
-          <div className="gc-phone-stage">
-            <PhoneMockup
+          <div className={`gc-phone-stage gc-phone-stage--${project.device || 'phone'}`}>
+            <DeviceMockup
+              device={project.device || 'phone'}
               src={project.video}
               poster={project.videoPoster}
               label={project.title}
               caption={project.videoCaption}
               labels={strings.detail}
-              width="min(clamp(260px, 34vw, 430px), 44dvh)"
+              /* El telefono lo limita el alto de la franja y la tablet el
+                 ancho: son proporciones opuestas y el mismo tope dejaria a una
+                 de las dos diminuta. */
+              width={project.device === 'tablet'
+                ? 'min(clamp(320px, 54vw, 900px), 112dvh)'
+                : 'min(clamp(260px, 34vw, 430px), 44dvh)'}
             />
           </div>
         ) : shots.length > 0 && (

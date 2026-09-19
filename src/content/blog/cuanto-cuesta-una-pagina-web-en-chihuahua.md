@@ -124,7 +124,7 @@ La quinta es la que más gente olvida preguntar y la que más caro sale.
 
 Dos modelos, según lo que necesites.
 
-Lo que se construye para ti —tu sitio, tu app, tu chatbot— se cobra una vez, y **el código es tuyo cuando liquidas**. Nunca pedimos todo por adelantado: se puede partir en anticipo y saldo, o por etapas.
+Lo que se construye para ti —tu sitio, tu app, tu chatbot— es [desarrollo a medida](/servicios/a-medida/): se cobra una vez, y **el código es tuyo cuando liquidas**. Nunca pedimos todo por adelantado: se puede partir en anticipo y saldo, o por etapas.
 
 Lo que ya tenemos hecho y solo se da de alta —menú digital con QR, punto de venta, programa de lealtad, agenda de citas, CRM— va por suscripción: **$300 al mes por módulo, sin costo de implementación**. Tres módulos son $900 al mes. Lo pusimos todo al mismo precio para que la cuenta la puedas hacer tú sin preguntarnos.
 
@@ -132,4 +132,4 @@ Lo que ya tenemos hecho y solo se da de alta —menú digital con QR, punto de v
 
 Si llegaste hasta aquí probablemente ya te ubicaste en algún renglón de la tabla. Si sigues sin saber, es señal de que el problema no es el precio: es que todavía no está claro qué necesitas.
 
-Eso también lo podemos platicar, y no cobramos por hacerlo.
+Eso también lo podemos platicar, y no cobramos por hacerlo. Si quieres ver primero qué hacemos, está todo en [servicios](/servicios/).

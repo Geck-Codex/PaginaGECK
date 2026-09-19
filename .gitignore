@@ -25,3 +25,13 @@ pnpm-debug.log*
 
 # Originales pesados fuera del sitio publicado (no se despliegan)
 originales/
+
+# Analitica: el cache normalizado se regenera con ingest.py; los informes
+# de analiticas/informes/ SI se versionan (son el historico del negocio).
+analiticas/.cache/
+
+# Credenciales de cuenta de servicio de Google. Nunca deben estar en el repo
+# (viven en ~/.config/geckcodex/); esto es la red por si una vuelve a caer aqui.
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*.json
+service-account*.json
+gcp-*.json

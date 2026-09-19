@@ -189,10 +189,10 @@ export default function GeckFooter({ lang, pageKey }) {
               </li>
               <li>
                 <a
-                  href="mailto:ventas@geckcodex.com"
+                  href="mailto:contacto@geckcodex.com"
                   onClick={() => trackLead('email', 'footer')}
                 >
-                  ventas@geckcodex.com
+                  contacto@geckcodex.com
                 </a>
               </li>
               <li>

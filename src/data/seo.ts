@@ -94,7 +94,7 @@ const SCHEMA_TEXT: Record<SchemaLocale, {
 export const BUSINESS = {
   name: 'Geck Codex',
   legalName: 'Geck Codex',
-  email: 'ventas@geckcodex.com',
+  email: 'contacto@geckcodex.com',
   phone: '+52-627-174-5436',
   phoneDisplay: '+52 627 174 5436',
   whatsapp: 'https://wa.me/526271745436',

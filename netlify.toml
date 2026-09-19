@@ -29,3 +29,25 @@
   to = "https://geckcodex.com/:splat"
   status = 301
   force = true
+
+# ── El articulo cambio de direccion ──────────────────────
+#
+# Se publico como /blog/por-que-mi-pagina-web-no-me-trae-clientes/ y
+# apuntaba a una busqueda global que pelea cada agencia del mundo
+# hispanohablante: quedo en la posicion 65 de Google. El articulo hermano,
+# publicado un dia antes y con "Chihuahua" en el titulo y en la URL, quedo
+# en la 1,3. La diferencia no era la antiguedad ni la calidad, era el
+# termino, asi que el articulo se re-apunto a la busqueda local.
+#
+# El 301 existe porque la URL vieja ya estaba indexada y recibia
+# impresiones. Sin el, esas impresiones se convierten en 404 y lo poco
+# acumulado se tira. No tiene fecha de caducidad: los enlaces que alguien
+# haya guardado siguen valiendo dentro de cinco años.
+# Sin `:splat` ni comodin: esto no es un arbol de rutas, es una sola
+# pagina que se mudo. Netlify hace coincidir la ruta con y sin la barra
+# final, asi que una regla cubre las dos formas.
+[[redirects]]
+  from = "/blog/por-que-mi-pagina-web-no-me-trae-clientes/"
+  to = "/blog/por-que-mi-pagina-web-en-chihuahua-no-me-trae-clientes/"
+  status = 301
+  force = true

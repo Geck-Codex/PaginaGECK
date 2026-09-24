@@ -144,6 +144,7 @@ armado a pedazos.
 | Juárez bilingüe | Dos llaves de latón idénticas colgando juntas de un gancho, muro de concreto oscuro |
 | App o web | Dos cajas de latón cerradas de distinto tamaño sobre piedra oscura |
 | Google Maps | Chincheta de latón clavada en un mapa de papel viejo, primer plano cerrado |
+| Excel o sistema (Juárez) | Ábaco antiguo de latón y madera oscura sobre un escritorio de piedra, cuentas desordenadas, un haz de luz cálida desde la derecha |
 
 Si un artículo no tiene sujeto asignado, buscar un **objeto físico que sea
 metáfora de la decisión** del lector, no del tema. Una balanza no es "precios":

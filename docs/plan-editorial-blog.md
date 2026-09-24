@@ -123,7 +123,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   se cotiza, qué se escribe en inglés en vez de traducirse, y cómo te contactan
   del otro lado. El artículo 1 ya lo enlaza desde su sección de Juárez.
 
-### 4. ¿Necesito una app o me basta con una página web?
+### 4. ¿Necesito una app o me basta con una página web? ⏸ EN BORRADOR
 
 - **Búsqueda:** "necesito una app o pagina web", "diferencia app y pagina web"
 - **Intención:** informativa, pero de alguien con presupuesto.
@@ -132,6 +132,31 @@ ninguno en marzo. Google premia la constancia, no el atracón.
 - **Ángulo:** una lista honesta de cuándo SÍ vale una app. Decir "casi nunca la
   necesitas" vende más confianza que empujar el producto caro.
 - **Conecta con:** `/servicios/a-medida/`, artículo 1
+- **Escrito y archivado con `draft: true`** en
+  `src/content/blog/necesito-una-app-o-una-pagina-web.md` (2026-09-24). Se
+  descartó porque no pasa el filtro de la línea editorial: "app o página web"
+  lo publica cualquier agencia, y no lleva ancla de ciudad ni de nicho (la
+  lección del artículo 2, que cayó a la posición 65). Si se retoma, la salida es
+  convertirlo en **"¿Cuánto cuesta una app en Chihuahua?"** —la fórmula del
+  artículo 1— aprovechando el material: cuándo sí vale una app, la letra chica
+  de las tiendas (Apple $99 USD/año, Google $25 USD una vez) y el punto
+  intermedio con los módulos del ecosistema.
+
+### 4b. Cuándo dejar Excel y tener un sistema propio en Ciudad Juárez ✅ PUBLICADO
+
+- **No estaba en el plan original**; entró en lugar del 4.
+- **Búsqueda:** "dejar excel por un sistema", "sistema a medida ciudad juarez",
+  "software para empresas juarez"
+- **Intención:** comercial, de quien ya siente el dolor. Talleres, proveedores
+  de la maquila, transportistas y distribuidoras.
+- **Por qué:** es el primer artículo que ataca Juárez de frente y el primero
+  que vende software a medida y automatización, no la web.
+- **Ángulo:** "la mayoría no necesita dejar Excel". Tres escalones (ordenar el
+  Excel, automatizar desde $10,000, sistema propio) y siete señales de que
+  Excel ya cuesta dinero, con la trazabilidad que pide la maquila como la señal
+  propia de Juárez. La cuenta de horas la hace el lector con sus números.
+- **Publicado como** `/blog/cuando-dejar-excel-por-un-sistema-propio-en-ciudad-juarez/`.
+  Enlaza a los artículos 1 y 3, `/servicios/a-medida/` y `/servicios/ecosistema/`.
 
 ### 5. Cómo poner tu negocio en Google Maps (guía para Chihuahua y Juárez)
 

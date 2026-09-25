@@ -159,4 +159,4 @@ Sobre la distancia, la neta: estamos en Hidalgo del Parral, Chihuahua. Si estás
 
 Un sitio bilingüe no es un sitio con el idioma de más. Es un sitio que decidió, desde antes de existir, que tiene dos públicos.
 
-Y si tu negocio ya vive así —dos monedas, dos idiomas, dos lados del puente—, tu página es el único lugar donde eso todavía no se nota. Vale la pena que se note, y [que la página haga algo](/blog/por-que-mi-pagina-web-no-me-trae-clientes/) más que verse bien.
+Y si tu negocio ya vive así —dos monedas, dos idiomas, dos lados del puente—, tu página es el único lugar donde eso todavía no se nota. Vale la pena que se note, y [que la página haga algo](/blog/por-que-mi-pagina-web-en-chihuahua-no-me-trae-clientes/) más que verse bien.

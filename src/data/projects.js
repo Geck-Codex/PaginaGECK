@@ -33,14 +33,29 @@ export const PROJECTS_STATIC = [
   { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Firebase', 'SQLite'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp',
     gallery: ['/assets/image/portafolio/ganova-1.webp', '/assets/image/portafolio/ganova-2.webp', '/assets/image/portafolio/ganova-3.webp'] },
   { id: 24, cat: 'software', title: 'Bot de Atención al Cliente', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'], gradient: 'linear-gradient(145deg, #1e1e1c 0%, #0B1D33 50%, #B8941F 100%)', image: '/assets/image/portafolio/nomda.webp',
-    /* PROVISIONAL: video de relleno para ver el mockup en su sitio. Sustituir
-       por la grabacion vertical de la conversacion del bot. */
-    device: 'phone', video: '/assets/video/cel-movil.mp4' },
+    /* Grabacion real de la conversacion del bot de Nomada en Instagram DM.
+       Tablet y no telefono porque el origen es una ventana de escritorio: en un
+       armazon 1:2 solo cabria una tira vertical ilegible.
+       Del original se recorta la lista de chats (izquierda, que en el mockup se
+       leia como un cuadro negro) y la barra de scroll (derecha). Lo que queda es
+       casi cuadrado, asi que se rellena hasta 16:10 con el MISMO gris del fondo
+       del chat (#0D0E13): la costura no se ve y el aparato no recorta contenido.
+       Reproducible:
+         ffmpeg -i <crudo> -vf "crop=1167:1080:708:0,
+           pad=1728:1080:280:0:0x0D0E13,scale=1440:900" -an -crf 28 */
+    device: 'tablet', video: '/assets/video/bot-nomada.mp4', videoPoster: '/assets/image/portafolio/bot-nomada-poster.webp' },
   { id: 21, cat: 'software', title: 'Bot Calificador de Leads', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'],                                                                  gradient: 'linear-gradient(145deg, #222220 0%, #0B1D33 50%, #D4AF37 100%)', image: '/assets/image/portafolio/seguiar_resized.webp', cardFit: 'contain',
-    /* PROVISIONAL: video de relleno para ver el mockup en su sitio. Sustituir
-       por una grabacion APAISADA: la tablet pide 16:9 y un video vertical
-       quedaria con dos franjas negras a los lados. */
-    device: 'tablet', video: '/assets/video/ia.mp4' },
+    /* Grabacion real del bot de Seguiar contestando en Messenger. Del crudo se
+       recortan las dos franjas que delatan que es una captura de escritorio y no
+       un producto: arriba la barra del navegador (pestañas, URL, marcadores) y
+       abajo la barra de tareas de Windows. El ancho se conserva entero porque el
+       rotulo que explica la automatizacion llega casi al borde derecho; para
+       llegar a 16:10 se rellena arriba y abajo con blanco, que es el mismo fondo
+       de la ventana y no se distingue.
+       Reproducible:
+         ffmpeg -i <crudo> -vf "crop=1250:600:0:87,
+           pad=1250:782:0:91:0xFFFFFF,scale=1440:900" -an -crf 29 */
+    device: 'tablet', video: '/assets/video/bot-seguiar.mp4', videoPoster: '/assets/image/portafolio/bot-seguiar-poster.webp' },
   { id: 6,  cat: 'landing',  title: 'Mi Caja POS',           tech: ['Astro', 'React', 'Tailwind CSS'],                                   link: 'https://mi-caja.geckcodex.com/',            gradient: 'linear-gradient(145deg, #1c1917 0%, #92400e 45%, #d97706 100%)', image: '/assets/image/portafolio/micaja.webp', cardImage: '/assets/image/portafolio/mi-caja.webp',
     gallery: ['/assets/image/portafolio/micaja-movil-1.webp', '/assets/image/portafolio/micaja-movil-2.webp', '/assets/image/portafolio/micaja-movil-3.webp'] },
   { id: 25, cat: 'webapp',   title: 'Mi Caja Restaurante',   tech: ['React', 'Node.js', 'PostgreSQL', 'Flutter'],                                                                          gradient: 'linear-gradient(145deg, #0c1e3c 0%, #14532d 45%, #0B1D33 100%)', image: '/assets/image/portafolio/micaja-res.webp', cardFit: 'contain', cardBg: '#D4D4CC',

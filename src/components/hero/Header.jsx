@@ -69,9 +69,13 @@ export default function Header({ lang }) {
           {t.header.phrase}
         </p>
 
+        {/* El boton solido lleva a CONTACTO, no al portafolio. Estaba al reves:
+            la unica accion que produce un cliente vivia en el boton secundario
+            mientras el primario devolvia al visitante a seguir mirando. El
+            trabajo se enseña igual, un centimetro mas a la derecha. */}
         <div className="hdr__ctas">
-          <a href={localizedPath("portfolio", lang)} className="hdr__cta hdr__cta--solid">{t.header.ctaSolid}</a>
-          <a href={localizedPath("contact", lang)} className="hdr__cta hdr__cta--ghost">{t.header.ctaGhost}</a>
+          <a href={localizedPath("contact", lang)} className="hdr__cta hdr__cta--solid">{t.header.ctaPrimary}</a>
+          <a href={localizedPath("portfolio", lang)} className="hdr__cta hdr__cta--ghost">{t.header.ctaSecondary}</a>
         </div>
 
       </div>

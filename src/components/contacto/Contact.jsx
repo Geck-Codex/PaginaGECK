@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, User, Mail, MessageSquare, Instagram } from 'lucide-react';
+import { Send, User, Mail, Phone, MessageSquare, Instagram } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { trackLead } from '../../data/track.js';
 
@@ -22,7 +22,7 @@ import { trackLead } from '../../data/track.js';
  */
 export default function Contact({ lang }) {
   const { t } = useLanguage(lang);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState(false);
@@ -33,7 +33,7 @@ export default function Contact({ lang }) {
 
   const contactConfig = {
     whatsapp: '+52 6271745436',
-    email: 'ventas@geckcodex.com',
+    email: 'contacto@geckcodex.com',
     instagram: 'https://www.instagram.com/geckcodex/',
   };
 
@@ -96,6 +96,10 @@ export default function Contact({ lang }) {
           replyto: formData.email,
           name: formData.name,
           email: formData.email,
+          // Opcional a proposito: pedirlo obligatorio espanta a quien solo
+          // quiere preguntar. Pero quien lo deja se contesta por WhatsApp el
+          // mismo dia, que es por donde este cliente responde de verdad.
+          phone: formData.phone,
           message: formData.message,
           botcheck: false,
         }),
@@ -104,7 +108,7 @@ export default function Contact({ lang }) {
       if (data.success) {
         track('form');
         setSubmitted(true);
-        setTimeout(() => { setFormData({ name: '', email: '', message: '' }); setSubmitted(false); }, 4000);
+        setTimeout(() => { setFormData({ name: '', email: '', phone: '', message: '' }); setSubmitted(false); }, 4000);
       } else {
         setError(true);
       }
@@ -229,6 +233,16 @@ export default function Contact({ lang }) {
                     <Mail className="ct-ii" aria-hidden="true" />
                     <input id="ct-email" type="email" name="email" value={formData.email}
                       onChange={handleChange} placeholder={t.contact.emailPh} required className="ct-input" />
+                  </div>
+                </div>
+
+                <div className="ct-field">
+                  <label className="ct-flabel" htmlFor="ct-phone">{t.contact.phone}</label>
+                  <div className="ct-iw">
+                    <Phone className="ct-ii" aria-hidden="true" />
+                    <input id="ct-phone" type="tel" name="phone" value={formData.phone}
+                      onChange={handleChange} placeholder={t.contact.phonePh}
+                      autoComplete="tel" className="ct-input" />
                   </div>
                 </div>
 

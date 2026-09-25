@@ -16,6 +16,7 @@ import Carrusel from '@/components/hero/Carrusel.jsx';
 import StatsSection from '@/components/hero/StatsSection.jsx';
 import FaqSection from '@/components/FaqSection.jsx';
 import BlogTeaser from '@/components/blog/BlogTeaser.astro';
+import CTASection from '@/components/hero/CTASection.jsx';
 import { translations } from '@/i18n/translations';
 import { faqSchema, serviceListSchema, SITE_URL } from '@/data/seo';
 import { PAGE_META } from '@/i18n/seo-meta';
@@ -85,9 +86,15 @@ const services = serviceListSchema(
     <StatsSection client:visible lang={lang} />
     <FaqSection client:visible lang={lang} />
 
-    {/* Va después de la FAQ, al final del recorrido: quien llegó hasta aquí y
-        no escribió está investigando, y el blog es lo que le sirve. En /en/ y
-        /pt/ el componente no pinta nada — el blog solo existe en español. */}
+    {/* El cierre va ANTES del blog, no después. Quien acaba de recorrer el
+        argumento entero es quien más cerca está de escribir: si lo último que
+        ve es una lista de artículos, lo que le ofrecemos es irse a leer. */}
+    <CTASection client:visible lang={lang} />
+
+    {/* Va después del cierre, al final del recorrido: quien llegó hasta aquí y
+        aun así no escribió está investigando, y el blog es lo que le sirve. En
+        /en/ y /pt/ el componente no pinta nada — el blog solo existe en
+        español. */}
     <BlogTeaser lang={lang} />
   </div>
 </Layout>

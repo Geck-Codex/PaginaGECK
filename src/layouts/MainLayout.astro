@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Footer from '@/components/Footer.jsx';
 import Navbar from '@/components/Navbar.jsx';
 import Analytics from '@/components/Analytics.astro';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp.jsx';
 import '@/styles/global.css';
 
 import { organizationSchema, websiteSchema, breadcrumbSchema, BUSINESS, SITE_URL } from '@/data/seo';
@@ -272,7 +273,7 @@ const jsonLdGraph = [
     ═══════════════════════════════════════ -->
     <Analytics />
   </head>
-  <body>
+  <body data-page={pageKey}>
     <!-- ═══════════════════════════════════════
          PRELOADER — carga inicial + transición de carga entre páginas.
          transition:persist mantiene el MISMO nodo entre navegaciones (no se
@@ -375,6 +376,11 @@ const jsonLdGraph = [
       <slot />
     </main>
     
+    {/* Atajo a WhatsApp siempre a mano. Va en el layout y no página por
+        página para que no se quede fuera de ninguna al añadir la siguiente; él
+        solo se esconde en /contacto mirando el `data-page` del body. */}
+    <FloatingWhatsApp client:visible lang={lang} phone={BUSINESS.phone.replace(/[^0-9]/g, '')} />
+
     {/* `pageKey` viaja al pie para que los enlaces de idioma apunten a ESTA
         misma página en los otros dos, igual que el hreflang del head. Sin él
         mandarían a la portada y el visitante perdería dónde estaba. */}

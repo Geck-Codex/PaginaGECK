@@ -15,8 +15,8 @@ export const translations = {
       title: 'Sitios web, apps y software',
       titleAccent: 'que generan resultados',
       phrase: 'Construimos productos digitales a medida para empresas y emprendedores en México — con el mismo nivel que Silicon Valley.',
-      ctaSolid: 'Ver nuestro trabajo',
-      ctaGhost: 'Cotiza tu proyecto',
+      ctaPrimary: 'Cotiza tu proyecto',
+      ctaSecondary: 'Ver nuestro trabajo',
     },
     heroAscii: {
       labels: [
@@ -414,6 +414,7 @@ export const translations = {
       formLabel: 'Cuéntanos todo',
       name: 'Nombre', namePh: 'Tu nombre completo',
       emailPh: 'tu@email.com',
+      phone: 'WhatsApp', phonePh: '627 123 4567 (opcional)',
       msg: 'Mensaje', msgPh: 'Describe tu proyecto, idea o consulta…',
       send: 'Enviar mensaje', sending: 'Enviando...',
       noSpam: 'Sin spam.\nNunca.',
@@ -421,6 +422,20 @@ export const translations = {
       successTitle: '¡Mensaje enviado!', successSub: 'Te responderemos pronto',
       waMsg: (name) => name ? `Hola! Soy ${name}. Quiero hablar sobre mi proyecto.` : 'Hola! Quiero hablar sobre un proyecto.',
       emailSubject: 'Nuevo contacto desde geckcodex.com',
+    },
+    ctaFinal: {
+      eyebrow: '¿Tienes un proyecto en mente?',
+      title: 'Construyamos algo',
+      titleAccent: 'extraordinario juntos',
+      sub: 'Cuéntanos tu idea. Nosotros la convertimos en tecnología que funciona.',
+      primary: 'Cotiza tu proyecto',
+      secondary: 'Ver nuestro trabajo',
+      note: 'Respuesta en menos de 24 h · Sin compromiso',
+    },
+    floatWa: {
+      label: 'Escríbenos por WhatsApp',
+      short: 'WhatsApp',
+      msg: 'Hola! Vengo de geckcodex.com y quiero cotizar un proyecto.',
     },
     faq: {
       badge: 'Preguntas frecuentes',
@@ -458,7 +473,7 @@ export const translations = {
         },
         {
           q: '¿Cómo empiezo un proyecto con ustedes?',
-          a: 'Escríbenos por WhatsApp al +52 627 174 5436, al correo ventas@geckcodex.com o desde el formulario de contacto. Agendamos una llamada sin costo para entender tu idea, y en pocos días te enviamos una propuesta con alcance, tiempos y precio. Respondemos en menos de 24 horas.',
+          a: 'Escríbenos por WhatsApp al +52 627 174 5436, al correo contacto@geckcodex.com o desde el formulario de contacto. Agendamos una llamada sin costo para entender tu idea, y en pocos días te enviamos una propuesta con alcance, tiempos y precio. Respondemos en menos de 24 horas.',
         },
       ],
       ctaText: '¿Tu duda no está aquí?',
@@ -492,8 +507,8 @@ export const translations = {
       title: 'Websites, apps and software',
       titleAccent: 'that deliver results',
       phrase: 'We build custom digital products for businesses and entrepreneurs in Mexico — at Silicon Valley standards.',
-      ctaSolid: 'See our work',
-      ctaGhost: 'Get a quote',
+      ctaPrimary: 'Get a quote',
+      ctaSecondary: 'See our work',
     },
     heroAscii: {
       labels: [
@@ -891,6 +906,7 @@ export const translations = {
       formLabel: 'Tell us everything',
       name: 'Name', namePh: 'Your full name',
       emailPh: 'you@email.com',
+      phone: 'WhatsApp', phonePh: '+52 627 123 4567 (optional)',
       msg: 'Message', msgPh: 'Describe your project, idea or inquiry…',
       send: 'Send message', sending: 'Sending...',
       noSpam: 'No spam.\nEver.',
@@ -898,6 +914,20 @@ export const translations = {
       successTitle: 'Message sent!', successSub: 'We\'ll get back to you soon',
       waMsg: (name) => name ? `Hi! I'm ${name}. I'd like to talk about my project.` : 'Hi! I\'d like to talk about a project.',
       emailSubject: 'New contact from geckcodex.com',
+    },
+    ctaFinal: {
+      eyebrow: 'Got a project in mind?',
+      title: "Let's build something",
+      titleAccent: 'extraordinary together',
+      sub: 'Tell us your idea. We turn it into technology that works.',
+      primary: 'Get a quote',
+      secondary: 'See our work',
+      note: 'Reply in under 24 h · No strings attached',
+    },
+    floatWa: {
+      label: 'Message us on WhatsApp',
+      short: 'WhatsApp',
+      msg: 'Hi! I came from geckcodex.com and I want a quote for a project.',
     },
     faq: {
       badge: 'Frequently asked questions',
@@ -935,7 +965,7 @@ export const translations = {
         },
         {
           q: 'How do I start a project with you?',
-          a: 'Message us on WhatsApp at +52 627 174 5436, email ventas@geckcodex.com, or use the contact form. We schedule a free call to understand your idea, and within a few days we send a proposal with scope, timeline and price. We reply in under 24 hours.',
+          a: 'Message us on WhatsApp at +52 627 174 5436, email contacto@geckcodex.com, or use the contact form. We schedule a free call to understand your idea, and within a few days we send a proposal with scope, timeline and price. We reply in under 24 hours.',
         },
       ],
       ctaText: 'Question not listed?',
@@ -969,8 +999,8 @@ export const translations = {
       title: 'Sites, apps e software',
       titleAccent: 'que geram resultados',
       phrase: 'Construímos produtos digitais sob medida para empresas e empreendedores no México — com o mesmo nível do Silicon Valley.',
-      ctaSolid: 'Ver nosso trabalho',
-      ctaGhost: 'Cotar meu projeto',
+      ctaPrimary: 'Cotar meu projeto',
+      ctaSecondary: 'Ver nosso trabalho',
     },
     heroAscii: {
       labels: [
@@ -1368,6 +1398,7 @@ export const translations = {
       formLabel: 'Conte tudo para nós',
       name: 'Nome', namePh: 'Seu nome completo',
       emailPh: 'voce@email.com',
+      phone: 'WhatsApp', phonePh: '+52 627 123 4567 (opcional)',
       msg: 'Mensagem', msgPh: 'Descreva seu projeto, ideia ou dúvida…',
       send: 'Enviar mensagem', sending: 'Enviando...',
       noSpam: 'Sem spam.\nJamais.',
@@ -1375,6 +1406,20 @@ export const translations = {
       successTitle: 'Mensagem enviada!', successSub: 'Responderemos em breve',
       waMsg: (name) => name ? `Olá! Sou ${name}. Quero falar sobre meu projeto.` : 'Olá! Quero falar sobre um projeto.',
       emailSubject: 'Novo contato pelo geckcodex.com',
+    },
+    ctaFinal: {
+      eyebrow: 'Tem um projeto em mente?',
+      title: 'Vamos construir algo',
+      titleAccent: 'extraordinário juntos',
+      sub: 'Conte sua ideia. Nós a transformamos em tecnologia que funciona.',
+      primary: 'Solicite um orçamento',
+      secondary: 'Ver nosso trabalho',
+      note: 'Resposta em menos de 24 h · Sem compromisso',
+    },
+    floatWa: {
+      label: 'Fale conosco no WhatsApp',
+      short: 'WhatsApp',
+      msg: 'Olá! Vim do geckcodex.com e quero um orçamento para um projeto.',
     },
     faq: {
       badge: 'Perguntas frequentes',
@@ -1412,7 +1457,7 @@ export const translations = {
         },
         {
           q: 'Como começo um projeto com vocês?',
-          a: 'Fale conosco pelo WhatsApp +52 627 174 5436, pelo e-mail ventas@geckcodex.com ou pelo formulário de contato. Agendamos uma conversa gratuita para entender sua ideia e, em poucos dias, enviamos uma proposta com escopo, prazos e preço. Respondemos em menos de 24 horas.',
+          a: 'Fale conosco pelo WhatsApp +52 627 174 5436, pelo e-mail contacto@geckcodex.com ou pelo formulário de contato. Agendamos uma conversa gratuita para entender sua ideia e, em poucos dias, enviamos uma proposta com escopo, prazos e preço. Respondemos em menos de 24 horas.',
         },
       ],
       ctaText: 'Sua dúvida não está aqui?',

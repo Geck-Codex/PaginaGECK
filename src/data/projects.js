@@ -28,9 +28,10 @@
  */
 
 export const PROJECTS_STATIC = [
+  { id: 27, cat: 'landing',  title: 'Precio de la Nuez',      tech: ['Astro', 'Leaflet'],                                                                 gradient: 'linear-gradient(145deg, #2A1F14 0%, #4A3A22 45%, #C9A227 100%)' },
   { id: 22, cat: 'landing',  title: 'Handlove',               tech: ['Astro', 'Tailwind CSS'],                                            link: 'https://handloves.mx/',                   gradient: 'linear-gradient(145deg, #030C1D 0%, #0D1625 45%, #F4E4BC 100%)', image: '/assets/image/portafolio/handlove.webp', cardFit: 'contain',
     gallery: ['/assets/image/portafolio/handloves-2.webp', '/assets/image/portafolio/handloves-m-1.webp', '/assets/image/portafolio/handloves-3.webp'] },
-  { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Firebase', 'SQLite'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp',
+  { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Riverpod', 'Drift', 'Supabase'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp',
     gallery: ['/assets/image/portafolio/ganova-1.webp', '/assets/image/portafolio/ganova-2.webp', '/assets/image/portafolio/ganova-3.webp'] },
   { id: 24, cat: 'software', title: 'Bot de Atención al Cliente', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'], gradient: 'linear-gradient(145deg, #1e1e1c 0%, #0B1D33 50%, #B8941F 100%)', image: '/assets/image/portafolio/nomda.webp',
     /* Grabacion real de la conversacion del bot de Nomada en Instagram DM.
@@ -60,7 +61,7 @@ export const PROJECTS_STATIC = [
     gallery: ['/assets/image/portafolio/micaja-movil-1.webp', '/assets/image/portafolio/micaja-movil-2.webp', '/assets/image/portafolio/micaja-movil-3.webp'] },
   { id: 25, cat: 'webapp',   title: 'Mi Caja Restaurante',   tech: ['React', 'Node.js', 'PostgreSQL', 'Flutter'],                                                                          gradient: 'linear-gradient(145deg, #0c1e3c 0%, #14532d 45%, #0B1D33 100%)', image: '/assets/image/portafolio/micaja-res.webp', cardFit: 'contain', cardBg: '#D4D4CC',
     gallery: ['/assets/image/portafolio/micaja-res-1.webp', '/assets/image/portafolio/micaja-res-3.webp', '/assets/image/portafolio/micaja-res-2.webp'] },
-  { id: 17, cat: 'mobile',   title: 'Nuki',                   tech: ['Flutter', 'Firebase'],                                                                    gradient: 'linear-gradient(145deg, #030C1D 0%, #0B1D33 45%, #B8941F 100%)', image: '/assets/image/portafolio/nuki.webp', cardFit: 'contain', cardBg: '#FFFFFF',
+  { id: 17, cat: 'mobile',   title: 'Nuki',                   tech: ['Flutter', 'sqflite'],                                                                    gradient: 'linear-gradient(145deg, #030C1D 0%, #0B1D33 45%, #B8941F 100%)', image: '/assets/image/portafolio/nuki.webp', cardFit: 'contain', cardBg: '#FFFFFF',
     gallery: ['/assets/image/portafolio/nuki-1.webp', '/assets/image/portafolio/nuki-2.webp', '/assets/image/portafolio/nuki-3.webp'] },
   { id: 18, cat: 'webapp',   title: 'Tablá',                  tech: ['Astro', 'React', 'Tailwind CSS'],                                                                                    gradient: 'linear-gradient(145deg, #1e1e1c 0%, #222220 40%, #D4AF37 100%)', image: '/assets/image/portafolio/tabla.webp', cardFit: 'contain', cardBg: '#D4D4CC', link: 'https://laschikis.vercel.app/?tema=fonda' },
   { id: 3,  cat: 'landing',  title: 'LandingKit',            tech: ['Astro', 'React', 'Tailwind CSS'],                                   link: 'https://landig-plantilla.geckcodex.com/',   gradient: 'linear-gradient(145deg, #2e1065 0%, #7c3aed 45%, #c026d3 100%)', image: '/assets/image/portafolio/landig.webp', cardFit: 'contain', cardBg: '#D4D4CC',

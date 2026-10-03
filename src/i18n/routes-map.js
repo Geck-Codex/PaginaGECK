@@ -44,11 +44,12 @@ export const LOCALE_META = {
 export const SLUGS = {
   home: { es: '', en: '', pt: '' },
   services: { es: 'servicios', en: 'services', pt: 'servicos' },
-  // Los dos caminos de servicios, cada uno con pagina propia. Van anidados
-  // bajo el slug de servicios porque son parte de el, y porque una URL como
-  // /servicios/ecosistema/ le dice a Google de que trata sin leer la pagina.
-  ecosystem: { es: 'servicios/ecosistema', en: 'services/ecosystem', pt: 'servicos/ecossistema' },
-  custom:    { es: 'servicios/a-medida',   en: 'services/custom-built', pt: 'servicos/sob-medida' },
+  // NO hay seccion de modulos. Estuvo en /servicios/ecosistema/ y se estaba
+  // mudando a /productos/ con pagina por producto; las dos cosas se retiraron
+  // hasta que los productos esten establecidos. El trabajo entero —la rejilla,
+  // el diagrama, las paginas de Nuki y Mi Caja, los datos— vive en la rama
+  // `productos`, y las URLs viejas se mandan a /servicios/ con 301 desde
+  // `netlify.toml`. Cuando se relancen, la clave vuelve aqui.
   portfolio: { es: 'portafolio', en: 'portfolio', pt: 'portfolio' },
   about: { es: 'nosotros', en: 'about', pt: 'sobre-nos' },
   contact: { es: 'contacto', en: 'contact', pt: 'contato' },
@@ -101,19 +102,22 @@ export function resolvePath(pathname) {
   const isPrefixed = maybeLocale !== undefined && PREFIXED_LOCALES.includes(maybeLocale);
 
   const locale = isPrefixed ? maybeLocale : DEFAULT_LOCALE;
-  // Se unen TODOS los segmentos, no solo el primero: hay slugs anidados
-  // ("servicios/ecosistema") y cortar por el primero devolvia la pagina padre.
+  // Se unen TODOS los segmentos, no solo el primero: puede haber slugs
+  // anidados, y cortar por el primero devolvia la pagina padre.
   const slug = (isPrefixed ? parts.slice(1) : parts).join('/');
 
   const page = Object.keys(SLUGS).find((key) => SLUGS[key][locale] === slug);
   return page ? { page, locale } : null;
 }
 
-/** Paginas hijas de otra, para migas de pan. */
-export const PARENT = {
-  ecosystem: 'services',
-  custom: 'services',
-}
+/**
+ * Paginas hijas de otra, para migas de pan.
+ *
+ * Vacio: /servicios/a-medida/ subio al hub y la seccion de modulos se retiro.
+ * Hoy todas las paginas son de primer nivel. Se queda declarado porque las
+ * paginas por producto volveran a llenarlo.
+ */
+export const PARENT = {}
 
 /**
  * Alternates de una URL absoluta, en el formato que espera `@astrojs/sitemap`

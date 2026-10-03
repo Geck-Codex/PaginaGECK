@@ -182,9 +182,13 @@ export default function GeckNavbar({ lang, pageKey }) {
 
   // Los enlaces apuntan a la variante del idioma actual: navegar dentro del
   // sitio nunca debe devolverte al español. El blog solo existe en español.
+  //
+  // El ORDEN es el de la decision de compra, no el historico: primero lo que
+  // se vende y despues la prueba. El portafolio estaba primero y esta al
+  // reves: demuestra a quien ya dudaba, no es por donde se entra.
   const navLinks = [
-    { key: "portfolio", icon: Briefcase, href: localizedPath("portfolio", language) },
     { key: "services", icon: Layers, href: localizedPath("services", language) },
+    { key: "portfolio", icon: Briefcase, href: localizedPath("portfolio", language) },
     { key: "about", icon: Info, href: localizedPath("about", language) },
     { key: "blog", icon: BookOpen, href: "/blog/" },
     // En móvil el acceso a Contacto vive dentro del menú (no en la barra)

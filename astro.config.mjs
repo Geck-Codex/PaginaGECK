@@ -67,6 +67,12 @@ export default defineConfig({
       // es la sección que más se actualiza, justo la que conviene que Google
       // rastree seguido. El filtro original era correcto mientras estaba vacía.
       changefreq: 'monthly',
+      // Las 404 por idioma NO van al sitemap. Astro descarta sola la /404 de la
+      // raiz, pero no las anidadas: /en/404/ y /pt/404/ salian listadas como
+      // paginas normales. Un sitemap es la lista de lo que se quiere indexar, y
+      // estas llevan noindex —pedirle a Google que rastree algo que le dices que
+      // no indexe es mandarle señales contrarias y gastarle presupuesto.
+      filter: (page) => !/\/404\/?$/.test(page),
       // Sin `lastmod` global a propósito — ver readBlogDates() arriba. Solo los
       // artículos declaran fecha, y la declaran de verdad.
       // NO se usa la opción `i18n` del plugin: empareja las variantes por slug

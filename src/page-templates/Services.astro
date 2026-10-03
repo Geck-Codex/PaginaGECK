@@ -1,16 +1,27 @@
 ---
+/**
+ * Servicios: el desarrollo a medida, en cualquiera de los tres idiomas.
+ *
+ * Absorbio a /servicios/a-medida/, que era su unica hija. El hub existia para
+ * bifurcar entre el ecosistema y a medida; cuando los modulos se mudaron a
+ * /productos/ se quedo sin la mitad de su razon de ser y con un contenido
+ * propio de tres secciones. Ver la cabecera de `CustomPage.jsx`.
+ *
+ * Lleva el JSON-LD de los siete servicios, de los diez paquetes y de las dudas
+ * de contratacion: es la pagina donde vive todo ese contenido ahora, asi que es
+ * la que debe declararlo.
+ */
 import Layout from '@/layouts/MainLayout.astro';
-import ServicesSection from '@/components/servicios/ServicesSection.jsx';
+import CustomPage from '@/components/servicios/CustomPage.jsx';
 import BlogTeaser from '@/components/blog/BlogTeaser.astro';
 import { translations } from '@/i18n/translations';
-import { faqSchema, serviceListSchema, SITE_URL } from '@/data/seo';
+import { faqSchema, packageListSchema, serviceListSchema, SITE_URL } from '@/data/seo';
 import { PAGE_META } from '@/i18n/seo-meta';
 import { localizedUrl } from '@/i18n/routes';
+import { ENTERPRISE, PACKAGES } from '@/data/packages.js';
 import type { Locale } from '@/i18n/routes';
 
-interface Props {
-  lang: Locale;
-}
+interface Props { lang: Locale }
 
 const { lang } = Astro.props;
 const meta = PAGE_META.services[lang];
@@ -21,6 +32,17 @@ const services = serviceListSchema(
   items.map((s) => ({ name: s.name, description: s.description })),
   lang,
 );
+
+/* Los diez paquetes, en el mismo orden en que los lista la pagina. Salen del
+   dato y de las traducciones, no de una copia escrita aparte: una lista
+   paralela se desincroniza al primer cambio de precio o de nombre. */
+const pkgCopy = translations[lang].services.custom.packages;
+const pkgIds = [...PACKAGES.map((p) => p.id), ENTERPRISE.shop.id, ENTERPRISE.base.id];
+const packages = packageListSchema(
+  pkgIds.map((id) => ({ name: pkgCopy[id].name, description: `${pkgCopy[id].d} ${pkgCopy[id].limit}` })),
+  'custom-packages',
+);
+
 /* Las dudas de contratacion, tambien como datos: son las preguntas que un
    buscador generativo responde citando a quien las tenga escritas. */
 const faq = faqSchema(
@@ -34,11 +56,11 @@ const faq = faqSchema(
   description={meta.description}
   canonical={url}
   breadcrumbs={[{ name: meta.breadcrumb!, url }]}
-  schema={[services, faq]}
+  schema={[services, packages, faq]}
   lang={lang}
   pageKey="services"
 >
-  <ServicesSection client:visible lang={lang} />
+  <CustomPage client:visible lang={lang} />
 
   {/* El artículo de precios va primero: quien llega a /servicios/ suele venir
       con la pregunta del costo, y responderla con número abierto es lo que

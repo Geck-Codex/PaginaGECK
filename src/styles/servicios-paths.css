@@ -76,6 +76,23 @@
 .paths__plan-feats li { font-size: 0.86rem; color: var(--text-muted); display: flex; gap: 0.6rem; }
 .paths__plan-feats li::before { content: "·"; color: var(--accent); flex: none; }
 
+/* Las horas: es lo que de verdad se compra, asi que se lee antes que la lista
+   y con mas peso que ella. Separadas por un filete para que la ficha se parta
+   en "cuanto cuesta" / "que incluye" / "para quien es". */
+.paths__plan-hours {
+  margin: 1rem 0 0; padding-top: 0.9rem; border-top: 1px solid var(--border);
+  font-size: 0.92rem; font-weight: 600; color: var(--text);
+}
+
+/* El "para quien" cierra la ficha, empujado al fondo para que las tres
+   tarjetas lo alineen aunque tengan distinto numero de puntos. */
+.paths__plan-target {
+  margin: 1.1rem 0 0; padding-top: 0.9rem; border-top: 1px solid var(--border);
+  font-size: 0.82rem; line-height: 1.5; color: var(--text-muted); font-style: italic;
+}
+.paths__plan { display: flex; flex-direction: column; }
+.paths__plan-target { margin-top: auto; }
+
 /* ── Planes en movil: se deslizan, no se apilan ──
  *
  * Con `minmax(250px, 1fr)` un telefono cabe una sola columna, asi que los tres

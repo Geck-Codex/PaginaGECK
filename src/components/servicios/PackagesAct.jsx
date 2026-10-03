@@ -3,7 +3,6 @@ import {
   cubicBezier, motion, useReducedMotion, useScroll, useSpring, useTransform,
 } from 'framer-motion';
 import PackagePicker from './PackagePicker.jsx';
-import { ENTERPRISE, PACKAGES } from '../../data/packages.js';
 
 /* El acto de los paquetes, contado con el scroll.
  *
@@ -19,10 +18,6 @@ import { ENTERPRISE, PACKAGES } from '../../data/packages.js';
  */
 
 const EASE = cubicBezier(0.22, 1, 0.36, 1);
-
-/* Los diez, en el orden del dato: primero los que se arman con el selector y
-   al final los dos escalones Enterprise, que no salen de una combinacion. */
-const ALL_IDS = [...PACKAGES.map((p) => p.id), ENTERPRISE.shop.id, ENTERPRISE.base.id];
 
 /* Compases del relato, en fraccion del recorrido. */
 const BEATS = {
@@ -121,30 +116,6 @@ export default function PackagesAct({ custom, lang }) {
         </motion.div>
       </div>
 
-      {/* El selector ensena un paquete a la vez, que es lo que hace que se
-          entienda; el coste es que los otros nueve no existen para quien lee
-          la pagina sin tocarla —un rastreador, un buscador de IA, alguien con
-          lector de pantalla—. Esta lista los pone a todos en el HTML sin
-          deshacer el selector: va plegada, fuera de la escena clavada, y
-          repite los mismos textos, no unos nuevos que se desincronicen.
-
-          Sin precios a proposito: el precio se ve en el selector, donde va
-          acompanado de su alcance. */}
-      <details className="pkgall">
-        <summary className="pkgall__sum">{custom.allTitle}</summary>
-        <ul className="pkgall__list">
-          {ALL_IDS.map((id) => {
-            const d = custom.packages[id];
-            return (
-              <li className="pkgall__it" key={id}>
-                <h3 className="pkgall__n">{d.name}</h3>
-                <p className="pkgall__d">{d.d}</p>
-                <p className="pkgall__l">{d.limit}</p>
-              </li>
-            );
-          })}
-        </ul>
-      </details>
     </section>
   );
 }

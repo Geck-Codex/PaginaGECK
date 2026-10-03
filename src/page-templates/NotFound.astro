@@ -1,0 +1,244 @@
+---
+/**
+ * Pagina 404, en cualquiera de los tres idiomas.
+ *
+ * SIN isla de React a proposito. Esta es la pagina que se sirve cuando algo ya
+ * salio mal —un enlace roto, una direccion mal escrita, una ruta que se movio y
+ * no quedo cubierta por un 301—, asi que no depende de que se hidrate nada:
+ * todo lo que hace falta para salir de aqui esta en el HTML estatico. El nav y
+ * el pie los pone el layout como en cualquier otra pagina.
+ *
+ * `noindex` y SIN `pageKey`: no se indexa, y no emite hreflang porque declarar
+ * un grupo de variantes hacia paginas de error no le sirve de nada a nadie.
+ *
+ * El numeral grande NO usa gradiente de texto: va con `-webkit-text-stroke` en
+ * oro y relleno transparente. Un contorno no es un degradado, cumple la regla
+ * del oro (el oro nunca es relleno de texto sobre fondo claro) y en navegadores
+ * sin soporte el @supports deja el numeral en tinta legible en vez de invisible.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import { translations } from '@/i18n/translations';
+import { localizedPath } from '@/i18n/routes';
+import type { Locale } from '@/i18n/routes';
+
+interface Props { lang: Locale }
+
+const { lang } = Astro.props;
+const t = translations[lang];
+const nf = t.notFound;
+
+/* Las cuatro salidas, en el orden de la decision de compra —el mismo del nav—:
+   lo que se construye, la prueba, quienes somos y el contacto. */
+const exits = [
+  { name: t.nav.services,  desc: nf.exits.services,  href: localizedPath('services', lang) },
+  { name: t.nav.portfolio, desc: nf.exits.portfolio, href: localizedPath('portfolio', lang) },
+  { name: t.nav.about,     desc: nf.exits.about,     href: localizedPath('about', lang) },
+  { name: t.nav.contact,   desc: nf.exits.contact,   href: localizedPath('contact', lang) },
+];
+---
+
+<Layout
+  title={`${nf.title} | Geck Codex`}
+  description={nf.lead}
+  noindex={true}
+  lang={lang}
+>
+  <section class="nf">
+    <div class="nf__inner">
+      <p class="nf__code" aria-hidden="true">404</p>
+
+      <h1 class="nf__title">{nf.title}</h1>
+      <p class="nf__lead">{nf.lead}</p>
+
+      <a class="nf__home" href={localizedPath('home', lang)}>
+        {nf.home}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
+
+      <p class="nf__exits-title">{nf.exitsTitle}</p>
+
+      <ul class="nf__exits">
+        {exits.map((e) => (
+          <li>
+            <a class="nf__card" href={e.href}>
+              <span class="nf__card-name">
+                {e.name}
+                <svg class="nf__card-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+              <span class="nf__card-desc">{e.desc}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .nf {
+    /* El alto minimo descuenta el nav para que el bloque quede centrado en lo
+       que de verdad se ve, no en la pagina entera. */
+    min-height: calc(100svh - 5rem);
+    display: grid;
+    place-items: center;
+    padding: clamp(3rem, 10vh, 7rem) 1.25rem clamp(4rem, 12vh, 8rem);
+    background: var(--background);
+  }
+
+  .nf__inner {
+    width: 100%;
+    max-width: 44rem;
+    text-align: center;
+  }
+
+  /* ── El numeral ── */
+  .nf__code {
+    margin: 0 0 clamp(.5rem, 2vw, 1rem);
+    font-family: var(--font-display);
+    font-size: clamp(5.5rem, 22vw, 11rem);
+    font-weight: 700;
+    line-height: .9;
+    letter-spacing: -.04em;
+    color: var(--text);
+    opacity: .16;
+  }
+
+  /* Contorno solo donde hay soporte: si no, se queda el numeral en tinta
+     traslucida de arriba, que sigue siendo legible. */
+  @supports (-webkit-text-stroke: 2px black) {
+    .nf__code {
+      -webkit-text-stroke: 2px var(--accent);
+      color: transparent;
+      opacity: 1;
+    }
+  }
+
+  .nf__title {
+    margin: 0 0 .75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5.5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    color: var(--text);
+  }
+
+  .nf__lead {
+    margin: 0 auto clamp(1.75rem, 4vw, 2.25rem);
+    max-width: 32rem;
+    font-size: clamp(.95rem, 2.4vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  /* ── Volver al inicio ── */
+  .nf__home {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .8rem 1.5rem;
+    border-radius: 999px;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    font-weight: 600;
+    font-size: .95rem;
+    text-decoration: none;
+    transition: background .22s ease, transform .22s ease;
+  }
+
+  .nf__home:hover {
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
+  }
+
+  .nf__home svg { transition: transform .22s ease; }
+  .nf__home:hover svg { transform: translateX(3px); }
+
+  /* ── Las salidas ── */
+  .nf__exits-title {
+    margin: clamp(2.5rem, 7vw, 3.5rem) 0 1rem;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .nf__exits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+
+  .nf__card {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    height: 100%;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: .85rem;
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+  }
+
+  .nf__card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -14px rgb(0 0 0 / .35);
+  }
+
+  .nf__card-name {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .nf__card-arrow {
+    color: var(--accent-text);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity .22s ease, transform .22s ease;
+  }
+
+  .nf__card:hover .nf__card-arrow { opacity: 1; transform: translateX(0); }
+
+  .nf__card-desc {
+    font-size: .85rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  /* En movil las cuatro salidas van en una columna: a dos, la descripcion
+     queda en tres o cuatro palabras por linea y deja de leerse. */
+  @media (max-width: 34rem) {
+    .nf__exits { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nf__home,
+    .nf__home svg,
+    .nf__card,
+    .nf__card-arrow { transition: none; }
+
+    .nf__home:hover,
+    .nf__card:hover { transform: none; }
+
+    /* La flecha se queda visible: si no hay transicion, aparecer de golpe es
+       peor que estar siempre ahi. */
+    .nf__card-arrow { opacity: 1; transform: none; }
+  }
+</style>

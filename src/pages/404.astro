@@ -1,0 +1,11 @@
+---
+/**
+ * 404 en español, y la que Netlify sirve por defecto para cualquier ruta que
+ * no exista. Las variantes por idioma viven en `en/404.astro` y `pt/404.astro`:
+ * Netlify busca el 404.html mas cercano subiendo por la ruta pedida, asi que
+ * un enlace roto bajo /en/ cae en el 404 en ingles y no en este.
+ */
+import NotFound from "@/page-templates/NotFound.astro";
+---
+
+<NotFound lang="es" />

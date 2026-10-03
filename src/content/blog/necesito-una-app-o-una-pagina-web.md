@@ -85,7 +85,7 @@ Entre "solo una página" y "una app completa" hay opciones que resuelven la mayo
 
 **Una página web que se comporta como app.** Una web bien hecha se puede guardar en la pantalla de inicio del celular con su propio ícono, abre a pantalla completa y se siente como una aplicación. No está en la tienda, pero tampoco hay que instalarla ni pasar la revisión de Apple. Para muchos negocios es todo lo que necesitaban.
 
-**Productos que ya existen.** Si lo que querías en tu app era un menú, una agenda de citas, un punto de venta o un programa de puntos, eso ya está construido. En nuestro caso son módulos del [ecosistema](/servicios/ecosistema/): **$300 al mes cada uno, sin costo de implementación.** Contra una app a medida que arranca en $20,000, la cuenta es fácil: con lo que cuesta construir la app pagas varios años del módulo, y sin preocuparte de mantenerlo.
+**Herramientas que ya existen.** Si lo que querías en tu app era un menú, una agenda de citas, un punto de venta o un programa de puntos, eso ya está construido y se renta por mes. Contra una app a medida que arranca en $20,000, la cuenta es fácil: con lo que cuesta construir la app pagas varios años de la herramienta, y sin preocuparte de mantenerla.
 
 Si alguna de estas dos cosas resuelve tu problema, empieza por ahí. Si con el tiempo te quedan chicas, ya sabrás exactamente qué pedirle a una app, que es la mejor forma de no pagar de más por ella.
 
@@ -117,7 +117,7 @@ Si contestaste "página web" en tres o más, ya tienes tu respuesta. Si la mayor
 
 ## Cuánto cuesta cada camino con nosotros
 
-Todo lo que se construye para ti es [desarrollo a medida](/servicios/a-medida/): se cobra una vez y **el código es tuyo cuando liquidas.**
+Todo lo que se construye para ti es [desarrollo a medida](/servicios/): se cobra una vez y **el código es tuyo cuando liquidas.**
 
 | Qué necesitas | Precio |
 | --- | --- |
@@ -128,7 +128,7 @@ Todo lo que se construye para ti es [desarrollo a medida](/servicios/a-medida/):
 
 El paquete de página y app juntas cuesta $48,000; cotizadas por separado saldrían en $55,000. Y si solo quieres la página, el desglose completo de qué mueve su precio está en [cuánto cuesta una página web en Chihuahua](/blog/cuanto-cuesta-una-pagina-web-en-chihuahua/).
 
-Nunca cobramos todo por adelantado: se puede partir en anticipo y saldo, o por etapas. Y **los errores del código que escribimos se corrigen sin costo, de por vida**. En una app eso pesa más que en una página, porque una app tiene más piezas que se pueden romper.
+Nunca cobramos todo por adelantado: se puede partir en anticipo y saldo, o por etapas. Y **los errores del código que escribimos se corrigen sin costo durante un año**. En una app eso pesa más que en una página, porque una app tiene más piezas que se pueden romper.
 
 Lo que casi siempre recomendamos, cuando no está claro: **primero la página, después la app.** La página te trae clientes y te enseña qué te piden. Con esos datos, si un día la app hace falta, se construye sabiendo exactamente para qué, y sale más barata porque nadie tiene que adivinar.
 

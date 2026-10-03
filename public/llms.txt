@@ -27,12 +27,7 @@ Consultoría inicial sin costo. Respuesta en menos de 24 horas.
 
 ## Cómo se contrata
 
-La página de servicios presenta dos caminos, uno frente al otro:
-
-- **El ecosistema** (https://geckcodex.com/servicios/ecosistema/) — productos que ya existen y se dan de alta: Menú Digital QR, Mi Caja POS, Nuki (programa de lealtad), CRM, Agend-In (citas) y chatbot de WhatsApp. Se enciende el que haga falta; cada módulo funciona solo y, juntos, se conectan entre sí. Cada módulo cuesta $300 MXN al mes y no se cobra implementación: se da de alta y arranca en días. Tres módulos son $900 al mes.
-- **A medida** (https://geckcodex.com/servicios/a-medida/) — software construido desde cero sobre los procesos del cliente, cuando lo que existe en el mercado no le sirve. Arranque en semanas o meses y presupuesto definido tras una sesión de descubrimiento.
-
-Los dos caminos se pueden mezclar: lo que se construye a medida puede conectarse con los módulos del ecosistema que el cliente ya tenga.
+Todo se contrata por el mismo camino: **servicios a medida** (https://geckcodex.com/servicios/) — software construido desde cero sobre los procesos del cliente. Ahí están los siete servicios en detalle, los paquetes de referencia con sus precios, los planes de mantenimiento y las dudas antes de contratar. Arranque en días para una web sencilla, en semanas o meses para una app o un sistema, y presupuesto definido tras una sesión de descubrimiento.
 
 ### Paquetes de referencia del desarrollo a medida
 
@@ -106,16 +101,16 @@ Por WhatsApp al +52 627 174 5436, por correo a contacto@geckcodex.com, o desde e
 Hay varias opciones y se acuerdan antes de arrancar: anticipo y saldo contra entrega, o pagos por etapas en los proyectos grandes. Nunca se cobra el total por adelantado.
 
 **¿El código es del cliente?**
-Lo que se construye a medida es del cliente cuando liquida: código y datos. Los módulos del ecosistema (Menú Digital, Mi Caja, Nuki, CRM) son producto de Geck Codex y se usan con licencia. Los datos son siempre del cliente y puede llevárselos.
+Sí. Lo que se construye a medida es del cliente cuando liquida: el código y los datos. Se entrega en el repositorio del cliente, no en uno de Geck Codex.
 
 **¿Quién paga el hosting y el dominio?**
 El cliente, y a su nombre. Geck Codex asesora en la compra pero no actúa como intermediario: si el cliente se va, se lleva todo sin pedir permiso.
 
 **¿Qué pasa si algo se rompe después de entregar?**
-Si el fallo viene del código de Geck Codex, se arregla gratis siempre, haya o no plan de mantenimiento: es una garantía de por vida sobre el código propio. Si viene de un cambio de un tercero (WhatsApp, Meta, una pasarela de pago) o de la operación diaria, lo cubre el plan de mantenimiento.
+Si el fallo viene del código de Geck Codex, se arregla gratis durante el primer año, haya o no plan de mantenimiento: es una garantía de un año sobre el código propio. Pasado ese año, o si el fallo viene de un cambio de un tercero (WhatsApp, Meta, una pasarela de pago) o de la operación diaria, lo cubre el plan de mantenimiento.
 
-**¿Se puede empezar con un módulo y agregar más después?**
-Sí. Cada módulo del ecosistema funciona solo y se conecta con los que se añadan más adelante sin rehacer lo anterior.
+**¿Se puede empezar con algo chico y crecer después?**
+Sí. Se arranca con lo que resuelve el problema de hoy —una web, un chatbot, una primera versión de la app— y se construye de forma que lo siguiente se sume encima, sin rehacer lo anterior.
 
 **¿Geck Codex trabaja con negocios pequeños?**
 Sí. Trabaja tanto con negocios locales de Parral y Chihuahua como con empresas medianas y proyectos internacionales.
@@ -123,9 +118,7 @@ Sí. Trabaja tanto con negocios locales de Parral y Chihuahua como con empresas 
 ## Páginas del sitio
 
 - [Inicio](https://geckcodex.com/) — Presentación, proyectos destacados, especialidades y clientes.
-- [Servicios](https://geckcodex.com/servicios/) — Los dos caminos de contratación, el mantenimiento y las dudas antes de contratar.
-- [Ecosistema](https://geckcodex.com/servicios/ecosistema/) — Los módulos que ya existen (menú digital, punto de venta, lealtad, CRM, citas) con sus precios.
-- [Desarrollo a medida](https://geckcodex.com/servicios/a-medida/) — Software hecho a la medida de la operación: los siete servicios en detalle, los paquetes de referencia y la garantía.
+- [Servicios](https://geckcodex.com/servicios/) — El desarrollo a medida: los siete servicios en detalle, los paquetes de referencia con precios, la garantía, el mantenimiento y las dudas antes de contratar.
 - [Portafolio](https://geckcodex.com/portafolio/) — Proyectos reales por categoría (landing, móvil, web, software e IA).
 - [Nosotros](https://geckcodex.com/nosotros/) — Equipo, misión, visión, stack tecnológico y proceso.
 - [Blog](https://geckcodex.com/blog/) — Artículos sobre precios reales, decisiones de tecnología y errores frecuentes al contratar desarrollo. Solo en español.
@@ -153,18 +146,14 @@ en español porque se rigen por la ley mexicana.
 
 **English**
 - [Home](https://geckcodex.com/en/) — Overview, featured projects, specialties and clients.
-- [Services](https://geckcodex.com/en/services/) — The two paths to hire, maintenance plans and the questions asked before hiring.
-- [Ecosystem](https://geckcodex.com/en/services/ecosystem/) — The modules that already exist (digital menu, point of sale, loyalty, CRM, bookings) with their prices.
-- [Custom built](https://geckcodex.com/en/services/custom-built/) — Software built around the operation: the seven services in detail, the reference packages and the warranty.
+- [Services](https://geckcodex.com/en/services/) — Custom development: the seven services in detail, the reference packages with prices, the warranty, maintenance plans and the questions asked before hiring.
 - [Portfolio](https://geckcodex.com/en/portfolio/) — Real projects by category (landing, mobile, web, software and AI).
 - [About](https://geckcodex.com/en/about/) — Team, mission, vision, tech stack and process.
 - [Contact](https://geckcodex.com/en/contact/) — Form, WhatsApp, email and Instagram.
 
 **Português**
 - [Início](https://geckcodex.com/pt/) — Apresentação, projetos em destaque, especialidades e clientes.
-- [Serviços](https://geckcodex.com/pt/servicos/) — Os dois caminhos de contratação, a manutenção e as dúvidas antes de contratar.
-- [Ecossistema](https://geckcodex.com/pt/servicos/ecossistema/) — Os módulos que já existem (cardápio digital, ponto de venda, fidelidade, CRM, agenda) com os seus preços.
-- [Sob medida](https://geckcodex.com/pt/servicos/sob-medida/) — Software feito sob medida para a operação: os sete serviços em detalhe, os pacotes de referência e a garantia.
+- [Serviços](https://geckcodex.com/pt/servicos/) — O desenvolvimento sob medida: os sete serviços em detalhe, os pacotes de referência com preços, a garantia, a manutenção e as dúvidas antes de contratar.
 - [Portfólio](https://geckcodex.com/pt/portfolio/) — Projetos reais por categoria (landing, móvel, web, software e IA).
 - [Sobre nós](https://geckcodex.com/pt/sobre-nos/) — Equipe, missão, visão, stack tecnológico e processo.
 - [Contato](https://geckcodex.com/pt/contato/) — Formulário, WhatsApp, e-mail e Instagram.

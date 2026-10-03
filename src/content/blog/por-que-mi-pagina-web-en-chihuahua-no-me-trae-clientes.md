@@ -110,7 +110,7 @@ El botón, los textos y las imágenes pesadas son ajustes: días de trabajo, no 
 
 Si quieres los números, están completos en [cuánto cuesta una página web en Chihuahua](/blog/cuanto-cuesta-una-pagina-web-en-chihuahua/), con la tabla de rangos y qué mueve el precio. Y si prefieres que lo revisemos nosotros, eso es parte de lo que hacemos en [desarrollo web](/servicios/).
 
-Y algo que deberías exigirle a quien sea que lo arregle, no solo a nosotros: que si el error viene del código que él escribió, lo corrija sin cobrarte. Nosotros lo hacemos de por vida, y no es generosidad — es que si lo programamos mal, el problema es nuestro, no de tu presupuesto.
+Y algo que deberías exigirle a quien sea que lo arregle, no solo a nosotros: que si el error viene del código que él escribió, lo corrija sin cobrarte. Nosotros damos un año, y no es generosidad — es que si lo programamos mal, el problema es nuestro, no de tu presupuesto.
 
 ## Lo que hay que entender
 

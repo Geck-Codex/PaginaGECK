@@ -106,7 +106,7 @@ La regla es sencilla: **el sistema tiene que ser más fácil que el Excel, no m�
 
 Parte del problema que resuelve un sistema propio ya está resuelto en productos que existen. Si lo que llevas en Excel es tu cartera de clientes y el seguimiento de ventas, eso es un CRM. Si es lo que vendes en mostrador, eso es un punto de venta.
 
-En nuestro caso, esos productos son módulos del [ecosistema](/servicios/ecosistema/): **$300 al mes cada uno, sin costo de implementación.** Si lo tuyo cabe ahí, te lo vamos a decir, porque sale más barato y arranca antes que cualquier desarrollo.
+Si lo tuyo cabe en una herramienta que ya existe, te lo vamos a decir: sale más barato y arranca antes que cualquier desarrollo, aunque signifique que no nos contrates para construirlo.
 
 El sistema propio tiene sentido cuando tu proceso **no cabe** en ningún producto del mercado: tu forma de armar órdenes, tus controles de calidad, cómo se mueve el material en tu planta. Eso es lo que no se compra hecho.
 
@@ -130,12 +130,12 @@ Lo explicamos con más calma en [cuánto cuesta una página web en Chihuahua](/b
 
 ## Cómo lo hacemos nosotros
 
-Todo lo que se construye para ti es [desarrollo a medida](/servicios/a-medida/): se cobra una vez y **el código es tuyo cuando liquidas.**
+Todo lo que se construye para ti es [desarrollo a medida](/servicios/): se cobra una vez y **el código es tuyo cuando liquidas.**
 
 - **Automatizaciones desde $10,000:** conectar lo que ya usas para que los datos se pasen solos, reportes que se arman solos, avisos que llegan solos. Muchas veces sin quitarte el Excel, solo quitándole el trabajo manual.
 - **Sistema propio:** se cotiza por alcance, después de entender el proceso. Si tu operación es grande y necesita permisos por área, servidores dedicados e integración con el ERP que ya usas, ese escalón va de **$85,000 a $100,000**.
 - **Nunca todo por adelantado:** anticipo y saldo, o por etapas.
-- **Los errores del código que escribimos se corrigen sin costo, de por vida.** En un sistema del que depende tu operación, eso pesa más que en cualquier otra cosa.
+- **Los errores del código que escribimos se corrigen sin costo durante un año.** En un sistema del que depende tu operación, eso pesa más que en cualquier otra cosa.
 
 Y la parte que casi nadie cumple: si al ver tu proceso resulta que te basta con ordenar el Excel, te lo decimos y no te cobramos por decírtelo.
 

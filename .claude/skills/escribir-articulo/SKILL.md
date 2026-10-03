@@ -47,18 +47,26 @@ haberla hecho. La misma redacción vive en la FAQ de `/servicios/`
 (`translations.js`, en los tres idiomas): si se cambia una, se cambian las dos o
 el sitio se contradice ante Google, que lee esa FAQ como JSON-LD.
 
-**Los precios salen del código, no de la memoria.** Leer `src/data/packages.js` y
-`src/data/ecosystem.js` antes de escribir cualquier cifra. Una cifra distinta
-entre el blog y `/servicios/` destruye la confianza que el artículo venía a
-construir. Los números vigentes están también en `docs/plan-editorial-blog.md`.
+**Los precios salen del código, no de la memoria.** Leer `src/data/packages.js`
+antes de escribir cualquier cifra. Una cifra distinta entre el blog y
+`/servicios/` destruye la confianza que el artículo venía a construir. Los
+números vigentes están también en `docs/plan-editorial-blog.md`.
 
-**Nada sobre clientes con el ecosistema conectado.** Ningún cliente lo tiene
-implementado. Se puede decir que los productos están diseñados para conectarse;
-no que haya casos funcionando.
+`ecosystem.js` ya NO existe: la sección de módulos se retiró el 2 de octubre de
+2026 y vive en la rama `productos`. **No escribir sobre el ecosistema, los $300
+al mes ni los módulos** hasta que se relance — hoy no hay página a donde mandar
+al lector, y tres artículos del plan (6, 7 y 9) están bloqueados por eso.
 
-**La garantía de por vida sí se publica.** Los errores del código propio se
-corrigen sin costo, siempre. Es el mayor diferenciador y conviene que aparezca
-donde encaje natural, sin forzarlo en cada artículo.
+**Nada sobre el ecosistema, punto.** La sección se retiró del sitio el 2 de
+octubre de 2026. Y cuando vuelva: ningún cliente la tiene implementada, así que
+se podrá decir que los productos están diseñados para conectarse, nunca que haya
+casos funcionando.
+
+**La garantía es de UN AÑO, no de por vida.** Los errores del código propio se
+corrigen sin costo durante el primer año; pasado ése, lo cubre el plan de
+mantenimiento. Se cambió el 2 de octubre de 2026 para que el sitio diga lo mismo
+que el PDF de ventas que ya está en la calle. **Nunca volver a escribir "de por
+vida"** en un artículo: los cuatro que lo decían ya se corrigieron.
 
 **Enlazar a dos o tres artículos ya publicados.** Es lo que reparte autoridad
 entre ellos. Usar rutas relativas: `/blog/slug-del-otro/`.

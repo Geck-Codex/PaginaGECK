@@ -57,7 +57,8 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   frente la objeción "no estás en mi ciudad", que es mejor resolver dentro del
   artículo que dejar que el lector la resuelva solo cerrando la pestaña.
 - **Precios reales o ninguno.** Los números tienen que coincidir con
-  `src/data/packages.js` y `src/data/ecosystem.js`. Una cifra distinta entre el
+  `src/data/packages.js`. (`ecosystem.js` se fue con la sección de módulos, que
+  se retiró el 2 oct 2026.) Una cifra distinta entre el
   blog y la página de servicios destruye la confianza que el artículo venía a
   construir.
 - **Nada sobre clientes con el ecosistema conectado.** Ningún cliente lo tiene
@@ -65,6 +66,20 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   conectarse; no que haya casos funcionando.
 - **Enlaza a dos o tres artículos anteriores.** Es lo que reparte autoridad
   entre ellos y lo que hace que el conjunto valga más que la suma.
+
+---
+
+## Tres artículos bloqueados
+
+Los números **6, 7 y 9** vendían Mi Caja POS, el Menú Digital QR y Agend-In.
+El 2 de octubre de 2026 se retiró del sitio la sección entera de módulos —no
+se lanzan hasta que los productos estén bien establecidos— así que esos tres
+artículos no tienen hoy a dónde mandar al lector: escribirlos sería traer
+tráfico comercial a una página que no existe.
+
+Se quedan en el plan, no se borran: el trabajo está guardado en la rama
+`productos` y vuelven en cuanto la sección se publique. Mientras tanto, el
+orden de publicación salta del 5 al 10.
 
 ---
 
@@ -78,7 +93,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   con números, y filtra a quien no puede pagarte antes de gastarte una reunión.
 - **Incluye** la sección que contesta la objeción de la distancia, y una
   comparación del mercado de la capital contra el de Juárez.
-- **Conecta con:** `/servicios/a-medida/`
+- **Conecta con:** `/servicios/`
 
 ### 2. ¿Por qué mi página web no me trae clientes? ✅ PUBLICADO
 
@@ -100,7 +115,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   solo necesitas existir, hazla con IA y no gastes de más"— vende muchísimo más
   confianza que el miedo, y deja bien parado al que sí necesita lo demás.
 - **Conecta con:** artículo 1 (ya trae una versión corta de este argumento),
-  `/servicios/a-medida/`
+  `/servicios/`
 
 ### 3. Página web bilingüe para negocios en la frontera ✅ PUBLICADO
 
@@ -112,7 +127,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
 - **Ángulo:** cobrar en dólares, el sitio en dos idiomas, y qué hay que decidir
   ANTES de empezar porque rehacerlo después cuesta el doble.
 - **Ventaja extra:** el sitio ya está en tres idiomas — es prueba viva.
-- **Conecta con:** `/servicios/a-medida/`, artículos 1 y 2
+- **Conecta con:** `/servicios/`, artículos 1 y 2
 - **Publicado como** `/blog/pagina-web-bilingue-para-negocios-en-la-frontera/`.
   Se generalizó a toda la franja fronteriza —con una tabla de ciudades hermanas,
   de Tijuana a Matamoros— usando Juárez–El Paso como el ejemplo que ilustra
@@ -131,7 +146,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   por una app cuando necesitaba un sitio de $8,000 — y al revés.
 - **Ángulo:** una lista honesta de cuándo SÍ vale una app. Decir "casi nunca la
   necesitas" vende más confianza que empujar el producto caro.
-- **Conecta con:** `/servicios/a-medida/`, artículo 1
+- **Conecta con:** `/servicios/`, artículo 1
 - **Escrito y archivado con `draft: true`** en
   `src/content/blog/necesito-una-app-o-una-pagina-web.md` (2026-09-24). Se
   descartó porque no pasa el filtro de la línea editorial: "app o página web"
@@ -156,9 +171,10 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   Excel ya cuesta dinero, con la trazabilidad que pide la maquila como la señal
   propia de Juárez. La cuenta de horas la hace el lector con sus números.
 - **Publicado como** `/blog/cuando-dejar-excel-por-un-sistema-propio-en-ciudad-juarez/`.
-  Enlaza a los artículos 1 y 3, `/servicios/a-medida/` y `/servicios/ecosistema/`.
+  Enlaza a los artículos 1 y 3 y a `/servicios/`. (Enlazaba también a
+  `/productos/`; se quitó al retirarse la sección.)
 
-### 5. Cómo poner tu negocio en Google Maps (guía para Chihuahua y Juárez)
+### 5. Cómo poner tu negocio en Google Maps (guía para Chihuahua y Juárez) ✅ PUBLICADO
 
 - **Búsqueda:** "poner mi negocio en google maps", "google mi negocio verificar"
 - **Intención:** informativa, volumen local alto en las dos ciudades.
@@ -168,8 +184,17 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   que es el mismo argumento que sostiene tu propia estrategia.
 - **Bonus:** es el tema que más circula en grupos de comerciantes locales, la
   vía más realista de conseguir tus primeros enlaces entrantes.
+- **Publicado como** `/blog/como-poner-tu-negocio-en-google-maps-chihuahua/`
+  (2026-10-03). La guía completa es gratis y se dice de frente que una agencia
+  cobra $2,000–$5,000 por el mismo trámite. Lleva la verificación por video
+  —que es la que se usa hoy en México— y el negocio con área de servicio para
+  quien trabaja desde su casa. La sección de Juárez va por el inglés de El Paso
+  y por los horarios de turno de maquila. El cierre es la concesión más honesta
+  del blog hasta ahora: **nosotros no aparecemos en el mapa de Juárez y no lo
+  vamos a simular**, que es exactamente el argumento de la estrategia de arriba.
+  Enlaza a los artículos 1, 2 y 3, y a `/servicios/`.
 
-### 6. Punto de venta para negocios pequeños: qué revisar antes de comprar
+### 6. Punto de venta para negocios pequeños: qué revisar antes de comprar ⛔ BLOQUEADO
 
 - **Búsqueda:** "punto de venta para negocio pequeño", "sistema pos mexico precio"
 - **Intención:** comercial.
@@ -177,9 +202,9 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   (Clip, Square) cobra comisión por transacción. Ese contraste es tu argumento.
 - **Cuidado:** comparar con nombres reales exige ser exacto en sus precios o se
   vuelve en contra.
-- **Conecta con:** `/servicios/ecosistema/`
+- **Conecta con:** `/productos/`
 
-### 7. Menú digital con QR para restaurantes: cómo funciona y cuánto cuesta
+### 7. Menú digital con QR para restaurantes: cómo funciona y cuánto cuesta ⛔ BLOQUEADO
 
 - **Búsqueda:** "menu digital qr restaurante", "menu qr precio mexico"
 - **Intención:** comercial. Dueño de restaurante evaluando.
@@ -187,7 +212,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   ($300/mes sin implementación). Puerta de entrada natural al ecosistema.
 - **Ángulo:** cuánto cuesta reimprimir menús al año contra $300 al mes. La
   cuenta se hace sola.
-- **Conecta con:** `/servicios/ecosistema/`, artículo 6
+- **Conecta con:** `/productos/`, artículo 6
 
 ### 8. Chatbot de WhatsApp: qué resuelve de verdad y qué no
 
@@ -199,7 +224,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   para que tú atiendas las que valen.
 - **Conecta con:** paquete Negocio Conectado ($19,500)
 
-### 9. Sistema de citas para barberías, clínicas y gimnasios
+### 9. Sistema de citas para barberías, clínicas y gimnasios ⛔ BLOQUEADO
 
 - **Búsqueda:** "sistema de citas para barberia", "agenda de citas online negocio"
 - **Intención:** comercial, nicho claro.
@@ -207,7 +232,7 @@ ninguno en marzo. Google premia la constancia, no el atracón.
   recomiendan mucho entre sí dentro de una misma ciudad.
 - **Ángulo:** el costo real de un hueco en la agenda y de las citas que no
   llegan.
-- **Conecta con:** `/servicios/ecosistema/`
+- **Conecta con:** `/productos/`
 
 ### 10. Cómo saber si tu página web está trabajando
 
@@ -222,7 +247,8 @@ ninguno en marzo. Google premia la constancia, no el atracón.
 - **Búsqueda:** "como contratar desarrollador web", "me estafaron pagina web"
 - **Intención:** informativa con intención de rescate.
 - **Por qué:** captura a quien ya tuvo una mala experiencia y busca cómo no
-  repetirla. Aquí entra tu garantía de por vida sin sonar a venta.
+  repetirla. Aquí entra tu garantía de un año sobre el código propio sin
+  sonar a venta.
 - **Ángulo:** el dominio a nombre de quién, la entrega del código, el
   mantenimiento oculto.
 - **Conecta con:** artículos 1, 2 y 10

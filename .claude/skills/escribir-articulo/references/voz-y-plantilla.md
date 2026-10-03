@@ -153,8 +153,9 @@ algo en vez de decorar.
 
 ## Datos de la empresa que se pueden usar
 
-Verificar siempre contra `src/data/packages.js` y `src/data/ecosystem.js` — esto
-es solo el resumen para saber qué existe:
+Verificar siempre contra `src/data/packages.js` — esto es solo el resumen para
+saber qué existe. (`ecosystem.js` ya no existe: se fue con la sección de
+módulos.)
 
 - **Solo la página web** (es el rango que se publica en el blog): plantilla desde
   $1,500, a medida desde $5,000, y **hasta $22,000** cuando el trabajo de
@@ -168,11 +169,14 @@ es solo el resumen para saber qué existe:
   $20,000–$25,000, Negocio Conectado $19,500, Expansión Comercial $48,000,
   Transformación 360 $75,000, E-commerce $15,000–$18,000 / $35,000–$45,000, y
   Enterprise desde $85,000.
-- **Ecosistema** (productos propios que se dan de alta): **$300 al mes por módulo,
-  sin costo de implementación.** Menú Digital QR, Mi Caja POS, Nuki (lealtad),
-  CRM, Agend-In (citas), NFC Reseñas. La web de plantilla del ecosistema arranca
-  en $1,500 — no confundirla con el paquete Presencia Digital.
-- **Mantenimiento:** $2,500 / $5,500 / $12,000 al mes. El lead es "no vendemos
-  horas de soporte".
+- **Ecosistema:** ~~$300 al mes por módulo~~ **RETIRADO del sitio el 2 oct 2026.**
+  No mencionarlo en ningún artículo nuevo: no hay página a donde enlazar, y por
+  eso los artículos 6, 7 y 9 del plan están bloqueados. El trabajo está en la
+  rama `productos` y vuelve cuando se relance.
+- **Mantenimiento:** $2,500 / $5,500 / $12,000 al mes, con 3 / 8 / ilimitadas
+  horas de soporte al mes. El lead es "no vendemos horas de soporte".
+  Contratando por año sale 10% más barato, y las horas no se acumulan.
 - **Formas de pago:** anticipo y saldo, o por etapas. Nunca todo por adelantado.
-- **Garantía:** los bugs del código propio se corrigen sin costo, de por vida.
+- **Garantía:** los bugs del código propio se corrigen sin costo **durante un
+  año**; después los cubre el plan de mantenimiento. No escribir "de por vida":
+  se cambió el 2 oct 2026 para coincidir con el PDF de ventas.

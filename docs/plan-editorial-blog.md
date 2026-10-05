@@ -188,8 +188,16 @@ orden de publicación salta del 5 al 10.
   (2026-10-03). La guía completa es gratis y se dice de frente que una agencia
   cobra $2,000–$5,000 por el mismo trámite. Lleva la verificación por video
   —que es la que se usa hoy en México— y el negocio con área de servicio para
-  quien trabaja desde su casa. La sección de Juárez va por el inglés de El Paso
-  y por los horarios de turno de maquila. El cierre es la concesión más honesta
+  quien trabaja desde su casa.
+- **Ancla de ESTADO, no de ciudad.** Arrancó como "Chihuahua y Juárez" y se
+  generalizó: el trámite es idéntico en todo México, así que encerrarlo en dos
+  ciudades desperdiciaba la mitad del estado. La sección geográfica cubre ahora
+  los tres escenarios reales: la capital (categorías saturadas), Juárez (el
+  inglés de El Paso y los horarios de maquila) y **las ciudades medianas
+  —Delicias, Cuauhtémoc, Parral, Camargo, Nuevo Casas Grandes— donde el mapa
+  todavía se gana solo**, que es el dato que no escribe nadie. Hasta ahí llega
+  la generalización: subirlo a "México" lo mete a competir con medios
+  nacionales y tira el ancla que es la razón de ser del blog. El cierre es la concesión más honesta
   del blog hasta ahora: **nosotros no aparecemos en el mapa de Juárez y no lo
   vamos a simular**, que es exactamente el argumento de la estrategia de arriba.
   Enlaza a los artículos 1, 2 y 3, y a `/servicios/`.

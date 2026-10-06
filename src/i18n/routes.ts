@@ -14,7 +14,7 @@ export type Locale = (typeof LOCALES)[number];
 
 /** Páginas que existen en los tres idiomas. */
 export type PageKey =
-  | 'home' | 'services' | 'ecosystem' | 'custom'
+  | 'home' | 'services'
   | 'portfolio' | 'about' | 'contact'
   | 'privacy' | 'terms';
 

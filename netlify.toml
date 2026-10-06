@@ -51,3 +51,99 @@
   to = "/blog/por-que-mi-pagina-web-en-chihuahua-no-me-trae-clientes/"
   status = 301
   force = true
+
+# ── La seccion de modulos se retiro ───────────────────────
+#
+# /servicios/ecosistema/ presentaba los modulos que se dan de alta —menu
+# digital, punto de venta, lealtad, CRM, citas—. Se estaba mudando a
+# /productos/, con pagina por producto, y ANTES de publicar esa mudanza se
+# decidio retirar la seccion entera hasta que los productos esten bien
+# establecidos. No tiene sentido vender a $300 al mes algo que todavia se
+# esta definiendo.
+#
+# Asi que la URL vieja se manda al hub de servicios, que es lo mas cercano a
+# lo que buscaba quien llego aqui. El 301 es baratisimo justo ahora: tuvo 8
+# vistas en septiembre y no ranquea para nada, asi que no hay autoridad que
+# arriesgar.
+#
+# CUANDO LOS PRODUCTOS SE RELANCEN estas tres reglas se quitan y la seccion
+# vuelve con su propia URL. El trabajo entero esta en la rama `productos`.
+#
+# Una regla por idioma y sin `:splat`: no es un arbol de rutas, son tres
+# paginas que se fueron. Netlify hace coincidir la ruta con y sin barra final.
+[[redirects]]
+  from = "/servicios/ecosistema/"
+  to = "/servicios/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/en/services/ecosystem/"
+  to = "/en/services/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pt/servicos/ecossistema/"
+  to = "/pt/servicos/"
+  status = 301
+  force = true
+
+# ── A medida subio al hub de servicios ────────────────────
+#
+# /servicios/a-medida/ era la unica hija de /servicios/, y el hub existia para
+# bifurcar entre ella y el ecosistema. Cuando los modulos se fueron a
+# /productos/ la bifurcacion se quedo con una sola rama: dos paginas para el
+# mismo tema, y la de arriba practicamente vacia —titulo, planes y dudas—.
+# El contenido de la hija subio al hub y la hija se fue.
+#
+# Aqui SI habia algo que cuidar: a-medida era la pagina que mejor rendia (16
+# vistas y 1:18 de permanencia en septiembre, contra 8 y 0:37 del ecosistema).
+# El 301 es justamente lo que evita tirarlo: manda sus señales al hub, que
+# recibe mas trafico y ahora tiene su contenido.
+[[redirects]]
+  from = "/servicios/a-medida/"
+  to = "/servicios/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/en/services/custom-built/"
+  to = "/en/services/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pt/servicos/sob-medida/"
+  to = "/pt/servicos/"
+  status = 301
+  force = true
+
+# ── La 404 de cada idioma ─────────────────────────────────
+#
+# Netlify sirve /404.html sola para cualquier ruta que no exista, y esa es la
+# version en español. Las otras dos no se toman solas: la busqueda por
+# directorio de Netlify quiere el archivo literal `en/404.html`, y el build de
+# Astro emite `en/404/index.html` porque publica en formato de directorio.
+#
+# Estas dos reglas lo resuelven sin pelearse con el formato de salida. Un
+# redirect SIN `force` solo entra cuando no existe un archivo en esa ruta, asi
+# que /en/services/ sigue sirviendose normal y solo lo que no existe bajo /en/
+# cae aqui. El `status = 404` es lo que importa: reescribe el contenido sin
+# cambiar la URL y responde con el codigo correcto, asi que un buscador entiende
+# que la pagina no existe en vez de creer que encontro una valida.
+#
+# ESTAS DOS REGLAS VAN AL FINAL DEL ARCHIVO Y AHI SE QUEDAN. Netlify aplica la
+# primera que coincide, y estas coinciden con TODO lo que hay bajo /en/ y /pt/.
+# Puestas antes de un 301, se lo comen: /en/services/custom-built/ caia en el
+# 404 en lugar de redirigir, porque el archivo ya no existe y el comodin
+# respondia primero. Cualquier redirect nuevo va ARRIBA de este bloque.
+[[redirects]]
+  from = "/en/*"
+  to = "/en/404/index.html"
+  status = 404
+
+[[redirects]]
+  from = "/pt/*"
+  to = "/pt/404/index.html"
+  status = 404

@@ -1,193 +1,191 @@
 ---
 periodo_inicio: 2026-09-01
-periodo_fin: 2026-09-18
-generado: 2026-09-18
+periodo_fin: 2026-09-23
+generado: 2026-09-24
 comparado_con: ninguno
 metricas:
-  sesiones: 78.0
-  usuarios: 51.0
-  vistas: 302.0
-  eventos: 476.0
-  eventos_clave: 0
-  leads: 2.0
-  tasa_interaccion_pct: 71.8
-  conversion_sesion_lead_pct: 2.56
+  sesiones: 97.0
+  usuarios: 59.0
+  vistas: 393.0
+  eventos: 628.0
+  eventos_clave: 2.0
+  leads: 5.0
+  leads_reales: 0  # los 5 son pruebas propias, confirmado 2026-09-24
+  tasa_interaccion_pct: 75.3
+  conversion_sesion_lead_pct: 5.15  # sobre leads medidos; sobre leads reales es 0
 ---
 
-# Analitica — 2026-09-01 a 2026-09-18
+# Analitica — 2026-09-01 a 2026-09-23
 
-**Periodo parcial: del 1 al 18 de septiembre.** El mes no ha cerrado, así que
+**Periodo parcial: del 1 al 23 de septiembre.** El mes no ha cerrado, asi que
 estas cifras no son comparables con las de un mes completo.
 
-78 sesiones y 51 personas. De esas 78 visitas salieron **2 contactos, y ninguno
-cerró**: la web está trayendo gente pero todavía no clientes. Con estos números
-no hay un problema de tráfico que arreglar — hay un problema de qué pasa cuando
-la gente llega, y sobre todo de que **el tráfico no se puede atribuir**: el 56 %
-de las visitas entran como "Direct", que es la forma que tiene Analytics de decir
-"no sé qué las trajo".
+97 sesiones y 59 personas. **Contactos reales: cero.** Los 5 eventos
+`generate_lead` del mes son pruebas propias — confirmado el 24 de septiembre. Todo lo
+que diga "5 contactos" mas abajo hay que leerlo como "5 pruebas": las tablas salen de
+GA4 tal cual, y GA4 no sabe distinguirlas.
 
-Todo el tráfico es orgánico o propio: **no hay ni ha habido inversión
-publicitaria**, así que estas 78 sesiones son lo que el sitio produce por sí solo.
+Ese es el dato del mes y no hay forma de suavizarlo: **de 97 sesiones, ninguna termino
+en alguien escribiendo**. No es un problema de medicion (el evento llega, se dispara y
+esta marcado como clave) ni de trafico (97 sesiones es poco, pero no cero). Es que la
+web no esta consiguiendo que nadie de el paso.
 
-No hay periodo anterior con el que comparar: éste es el primer informe. Agosto
-existe en GA4 (9 sesiones, 0 contactos) pero es un mes tan pequeño que compararlo
-no diría nada.
+Lo que si quedo listo este mes es la fontaneria: `generate_lead` ya esta marcado como
+evento clave y las dimensiones `method`/`where` ya funcionan. Sirvio para comprobar que
+la tuberia mide bien; el mes que viene, cuando entre un contacto de verdad, se va a
+saber por donde entro.
 
-**Lo único que conviene hacer antes del próximo informe: etiquetar con UTM los
-enlaces que se mandan por WhatsApp y los de Instagram.** Mientras más de la mitad
-del tráfico sea inatribuible, cualquier conclusión sobre qué funciona es una
-corazonada.
+Lo unico que conviene hacer antes del proximo informe: **desplegar a produccion lo que
+lleva desde el 19 de septiembre parado en la rama `astro`** — ahi va el CTA flotante de
+WhatsApp, que es lo unico pendiente que ataca directamente el cero. Y hacerlo con una
+redireccion del articulo que cambio de URL (seccion 8), porque tal como esta hoy el
+despliegue rompe la unica pagina de blog con trafico. Junto con eso, **excluir el
+trafico propio en GA4**, para que octubre no vuelva a contar pruebas como contactos.
 
 ## 1. Las cifras
 
 | Metrica | Este periodo | Anterior | Variacion |
 |---|---|---|---|
-| Sesiones | 78 | — | — |
-| Usuarios | 51 | — | — |
-| Vistas de pagina | 302 | — | — |
-| Eventos | 476 | — | — |
-| Eventos clave | 0 | — | — |
-| Leads (generate_lead) | 2 | — | — |
-| Tasa de interaccion % | 71.80 | — | — |
-| Conversion sesion->lead % | 2.56 | — | — |
+| Sesiones | 97 | — | — |
+| Usuarios | 59 | — | — |
+| Vistas de pagina | 393 | — | — |
+| Eventos | 628 | — | — |
+| Eventos clave | 2 | — | — |
+| Leads (generate_lead) | 5 | — | — |
+| Tasa de interaccion % | 75.30 | — | — |
+| Conversion sesion->lead % | 5.15 | — | — |
 
 
 ## 2. De donde llega la gente
 
 | Canal | Sesiones | % del total |
 |---|---|---|
-| Direct | 44 | 56.4 % |
-| Organic Search | 17 | 21.8 % |
-| Organic Social | 10 | 12.8 % |
-| Paid Search | 3 | 3.8 % |
-| Unassigned | 3 | 3.8 % |
-| Cross-network | 1 | 1.3 % |
+| Direct | 52 | 53.6 % |
+| Organic Search | 24 | 24.7 % |
+| Organic Social | 14 | 14.4 % |
+| Unassigned | 4 | 4.1 % |
+| Paid Search | 3 | 3.1 % |
 
-**Ese 56 % de "Direct" casi con seguridad no es gente tecleando geckcodex.com.**
-Es el cajón donde Analytics mete lo que no puede identificar: clics desde
-WhatsApp, desde apps, desde enlaces sin etiquetar. En un negocio que se mueve
-mandando su enlace por mensaje esto es lo esperable — pero significa que de 44 de
-las 78 visitas no se sabe qué las originó.
+**El 53.6 % entra como "Direct", y eso no es marca fuerte: es medicion ciega.** Direct
+es lo que Analytics escribe cuando no sabe que trajo la visita — clics desde WhatsApp,
+desde apps que no pasan referente y enlaces sin etiquetar. De esas 52 sesiones no se
+puede decir nada mas.
 
-Lo bueno: **Google ya aporta 17 sesiones orgánicas (22 %)**, que para un sitio que
-en agosto estaba prácticamente sin indexar es señal real de que la indexación se
-destrabó.
+La buena noticia es que **los UTM empiezan a funcionar**: aparece `instagram / bio`
+(1 sesion), que es exactamente el enlace del perfil que se pego el 18. Pero al lado esta
+`ig / social` con 8 sesiones: **Instagram esta entrando por dos nombres distintos** y
+GA4 no los va a juntar nunca. Hay que dejar un solo nombre, `instagram`, en todos los
+enlaces; los de `analiticas/enlaces-utm.md` ya lo usan.
 
-Hay **3 sesiones etiquetadas como `google / cpc`, y no corresponden a ninguna
-campaña**: nunca se ha contratado Google Ads. En GA4 esas tres llegan con campaña
-`(not set)`, cuando una campaña real de Ads traería su nombre por el etiquetado
-automático. Lo más probable es que alguien entrara con una URL que llevaba un
-parámetro `gclid` pegado de otro sitio, que es lo que hace a GA4 clasificar la
-visita como pago.
+`google / organic` (24 sesiones, 24.7 %) es el segundo canal y es el unico que no
+depende de que alguien mande un enlace a mano.
 
-**No hay gasto publicitario que revisar ni campaña que optimizar.** Con 3
-sesiones tampoco vale la pena investigar más: si el próximo mes vuelve a
-aparecer y crece, entonces sí conviene mirarlo.
+**Las 3 sesiones de `google / cpc` no son publicidad.** Nunca se ha contratado Ads: son
+visitas que llegaron con un `gclid` pegado en la URL. No hay ningun gasto que revisar.
 
-Instagram aporta 7 sesiones (`ig / social`) y Facebook 3 entre sus dos entradas.
-
-**Qué hacer:** poner UTM en todo enlace que salga a mano. Para WhatsApp,
-`https://geckcodex.com/?utm_source=whatsapp&utm_medium=chat`; para la bio de
-Instagram, `utm_source=instagram&utm_medium=bio`. Es gratis, y el próximo informe
-ya separa lo que hoy es un bloque opaco.
+Las 4 sesiones "Unassigned" son ruido de la atribucion de GA4, no un canal.
 
 
 ## 3. Que paginas ven
 
 | Pagina | Vistas | Usuarios | Tiempo medio |
 |---|---|---|---|
-| / | 135 | 43 | 0:28 |
-| /portafolio/ | 31 | 10 | 0:37 |
-| /blog/ | 30 | 4 | 1:39 |
-| /nosotros/ | 26 | 7 | 0:42 |
-| /servicios/ | 23 | 4 | 0:52 |
-| /contacto/ | 11 | 5 | 0:06 |
-| /servicios/a-medida/ | 10 | 3 | 0:55 |
+| / | 169 | 48 | 0:28 |
+| /portafolio/ | 43 | 12 | 1:39 |
+| /nosotros/ | 36 | 8 | 1:19 |
+| /blog/ | 34 | 6 | 1:20 |
+| /servicios/ | 31 | 7 | 1:23 |
+| /contacto/ | 23 | 8 | 0:44 |
+| /servicios/a-medida/ | 16 | 5 | 1:18 |
+| /blog/por-que-mi-pagina-web-no-me-trae-clientes/ | 8 | 3 | 1:34 |
 | /servicios/ecosistema/ | 8 | 2 | 0:37 |
-| /blog/por-que-mi-pagina-web-no-me-trae-clientes/ | 6 | 2 | 0:16 |
 | /en/ | 6 | 2 | 0:12 |
-| /blog/cuanto-cuesta-una-pagina-web-en-chihuahua/ | 4 | 2 | 0:03 |
+| /blog/cuanto-cuesta-una-pagina-web-en-chihuahua/ | 5 | 2 | 0:03 |
 | /en/portfolio/ | 4 | 1 | 0:09 |
 
-Aquí está el hallazgo del mes.
+**El recorrido se corta antes de contacto.** 48 personas vieron la portada; 8 llegaron
+a `/contacto/`. Una de cada seis. Esa es la fuga principal, y no se arregla con mas
+trafico.
 
-**`/contacto/` retiene 6 segundos.** Es la página con menos permanencia de todo el
-sitio, y la única cuyo propósito es que alguien haga algo. Seis segundos es el
-tiempo de mirar y salir. Llegaron 5 personas y 2 escribieron, así que no es que la
-página no sirva — pero de todas, es la que más desentona: la home retiene 28 s y
-`/servicios/` 52 s.
+Lo que si funciona es la profundidad: `/portafolio/` retiene 1:39 de media,
+`/servicios/` 1:23 y `/nosotros/` 1:19. Quien pasa de la portada lee de verdad. La
+portada, en cambio, se despacha en 28 segundos — es un paso, no un destino.
 
-**El blog es lo que más engancha.** `/blog/` retiene 99 segundos, casi el doble
-que cualquier otra página, aunque solo con 4 personas. Los artículos sueltos, en
-cambio, retienen poco (16 s y 3 s). Lectura probable: el índice del blog gusta y
-los artículos aún no retienen, o son demasiado nuevos para tener lectores llegados
-de Google.
+**El blog ya no es decorativo**: `/blog/` suma 34 vistas y el articulo de "por que mi
+pagina web no me trae clientes" 8 vistas con 1:34 de lectura. El de precios
+(`/cuanto-cuesta-una-pagina-web-en-chihuahua/`) tiene 5 vistas pero **3 segundos de
+media**: la gente entra y se va. Con 2 usuarios no es concluyente, pero conviene mirarlo
+el mes que viene: si el patron se repite, el articulo no esta dando el precio arriba,
+que es lo unico que esa busqueda quiere.
 
-**El recorrido hacia contacto se estrecha mucho:** 43 personas en la home, 4 en
-`/servicios/`, 5 en `/contacto/`. De cada diez que entran, una llega a servicios.
-Eso apunta a que la home no está empujando hacia el catálogo.
-
-Las páginas en inglés (`/en/`, `/en/portfolio/`) tienen 2 usuarios: existen y se
-visitan, poco.
+`/servicios/a-medida/` (16 vistas, 1:18) rinde mejor que `/servicios/ecosistema/` (8
+vistas, 0:37). Y las versiones en ingles y portugues juntas no llegan a 15 vistas, con
+tiempos de 0 a 12 segundos: hoy no aportan y no merecen inversion.
 
 
 ## 4. Que hacen
 
 | Evento | Recuento | Eventos clave |
 |---|---|---|
-| page_view | 302 | 0 |
-| session_start | 75 | 0 |
-| first_visit | 41 | 0 |
-| scroll | 30 | 0 |
-| user_engagement | 22 | 0 |
-| click | 4 | 0 |
-| generate_lead | 2 | 0 |
+| page_view | 393 | 0 |
+| session_start | 93 | 0 |
+| first_visit | 47 | 0 |
+| scroll | 43 | 0 |
+| user_engagement | 37 | 0 |
+| click | 10 | 0 |
+| generate_lead | 5 | 2 |
 
 
 ## 5. El embudo
 
 | Escalon | Cantidad | % de las sesiones |
 |---|---|---|
-| Sesiones | 78 | 100.0 % |
-| Sesiones con interaccion | 56 | 71.8 % |
-| Contactos (generate_lead) | 2 | 2.6 % |
+| Sesiones | 97 | 100.0 % |
+| Sesiones con interaccion | 73 | 75.3 % |
+| Contactos (generate_lead) | 5 | 5.2 % |
 
 
-De 78 sesiones, 56 tuvieron interacción real (72 %) y **2 terminaron en un
-contacto: el 2,6 %**.
+La tabla de arriba dice 5 contactos porque la calcula GA4. **El escalon real es cero**:
+los 5 son pruebas propias. De 97 sesiones y 73 con interaccion, **nadie de fuera
+escribio**.
 
-Para un sitio de servicios ese 2,6 % no es malo en sí. El problema es otro: **son
-dos personas**. Con dos, cualquier lectura porcentual es ruido — si el mes que
-viene son cuatro, no se habrá "duplicado la conversión", habrá habido dos
-contactos más. Conviene seguir esto en números absolutos durante varios meses
-antes de sacar conclusiones de tendencia.
+Los dos escalones que si son reales y si informan:
 
-**No se sabe por dónde llegaron esos 2 contactos.** Las dimensiones `method` y
-`where` se crearon el 18 de septiembre y GA4 no las aplica hacia atrás, así que
-aparecen como `(not set)`. Desde ahora sí se registran: el próximo informe podrá
-decir si los contactos vienen de WhatsApp o del formulario, y desde qué sección.
+- **97 sesiones -> 73 con interaccion (75.3 %).** La gente que entra no rebota. El
+  contenido no espanta.
+- **48 personas en la portada -> 8 en `/contacto/`.** Una de cada seis hace el viaje. Y
+  de esas 8, ninguna escribio.
 
-**Ninguno de los 2 contactos cerró.** Ese es el dato confirmado a mano, y ninguna
-herramienta puede medirlo: GA4 sabe que alguien pulsó WhatsApp, no qué pasó en la
-conversación.
+Ese segundo dato es el que hay que atacar, y da dos lecturas posibles: o llega poca
+gente a contacto (una de cada seis), o la que llega no encuentra motivo para escribir.
+Con 8 personas no se puede distinguir cual de las dos pesa mas — hacen falta mas meses o
+mas trafico. Mientras tanto, lo barato es reducir el viaje: el CTA flotante de WhatsApp,
+que sigue sin desplegar, pone el contacto en todas las paginas en vez de exigir que
+alguien navegue hasta `/contacto/`.
 
-El embudo completo del periodo queda así:
+Solo 10 eventos `click` y 43 `scroll` contra 393 vistas. Es poca interaccion medida, y
+en parte es porque el sitio casi no tiene enlaces salientes que GA4 cuente sola.
 
-| Escalón | Cantidad |
-|---|---|
-| Sesiones | 78 |
-| Con interacción | 56 |
-| Contactos | 2 |
-| Propuestas enviadas | (sin dato) |
-| Clientes | **0** |
-| Ingresos atribuibles a la web | **0 MXN** |
+**Cero clientes y cero facturacion desde la web este mes**, porque no hubo ningun
+contacto real que pudiera convertirse en uno.
 
-Dicho sin rodeos: **en lo que va de septiembre la web no ha producido ingresos.**
-No es motivo de alarma con 78 sesiones —el volumen es demasiado bajo para esperar
-cierres— pero fija el punto de partida. Para el próximo informe conviene anotar de
-cada contacto: de dónde vino, qué pidió y en qué quedó. Son tres campos, y son los
-que convierten esta sección en información de negocio en vez de una cuenta de
-clics.
+El detalle de los 5 eventos, para que quede en el historico por que se descartan:
+
+| Fecha | Ciudad | Dispositivo | Fuente | method / where |
+|---|---|---|---|---|
+| 17 sep | Chihuahua | movil | `ig / social` | (not set) x2 |
+| 18 sep | Chihuahua | escritorio | `linkedin.com / referral` | email + whatsapp, `contact` |
+| 21 sep | Jose Mariano Jimenez | movil | `google / organic` | whatsapp, `contact` |
+
+Los dos del 18 salen de la misma sesion y por dos vias distintas — la firma tipica de
+una prueba, no de una persona. Los otros tres los confirmo el usuario.
+
+Lo que si dice la prueba: el evento llega con su `method` y su `where` correctos desde
+`/contacto/`. La tuberia funciona; lo que falta es que alguien de fuera la use.
+
+Con el catalogo actual (`src/data/packages.js`: desde $5,000 la web sola hasta $75,000
+el paquete 360), **un solo contacto que cierre vale mas que duplicar las sesiones**. Ese
+sigue siendo el numero a vigilar, y hoy esta en cero.
 
 
 ## 6. Busqueda en Google
@@ -195,72 +193,101 @@ clics.
 
 **Indexacion al 2026-09-13:** 11 indexadas, 19 sin indexar.
 
-**No hay datos de consultas este periodo:** falta exportar el informe de
-Rendimiento de Search Console (Rendimiento → Resultados de búsqueda → Exportar) y
-dejarlo en `analiticas/`. Sin eso no se puede decir qué se busca para llegar al
-sitio, ni separar las búsquedas de marca de las que no lo son.
+**Falta el dato principal: no hay exportacion de rendimiento de Search Console.** En
+`analiticas/` solo estan los CSV de indexacion, asi que **este informe no puede decir
+que busquedas traen gente, cuales son de marca y cuales no, ni el CTR de ninguna
+pagina**. No es que sea cero: es que no esta medido. Para el informe de octubre hay que
+descargar de Search Console -> Rendimiento -> pestanas Consultas y Paginas (ultimos 28
+dias) y dejar los CSV en `analiticas/`.
 
-Lo que sí hay es la cobertura de indexación, y está a medias: **11 páginas
-indexadas y 19 sin indexar** al 13 de septiembre, con 18 en "Descubierta:
-actualmente sin indexar". Google conoce esas páginas y ha decidido no incluirlas
-todavía, cosa habitual en sitios jóvenes con pocos enlaces entrantes.
+Lo que si dicen los CSV que hay:
 
-Que 17 sesiones ya lleguen por orgánico con solo 11 páginas indexadas sugiere que
-el problema no es técnico sino de antigüedad y autoridad. Conviene volver a
-mirarlo en el informe de octubre antes de tocar nada.
+- **57 impresiones del 1 al 13 de septiembre.** Es muy poco. El unico pico, 22
+  impresiones el 10 de septiembre, no tiene causa identificada en el repo.
+- **Al 13 de septiembre: 11 paginas indexadas y 19 sin indexar.** De esas, 18 figuran
+  como "Descubierta: actualmente sin indexar" — Google las conoce y ha decidido no
+  rastrearlas todavia. Es lo normal en un sitio nuevo con poca autoridad, y se corrige
+  publicando con constancia y enlazando internamente, no pidiendo indexacion una por
+  una.
+
+Ese 11 contra 19 explica las 24 sesiones de organico mejor que cualquier otra cosa: la
+mayor parte del sitio todavia no compite en Google porque no esta en el indice.
 
 
 ## 7. Estado de la medicion
 
-**Corregido hoy, 18 de septiembre:**
+**Las tres comprobaciones del diagnostico, sobre el codigo de hoy:**
 
-- `generate_lead` **no estaba marcado como evento clave**. Por eso este informe
-  muestra `eventos_clave: 0` pese a haber 2 contactos reales: el evento llegaba,
-  GA4 no lo contaba como conversión. Ya está marcado, con conteo *una vez por
-  sesión*. **Ese 0 es histórico y no se va a rellenar hacia atrás.**
-- Las dimensiones `method` y `where` **no existían**, así que GA4 descartaba esos
-  parámetros aunque `src/data/track.js` los enviaba en cada evento. Ya creadas.
-- La propiedad traía de fábrica los eventos clave `purchase`, `close_convert_lead`
-  y `qualify_lead`, que **el sitio no emite nunca**. Estaban contando cero de
-  forma permanente. Se dejaron como estaban; no estorban.
+1. **`generate_lead` ya es evento clave.** 2 de 5 aparecen marcados. GA4 no cuenta hacia
+   atras: los 3 anteriores al interruptor no se recuperan. A partir de octubre la cifra
+   de eventos clave y la de leads deberian coincidir; si no coinciden, algo se
+   desconfiguro.
+2. **Todos los CTA de contacto llaman a `trackLead`.** Comprobado uno por uno:
+   `Contact.jsx` (whatsapp, email, form), `Footer.jsx` (whatsapp, email),
+   `ServicesSection.jsx` (whatsapp) y `FloatingWhatsApp.jsx` (whatsapp, 'float'). No
+   queda ningun `wa.me` ni `mailto:` suelto fuera de los textos legales. El agujero que
+   motivo sacar `trackLead` a `src/data/track.js` no ha vuelto.
+3. **Los valores de `where` cuadran a medias.** En GA4 solo aparece `contact`. No
+   aparecen `footer`, `services` ni `float`, y la explicacion es distinta para cada uno:
+   `float` **no existe en produccion** — `FloatingWhatsApp.jsx` esta solo en la rama
+   `astro`, sin desplegar. `footer` y `services` si estan publicados y miden bien;
+   simplemente nadie escribio desde ahi este mes.
 
-**Pendiente — CTAs sin medir:** solo llaman a `trackLead()` el pie, `/contacto/` y
-`ServicesSection`. Otros enlaces de WhatsApp del sitio abren el chat sin registrar
-nada, así que hay contactos que ocurren y no aparecen en ningún informe. Vale la
-pena repasarlos antes de sacar conclusiones sobre qué sección convierte.
+**Agujeros abiertos:**
 
-**Nota para cuando haya Google Ads:** hoy no hay campañas y las variables
-`PUBLIC_GOOGLE_ADS_ID` y `PUBLIC_ADS_CONVERSION_LABEL` están vacías, que es lo
-correcto. El código de `Analytics.astro` ya está preparado para enviar la
-conversión en cuanto se rellenen, así que el día que se contrate Ads eso es lo
-primero que hay que hacer: una campaña que no recibe conversiones optimiza a
-ciegas.
+- **El trafico propio no esta excluido.** Es el agujero mas caro ahora mismo: las 5
+  pruebas de este mes entraron al informe como contactos y, si no se filtra, el mes que
+  viene vuelve a pasar. En GA4: Administrar -> Flujos de datos -> el flujo web ->
+  Configurar los ajustes de la etiqueta -> Mostrar todo -> Definir trafico interno, con
+  la IP de casa y la de la oficina; despues Administrar -> Filtros de datos, poner
+  "Trafico interno" en Activo. Ojo con el movil en datos: ahi la IP cambia, asi que las
+  pruebas desde el telefono conviene hacerlas en modo DebugView.
+- No se mide nada entre entrar y contactar: ni clic en un paquete, ni apertura del modal
+  de servicios, ni scroll hasta precios. Cuando el embudo se corta —como se corta hoy
+  entre portada y contacto— no hay forma de saber en que punto.
+- Instagram llega con dos nombres (`ig` y `instagram`), lo que parte la cifra.
+- Search Console no tiene automatizacion: depende de que alguien baje los CSV a mano.
+
+*No se toco nada de esto: el informe analiza, los arreglos van aparte para que se
+revisen.*
 
 
 ## 8. Que hacer ahora
 
-Por orden de lo que más mueve la aguja:
+1. **Desplegar la rama `astro` a produccion (PR a `main`), con redireccion.** Son dos
+   commits parados desde el 19 de septiembre: CTA flotante de WhatsApp, telefono en el
+   formulario y cierre del portafolio. **Antes de mezclar hay que anadir una redireccion
+   301 de `/blog/por-que-mi-pagina-web-no-me-trae-clientes/` a
+   `/blog/por-que-mi-pagina-web-en-chihuahua-no-me-trae-clientes/`**: el articulo cambio
+   de slug en `astro`, en produccion sigue el viejo y hoy es la unica pagina de blog con
+   trafico (8 vistas). Sin redireccion, al desplegar se convierte en un 404 y se pierde
+   ademas lo que Google ya tenia indexado. *Que deberia moverse:* aparicion de
+   `where: float` en la tabla de leads, y mas de 5 contactos en octubre.
 
-**1. Etiquetar con UTM los enlaces de WhatsApp e Instagram.** Hoy el 56 % del
-tráfico es inatribuible. Coste: cero. Debería mover el reparto de la sección 2,
-con "Direct" bajando y apareciendo fuentes reales.
+2. **Unificar el nombre de Instagram a `instagram` en todos los enlaces.** Hoy entran 8
+   sesiones como `ig / social` y 1 como `instagram / bio`. Usar siempre los enlaces de
+   `analiticas/enlaces-utm.md` y revisar donde quedo pegado el `ig` (link in bio,
+   historias destacadas, publicaciones). *Que deberia moverse:* una sola fila de
+   Instagram en la tabla de fuentes, y menos sesiones en Direct.
 
-**2. Revisar `/contacto/`: 6 segundos de permanencia.** Es la página más
-importante del sitio y la que menos retiene. Mirar qué se ve sin hacer scroll: si
-el formulario o el botón de WhatsApp quedan por debajo, subirlos. Debería mover la
-permanencia de esa página en la sección 3, y con suerte los contactos.
+3. **Descargar los CSV de rendimiento de Search Console** (Consultas y Paginas, ultimos
+   28 dias) y dejarlos en `analiticas/`. Es el unico bloque del informe que hoy esta
+   vacio, y es el que dice si el organico viene de gente que busca "geck codex" o de
+   gente que busca lo que vendemos. *Que deberia moverse:* la seccion 6 deja de decir
+   "no esta medido".
 
-**3. Empujar de la home hacia `/servicios/`.** 43 personas en la home, 4 en
-servicios. El catálogo es donde están los precios y los paquetes, y casi nadie
-llega. Debería mover los usuarios de `/servicios/` en la sección 3.
+4. **Publicar los dos articulos que estan escritos y sin commitear**
+   (`cuando-dejar-excel-por-un-sistema-propio-en-ciudad-juarez.md` y
+   `necesito-una-app-o-una-pagina-web.md`). El blog ya demuestra que retiene —1:34 de
+   lectura media en el articulo que funciona— y con 19 paginas sin indexar lo que
+   necesita el sitio es senal de actividad. Ademas apuntan a Ciudad Juarez, de donde ya
+   llegan 14 sesiones sin haber publicado nada dirigido ahi. *Que deberia moverse:*
+   paginas indexadas de 11 hacia arriba, e impresiones por encima de 57 al mes.
 
-**4. Exportar Search Console cada mes.** Sin las consultas, este informe está
-ciego a la mitad del canal orgánico. Son dos clics y una carpeta.
-
-**Nota de seguimiento:** el artículo `por-que-mi-pagina-web-no-me-trae-clientes`
-cambió de URL y tiene visitas en la antigua. El redirect 301 ya está escrito en
-`netlify.toml` pero **todavía sin desplegar**: hasta que se suba, esas visitas dan
-404.
+5. **Excluir el trafico propio en GA4** (ruta exacta en la seccion 7). Cuesta cinco
+   minutos y es lo que separa "la web genero 5 contactos" de "la web genero cero", que
+   son dos decisiones de negocio opuestas. *Que deberia moverse:* que el proximo
+   `generate_lead` que aparezca sea de alguien de fuera, sin tener que preguntarlo.
 
 
 ---

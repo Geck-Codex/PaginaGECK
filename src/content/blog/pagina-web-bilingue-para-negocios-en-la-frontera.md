@@ -151,7 +151,7 @@ Las direcciones que ya tenías indexadas tienen que cambiar de forma para que qu
 
 ## Cómo lo hacemos nosotros
 
-Este sitio que estás leyendo corre en tres idiomas —español, inglés y portugués— con dirección propia por idioma, la palabra del idioma en la dirección y las etiquetas que las enlazan entre sí. No es un ejemplo de folleto: es la misma estructura que montamos para un cliente, y la puedes verificar ahora cambiando el idioma en el menú y mirando la barra de direcciones. Los sitios a medida, con sus precios, están en [desarrollo a medida](/servicios/a-medida/). Y si el error viene del código que escribimos nosotros, lo corregimos sin costo, siempre.
+Este sitio que estás leyendo corre en tres idiomas —español, inglés y portugués— con dirección propia por idioma, la palabra del idioma en la dirección y las etiquetas que las enlazan entre sí. No es un ejemplo de folleto: es la misma estructura que montamos para un cliente, y la puedes verificar ahora cambiando el idioma en el menú y mirando la barra de direcciones. Los sitios a medida, con sus precios, están en [desarrollo a medida](/servicios/). Y si el error viene del código que escribimos nosotros, lo corregimos sin costo, siempre.
 
 Sobre la distancia, la neta: estamos en Hidalgo del Parral, Chihuahua. Si estás en Juárez o en Ojinaga, vamos a donde estés sin cobrarte el viaje, porque un trato se cierra en persona. Si estás en otra frontera —Tijuana, Nogales, Reynosa—, también viajamos, pero hay que acomodarlo con tiempo: preferimos decirlo antes que prometer algo que luego se negocia. El día a día del proyecto corre por videollamada y WhatsApp, que para eso es más rápido para los dos.
 

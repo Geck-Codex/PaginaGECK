@@ -34,7 +34,7 @@ import { TEAM } from '../../data/team.js';
  * pasan de area en area), que es donde se siente, y no por el nuestro.
  *
  * Las tres afirmaciones de abajo son verificables y estan en otras paginas del
- * sitio: el codigo se entrega, la garantia es de por vida, y se viaja dentro de
+ * sitio: el codigo se entrega, la garantia es de un año, y se viaja dentro de
  * Chihuahua. Nada de "calidad" ni "compromiso".
  *
  * Los datos salen de TEAM, no de una lista propia: si entra o sale alguien, la

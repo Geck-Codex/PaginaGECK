@@ -689,12 +689,13 @@ export default function PortfolioSection({ lang }) {
           margin: 0 auto;
           padding: 7rem 1.4rem 2rem;
         }
+        /* Sin pildora: la ceja es texto y no una etiqueta. Ver el mismo
+           razonamiento en .paths__eyebrow de servicios-paths.css. */
         .screw__pretitle {
           display: inline-block;
           font-size: 0.68rem; font-weight: 700; letter-spacing: 0.3em;
           text-transform: uppercase; color: var(--accent-text);
-          padding: 0.35rem 1.2rem; border: 1px solid var(--sc-gb);
-          border-radius: 100px; margin-bottom: 1.5rem; background: rgba(88,74,28,0.08);
+          margin-bottom: 1.5rem;
         }
         .screw__h1 {
           font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1.06;

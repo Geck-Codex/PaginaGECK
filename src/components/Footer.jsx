@@ -144,16 +144,13 @@ export default function GeckFooter({ lang, pageKey }) {
             <p className="footer-col__title">{t.footer.navTitle}</p>
             <ul className="footer-list">
               <li><a href={localizedPath("home", lang)}>{t.nav.home}</a></li>
+              {/* Sin sublista: /servicios/a-medida/ subió al hub y la sección
+                  de módulos se retiró hasta que los productos estén listos.
+                  Cuando vuelva, su enlace va AQUÍ y no solo en el Navbar: el
+                  menú del Navbar se pinta cuando el usuario lo abre, así que
+                  sus enlaces nunca llegan al HTML inicial, y este es el enlace
+                  interno que cada página del idioma le da a una sección. */}
               <li><a href={localizedPath("services", lang)}>{t.nav.services}</a></li>
-              {/* Los dos caminos de servicios, sangrados bajo su padre.
-                  Estaban a dos clics de la home —solo se llegaba desde dentro
-                  de /servicios/— y en las ramas /en/ y /pt/ eso bastó para que
-                  Google no los rastreara nunca: Search Console los reportaba
-                  como "Descubierta: actualmente sin indexar" con último rastreo
-                  N/D. Desde el pie los enlaza CADA página del idioma, que es
-                  una señal mucho más fuerte que un enlace único desde la home. */}
-              <li className="footer-list__sub"><a href={localizedPath("ecosystem", lang)}>{t.services.fork.eco.k}</a></li>
-              <li className="footer-list__sub"><a href={localizedPath("custom", lang)}>{t.services.fork.custom.k}</a></li>
               <li><a href={localizedPath("portfolio", lang)}>{t.nav.portfolio}</a></li>
               <li><a href={localizedPath("about", lang)}>{t.nav.about}</a></li>
               {/* El blog va SIN localizedPath porque solo existe en español y no

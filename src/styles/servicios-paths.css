@@ -25,9 +25,15 @@
 
 /* ── Cabeceras ── */
 .paths__head { text-align: center; max-width: 720px; margin: 0 auto; }
+
+/* La ceja es TEXTO, no una etiqueta: sin contorno, sin fondo y sin esquinas
+   redondeadas. La pildora la encerraba en una capsula que no significa nada
+   —no es un filtro ni un estado, no se pulsa— y que ademas la separaba del
+   titulo al que acompaña. El resto de las cejas del sitio ya se escriben asi;
+   esta era la excepcion. El tamaño y el espaciado de letra son lo que la
+   distinguen, que es suficiente. */
 .paths__eyebrow {
-  display: inline-block; padding: 0.4rem 1.1rem; border-radius: 50px;
-  border: 1px solid var(--gold-border, rgba(88, 74, 28, 0.35));
+  display: inline-block; margin-bottom: 0.9rem;
   color: var(--accent-text); font-size: 0.64rem; font-weight: 800;
   letter-spacing: 0.18em; text-transform: uppercase;
 }
@@ -75,6 +81,23 @@
 .paths__plan-feats { margin: 1.1rem 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
 .paths__plan-feats li { font-size: 0.86rem; color: var(--text-muted); display: flex; gap: 0.6rem; }
 .paths__plan-feats li::before { content: "·"; color: var(--accent); flex: none; }
+
+/* Las horas: es lo que de verdad se compra, asi que se lee antes que la lista
+   y con mas peso que ella. Separadas por un filete para que la ficha se parta
+   en "cuanto cuesta" / "que incluye" / "para quien es". */
+.paths__plan-hours {
+  margin: 1rem 0 0; padding-top: 0.9rem; border-top: 1px solid var(--border);
+  font-size: 0.92rem; font-weight: 600; color: var(--text);
+}
+
+/* El "para quien" cierra la ficha, empujado al fondo para que las tres
+   tarjetas lo alineen aunque tengan distinto numero de puntos. */
+.paths__plan-target {
+  margin: 1.1rem 0 0; padding-top: 0.9rem; border-top: 1px solid var(--border);
+  font-size: 0.82rem; line-height: 1.5; color: var(--text-muted); font-style: italic;
+}
+.paths__plan { display: flex; flex-direction: column; }
+.paths__plan-target { margin-top: auto; }
 
 /* ── Planes en movil: se deslizan, no se apilan ──
  *

@@ -92,7 +92,7 @@ Aquí es donde la mayoría se lleva la sorpresa. El desarrollo es un pago; tener
 
 Nuestros planes de mantenimiento van de **$2,500 a $12,000 al mes** según qué tan crítico sea el sistema. Y lo decimos como lo pensamos: no vendemos horas de soporte, vendemos que el sistema siga en pie.
 
-Un detalle que nos separa del resto: **los errores del código que nosotros escribimos se corrigen sin costo, de por vida.** No un año de garantía. Siempre. Si lo programamos mal, es nuestro problema, no tuyo ni de tu presupuesto.
+Un detalle que conviene preguntarle a cualquiera que te cotice: **los errores del código que nosotros escribimos se corrigen sin costo durante un año.** Si lo programamos mal, es nuestro problema, no tuyo ni de tu presupuesto. Hay quien no ofrece ninguna garantía y te cobra por arreglar su propio error.
 
 ## Cuando el precio es demasiado bajo
 
@@ -124,7 +124,7 @@ La quinta es la que más gente olvida preguntar y la que más caro sale.
 
 Dos modelos, según lo que necesites.
 
-Lo que se construye para ti —tu sitio, tu app, tu chatbot— es [desarrollo a medida](/servicios/a-medida/): se cobra una vez, y **el código es tuyo cuando liquidas**. Nunca pedimos todo por adelantado: se puede partir en anticipo y saldo, o por etapas.
+Lo que se construye para ti —tu sitio, tu app, tu chatbot— es [desarrollo a medida](/servicios/): se cobra una vez, y **el código es tuyo cuando liquidas**. Nunca pedimos todo por adelantado: se puede partir en anticipo y saldo, o por etapas.
 
 Lo que ya tenemos hecho y solo se da de alta —menú digital con QR, punto de venta, programa de lealtad, agenda de citas, CRM— va por suscripción: **$300 al mes por módulo, sin costo de implementación**. Tres módulos son $900 al mes. Lo pusimos todo al mismo precio para que la cuenta la puedas hacer tú sin preguntarnos.
 

@@ -35,6 +35,30 @@ interface Props {
    */
   ogTitle?: string;
   ogDescription?: string;
+  /**
+   * Que cascaron lleva la pagina.
+   *
+   * `site` (por defecto) es el de Geck Codex: navbar, pie, preloader y el atajo
+   * flotante de WhatsApp.
+   *
+   * `product` los quita y deja que la pagina ponga los suyos por los slots
+   * `chrome-top` y `chrome-bottom`. Existe porque un producto con marca propia
+   * —Mi Caja, y manana Ganova— pierde su gracia dentro del cascaron de la
+   * agencia: quien llega buscando un punto de venta ve un nav que dice
+   * "Portafolio · Nosotros · Blog" y entiende que esta en el sitio de otro. La
+   * pagina sigue viviendo en este dominio, asi que hereda autoridad, sitemap y
+   * medicion; lo unico que cambia es el marco.
+   *
+   * El SEO del <head> NO se duplica: es el mismo para las dos, y por eso esto
+   * es una prop y no un layout aparte.
+   */
+  chrome?: 'site' | 'product';
+  /**
+   * Variables CSS para el <body>, en una cadena de `style`. Es como un producto
+   * mete su paleta y su tipografia una sola vez para que las hereden su nav, su
+   * contenido y su pie.
+   */
+  bodyStyle?: string;
 }
 
 const {
@@ -50,7 +74,11 @@ const {
   ogDescription,
   lang = DEFAULT_LOCALE,
   pageKey,
+  chrome = 'site',
+  bodyStyle,
 } = Astro.props;
+
+const siteChrome = chrome === 'site';
 
 // ── Idioma y variantes ──────────────────────────────────────────────────
 // El hreflang solo se emite si la página existe en varios idiomas. Declararlo
@@ -273,77 +301,79 @@ const jsonLdGraph = [
     ═══════════════════════════════════════ -->
     <Analytics />
   </head>
-  <body data-page={pageKey}>
+  <body data-page={pageKey} data-chrome={chrome} style={bodyStyle}>
     <!-- ═══════════════════════════════════════
          PRELOADER — carga inicial + transición de carga entre páginas.
          transition:persist mantiene el MISMO nodo entre navegaciones (no se
          recrea ni parpadea); el script lo muestra/oculta en cada cambio.
     ═══════════════════════════════════════ -->
-    <div id="gc-preloader" class="gc-preloader" aria-hidden="true" transition:persist>
-      <div class="gc-preloader__inner">
-        <img src="/assets/image/logo.png" alt="" class="gc-preloader__logo" width="240" height="240" />
-        <span class="gc-preloader__bar"><span class="gc-preloader__bar-fill"></span></span>
+    {siteChrome && (
+      <div id="gc-preloader" class="gc-preloader" aria-hidden="true" transition:persist>
+        <div class="gc-preloader__inner">
+          <img src="/assets/image/logo.png" alt="" class="gc-preloader__logo" width="240" height="240" />
+          <span class="gc-preloader__bar"><span class="gc-preloader__bar-fill"></span></span>
+        </div>
       </div>
-    </div>
-    <style is:global>
-      .gc-preloader {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--background);
-        transition: opacity 0.55s ease;
-      }
-      .gc-preloader.is-done { opacity: 0; pointer-events: none; }
-      .gc-preloader__inner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 22px;
-      }
-      .gc-preloader__logo {
-        /* Crece con la pantalla en vez de quedarse en 72px fijos: en el
-           telefono manda el ancho, en escritorio topa en 260px para no
-           comerse el alto disponible junto con la barra. */
-        width: clamp(150px, 26vw, 260px);
-        height: auto;
-        aspect-ratio: 1 / 1;
-        object-fit: contain;
-        animation: gc-pl-pulse 1.6s ease-in-out infinite;
-      }
-      @keyframes gc-pl-pulse {
-        0%, 100% { opacity: 0.5; transform: scale(0.95); }
-        50%      { opacity: 1;   transform: scale(1); }
-      }
-      .gc-preloader__bar {
-        /* La barra acompana al logo: con el gecko grande, 140px se veian
-           como un hilo suelto debajo. */
-        width: clamp(160px, 22vw, 220px);
-        height: 2px;
-        border-radius: 2px;
-        background: color-mix(in srgb, var(--accent) 20%, transparent);
-        overflow: hidden;
-      }
-      .gc-preloader__bar-fill {
-        display: block;
-        height: 100%;
-        width: 40%;
-        border-radius: 2px;
-        background: var(--accent);
-        animation: gc-pl-slide 1.1s ease-in-out infinite;
-      }
-      @keyframes gc-pl-slide {
-        0%   { transform: translateX(-120%); }
-        100% { transform: translateX(320%); }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .gc-preloader__logo,
-        .gc-preloader__bar-fill { animation: none; }
-        .gc-preloader { transition: none; }
-      }
-    </style>
+      <style is:global>
+        .gc-preloader {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--background);
+          transition: opacity 0.55s ease;
+        }
+        .gc-preloader.is-done { opacity: 0; pointer-events: none; }
+        .gc-preloader__inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 22px;
+        }
+        .gc-preloader__logo {
+          /* Crece con la pantalla en vez de quedarse en 72px fijos: en el
+             telefono manda el ancho, en escritorio topa en 260px para no
+             comerse el alto disponible junto con la barra. */
+          width: clamp(150px, 26vw, 260px);
+          height: auto;
+          aspect-ratio: 1 / 1;
+          object-fit: contain;
+          animation: gc-pl-pulse 1.6s ease-in-out infinite;
+        }
+        @keyframes gc-pl-pulse {
+          0%, 100% { opacity: 0.5; transform: scale(0.95); }
+          50%      { opacity: 1;   transform: scale(1); }
+        }
+        .gc-preloader__bar {
+          /* La barra acompana al logo: con el gecko grande, 140px se veian
+             como un hilo suelto debajo. */
+          width: clamp(160px, 22vw, 220px);
+          height: 2px;
+          border-radius: 2px;
+          background: color-mix(in srgb, var(--accent) 20%, transparent);
+          overflow: hidden;
+        }
+        .gc-preloader__bar-fill {
+          display: block;
+          height: 100%;
+          width: 40%;
+          border-radius: 2px;
+          background: var(--accent);
+          animation: gc-pl-slide 1.1s ease-in-out infinite;
+        }
+        @keyframes gc-pl-slide {
+          0%   { transform: translateX(-120%); }
+          100% { transform: translateX(320%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .gc-preloader__logo,
+          .gc-preloader__bar-fill { animation: none; }
+          .gc-preloader { transition: none; }
+        }
+      </style>
+      )}
     <script is:inline>
       // is:inline → corre durante el parseo y sus listeners sobre `document`
       // persisten entre navegaciones SPA (el preloader usa transition:persist,
@@ -370,20 +400,32 @@ const jsonLdGraph = [
       })();
     </script>
 
-    <Navbar client:load lang={lang} pageKey={pageKey} />
-    
+    {/* El cascaron: el de la agencia, o el que traiga la pagina del producto. */}
+    {siteChrome
+      ? <Navbar client:load lang={lang} pageKey={pageKey} />
+      : <slot name="chrome-top" />}
+
     <main>
       <slot />
     </main>
     
     {/* Atajo a WhatsApp siempre a mano. Va en el layout y no página por
         página para que no se quede fuera de ninguna al añadir la siguiente; él
-        solo se esconde en /contacto mirando el `data-page` del body. */}
-    <FloatingWhatsApp client:visible lang={lang} phone={BUSINESS.phone.replace(/[^0-9]/g, '')} />
+        solo se esconde en /contacto mirando el `data-page` del body.
+
+        Fuera del cascarón de producto: esa página lleva su propio botón de
+        WhatsApp en el nav y en cada sección, y dos flotantes compitiendo —uno
+        con el verde del producto y otro con el de la agencia— es una sola
+        llamada a la acción dicha dos veces. */}
+    {siteChrome && (
+      <FloatingWhatsApp client:visible lang={lang} phone={BUSINESS.phone.replace(/[^0-9]/g, '')} />
+    )}
 
     {/* `pageKey` viaja al pie para que los enlaces de idioma apunten a ESTA
         misma página en los otros dos, igual que el hreflang del head. Sin él
         mandarían a la portada y el visitante perdería dónde estaba. */}
-    <Footer client:visible lang={lang} pageKey={pageKey} />
+    {siteChrome
+      ? <Footer client:visible lang={lang} pageKey={pageKey} />
+      : <slot name="chrome-bottom" />}
   </body>
 </html>

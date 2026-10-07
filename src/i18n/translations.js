@@ -428,8 +428,6 @@ export const translations = {
         24: { tagline: 'Atención de Restaurante 24/7',      desc: 'Asistente que atiende a los comensales de un restaurante a cualquier hora: da seguimiento a sus peticiones, agenda reservaciones y cotiza eventos y banquetes sin que nadie tenga que estar al pendiente del teléfono.' },
         25: { tagline: 'POS para Restaurantes',                desc: 'La versión de Mi Caja hecha para restaurantes, fondas y cocinas económicas: mesas, zonas, comandas a cocina, pedidos para llevar y a domicilio. Funciona en la computadora de la caja y en el celular del mesero al mismo tiempo, sobre la misma información.',
             shots: ['Mi Caja Restaurante en el navegador: salón, cocina, venta y caja sin instalar nada', 'El salón en el celular del mesero: mesas ocupadas y libres, para llevar y a domicilio', 'Ajustes del negocio: impresora Bluetooth, cuota de envío y las zonas del restaurante']  },
-        26: { tagline: 'Tus Gastos, Foto por Foto',            desc: 'Aplicación móvil para llevar el control del gasto diario sin sentarse a capturar nada: le tomas foto al ticket y el gasto queda registrado con su monto, su fecha y su categoría. Al final del mes muestra en qué se fue el dinero, categoría por categoría. En desarrollo.',
-            shots: ['Mis gastos: el total del periodo arriba y cada gasto con su categoría y su monto', 'Alta de gasto: monto, fecha, comercio y la categoría elegida de un toque', 'Resumen del mes: total gastado y el reparto por categoría con su porcentaje']  },
       },
     },
     contact: {
@@ -949,8 +947,6 @@ export const translations = {
         24: { tagline: 'Restaurant Support, Around the Clock', desc: 'Assistant that serves a restaurant\'s diners at any hour: follows up on their requests, books reservations and quotes events and banquets, with nobody having to watch the phone.' },
         25: { tagline: 'POS for Restaurants',                  desc: 'The version of Mi Caja built for restaurants and diners: tables, zones, orders sent to the kitchen, takeaway and delivery. It runs on the till computer and on the waiter\'s phone at the same time, over the same data.',
             shots: ['Mi Caja Restaurante in the browser: floor, kitchen, sales and till with nothing to install', 'The floor on the waiter\'s phone: tables taken and free, takeaway and delivery', 'Business settings: Bluetooth printer, default delivery fee and the restaurant zones']  },
-        26: { tagline: 'Your Spending, Photo by Photo',       desc: 'Mobile app for tracking daily spending without sitting down to type anything: snap a photo of the receipt and the expense is logged with its amount, date and category. At the end of the month it shows where the money went, category by category. In development.',
-            shots: ['My expenses: the period total up top and every expense with its category and amount', 'Add an expense: amount, date, merchant and the category picked in one tap', 'Monthly summary: total spent and the split by category with its percentage']  },
       },
     },
     contact: {
@@ -1470,8 +1466,6 @@ export const translations = {
         24: { tagline: 'Atendimento de Restaurante 24/7',      desc: 'Assistente que atende os clientes de um restaurante a qualquer hora: acompanha os pedidos, agenda reservas e orça eventos e banquetes sem que ninguém precise ficar de olho no telefone.' },
         25: { tagline: 'PDV para Restaurantes',                desc: 'A versão do Mi Caja feita para restaurantes e lanchonetes: mesas, zonas, comandas para a cozinha, pedidos para viagem e delivery. Funciona no computador do caixa e no celular do garçom ao mesmo tempo, sobre a mesma informação.',
             shots: ['Mi Caja Restaurante no navegador: salão, cozinha, venda e caixa sem instalar nada', 'O salão no celular do garçom: mesas ocupadas e livres, para viagem e delivery', 'Ajustes do negócio: impressora Bluetooth, taxa de entrega e as zonas do restaurante']  },
-        26: { tagline: 'Seus Gastos, Foto por Foto',           desc: 'Aplicativo móvel para controlar o gasto diário sem precisar digitar nada: você tira uma foto do recibo e a despesa fica registrada com valor, data e categoria. No fim do mês mostra para onde foi o dinheiro, categoria por categoria. Em desenvolvimento.',
-            shots: ['Meus gastos: o total do período no topo e cada gasto com sua categoria e valor', 'Cadastro de gasto: valor, data, comércio e a categoria escolhida com um toque', 'Resumo do mês: total gasto e a divisão por categoria com sua porcentagem']  },
       },
     },
     contact: {

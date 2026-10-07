@@ -28,7 +28,6 @@
  */
 
 export const PROJECTS_STATIC = [
-  { id: 27, cat: 'landing',  title: 'Precio de la Nuez',      tech: ['Astro', 'Leaflet'],                                                                 gradient: 'linear-gradient(145deg, #2A1F14 0%, #4A3A22 45%, #C9A227 100%)' },
   { id: 22, cat: 'landing',  title: 'Handlove',               tech: ['Astro', 'Tailwind CSS'],                                            link: 'https://handloves.mx/',                   gradient: 'linear-gradient(145deg, #030C1D 0%, #0D1625 45%, #F4E4BC 100%)', image: '/assets/image/portafolio/handlove.webp', cardFit: 'contain',
     gallery: ['/assets/image/portafolio/handloves-2.webp', '/assets/image/portafolio/handloves-m-1.webp', '/assets/image/portafolio/handloves-3.webp'] },
   { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Riverpod', 'Drift', 'Supabase'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp',
@@ -74,8 +73,6 @@ export const PROJECTS_STATIC = [
   { id: 7,  cat: 'mobile',   title: 'Capital Transport',     tech: ['React Native', 'Node.js', 'Firebase', 'Google Maps API'],                                                              gradient: 'linear-gradient(145deg, #0c1a3d 0%, #1d4ed8 45%, #0ea5e9 100%)', image: '/assets/image/portafolio/capital transpor.webp' },
   { id: 9,  cat: 'webapp',   title: 'Coronado Gym',          tech: ['React', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],                                                                     gradient: 'linear-gradient(145deg, #0a2e1a 0%, #15803d 45%, #0d9488 100%)', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=640&q=80&auto=format&fit=crop' },
   { id: 11, cat: 'webapp',   title: 'Generador de Gafetes',  tech: ['React', 'Node.js', 'PostgreSQL', 'PDF-lib', 'QR Generator'],                                                         gradient: 'linear-gradient(145deg, #1c1917 0%, #064e3b 45%, #0f766e 100%)', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=640&q=80&auto=format&fit=crop' },
-  { id: 26, cat: 'mobile',   title: 'My Ticket',             tech: ['Flutter', 'Firebase', 'SQLite', 'OCR'],                                                                               gradient: 'linear-gradient(145deg, #0d0d0b 0%, #1e1e1c 45%, #65a30d 100%)',
-    gallery: ['/assets/image/portafolio/mytiket-m-2.webp', '/assets/image/portafolio/mytiket-m-1.webp', '/assets/image/portafolio/mytiket-m-3.webp'] },
 ];
 
 /* Seleccion que se muestra en el carrusel de la home. Solo ids: el titulo, la

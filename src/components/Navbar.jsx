@@ -87,11 +87,25 @@ export default function GeckNavbar({ lang, pageKey }) {
     return () => { document.body.style.overflow = "unset"; };
   }, [menuOpen]);
 
-  // Dispara el crecimiento del círculo en el frame siguiente al montaje
+  /* Dispara el crecimiento del círculo DOS frames después del montaje.
+   *
+   * Con uno solo había un flashazo al abrir: React monta las capas y cambia la
+   * clase dentro del mismo pintado, así que el navegador nunca llegaba a
+   * dibujar el `circle(0px)` inicial. La transición no arrancaba desde cero y
+   * lo que se veía era la capa dorada a pantalla completa de golpe.
+   *
+   * El primer frame deja que se pinte el estado inicial; el segundo cambia la
+   * clase. Es la diferencia entre un círculo que crece y un destello. */
   useEffect(() => {
     if (!menuOpen) return;
-    const id = requestAnimationFrame(() => setRevealOpen(true));
-    return () => cancelAnimationFrame(id);
+    let second;
+    const first = requestAnimationFrame(() => {
+      second = requestAnimationFrame(() => setRevealOpen(true));
+    });
+    return () => {
+      cancelAnimationFrame(first);
+      if (second) cancelAnimationFrame(second);
+    };
   }, [menuOpen]);
 
   const openMenu = () => {
@@ -356,23 +370,55 @@ export default function GeckNavbar({ lang, pageKey }) {
         }
         @media (max-width: 860px) {
           .mr-layer--base::after { display: none; }
+
+          /* Una capa menos que recortar. Tres clip-path a pantalla completa a
+             la vez es lo que hace que el barrido se vea a tirones en un
+             teléfono: el recorte no se compone en GPU, repinta la capa entera
+             en cada frame. Se queda el oro —que es el destello, y el que avisa
+             de que terminó el cierre— y el navy. El tono intermedio era un
+             matiz de 0.09s que en una pantalla de seis pulgadas no se ve. */
+          .mr-layer--mid { display: none; }
+          .mr-layer--base { --in-delay: 0.09s; }
+
+          /* Fuera el desenfoque de entrada de los enlaces. Animar
+             filter: blur() obliga a rasterizar el texto otra vez en cada
+             frame, y es lo que hace que entren a saltos. La opacidad y el
+             desplazamiento sí los compone la GPU, así que el movimiento se
+             conserva entero: lo único que se pierde es un desenfoque de medio
+             segundo que a ese tamaño casi no se percibe. */
+          .mr-link {
+            filter: none;
+            transition: opacity 0.5s ease,
+                        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                        color 0.3s ease, padding-left 0.3s ease;
+          }
+          .menu-reveal.is-open .mr-link { filter: none; }
         }
 
         /* Anillo que sale disparado del botón al abrir: deja claro de dónde
            nace el barrido y se desvanece solo, sin dejar nada que limpiar. */
+        /* El anillo nace a su tamaño final y se escala desde cero, en vez de
+           crecer animando width/height. Animar el tamaño obliga al navegador a
+           recalcular el layout en cada frame; transform lo compone la GPU y
+           no toca el layout. El centrado va por margen negativo para dejar el
+           transform libre. */
         .mr-ring {
           position: fixed; left: var(--cx); top: var(--cy);
-          width: 0; height: 0; border-radius: 50%;
+          width: calc(var(--r) * 2.1); height: calc(var(--r) * 2.1);
+          margin-left: calc(var(--r) * -1.05);
+          margin-top: calc(var(--r) * -1.05);
+          border-radius: 50%;
           border: 2px solid var(--accent);
-          transform: translate(-50%, -50%);
+          transform: scale(0);
           opacity: 0; pointer-events: none;
+          will-change: transform, opacity;
         }
         .menu-reveal.is-open .mr-ring {
           animation: mr-ring-out 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         @keyframes mr-ring-out {
-          0%   { width: 0; height: 0; opacity: 0.85; }
-          100% { width: calc(var(--r) * 2.1); height: calc(var(--r) * 2.1); opacity: 0; }
+          0%   { transform: scale(0); opacity: 0.85; }
+          100% { transform: scale(1); opacity: 0; }
         }
 
         .menu-reveal__inner {

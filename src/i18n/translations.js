@@ -466,6 +466,20 @@ export const translations = {
       short: 'WhatsApp',
       msg: 'Hola! Vengo de geckcodex.com y quiero cotizar un proyecto.',
     },
+    // Marco de la capa de anuncios. El contenido de cada anuncio vive en
+    // src/data/anuncios.js; aqui solo lo que es igual para todos.
+    anuncio: {
+      cerrar: 'Cerrar',
+      reproducir: 'Reproducir video',
+      activarSonido: 'Activar sonido',
+      revisamos: 'Qué revisamos',
+      proximamente: 'Próximamente',
+      secciones: 'Secciones del anuncio',
+      niveles: { urgente: 'Urgente', importante: 'Importante', bien: 'Bien' },
+      pesos: 'pesos',
+      cupo: 'Cupo',
+      cierra: 'Cierra el',
+    },
     faq: {
       badge: 'Preguntas frecuentes',
       title: 'Lo que todos',
@@ -985,6 +999,18 @@ export const translations = {
       short: 'WhatsApp',
       msg: 'Hi! I came from geckcodex.com and I want a quote for a project.',
     },
+    anuncio: {
+      cerrar: 'Close',
+      reproducir: 'Play video',
+      activarSonido: 'Turn on sound',
+      revisamos: 'What we review',
+      proximamente: 'Coming soon',
+      secciones: 'Announcement sections',
+      niveles: { urgente: 'Urgent', importante: 'Important', bien: 'Good' },
+      pesos: 'Mexican pesos',
+      cupo: 'Spots',
+      cierra: 'Closes on',
+    },
     faq: {
       badge: 'Frequently asked questions',
       title: 'What everyone',
@@ -1503,6 +1529,18 @@ export const translations = {
       label: 'Fale conosco no WhatsApp',
       short: 'WhatsApp',
       msg: 'Olá! Vim do geckcodex.com e quero um orçamento para um projeto.',
+    },
+    anuncio: {
+      cerrar: 'Fechar',
+      reproducir: 'Reproduzir vídeo',
+      activarSonido: 'Ativar som',
+      revisamos: 'O que revisamos',
+      proximamente: 'Em breve',
+      secciones: 'Seções do anúncio',
+      niveles: { urgente: 'Urgente', importante: 'Importante', bien: 'Bom' },
+      pesos: 'pesos mexicanos',
+      cupo: 'Vagas',
+      cierra: 'Encerra em',
     },
     faq: {
       badge: 'Perguntas frequentes',

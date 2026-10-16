@@ -1,0 +1,62 @@
+---
+/**
+ * Índice de la guía de Ganova. Los capítulos salen de `src/data/ganova-guia.json`
+ * (ver `GanovaGuia.astro`). El número de página es el orden de los capítulos
+ * listos, para que coincida con el "pág." de cada capítulo.
+ */
+import GanovaGuia from '@/components/productos/GanovaGuia.astro';
+import guia from '@/data/ganova-guia.json';
+import { SITE_URL } from '@/data/seo';
+
+const url = `${SITE_URL}/ganova/guia/`;
+const listos = guia.capitulos.filter((c) => c.secciones?.length);
+const grupos = [...new Set(listos.map((c) => c.grupo))].map((g) => ({
+  nombre: g,
+  caps: listos.filter((c) => c.grupo === g),
+}));
+const pagina = (id: string) => listos.findIndex((c) => c.id === id) + 1;
+---
+
+<GanovaGuia
+  title="Guía de Ganova — Cómo usar la app, paso a paso | Geck Codex"
+  description="Guía de uso de Ganova: dar de alta el ganado, registrar partos, vacunas, ventas, gastos, proyectos, dieta y pendientes del rancho, con capturas y videos de la app."
+  canonical={url}
+  breadcrumbs={[
+    { name: 'Ganova', url: `${SITE_URL}/ganova/` },
+    { name: 'Guía', url },
+  ]}
+>
+  <p class="gg-ruta"><a href="/ganova/">Ganova</a> › Guía</p>
+  <h1 class="gg-titulo">La guía de Ganova</h1>
+  <p class="gg-entrada">
+    Cómo se usa la app, paso a paso, con fotos de la pantalla y videos cortos. Escoge lo
+    que quieres hacer. Las capturas son de un rancho de prueba con datos inventados.
+  </p>
+
+  {grupos.map((g) => (
+    <section aria-labelledby={`g-${g.nombre}`}>
+      <p class="gg-grupo" id={`g-${g.nombre}`}>{g.nombre}</p>
+      <ul class="gg-indice">
+        {g.caps.map((c) => (
+          <li>
+            <a href={`/ganova/guia/${c.id}/`}>
+              <span class="gg-indice__t">
+                {c.titulo}
+                {c.video && <span class="gg-indice__video">· con video</span>}
+              </span>
+              <small>{c.resumen}</small>
+              <span class="gg-indice__pag" aria-label={`página ${pagina(c.id)}`}>{pagina(c.id)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  {guia.creditos?.length && (
+    <section class="gg-creditos" aria-labelledby="gg-creditos-t">
+      <h2 id="gg-creditos-t">Créditos de las fotos</h2>
+      <ul>{guia.creditos.map((t) => <li>{t}</li>)}</ul>
+    </section>
+  )}
+</GanovaGuia>

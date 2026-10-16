@@ -236,11 +236,12 @@ const faq = [
     mark={img('marca-128.webp')}
     href="/ganova/"
     links={[
-      { label: 'Un día', href: '#dia' },
-      { label: 'Las crías', href: '#cria' },
-      { label: 'La alfa', href: '#alfa' },
+      { label: 'Inicio', href: '#inicio', icon: 'inicio', soloMovil: true },
+      { label: 'Un día', href: '#dia', icon: 'dia' },
+      { label: 'Las crías', href: '#cria', icon: 'cria' },
+      { label: 'La alfa', href: '#alfa', icon: 'alfa' },
       { label: 'Preguntas', href: '#preguntas' },
-      { label: 'Guía', href: '/ganova/guia/' },
+      { label: 'Guía', href: '/ganova/guia/', icon: 'guia' },
     ]}
     cta={{ label: 'Entrar a la alfa', href: wa }}
     byHref="/"
@@ -268,7 +269,7 @@ const faq = [
 
   <article class="gn">
     <!-- ══ Portada ══ -->
-    <section class="gn-hero">
+    <section class="gn-hero" id="inicio">
       <div class="gn-hero__in">
         <div class="gn-hero__copy">
           <h1 class="gn-hero__h1">
@@ -886,6 +887,7 @@ const faq = [
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     padding-block: 4.5rem 2rem;
@@ -993,6 +995,7 @@ const faq = [
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     padding: 0;
   }
 
@@ -1569,6 +1572,25 @@ const faq = [
 
   @media (max-width: 40rem) {
     .gn-hero__ctas .gn-btn { flex: 1 1 100%; text-align: center; }
+
+    /* Portada en telefono: titular que cabe sin apretar letras, y aretes
+       chicos que cuelgan del borde del video en vez de taparlo. */
+    .gn-hero { padding-top: 1.5rem; }
+    .gn-hero__h1 { font-size: clamp(2.4rem, 11.5vw, 3.1rem); line-height: .95; }
+    .gn-hero__escena { max-width: 15.5rem; margin-top: .5rem; }
+    .gn-flota .gn-arete { width: 3.4rem; }
+    .gn-flota--1 { top: 5%; left: -15%; }
+    .gn-flota--2 { top: 50%; right: -15%; }
+    .gn-flota--3 { display: none; }
+
+    /* El dia en telefono: el reloj arriba sin pisar el telefono, y todo un
+       poco mas compacto para que la tarjeta no quede bajo las pestañas. */
+    .gn-dia__reloj { top: 4.3rem; font-size: 2rem; }
+    .gn-tel--guia { height: min(40vh, 21rem); }
+    :global(.gn-anim) .gn-dia__track { padding-top: 6.5rem; padding-bottom: 6.5rem; }
+    .gn-hora__txt { width: min(74vw, 17rem); }
+    .gn-hora__k { font-size: 1.1rem; }
+    .gn-hora__d { font-size: .9rem; }
 
     .gn-juego__vacas { gap: .5rem; }
     .gn-juego__nombre { font-size: .8rem; }

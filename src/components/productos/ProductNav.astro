@@ -7,10 +7,12 @@
  * tipografia NO llegan como props: se heredan de las variables `--pr-*` que la
  * pagina pone en el <body> por `bodyStyle` del layout.
  *
- * SIN JAVASCRIPT. En movil no hay menu hamburguesa: se esconden los anclas y se
- * quedan el nombre y el boton, que es lo unico que alguien toca en la pantalla
- * de un telefono. Un cajon desplegable aqui seria JS para revelar tres enlaces
- * que la propia pagina ya recorre al bajar.
+ * EN MOVIL, PESTAÑAS ABAJO. Arriba se quedan el nombre y el boton; los
+ * enlaces que traen `icon` bajan a una barra de pestañas fija, como la de la
+ * propia app (Inicio · Ganado · Dinero…). No es un menu hamburguesa: son
+ * enlaces de verdad, siempre visibles, a un pulgar de distancia. El unico JS
+ * es el que marca la pestaña de la seccion que se esta viendo, y sin el los
+ * enlaces funcionan igual.
  *
  * El reconocimiento de la agencia va discreto y a la derecha del nombre, no
  * arriba: quien llega buscando el producto no viene por Geck Codex, pero saber
@@ -25,15 +27,31 @@ interface Props {
   mark?: string;
   /** Enlace del propio producto (su H1), para que el nombre lleve a arriba. */
   href: string;
-  /** Anclas internos: [{ label, href }]. */
-  links?: { label: string; href: string }[];
+  /** Anclas internos: [{ label, href, icon? }]. Los que traen `icon` son las
+      pestañas de abajo en movil (cinco como mucho, como en la app). */
+  links?: { label: string; href: string; icon?: Icono; soloMovil?: boolean }[];
   /** Llamada a la accion principal. */
   cta: { label: string; href: string };
   /** A donde manda el credito de la agencia. */
   byHref: string;
 }
 
+type Icono = 'inicio' | 'dia' | 'cria' | 'avisos' | 'alfa' | 'preguntas' | 'guia' | 'app';
+
 const { name, mark, href, links = [], cta, byHref } = Astro.props;
+const tabs = links.filter((l) => l.icon).slice(0, 5);
+
+/* Iconos de linea en 24×24, del mismo trazo que los de la barra de la app. */
+const iconos: Record<Icono, string> = {
+  inicio: 'M3 18 9 9l4 5 3-4 5 8z',
+  dia: 'M12 3v2M12 19v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M3 12h2M19 12h2M4.6 19.4 6 18M18 6l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
+  cria: 'M5 8c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3l-1 1-1-2h-8L8 9zM7 9h10v5a5 5 0 0 1-10 0zM10 13h.01M14 13h.01M10.5 16.5h3',
+  avisos: 'M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0',
+  alfa: 'M9 3h6l1 4c2 1.5 3 3.5 3 5.5V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6.5C5 10.5 6 8.5 8 7zM12 5.5h.01M9 15h6',
+  preguntas: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5h.01M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',
+  guia: 'M4 5c2.5-1 5-1 8 1 3-2 5.5-2 8-1v14c-2.5-1-5-1-8 1-3-2-5.5-2-8-1zM12 6v14',
+  app: 'M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM11 18h2',
+};
 ---
 
 <header class="pr-nav">
@@ -45,7 +63,7 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
 
     {links.length > 0 && (
       <ul class="pr-nav__links">
-        {links.map((l) => (
+        {links.filter((l) => !l.soloMovil).map((l) => (
           <li><a href={l.href}>{l.label}</a></li>
         ))}
       </ul>
@@ -57,6 +75,67 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
     </div>
   </nav>
 </header>
+
+{tabs.length > 0 && (
+  <nav class="pr-tabs" aria-label={`Secciones de ${name}`}>
+    {tabs.map((t) => (
+      <a class="pr-tabs__a" href={t.href}>
+        <span class="pr-tabs__ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={iconos[t.icon as Icono]} /></svg>
+        </span>
+        <span class="pr-tabs__t">{t.label}</span>
+      </a>
+    ))}
+  </nav>
+)}
+
+<script is:inline>
+  // Marca la pestaña activa: la de la pagina actual, o la de la seccion que
+  // cruza la mitad de la pantalla cuando son anclas de la misma pagina. Espera
+  // al DOM: el nav se pinta antes que las secciones a las que apunta.
+  (function (run) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
+    else run();
+  })(function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.pr-tabs__a'));
+    if (!tabs.length) return;
+    var marcar = function (a) {
+      tabs.forEach(function (t) {
+        if (t === a) t.setAttribute('aria-current', 'true');
+        else t.removeAttribute('aria-current');
+      });
+    };
+    var aqui = location.pathname;
+    var dePagina = tabs.filter(function (t) { return t.getAttribute('href').charAt(0) !== '#'; });
+    // La de la ruta mas larga que contiene a la actual: /ganova/guia/aretes/
+    // marca "Guía" (/ganova/guia/) y no "La app" (/ganova/).
+    var exacta = dePagina
+      .filter(function (t) { return aqui.indexOf(t.getAttribute('href')) === 0; })
+      .sort(function (a, b) { return b.getAttribute('href').length - a.getAttribute('href').length; })[0];
+    var anclas = tabs.filter(function (t) { return t.getAttribute('href').charAt(0) === '#'; });
+    if (!anclas.length) { if (exacta) marcar(exacta); return; }
+    var pares = anclas.map(function (t) {
+      return { t: t, el: document.getElementById(t.getAttribute('href').slice(1)) };
+    }).filter(function (x) { return x.el; });
+    var ticking = false;
+    var elegir = function () {
+      ticking = false;
+      var mitad = window.innerHeight / 2;
+      var actual = null;
+      pares.forEach(function (x) {
+        var r = x.el.getBoundingClientRect();
+        // La ultima seccion que ya paso la mitad: entre dos anclas se queda
+        // marcada la anterior en vez de quedarse sin ninguna.
+        if (r.top <= mitad) actual = x.t;
+      });
+      marcar(actual || exacta || null);
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(elegir); }
+    }, { passive: true });
+    elegir();
+  });
+</script>
 
 <style>
   .pr-nav {
@@ -160,11 +239,81 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
     .pr-nav__links { display: none; }
   }
 
+  /* ── Pestañas de abajo (solo movil) ──
+     Mismo aire que la barra de la app: icono de linea, etiqueta chica y una
+     pastilla detras del icono en la pestaña activa. */
+  .pr-tabs { display: none; }
+
+  @media (max-width: 52rem) {
+    .pr-tabs {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      display: flex;
+      justify-content: space-around;
+      padding: .45rem .5rem calc(.45rem + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--pr-ink) 92%, transparent);
+      border-top: 1px solid var(--pr-line);
+      backdrop-filter: blur(14px);
+    }
+
+    /* Que la barra no tape el final de la pagina. */
+    :global(body[data-chrome='product']) { padding-bottom: calc(4.4rem + env(safe-area-inset-bottom)); }
+  }
+
+  .pr-tabs__a {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .2rem;
+    min-width: 0;
+    color: var(--pr-fg-dim);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pr-tabs__ico {
+    display: grid;
+    place-items: center;
+    width: 3.1rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    transition: background-color .25s ease;
+  }
+
+  .pr-tabs__ico svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pr-tabs__t {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: .68rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .pr-tabs__a[aria-current] { color: var(--pr-fg); }
+  .pr-tabs__a[aria-current] .pr-tabs__ico { background: color-mix(in srgb, var(--pr-accent) 22%, transparent); color: var(--pr-accent); }
+  .pr-tabs__a:focus-visible { outline: none; }
+  .pr-tabs__a:focus-visible .pr-tabs__ico { outline: 2px solid var(--pr-accent); outline-offset: 2px; }
+
   @media (max-width: 30rem) {
     .pr-nav__by { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .pr-tabs__ico { transition: none; }
     .pr-nav__links a,
     .pr-nav__by,
     .pr-nav__cta { transition: none; }

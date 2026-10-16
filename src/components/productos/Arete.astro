@@ -1,0 +1,81 @@
+---
+/**
+ * Arete tipo bandera, dibujado como el del SINIIGA (pieza hembra).
+ *
+ * Forma y lineas salen de la especificacion tecnica oficial para bovinos
+ * (ETGD.Bo.10/08/2017, Anexo 1): cabeza redonda con el boton al centro, cuello
+ * angosto, hombros que abren a un cuerpo de esquinas redondeadas (57 × 79 mm),
+ * y en la cara externa: "MX", la linea de especie + estado + inicio del numero,
+ * el codigo de barras y los cuatro ultimos digitos en grande.
+ *
+ * NO lleva las siglas de la Secretaria (SAGARPA/SADER) a proposito: es una
+ * ilustracion en la pagina de un producto privado, y con las siglas pareceria
+ * un dispositivo oficial o un respaldo del gobierno que Ganova no tiene.
+ *
+ * El viewBox esta en milimetros (57 × 79) para que las proporciones sean las
+ * del arete real. El ancho lo pone quien lo usa con CSS.
+ */
+interface Props {
+  /** Los cuatro ultimos digitos, en grande. */
+  num: string;
+  /** Linea de especie (00), estado (08 = Chihuahua) e inicio del numero. */
+  linea?: string;
+  class?: string;
+  style?: string;
+}
+
+const { num, linea = '00 08 9500', class: cls, style } = Astro.props;
+
+/* Barras deterministas a partir del numero: siempre el mismo dibujo para el
+   mismo arete, sin pretender ser un Code 128 legible. */
+const semilla = `${linea}${num}`.replace(/\D/g, '') || '1234';
+const barras: { x: number; w: number }[] = [];
+let x = 7;
+for (let i = 0; x < 50 && i < 80; i++) {
+  const d = Number(semilla[i % semilla.length]);
+  const w = d % 3 === 0 ? 1.1 : d % 3 === 1 ? 0.55 : 0.8;
+  barras.push({ x, w });
+  x += w + (d % 2 ? 0.55 : 0.85);
+}
+---
+
+<svg class:list={['arete-siniiga', cls]} style={style} viewBox="0 0 57 79" aria-hidden="true" focusable="false">
+  <path
+    class="arete-siniiga__cuerpo"
+    d="M28.5 0.5a10.5 10.5 0 0 1 7.3 18c.4 7 9.9 10.4 16.6 14.6 2.9 1.9 4.1 4.7 4.1 8.4V72c0 4-3 7-7 7H7c-4 0-7-3-7-7V41.5c0-3.7 1.2-6.5 4.1-8.4 6.7-4.2 16.2-7.6 16.6-14.6a10.5 10.5 0 0 1 7.8-18z"
+  />
+  <circle class="arete-siniiga__boton" cx="28.5" cy="11" r="6.4" />
+  <text class="arete-siniiga__mx" x="28.5" y="40.5">MX</text>
+  <text class="arete-siniiga__linea" x="28.5" y="48.2">{linea}</text>
+  <g class="arete-siniiga__barras">
+    {barras.map((b) => <rect x={b.x} y="50.6" width={b.w} height="6.6" />)}
+  </g>
+  <text class="arete-siniiga__num" x="28.5" y="75.6" textLength={num.length > 4 ? 48 : undefined} lengthAdjust="spacingAndGlyphs">{num}</text>
+</svg>
+
+<style>
+  .arete-siniiga {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .28));
+  }
+
+  /* Amarillo limon del arete real; se puede cambiar con --arete-color. */
+  .arete-siniiga__cuerpo { fill: var(--arete-color, #F2CC1D); }
+  .arete-siniiga__boton { fill: #15130F; }
+  .arete-siniiga__barras { fill: #15130F; }
+
+  .arete-siniiga__mx,
+  .arete-siniiga__linea,
+  .arete-siniiga__num {
+    fill: #15130F;
+    text-anchor: middle;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  }
+
+  .arete-siniiga__mx { font-size: 6.2px; font-weight: 700; }
+  .arete-siniiga__linea { font-size: 5.6px; font-weight: 700; letter-spacing: .3px; }
+  .arete-siniiga__num { font-size: 19.5px; font-weight: 700; letter-spacing: -.4px; }
+</style>

@@ -302,7 +302,17 @@ function Detail({ project, onClose, catMeta, strings, lang }) {
             ))}
           </div>
 
-          {project.link ? (
+          {/* `page` = el proyecto tiene pagina propia en este sitio (hoy, Ganova).
+              Va antes que `link` y en la misma pestaña: es una pagina nuestra,
+              no un sitio de cliente. */}
+          {project.page ? (
+            <a href={project.page} className="gc-detail__cta">
+              {strings.viewPage}
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 10H16M16 10L10 4M16 10L10 16" />
+              </svg>
+            </a>
+          ) : project.link ? (
             <a href={project.link} target="_blank" rel="noopener noreferrer" className="gc-detail__cta">
               {strings.viewLive}
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

@@ -4,6 +4,7 @@ import Footer from '@/components/Footer.jsx';
 import Navbar from '@/components/Navbar.jsx';
 import Analytics from '@/components/Analytics.astro';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp.jsx';
+import CapaAnuncio from '@/components/anuncio/CapaAnuncio.jsx';
 import '@/styles/global.css';
 
 import { organizationSchema, websiteSchema, breadcrumbSchema, BUSINESS, SITE_URL } from '@/data/seo';
@@ -419,6 +420,23 @@ const jsonLdGraph = [
         llamada a la acción dicha dos veces. */}
     {siteChrome && (
       <FloatingWhatsApp client:visible lang={lang} phone={BUSINESS.phone.replace(/[^0-9]/g, '')} />
+    )}
+
+    {/* Capa de anuncio (hoy Radar GC). Abajo a la izquierda, porque la derecha
+        es del WhatsApp. Lo que dice y cuando sale se decide en
+        src/data/anuncios.js, no aqui.
+
+        `transition:persist` la mantiene viva entre paginas: es la misma
+        instancia, no una nueva por navegacion, asi que ni se duplica ni olvida
+        que el visitante ya la cerro. Sin `persist-props`, porque al cambiar de
+        idioma si debe recibir el `lang` nuevo.
+
+        `client:idle` CON `timeout`: la home tiene animaciones continuas
+        (ondas en canvas, videos) y el navegador nunca llega a estar ocioso,
+        asi que sin tope la capa no se hidrataba jamas —ni la tarjeta ni el
+        enlace /#radar funcionaban al recargar—. */}
+    {siteChrome && (
+      <CapaAnuncio client:idle={{ timeout: 1500 }} lang={lang} transition:persist="capa-anuncio" />
     )}
 
     {/* `pageKey` viaja al pie para que los enlaces de idioma apunten a ESTA

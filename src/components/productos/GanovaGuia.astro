@@ -1,0 +1,335 @@
+---
+/**
+ * Marco de la guía de Ganova (/ganova/guia/ y cada capítulo).
+ *
+ * El contenido NO se escribe aquí: sale de `src/data/ganova-guia.json`, que se
+ * genera desde el repo de la app con `tool/guia/publicar_sitio.py`. Las
+ * capturas y videos que copia ese script viven en
+ * `/assets/image/ganova/manual/` y `/assets/video/ganova/manual/`. Para cambiar
+ * un paso se edita `guia/capitulos.json` en el repo de Ganova y se vuelve a
+ * correr el script; editar el JSON de aquí se pierde en la siguiente copia.
+ *
+ * ── DISEÑO: la libreta del rancho ──
+ * El usuario escogió esta dirección entre tres maquetas (2026-10-16). Sigue la
+ * libreta de la portada de Ganova: hoja rayada, margen rojo, números a mano
+ * en círculo y las capturas pegadas con cinta del amarillo del arete. Misma
+ * paleta y letras que /ganova/ (Archivo para leer, Caveat para lo escrito a
+ * mano). Una sola apariencia, clara: es papel.
+ *
+ * `chrome="product"` con el nav y el pie de Ganova, como la portada.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import ProductNav from '@/components/productos/ProductNav.astro';
+import ProductFooter from '@/components/productos/ProductFooter.astro';
+import { BUSINESS } from '@/data/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  breadcrumbs: { name: string; url: string }[];
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, canonical, breadcrumbs, schema = [] } = Astro.props;
+
+const B = {
+  crema: '#F2EDE2',
+  hueso: '#E6DFD0',
+  linea: '#D6CDBA',
+  olivo: '#485A30',
+  monte: '#263018',
+  texto: '#4E5540',
+  tenue: '#757A63',
+  arete: '#E3B23C',
+  tinta: '#2C3A55',
+  font: "'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  mano: "'Caveat', 'Segoe Print', cursive",
+  fontHref:
+    'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600;700&display=swap',
+};
+
+const bodyStyle = [
+  `--pr-ink:${B.crema}`, `--pr-ink-deep:${B.hueso}`, `--pr-surface:#FFFFFF`,
+  `--pr-line:${B.linea}`, `--pr-fg:${B.monte}`, `--pr-fg-dim:${B.texto}`,
+  `--pr-fg-faint:${B.tenue}`, `--pr-accent:${B.olivo}`, `--pr-on-accent:#FFFFFF`,
+  `--pr-font:${B.font}`,
+  `--gg-crema:${B.crema}`, `--gg-hueso:${B.hueso}`, `--gg-linea:${B.linea}`,
+  `--gg-olivo:${B.olivo}`, `--gg-monte:${B.monte}`, `--gg-texto:${B.texto}`,
+  `--gg-tenue:${B.tenue}`, `--gg-arete:${B.arete}`, `--gg-tinta:${B.tinta}`,
+  `--gg-font:${B.font}`, `--gg-mano:${B.mano}`,
+  `background:${B.crema}`, `color:${B.texto}`,
+].join(';');
+
+const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent(
+  'Hola, tengo ganado y quiero entrar a la alfa de Ganova.',
+)}`;
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonical}
+  lang="es"
+  chrome="product"
+  bodyStyle={bodyStyle}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href={B.fontHref} />
+
+  <ProductNav
+    slot="chrome-top"
+    name="Ganova"
+    mark="/assets/image/ganova/marca-128.webp"
+    href="/ganova/"
+    links={[
+      { label: 'La app', href: '/ganova/' },
+      { label: 'Guía', href: '/ganova/guia/' },
+    ]}
+    cta={{ label: 'Entrar a la alfa', href: wa }}
+    byHref="/"
+  />
+
+  <ProductFooter
+    slot="chrome-bottom"
+    name="Ganova"
+    tagline="Tu rancho completo en el teléfono. Funciona sin señal en el corral y sincroniza cuando hay internet."
+    waHref={wa}
+  />
+
+  <article class="gg">
+    <div class="gg-hoja">
+      <slot />
+    </div>
+  </article>
+</Layout>
+
+<style is:global>
+  /* La hoja: renglones azules cada 32px y el margen rojo a la izquierda. */
+  .gg {
+    --gg-renglon: 32px;
+    --gg-margen: #E7A39A;
+    --gg-azul: #D9E2EE;
+    --gg-papel: #FBF8F0;
+    font-family: var(--gg-font);
+    color: var(--gg-tinta);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: clamp(20px, 4vw, 48px) clamp(40px, 6vw, 80px);
+  }
+  .gg-hoja {
+    position: relative;
+    max-width: 1040px;
+    margin: 0 auto;
+    background-color: var(--gg-papel);
+    background-image: repeating-linear-gradient(
+      var(--gg-papel) 0 calc(var(--gg-renglon) - 1px),
+      var(--gg-azul) calc(var(--gg-renglon) - 1px) var(--gg-renglon)
+    );
+    border-radius: 6px;
+    box-shadow: 0 1px 0 var(--gg-linea), 0 18px 50px -24px rgb(38 48 24 / 0.35);
+    padding: clamp(24px, 4vw, 48px) clamp(18px, 4vw, 56px) clamp(32px, 5vw, 64px)
+      clamp(48px, 7vw, 96px);
+    overflow: hidden;
+  }
+  .gg-hoja::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: clamp(30px, 4.6vw, 64px);
+    width: 2px;
+    background: var(--gg-margen);
+  }
+
+  .gg-ruta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--gg-tenue);
+    margin: 0 0 14px;
+  }
+  .gg-ruta a { color: var(--gg-olivo); font-weight: 600; text-decoration: none; }
+  .gg-ruta a:hover, .gg-ruta a:focus-visible { text-decoration: underline; }
+
+  .gg-titulo {
+    font-family: var(--gg-mano);
+    font-weight: 700;
+    color: var(--gg-monte);
+    font-size: clamp(44px, 7vw, 76px);
+    line-height: 0.95;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  .gg-entrada {
+    font-size: clamp(17px, 2vw, 19px);
+    line-height: 1.6;
+    color: var(--gg-texto);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .gg h2 {
+    font-family: var(--gg-mano);
+    font-weight: 700;
+    color: var(--gg-monte);
+    font-size: clamp(34px, 4.6vw, 46px);
+    line-height: 1;
+    margin: clamp(36px, 5vw, 56px) 0 14px;
+  }
+  .gg-texto { font-size: 17px; line-height: 1.6; color: var(--gg-texto); max-width: 62ch; margin: 0 0 8px; }
+  .gg b { color: var(--gg-monte); font-weight: 700; }
+
+  /* Pasos: número a mano en círculo, sobre el margen rojo. */
+  .gg-pasos { list-style: none; margin: 0; padding: 0; counter-reset: paso; display: grid; gap: clamp(20px, 3vw, 36px); }
+  .gg-paso {
+    position: relative;
+    counter-increment: paso;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px 40px;
+    align-items: start;
+  }
+  .gg-paso.con-foto { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+  .gg-paso__txt { min-width: 0; padding-top: 4px; }
+  .gg-pasos--num .gg-paso::before {
+    content: counter(paso);
+    position: absolute;
+    left: calc(-1 * clamp(42px, 6.2vw, 82px));
+    top: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2.5px solid var(--gg-tinta);
+    background: var(--gg-papel);
+    font: 700 30px/36px var(--gg-mano);
+    text-align: center;
+    color: var(--gg-tinta);
+    transform: rotate(-6deg);
+  }
+  .gg-pasos--num .gg-paso:nth-child(even)::before { transform: rotate(5deg); }
+  .gg-paso h3 { font-size: 20px; font-stretch: 105%; font-weight: 700; color: var(--gg-monte); margin: 0 0 6px; text-wrap: balance; }
+  .gg-paso p { font-size: 16.5px; line-height: 1.6; margin: 0 0 6px; color: var(--gg-texto); }
+  .gg-lista { margin: 4px 0 6px; padding-left: 22px; font-size: 16.5px; line-height: 1.6; color: var(--gg-texto); }
+  .gg-lista li { margin-bottom: 4px; padding-left: 2px; }
+  .gg-lista li::marker { font: 700 19px var(--gg-mano); color: #C2410C; }
+
+  /* La etiqueta "Opcional" con forma de arete. */
+  .gg-tag {
+    display: inline-block;
+    background: var(--gg-arete);
+    color: #15130F;
+    font: 700 19px/1.25 var(--gg-mano);
+    padding: 0 12px 0 10px;
+    border-radius: 4px 14px 14px 4px;
+    margin-bottom: 6px;
+  }
+
+  /* Capturas pegadas con cinta. */
+  .gg-fotos { display: grid; gap: 22px; justify-items: center; min-width: 0; }
+  .gg-foto {
+    position: relative;
+    width: min(100%, 300px);
+    background: #fff;
+    padding: 9px;
+    box-shadow: 0 8px 22px -6px rgb(21 19 15 / 0.28);
+    transform: rotate(1.4deg);
+  }
+  .gg-paso:nth-child(even) .gg-foto { transform: rotate(-1.4deg); }
+  .gg-foto + .gg-foto { transform: rotate(-2deg); }
+  .gg-foto::before {
+    content: '';
+    position: absolute;
+    top: -11px;
+    left: calc(50% - 40px);
+    width: 80px;
+    height: 24px;
+    background: rgb(227 178 60 / 0.6);
+    transform: rotate(-4deg);
+  }
+  .gg-foto img { display: block; width: 100%; height: auto; border-radius: 3px; }
+
+  /* Video: como foto instantánea, más grande. */
+  .gg-video { margin: clamp(26px, 4vw, 40px) 0 0; display: grid; justify-items: start; gap: 10px; }
+  .gg-video .gg-foto { width: min(100%, 320px); transform: rotate(-1.2deg); padding-bottom: 12px; }
+  .gg-video video { display: block; width: 100%; height: auto; background: #15130F; border-radius: 3px; }
+  .gg-video figcaption {
+    margin: 10px 4px 0;
+    font: 700 22px/1.2 var(--gg-mano);
+    color: var(--gg-tinta);
+    text-align: center;
+  }
+
+  /* Notas al margen: "consejos", con la letra a mano. */
+  .gg-notas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px; margin-top: clamp(30px, 4vw, 48px); }
+  .gg-nota {
+    background: #FFF6D6;
+    border-left: 5px solid var(--gg-arete);
+    padding: 14px 16px 16px;
+    transform: rotate(-0.6deg);
+    box-shadow: 0 6px 16px -10px rgb(21 19 15 / 0.35);
+  }
+  .gg-nota:nth-child(even) { transform: rotate(0.7deg); }
+  .gg-nota h3 { font: 700 26px/1.1 var(--gg-mano); color: #9A3412; margin: 0 0 4px; }
+  .gg-nota p { font-size: 16px; line-height: 1.55; margin: 0; color: var(--gg-texto); }
+
+  /* Anterior / siguiente: esquinas de hoja. */
+  .gg-sigue { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: clamp(36px, 5vw, 60px); }
+  .gg-sigue a {
+    display: block;
+    border: 2px dashed var(--gg-linea);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: var(--gg-monte);
+    font-weight: 700;
+    min-height: 64px;
+    background: rgb(255 255 255 / 0.55);
+  }
+  .gg-sigue a:hover, .gg-sigue a:focus-visible { border-color: var(--gg-olivo); outline: none; }
+  .gg-sigue small { display: block; font: 700 20px var(--gg-mano); color: var(--gg-tenue); }
+  .gg-sigue .der { text-align: right; }
+
+  /* Índice: renglones con número de página a mano, como el índice de un cuaderno. */
+  .gg-grupo { font: 700 30px/1 var(--gg-mano); color: #9A3412; margin: clamp(30px, 4vw, 44px) 0 6px; }
+  .gg-indice { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); column-gap: 40px; }
+  .gg-indice a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 6px 14px;
+    padding: 10px 0 8px;
+    border-bottom: 1px dotted var(--gg-tenue);
+    text-decoration: none;
+    color: var(--gg-monte);
+    min-height: 64px;
+  }
+  .gg-indice a:hover .gg-indice__t, .gg-indice a:focus-visible .gg-indice__t { text-decoration: underline; text-decoration-color: var(--gg-arete); text-decoration-thickness: 3px; }
+  .gg-indice a:focus-visible { outline: 2px solid var(--gg-olivo); outline-offset: 2px; }
+  .gg-indice__t { font-size: 18px; font-weight: 700; }
+  .gg-indice small { grid-column: 1; display: block; font-size: 15px; color: var(--gg-tenue); font-weight: 400; }
+  .gg-indice__pag { grid-column: 2; grid-row: 1 / span 2; font: 700 28px/1 var(--gg-mano); color: var(--gg-tinta); align-self: center; }
+  .gg-indice__video { font: 700 18px var(--gg-mano); color: #9A3412; margin-left: 6px; white-space: nowrap; }
+
+  .gg-creditos { margin-top: clamp(36px, 5vw, 56px); font-size: 14px; line-height: 1.6; color: var(--gg-tenue); }
+  .gg-creditos h2 { font-size: 28px; margin: 0 0 6px; color: var(--gg-tenue); }
+  .gg-creditos ul { margin: 0; padding-left: 18px; }
+
+  @media (max-width: 760px) {
+    .gg-paso.con-foto { grid-template-columns: minmax(0, 1fr); }
+    .gg-hoja { padding-left: 54px; }
+    .gg-hoja::before { left: 36px; }
+    .gg-pasos--num .gg-paso::before { left: -50px; width: 36px; height: 36px; font-size: 26px; line-height: 31px; }
+  }
+  @media (max-width: 420px) {
+    .gg-sigue { grid-template-columns: 1fr; }
+    .gg-sigue .der { text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gg-foto, .gg-nota, .gg-video .gg-foto { transform: none !important; }
+  }
+</style>

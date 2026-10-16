@@ -152,6 +152,11 @@ export default function GeckFooter({ lang, pageKey }) {
                   interno que cada página del idioma le da a una sección. */}
               <li><a href={localizedPath("services", lang)}>{t.nav.services}</a></li>
               <li><a href={localizedPath("portfolio", lang)}>{t.nav.portfolio}</a></li>
+              {/* Ganova, el producto estrella: pagina propia y solo en español
+                  (su mercado son ranchos del norte de Mexico). El nombre no se
+                  traduce. Es el enlace interno que la saca de depender del
+                  sitemap, igual que el del blog. */}
+              <li><a href="/ganova/">Ganova</a></li>
               <li><a href={localizedPath("about", lang)}>{t.nav.about}</a></li>
               {/* El blog va SIN localizedPath porque solo existe en español y no
                   está en SLUGS —ver src/i18n/blog.js—. Y va aquí, no solo en el

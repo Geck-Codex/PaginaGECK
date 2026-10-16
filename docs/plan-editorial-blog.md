@@ -202,6 +202,29 @@ orden de publicación salta del 5 al 10.
   vamos a simular**, que es exactamente el argumento de la estrategia de arriba.
   Enlaza a los artículos 1, 2 y 3, y a `/servicios/`.
 
+### 5b. Merma en una tienda de abarrotes: un caso real en Chihuahua ✅ PUBLICADO
+
+- **No estaba en el plan original**; entró el 2026-10-14 para acompañar la
+  convocatoria **Radar GC** (diagnóstico tecnológico sin costo, capa flotante
+  del sitio en `/#radar`).
+- **Búsqueda:** "merma en tienda de abarrotes", "como controlar la merma",
+  "robo hormiga tienda de abarrotes"
+- **Intención:** comercial-informativa, de dueño de comercio que ya sospecha
+  que pierde mercancía.
+- **Por qué:** pasa el filtro completo. Nadie publica números reales de merma
+  de una tienda local, el nicho va en el título, y vende diagnóstico y
+  automatización, no la web.
+- **Ángulo:** "la merma se confunde con robo". Usa los datos REALES y anónimos
+  del diagnóstico GC-001 (~2% del inventario, descubierto hasta 6 meses
+  después; $15,000 en 4 categorías: aceites $8,000, papas $3,000, sodas
+  $3,000, galletas $1,000). **No inventar más detalle del caso** que el que dé
+  el usuario. Los mismos números viven en `src/data/anuncios.js`: si cambian
+  en uno, se cambian en los dos.
+- **Publicado como** `/blog/merma-en-tienda-de-abarrotes-chihuahua/`. Enlaza a
+  `/#radar` (abre la capa), al artículo 4b (Excel), al 1 y a `/servicios/`.
+- **Si Radar GC se apaga**, hay que cambiar los enlaces `/#radar` del artículo
+  por `/contacto/`: sin anuncio activo, el enlace lleva a la home y no abre nada.
+
 ### 6. Punto de venta para negocios pequeños: qué revisar antes de comprar ⛔ BLOQUEADO
 
 - **Búsqueda:** "punto de venta para negocio pequeño", "sistema pos mexico precio"

@@ -1,0 +1,173 @@
+---
+/**
+ * Nav de una pagina de producto — la del producto, no la de la agencia.
+ *
+ * Generico a proposito: recibe el nombre, los anclas y la llamada a la accion,
+ * asi que el siguiente producto lo reusa sin tocarlo. Los colores y la
+ * tipografia NO llegan como props: se heredan de las variables `--pr-*` que la
+ * pagina pone en el <body> por `bodyStyle` del layout.
+ *
+ * SIN JAVASCRIPT. En movil no hay menu hamburguesa: se esconden los anclas y se
+ * quedan el nombre y el boton, que es lo unico que alguien toca en la pantalla
+ * de un telefono. Un cajon desplegable aqui seria JS para revelar tres enlaces
+ * que la propia pagina ya recorre al bajar.
+ *
+ * El reconocimiento de la agencia va discreto y a la derecha del nombre, no
+ * arriba: quien llega buscando el producto no viene por Geck Codex, pero saber
+ * quien lo hace es lo que da confianza para pagar.
+ */
+interface Props {
+  /** Nombre del producto, como se lee. */
+  name: string;
+  /** Marca grafica, si el producto tiene una. Va junto al nombre, no en vez de
+      el: un logo solo obliga a reconocerlo, y quien llega por una busqueda no
+      lo ha visto nunca. */
+  mark?: string;
+  /** Enlace del propio producto (su H1), para que el nombre lleve a arriba. */
+  href: string;
+  /** Anclas internos: [{ label, href }]. */
+  links?: { label: string; href: string }[];
+  /** Llamada a la accion principal. */
+  cta: { label: string; href: string };
+  /** A donde manda el credito de la agencia. */
+  byHref: string;
+}
+
+const { name, mark, href, links = [], cta, byHref } = Astro.props;
+---
+
+<header class="pr-nav">
+  <nav class="pr-nav__in" aria-label={`Navegación de ${name}`}>
+    <a class="pr-nav__brand" href={href} aria-label={`${name}, inicio`}>
+      {mark && <img class="pr-nav__mark" src={mark} alt="" width="32" height="32" />}
+      <span class="pr-nav__name">{name}</span>
+    </a>
+
+    {links.length > 0 && (
+      <ul class="pr-nav__links">
+        {links.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    )}
+
+    <div class="pr-nav__right">
+      <a class="pr-nav__by" href={byHref}>un producto de <strong>Geck Codex</strong></a>
+      <a class="pr-nav__cta" href={cta.href} data-lead="nav">{cta.label}</a>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .pr-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--pr-ink) 88%, transparent);
+    border-bottom: 1px solid var(--pr-line);
+    backdrop-filter: blur(12px);
+  }
+
+  .pr-nav__in {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: .8rem 1.25rem;
+  }
+
+  .pr-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    text-decoration: none;
+  }
+
+  .pr-nav__mark {
+    width: 2rem;
+    height: 2rem;
+    border-radius: .4rem;
+    /* El recorte del logo trae su propio fondo crema. Mezclarlo con el del nav
+       evita el recuadro que se nota cuando los dos cremas no coinciden. */
+    mix-blend-mode: multiply;
+  }
+
+  .pr-nav__name {
+    font-family: var(--pr-font);
+    font-size: 1.15rem;
+    font-weight: 800;
+    font-stretch: 115%;
+    letter-spacing: -.02em;
+    color: var(--pr-fg);
+  }
+
+  .pr-nav__links {
+    display: flex;
+    gap: 1.4rem;
+    margin: 0 auto 0 .75rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pr-nav__links a {
+    font-size: .88rem;
+    font-weight: 500;
+    color: var(--pr-fg-dim);
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+
+  .pr-nav__links a:hover { color: var(--pr-accent); }
+
+  .pr-nav__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  /* El credito de la agencia: presente, no protagonista. */
+  .pr-nav__by {
+    font-size: .74rem;
+    color: var(--pr-fg-faint);
+    text-decoration: none;
+    transition: color .2s ease;
+    white-space: nowrap;
+  }
+
+  .pr-nav__by strong { font-weight: 600; color: var(--pr-fg-dim); }
+  .pr-nav__by:hover strong { color: var(--pr-accent); }
+
+  .pr-nav__cta {
+    padding: .55rem 1.1rem;
+    border-radius: .45rem;
+    background: var(--pr-accent);
+    color: var(--pr-on-accent);
+    font-weight: 700;
+    font-size: .85rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: filter .2s ease, transform .2s ease;
+  }
+
+  .pr-nav__cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  /* Los anclas se van primero: la pagina los recorre sola al bajar. Despues el
+     credito de la agencia, que es lo que menos falta en una pantalla angosta.
+     Siempre quedan el nombre y el boton. */
+  @media (max-width: 52rem) {
+    .pr-nav__links { display: none; }
+  }
+
+  @media (max-width: 30rem) {
+    .pr-nav__by { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pr-nav__links a,
+    .pr-nav__by,
+    .pr-nav__cta { transition: none; }
+    .pr-nav__cta:hover { transform: none; }
+  }
+</style>

@@ -1,0 +1,1594 @@
+{
+ "titulo": "Guía de Ganova",
+ "entrada": "Cómo se usa la app, paso a paso, con fotos y videos. Escoge lo que quieres hacer.",
+ "capitulos": [
+  {
+   "id": "crear-rancho",
+   "grupo": "Para empezar",
+   "icono": "🌵",
+   "titulo": "Crear tu rancho",
+   "resumen": "El primer arranque, el giro y el nombre",
+   "ruta": "Para empezar",
+   "entrada": "La primera vez que abres Ganova te pregunta tres cosas: a qué te dedicas, cómo se llama tu rancho y si quieres respaldar tu información. No necesitas internet ni cuenta para empezar.",
+   "secciones": [
+    {
+     "titulo": "Paso a paso",
+     "pasos": [
+      {
+       "titulo": "Toca “Crear mi rancho”",
+       "lista": [
+        "<b>Crear mi rancho</b>, si eres el primero de tu familia en usar la app.",
+        "<b>Me invitaron a un rancho:</b> si alguien ya lo tiene en la app, pega el código que te pasen y entran al mismo.",
+        "<b>Ya tengo cuenta:</b> si ya la usabas, entra y te baja tu rancho."
+       ],
+       "img": "00-bienvenida"
+      },
+      {
+       "titulo": "Escoge a qué te dedicas",
+       "texto": "Para traer vacas y crías en el agostadero, escoge <b>Ganadería extensiva</b>. Escógelo bien: el giro ya no se cambia después.",
+       "img": "01-elegir-giro"
+      },
+      {
+       "titulo": "Ponle nombre y escoge el municipio",
+       "lista": [
+        "<b>Nombre del rancho</b>, como lo conocen todos.",
+        "<b>Municipio</b>: con él la app saca el clima de tu zona. También puedes tocar <b>Detectar con GPS</b> si estás en el rancho."
+       ],
+       "img": "02-nombre-rancho-lleno"
+      },
+      {
+       "titulo": "Échale un ojo a lo que hace la app",
+       "texto": "Es un resumen rápido. Toca <b>Siguiente</b>.",
+       "img": "03-tour"
+      },
+      {
+       "titulo": "Cuenta: ahora o después",
+       "texto": "La app funciona completa sin cuenta. La cuenta sirve para respaldar todo en la nube y para que la familia vea el mismo rancho. Si no tienes señal, toca <b>Empezar</b> y la haces después desde Ajustes (ver <b>Cuenta y respaldo</b>)."
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "¿Te equivocaste de giro?",
+     "texto": "No se puede cambiar. Crea el rancho bueno desde Ajustes → Agregar otro rancho, y borra el que salió mal."
+    }
+   ],
+   "video": "00-crear-rancho",
+   "poster": "01-elegir-giro",
+   "pie": "Del primer arranque a la pantalla de Inicio."
+  },
+  {
+   "id": "conoce-la-app",
+   "grupo": "Para empezar",
+   "icono": "🧭",
+   "titulo": "Conoce la app",
+   "resumen": "Inicio, la campana, el engrane y la nube",
+   "ruta": "Para empezar",
+   "entrada": "Un recorrido rápido por la pantalla de Inicio: qué es cada cosa y a dónde te lleva.",
+   "secciones": [
+    {
+     "titulo": "Lo de arriba",
+     "pasos": [
+      {
+       "titulo": "La barra de arriba",
+       "lista": [
+        "<b>Nombre del rancho</b> en el que estás.",
+        "<b>La campana:</b> los avisos de hoy y los que vienen. El número rojo es cuántos tienes sin ver.",
+        "<b>El engrane:</b> los Ajustes (cuenta, ranchos, avisos, tema).",
+        "<b>La nube:</b> si tu información ya está respaldada. El número son los cambios que faltan por subir."
+       ],
+       "img": "55-barra-arriba"
+      },
+      {
+       "titulo": "La barra de abajo",
+       "texto": "Para brincar entre las secciones: <b>Inicio, Ganado, Dinero, Proyectos y Dieta</b>.",
+       "img": "56-barra-abajo"
+      }
+     ]
+    },
+    {
+     "titulo": "Las tarjetas de Inicio",
+     "texto": "Bájale a la pantalla de Inicio y vas a ver un resumen de todo el rancho. Toca cualquier tarjeta para ver el detalle.",
+     "pasos": [
+      {
+       "titulo": "Arriba: clima y hato",
+       "texto": "El clima de hoy en tu rancho y cuántas vacas y crías traes, con las crías separadas en hembras y machos."
+      },
+      {
+       "titulo": "Accesos y dinero del mes",
+       "lista": [
+        "<b>Rancho:</b> el clima de la semana, los avisos por clima y lo que se ha descompuesto.",
+        "<b>Inventario:</b> lo que tienes guardado. Te avisa si algo se está acabando.",
+        "<b>Gastos del mes:</b> cuánto llevas gastado.",
+        "<b>Pendientes en el rancho:</b> cercos, mangueras o lo que esté por arreglar."
+       ],
+       "img": "50-inicio-1"
+      },
+      {
+       "titulo": "Vacunas y partos",
+       "lista": [
+        "<b>Partos próximos:</b> las vacas a las que ya les toca parir, con la fecha estimada.",
+        "<b>Partos recientes:</b> las últimas crías que apuntaste."
+       ],
+       "despues": "Más arriba también salen los <b>recordatorios de vacunas</b> y las <b>vacas atrasadas</b>, las que ya se tardaron en parir.",
+       "img": "50-inicio-4"
+      }
+     ]
+    },
+    {
+     "titulo": "La nube",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Toca la nube para ver cómo vas",
+       "lista": [
+        "Cuántos cambios faltan por subir.",
+        "Si todavía no tienes cuenta, desde aquí la creas para que se respalde todo."
+       ],
+       "img": "54-nube"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "El botón naranja",
+     "texto": "<b>Acciones rápidas</b> te deja apuntar lo más común sin buscarlo: un parto, una venta, un animal nuevo, un gasto, un artículo o una vacunación de todo el hato."
+    }
+   ]
+  },
+  {
+   "id": "alta-animal",
+   "grupo": "Ganado",
+   "icono": "🐄",
+   "titulo": "Dar de alta un animal",
+   "resumen": "Arete, apodo, color, raza y foto",
+   "ruta": "Ganado · Alta",
+   "entrada": "Para meter al hato una vaca, un toro o un animal que compraste. Casi todo es opcional: si no tienes el dato a la mano, lo llenas después.",
+   "video": "alta-animal",
+   "poster": "78-alta-guardado",
+   "pie": "Foto, apodo, arete, color, raza y edad, y a guardar.",
+   "secciones": [
+    {
+     "titulo": "Paso a paso",
+     "pasos": [
+      {
+       "titulo": "Ve a Ganado y toca el +",
+       "texto": "El botón naranja de abajo a la derecha. También está en Inicio → <b>Acciones rápidas → Agregar animal</b>.",
+       "img": "70-ganado"
+      },
+      {
+       "titulo": "Ponle foto",
+       "texto": "Toca el cuadro de arriba. Puedes <b>tomar la foto</b> en ese momento o <b>escogerla de la galería</b>.",
+       "img": [
+        "71-alta-form",
+        "72-foto-opciones"
+       ]
+      },
+      {
+       "titulo": "Escoge la foto y acomódala",
+       "texto": "Toca la foto que quieres, luego <b>Listo</b>. Te deja recortarla: acomódala y toca la palomita de arriba.",
+       "img": [
+        "73-galeria",
+        "74-recortar"
+       ]
+      },
+      {
+       "titulo": "Identidad",
+       "lista": [
+        "<b>Apodo</b>, como le dicen en el rancho.",
+        "<b>Número de arete.</b> Si de plano no trae, prende “Este animal no trae arete” y la reconoces por apodo y foto.",
+        "<b>Macho o hembra.</b>"
+       ],
+       "img": "75-alta-identidad"
+      },
+      {
+       "titulo": "Rasgos y edad",
+       "opcional": true,
+       "lista": [
+        "<b>Color.</b> Escríbelo o toca una sugerencia.",
+        "<b>Raza</b>, igual.",
+        "<b>Fierro:</b> la marca con la que está herrado. Las que ya usaste salen abajo para tocarlas.",
+        "<b>Edad.</b> Si no sabes la fecha de nacimiento, pon la edad aproximada en años (o en meses, si es cría)."
+       ],
+       "img": "76-alta-rasgos"
+      },
+      {
+       "titulo": "Manejo",
+       "opcional": true,
+       "lista": [
+        "<b>¿Es matrera?</b> Si es arisca y difícil de manejar, márcala. Le sale una advertencia roja en su ficha y en la lista.",
+        "<b>¿Cría sin madre identificada?</b> Regístrala igual y le pones la madre después, desde su ficha."
+       ],
+       "img": "77-alta-manejo"
+      },
+      {
+       "titulo": "Toca “Guardar”",
+       "texto": "Listo: ya sale en <b>Todo el hato</b>, con su foto.",
+       "img": "78-alta-guardado"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Las crías no se dan de alta aquí",
+     "texto": "Cuando nace una cría, mejor <b>registra el parto</b>: así la cría queda ligada a su madre y la app calcula el siguiente parto."
+    },
+    {
+     "titulo": "¿Te equivocaste?",
+     "texto": "Abre la ficha del animal y toca el lápiz de arriba para editar cualquier dato."
+    }
+   ]
+  },
+  {
+   "id": "registrar-parto",
+   "grupo": "Ganado",
+   "icono": "🍼",
+   "titulo": "Registrar un parto",
+   "resumen": "Apunta la cría nueva y lígala a su madre",
+   "ruta": "Ganado · Partos",
+   "entrada": "Viste una cría nueva en el potrero. Apúntala aquí: la app crea a la cría, la liga con su madre y te calcula el siguiente parto.",
+   "video": "registrar-parto",
+   "poster": "12-parto-form",
+   "pie": "Lo más rápido: escoges a la madre y guardas.",
+   "secciones": [
+    {
+     "titulo": "Paso a paso",
+     "pasos": [
+      {
+       "titulo": "Toca “Acciones rápidas”",
+       "texto": "Es el botón naranja de abajo, en la pantalla de Inicio.",
+       "img": "10-inicio"
+      },
+      {
+       "titulo": "Escoge “Registrar parto”",
+       "texto": "Es la primera opción de la lista.",
+       "img": "11-acciones-rapidas"
+      },
+      {
+       "titulo": "Elige a la madre",
+       "texto": "Toca el recuadro de <b>Madre</b> y búscala por su arete o por su apodo. Es lo único que la app te pide a fuerzas.",
+       "img": [
+        "12-parto-form",
+        "13-elegir-madre"
+       ]
+      },
+      {
+       "titulo": "Revisa la fecha y la edad de la cría",
+       "lista": [
+        "<b>Fecha en que se vio la cría.</b> Ya viene con la de hoy. Cámbiala si la viste otro día.",
+        "<b>¿Qué edad tenía cuando la viste?</b> Si ya estaba grandecita, escoge “Unos días” o “Como 1 mes”. Así la app sabe cuándo nació de verdad."
+       ],
+       "img": "14-madre-elegida"
+      },
+      {
+       "titulo": "Cómo estuvo el parto",
+       "opcional": true,
+       "lista": [
+        "<b>Dificultad del parto:</b> normal, asistido, complicado o “se desconoce”.",
+        "<b>¿La cría está viva?</b> Si nació muerta, apágalo."
+       ],
+       "img": "15-parto-cria"
+      },
+      {
+       "titulo": "Los datos de la cría",
+       "opcional": true,
+       "lista": [
+        "<b>Apodo</b>, si ya le pusieron.",
+        "<b>Macho o hembra.</b>",
+        "<b>Color.</b> Escríbelo o toca uno de los de abajo."
+       ],
+       "despues": "La raza se llena sola con la de la madre. Cámbiala si es cruza.",
+       "img": "16-parto-cria-llena"
+      },
+      {
+       "titulo": "Padre, peso y foto",
+       "opcional": true,
+       "lista": [
+        "<b>Padre:</b> escoge al toro que le reconozcas. Si no sabes, déjalo en “No se sabe”.",
+        "<b>Peso al nacer</b>, si lo pesaste.",
+        "<b>Foto de la madre con la cría.</b> Sirve para reconocerlas después en el potrero."
+       ],
+       "img": "17-parto-final"
+      },
+      {
+       "titulo": "Toca “Guardar”",
+       "texto": "Te sale un recordatorio para vigilar el ombligo del becerro (por el gusano barrenador). Toca <b>Entendido</b> y listo.",
+       "img": "19-parto-guardado"
+      }
+     ]
+    },
+    {
+     "titulo": "¿Dónde queda apuntado?",
+     "texto": "En la ficha de la madre. Ve a <b>Ganado</b>, busca su arete y bájale hasta <b>Crías</b>:",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "La cría y la probabilidad",
+       "lista": [
+        "Ahí aparece la cría nueva, ya ligada a su madre.",
+        "La app te dice qué tan probable es que la que sigue sea hembra o macho, según las crías que ha tenido."
+       ],
+       "img": "33-ficha-scroll2"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Sin señal también funciona",
+     "texto": "El parto se guarda en el teléfono. Si tienes cuenta, se sube solo a la nube cuando agarres internet."
+    },
+    {
+     "titulo": "Otro camino",
+     "texto": "Si ya estás en la ficha de la vaca, abajo tienes el botón <b>Registrar parto</b>, y ahí la madre ya viene escogida."
+    }
+   ]
+  },
+  {
+   "id": "ficha-animal",
+   "grupo": "Ganado",
+   "icono": "📋",
+   "titulo": "La ficha del animal",
+   "resumen": "Riesgo, próximo parto, crías y salud",
+   "ruta": "Ganado · Ficha",
+   "entrada": "Cada animal tiene su ficha: su foto, sus datos, qué tan problemático es, sus crías, su salud y lo que le puedes apuntar. Para abrirla, toca al animal en la lista de Ganado.",
+   "secciones": [
+    {
+     "titulo": "Arriba de la ficha",
+     "pasos": [
+      {
+       "titulo": "Los botones de arriba",
+       "lista": [
+        "<b>Árbol:</b> su familia, madre, padre y crías.",
+        "<b>Lápiz:</b> editar sus datos.",
+        "<b>Bote:</b> borrarlo. Te pregunta antes de hacerlo."
+       ],
+       "img": "80-ficha-1b"
+      },
+      {
+       "titulo": "Foto, datos y riesgo",
+       "lista": [
+        "<b>La foto.</b> Con los botoncitos de la esquina la recortas o le agregas otra (individual, madre con cría o cría sola).",
+        "<b>El semáforo de riesgo:</b> verde, amarillo o rojo.",
+        "<b>Índice de riesgo</b> de 0 a 100, con el porqué: edad, si se enferma seguido, partos difíciles, si es matrera."
+       ],
+       "img": "80-ficha-1"
+      }
+     ]
+    },
+    {
+     "titulo": "Bájale a la ficha",
+     "pasos": [
+      {
+       "titulo": "Cuándo la viste y quién es el padre",
+       "lista": [
+        "<b>Lo vi hoy:</b> tócalo cuando la veas en el potrero. Así sabes cuáles tienes mucho sin ver.",
+        "<b>Decir quién es el padre</b>, si lo sabes."
+       ],
+       "img": "80-ficha-2"
+      },
+      {
+       "titulo": "Crías y predicciones",
+       "lista": [
+        "<b>Próximo parto estimado:</b> la fecha aproximada, calculada con sus partos anteriores. Si todavía trae cría al pie, te lo dice.",
+        "<b>Probabilidad de la cría:</b> qué tan probable es hembra o macho, según lo que ha parido.",
+        "<b>Sus crías.</b> Si una tiene potencial, toca <b>Dejar</b> para que pase al hato."
+       ],
+       "img": "80-ficha-3"
+      },
+      {
+       "titulo": "Salud y acciones",
+       "lista": [
+        "<b>Salud:</b> sus vacunas y enfermedades. Con el <b>+</b> le apuntas una nueva.",
+        "<b>Acciones:</b> cambiar arete, apuntar lo que viste (panzona, palpada, etc.), registrar parto y registrar venta."
+       ],
+       "img": "80-ficha-5"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "El semáforo",
+     "texto": "🟢 Bajo (0 a 33), 🟡 Medio (34 a 66), 🔴 Alto (67 a 100). En la lista de Ganado también sale, para que ubiques rápido a las problemáticas."
+    }
+   ]
+  },
+  {
+   "id": "buscar-filtrar",
+   "grupo": "Ganado",
+   "icono": "🔎",
+   "titulo": "Buscar y filtrar",
+   "resumen": "Por arete, apodo, color, “sin ver”",
+   "ruta": "Ganado · Buscar",
+   "entrada": "Para encontrar rápido a un animal entre todo el hato: por arete, por apodo o color, o con filtros.",
+   "secciones": [
+    {
+     "titulo": "La pantalla de Ganado",
+     "pasos": [
+      {
+       "titulo": "Lo que hay arriba",
+       "lista": [
+        "<b>#</b> para buscar por número de arete, <b>ABC</b> para buscar por apodo o color.",
+        "<b>Filtros</b>: para ordenar y escoger qué ver.",
+        "<b>Los contadores:</b> vacas, crías, con cría y sin ver. Toca uno para ver solo esos.",
+        "<b>Vacas atrasadas:</b> las que ya se tardaron en parir. Tócalo para verlas."
+       ],
+       "img": "90-lista"
+      }
+     ]
+    },
+    {
+     "titulo": "Buscar",
+     "pasos": [
+      {
+       "titulo": "Por arete",
+       "texto": "Con <b>#</b> escoges y tecleas el número. Basta con los últimos dígitos: “0108” encuentra el arete 05120108. Si no existe, te ofrece darlo de alta ahí mismo."
+      },
+      {
+       "titulo": "Por apodo o color",
+       "texto": "Toca <b>ABC</b> y escribe. Por ejemplo “prieto” te saca a todos los prietos, con sus crías abajo.",
+       "img": "91-buscar-apodo"
+      }
+     ]
+    },
+    {
+     "titulo": "Filtrar y ordenar",
+     "pasos": [
+      {
+       "titulo": "Abre los filtros",
+       "lista": [
+        "<b>Ver:</b> vacas, crías o todas.",
+        "<b>Ordenar por:</b> recién agregadas, nombre, más viejas, más nuevas, riesgo o tiempo sin verse."
+       ],
+       "img": "92-filtros"
+      },
+      {
+       "titulo": "Escoge y aplica",
+       "lista": [
+        "Bájale para filtrar por <b>estado</b> (activa, vendida, muerta, perdida), <b>sexo</b> o <b>riesgo</b>.",
+        "Toca <b>Aplicar</b>."
+       ],
+       "img": "93-filtros-2"
+      },
+      {
+       "titulo": "El resultado",
+       "lista": [
+        "Arriba salen los filtros que pusiste. Tócales la <b>×</b> para quitarlos.",
+        "El ojito de la foto es <b>Lo vi</b>: tócalo para apuntar que la viste hoy, sin abrir la ficha."
+       ],
+       "img": "94-filtrado"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "aretes",
+   "grupo": "Ganado",
+   "icono": "🏷️",
+   "titulo": "Aretar y arreglar aretes",
+   "resumen": "Jornada de aretado, repetidos y perdidos",
+   "ruta": "Ganado · Aretes",
+   "entrada": "Cuando arreas a las crías para aretarlas, la app te lleva la cuenta: cuáles faltan, qué arete le tocó a cada una, y cuántos aretes se pierden al año.",
+   "secciones": [
+    {
+     "titulo": "Jornada de aretado",
+     "pasos": [
+      {
+       "titulo": "Abre la jornada",
+       "texto": "En <b>Ganado</b>, toca la etiqueta de arriba.",
+       "img": "99-ganado-etiqueta"
+      },
+      {
+       "titulo": "Lo que ves",
+       "lista": [
+        "<b>Machos y Hembras</b>, en pestañas separadas.",
+        "<b>Tanda de aretes:</b> los dígitos que se repiten en todos los aretes del pedido.",
+        "La lista de crías sin arete. Toca la etiqueta de una para ponérselo.",
+        "<b>No la encuentro:</b> si traes una cría que no está en la lista."
+       ],
+       "img": "100-aretado"
+      },
+      {
+       "titulo": "Pon la tanda una sola vez",
+       "texto": "Toca el lápiz de la tanda y escribe los dígitos que traen iguales todos los aretes (por ejemplo 051202). Así al aretar solo tecleas los últimos.",
+       "img": "101-tanda"
+      },
+      {
+       "titulo": "Arétala",
+       "texto": "Toca la etiqueta de la cría, teclea los <b>últimos dígitos</b> y toca <b>Poner arete</b>.",
+       "img": "102-poner-arete"
+      },
+      {
+       "titulo": "Sigue con la otra",
+       "texto": "La cría sale de la lista y abajo te confirma el arete completo. Si te equivocaste, toca <b>Deshacer</b>.",
+       "img": "103-aretada"
+      },
+      {
+       "titulo": "¿Traes una que no está?",
+       "texto": "Toca <b>No la encuentro</b>, teclea sus dígitos, escoge su color (y foto si quieres) y <b>Guardar y siguiente</b>. Después con calma la juntas con la que tenías apuntada.",
+       "img": "104-no-la-encuentro"
+      }
+     ]
+    },
+    {
+     "titulo": "Cambiar un arete",
+     "pasos": [
+      {
+       "titulo": "Desde la ficha",
+       "texto": "Abre la ficha del animal, bájale hasta abajo y toca <b>Cambiar arete</b>.",
+       "img": "107-ficha-acciones"
+      },
+      {
+       "titulo": "Di qué pasó",
+       "texto": "Se le cayó, ya no se lee, cambio de tanda, se puso el oficial u otro. Si fue un error de captura, escoge <b>Me equivoqué al capturarlo</b>: así no queda en el historial.",
+       "img": "108-cambiar-arete"
+      },
+      {
+       "titulo": "Pon el nuevo y guarda",
+       "texto": "Escribe el arete nuevo, revisa la fecha y toca <b>Guardar</b>.",
+       "img": "109-arete-nuevo"
+      }
+     ]
+    },
+    {
+     "titulo": "Aretes perdidos y repetidos",
+     "pasos": [
+      {
+       "titulo": "Cuántos se pierden",
+       "texto": "En la jornada de aretado, el icono de arriba a la derecha te dice cuántos aretes se han retirado, por qué y cuánto duran puestos. Te sirve para pedir la siguiente tanda con margen.",
+       "img": "106-perdidos"
+      },
+      {
+       "titulo": "Repetidos",
+       "texto": "El icono de junto (a la izquierda) te avisa si dos animales traen el mismo número de arete, para que lo corrijas."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pendientes-hato",
+   "grupo": "Ganado",
+   "icono": "⏳",
+   "titulo": "Pendientes del hato",
+   "resumen": "Vacas atrasadas y crías sin madre",
+   "ruta": "Ganado · Pendientes",
+   "entrada": "La app te avisa de lo que hay que revisar en el hato: vacas que ya se tardaron en parir y crías que no sabes de quién son.",
+   "secciones": [
+    {
+     "titulo": "Dónde salen",
+     "pasos": [
+      {
+       "titulo": "Arriba de la lista de Ganado",
+       "texto": "Cuando hay pendientes, salen como renglones cafés arriba de <b>Todo el hato</b>. Toca uno para verlo.",
+       "img": "113-ganado-pendientes"
+      }
+     ]
+    },
+    {
+     "titulo": "Vacas atrasadas",
+     "pasos": [
+      {
+       "titulo": "Las que no han parido",
+       "lista": [
+        "Las vacas que llevan más de 15 meses sin parir.",
+        "Cuánto van tarde, comparadas con su propio ritmo o con el promedio del hato."
+       ],
+       "despues": "Vale la pena revisarlas: puede que no cargó, que abortó o que ya no está sirviendo.",
+       "img": "111-atrasadas"
+      }
+     ]
+    },
+    {
+     "titulo": "Crías sin madre",
+     "pasos": [
+      {
+       "titulo": "Regístrala aunque no sepas de quién es",
+       "texto": "Al dar de alta la cría, prende <b>¿Es una cría sin madre identificada?</b>.",
+       "img": "112-cria-sin-madre-alta"
+      },
+      {
+       "titulo": "Cuando sepas, vincúlala",
+       "texto": "En <b>Crías sin madre</b> toca <b>Vincular madre</b>.",
+       "img": "114-sin-madre"
+      },
+      {
+       "titulo": "Escoge a la madre",
+       "lista": [
+        "Puedes filtrar por color, o buscar por arete o apodo.",
+        "Arriba salen las que <b>pudieron haberla parido</b>: a las que les tocaba parir o que traen cría sin aretar."
+       ],
+       "img": "115-vincular"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vacunas",
+   "grupo": "Salud",
+   "icono": "💉",
+   "titulo": "Vacunas",
+   "resumen": "Una vaca o todo el hato de jalón",
+   "ruta": "Salud · Vacunas",
+   "entrada": "Apunta las vacunas de un animal o de todo el hato de jalón. Si pones la próxima dosis, la app te avisa cuando toque.",
+   "secciones": [
+    {
+     "titulo": "A todo el hato de jalón",
+     "pasos": [
+      {
+       "titulo": "Abre la vacunación masiva",
+       "texto": "En Inicio toca <b>Acciones rápidas → Vacunación masiva</b>.",
+       "img": "120-acciones"
+      },
+      {
+       "titulo": "Escoge la vacuna",
+       "texto": "Escríbela o toca una de las de abajo: clostridial, IBR, brucela, rabia, desparasitante…",
+       "img": "121-masiva"
+      },
+      {
+       "titulo": "Fechas y animales",
+       "lista": [
+        "<b>Fecha:</b> viene con la de hoy.",
+        "<b>Próxima dosis:</b> opcional. Si la pones, te llega el aviso ese día.",
+        "<b>Seleccionar animales:</b> toca <b>Todas</b> o palomea uno por uno.",
+        "Toca <b>Guardar</b>: el botón te dice cuántos animales llevas."
+       ],
+       "img": "122-masiva-llena"
+      }
+     ]
+    },
+    {
+     "titulo": "A un solo animal",
+     "pasos": [
+      {
+       "titulo": "Desde su ficha",
+       "texto": "Abre la ficha, bájale hasta <b>Salud</b> y toca el <b>+</b>.",
+       "img": "125-ficha-salud"
+      },
+      {
+       "titulo": "Registrar vacuna",
+       "texto": "Escoge <b>Registrar vacuna</b>.",
+       "img": "126-salud-mas"
+      },
+      {
+       "titulo": "Llénala y guarda",
+       "lista": [
+        "El nombre de la vacuna.",
+        "Las sugerencias, para no escribir.",
+        "La fecha y la próxima dosis.",
+        "Toca <b>Guardar</b>."
+       ],
+       "img": "127-vacuna-form"
+      },
+      {
+       "titulo": "Queda en su historial",
+       "texto": "La vacuna sale en la Salud de su ficha. Tócala para editarla.",
+       "img": "128-tras-vacuna"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Recordatorios",
+     "texto": "Las próximas dosis salen en Inicio, en <b>Recordatorios de vacunas</b>, y en la campana de avisos."
+    }
+   ]
+  },
+  {
+   "id": "enfermedades",
+   "grupo": "Salud",
+   "icono": "🩹",
+   "titulo": "Enfermedades y alertas",
+   "resumen": "Tratamiento, gasto y aviso a SENASICA",
+   "ruta": "Salud · Enfermedades",
+   "entrada": "Apunta cuando un animal se enferma: qué tiene, cómo lo curaste y cuánto costó. Los casos graves, como el gusano barrenador, se marcan como alerta sanitaria.",
+   "secciones": [
+    {
+     "titulo": "Paso a paso",
+     "pasos": [
+      {
+       "titulo": "Desde la ficha del animal",
+       "texto": "Bájale hasta <b>Salud</b>, toca el <b>+</b> y escoge <b>Registrar enfermedad</b>.",
+       "img": "126-salud-mas"
+      },
+      {
+       "titulo": "¿Qué tiene?",
+       "texto": "Escríbelo o toca una sugerencia: diarrea, neumonía, mastitis, cojera, mal de ojo, garrapatas…",
+       "img": "130-enfermedad-form"
+      },
+      {
+       "titulo": "¿Es alerta sanitaria?",
+       "opcional": true,
+       "lista": [
+        "Prende el switch si es un caso grave.",
+        "Escoge el <b>tipo de alerta</b> (por ejemplo, gusano barrenador).",
+        "Dónde está la <b>herida</b>: ombligo, castración, descorne…"
+       ],
+       "img": "131-alerta"
+      },
+      {
+       "titulo": "Revisión y reporte",
+       "opcional": true,
+       "lista": [
+        "<b>Próxima revisión de la herida:</b> te llega el aviso ese día.",
+        "<b>Ya la reporté a SENASICA</b>, para que quede apuntado.",
+        "<b>Reportar a SENASICA</b> te enseña el teléfono, el WhatsApp y el correo para avisarles."
+       ],
+       "img": [
+        "132-enf-2",
+        "133-senasica"
+       ]
+      },
+      {
+       "titulo": "Tratamiento y costo",
+       "lista": [
+        "<b>Fecha de inicio</b> y si <b>sigue enferma</b>. Cuando se cure, apágalo y pon la fecha.",
+        "<b>Tratamiento</b>: qué le pusiste.",
+        "<b>Costo</b> de la medicina.",
+        "Palomea <b>Registrar el costo como gasto</b> y se apunta solo en Dinero.",
+        "Toca <b>Guardar</b>."
+       ],
+       "img": "134-enf-3"
+      },
+      {
+       "titulo": "Así se ve en la ficha",
+       "texto": "Las alertas sanitarias salen en rojo, con la herida y el botón para reportar. En Inicio también salen en <b>Alertas sanitarias</b>.",
+       "img": "135-tras-enf"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Se suma al riesgo",
+     "texto": "Si un animal se enferma seguido, su índice de riesgo sube. Así ubicas a las problemáticas."
+    }
+   ]
+  },
+  {
+   "id": "vender",
+   "grupo": "Dinero",
+   "icono": "🤝",
+   "titulo": "Vender ganado",
+   "resumen": "Peso, precio por kilo y comprador",
+   "ruta": "Dinero · Ventas",
+   "entrada": "Cuando vendes ganado, apúntalo aquí: uno o todo un lote. La app saca el importe con el peso y el precio por kilo, pasa el animal a “vendido” y suma la entrada al Dinero.",
+   "secciones": [
+    {
+     "titulo": "Paso a paso",
+     "pasos": [
+      {
+       "titulo": "Abre la venta",
+       "texto": "Inicio → <b>Acciones rápidas → Registrar venta</b>. También desde la ficha del animal (<b>Registrar venta</b>) o desde Dinero → Entradas → <b>+</b>.",
+       "img": "120-acciones"
+      },
+      {
+       "titulo": "Fecha y animales",
+       "lista": [
+        "<b>Fecha de venta:</b> viene con la de hoy.",
+        "Toca <b>Agregar animal</b> por cada uno que salió."
+       ],
+       "img": "140-venta-form"
+      },
+      {
+       "titulo": "¿Cuál salió?",
+       "lista": [
+        "Búscalo por arete, apodo o color.",
+        "Filtra por color con los botones.",
+        "Toca el <b>+</b> del animal."
+       ],
+       "img": "141-escoger-animal"
+      },
+      {
+       "titulo": "Peso y precio",
+       "lista": [
+        "La <b>categoría</b> (becerro, vaca, toro…) se pone sola. Cámbiala si hace falta.",
+        "<b>Peso</b> en kilos y <b>precio por kilo</b>.",
+        "El <b>importe</b> se calcula solo.",
+        "Abajo ves cuántas cabezas y el total. Toca <b>Guardar</b>."
+       ],
+       "img": "142-renglon"
+      }
+     ]
+    },
+    {
+     "titulo": "Dónde queda",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Dinero → Entradas",
+       "lista": [
+        "Lo que entró en el mes, cuántas cabezas, kilos y el promedio por kilo.",
+        "Cada venta con sus animales. Tócala para ver el detalle."
+       ],
+       "img": "151-entradas"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "El animal ya no sale en el hato",
+     "texto": "Al vender, pasa a “vendida”. Si lo quieres ver, en Ganado → Filtros → Estado escoge <b>Vendida</b>."
+    }
+   ]
+  },
+  {
+   "id": "gastos-entradas",
+   "grupo": "Dinero",
+   "icono": "💵",
+   "titulo": "Gastos y entradas",
+   "resumen": "Apuntar lo que sale y lo que entra",
+   "ruta": "Dinero · Gastos y entradas",
+   "entrada": "Apunta todo lo que sale (gasolina, pacas, medicina, la raya) y lo que entra que no sea venta de ganado (renta de agostadero, venta de pacas…).",
+   "secciones": [
+    {
+     "titulo": "Apuntar un gasto",
+     "pasos": [
+      {
+       "titulo": "Ve a Dinero → Gastos y toca el +",
+       "lista": [
+        "El total del mes.",
+        "Por categoría: toca una rebanada para ver de qué fue.",
+        "El <b>+</b> para apuntar uno nuevo."
+       ],
+       "despues": "También está en Inicio → <b>Acciones rápidas → Registrar gasto</b>.",
+       "img": "152-gastos"
+      },
+      {
+       "titulo": "Llénalo",
+       "lista": [
+        "<b>Lo que salió:</b> la cantidad. Puedes escribir “1,200”.",
+        "<b>En qué se gastó:</b> alimentación, mantenimiento, combustible, medicinas, mano de obra u otros.",
+        "<b>¿Qué fue?</b> Como lo dirías: “gasolina de la troca”.",
+        "<b>Cuándo:</b> hoy, ayer u otra fecha.",
+        "<b>Además…</b> para ligarlo a algo más (siguiente paso)."
+       ],
+       "img": "153-gasto-form"
+      },
+      {
+       "titulo": "Además: proyecto o almacén",
+       "opcional": true,
+       "lista": [
+        "<b>Proyecto:</b> si el gasto es de una obra (por ejemplo “Poner agua en la pila”), escógela y se suma a lo que lleva gastado.",
+        "<b>Mandar al inventario:</b> si compraste algo que vas a guardar (sal, alambre), entra solo al almacén."
+       ],
+       "despues": "Toca <b>Guardar</b>.",
+       "img": "154-gasto-ademas"
+      },
+      {
+       "titulo": "Ver de qué fue",
+       "texto": "En la gráfica de pastel toca una rebanada: te enseña los gastos de esa categoría. <b>Ver solo estos gastos</b> te deja la lista filtrada.",
+       "img": "158-rebanada"
+      }
+     ]
+    },
+    {
+     "titulo": "Apuntar una entrada",
+     "pasos": [
+      {
+       "titulo": "Dinero → Entradas → +",
+       "lista": [
+        "<b>Venta de ganado:</b> te lleva a registrar una venta.",
+        "<b>Otra entrada de dinero:</b> cuando te pagaron sin que saliera ganado."
+       ],
+       "img": "155-que-entro"
+      },
+      {
+       "titulo": "Llénala",
+       "lista": [
+        "<b>Lo que entró.</b>",
+        "<b>De qué fue.</b> La app se acuerda de las que ya usaste y te las pone abajo.",
+        "<b>De quién o de qué</b>, opcional."
+       ],
+       "despues": "Escoge la fecha y toca <b>Guardar</b>.",
+       "img": "156-entrada-form"
+      },
+      {
+       "titulo": "De dónde entró",
+       "texto": "En Entradas ves cuánto vino de ventas y cuánto de cada otra cosa. Toca un renglón para ver el detalle.",
+       "img": "157-entradas-origen"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "balance",
+   "grupo": "Dinero",
+   "icono": "📊",
+   "titulo": "El balance",
+   "resumen": "Cuánto entró, cuánto salió, mes por mes",
+   "ruta": "Dinero · Balance",
+   "entrada": "Cuánto entró, cuánto salió y cuánto queda: por mes, por año o de toda la vida.",
+   "secciones": [
+    {
+     "titulo": "Cómo leerlo",
+     "pasos": [
+      {
+       "titulo": "Dinero → Balance",
+       "lista": [
+        "<b>Mes, Año o Todo:</b> escoge el periodo. Con las flechas te mueves al mes de antes o al siguiente.",
+        "<b>Entró, Salió y Queda.</b> Si quedó a favor, sale en verde con la flechita para arriba.",
+        "<b>Mes por mes:</b> barras verdes de lo que entró y rosas de lo que salió, para comparar."
+       ],
+       "img": "150-balance"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Todo sale de lo que apuntas",
+     "texto": "El balance suma las ventas, las otras entradas y los gastos. También los gastos que se apuntaron solos, como la medicina de una enfermedad o la compra de una dieta."
+    }
+   ]
+  },
+  {
+   "id": "proyectos",
+   "grupo": "El rancho",
+   "icono": "🛠️",
+   "titulo": "Proyectos",
+   "resumen": "Obras con tareas, avance y gastos",
+   "ruta": "El rancho · Proyectos",
+   "entrada": "Para las obras del rancho, como poner agua en la pila o arreglar el corral: las tareas en orden, lo que llevas gastado y cuánto falta.",
+   "secciones": [
+    {
+     "titulo": "Tus proyectos",
+     "pasos": [
+      {
+       "titulo": "La pestaña Proyectos",
+       "lista": [
+        "Cuántos tienes planeados, en obra, pausados y listos.",
+        "Cada proyecto con su avance, lo que va gastado y la tarea que sigue.",
+        "El <b>+</b> para uno nuevo."
+       ],
+       "img": "160-proyectos"
+      },
+      {
+       "titulo": "Uno nuevo",
+       "lista": [
+        "<b>Nombre</b>, como lo dicen: “Poner agua en la pila”.",
+        "<b>Descripción</b>, opcional.",
+        "<b>Estado:</b> planeado, en progreso, terminado o pausado.",
+        "<b>Lo que calculaste</b> que va a costar, opcional.",
+        "<b>Fechas</b> de inicio y fin, opcionales."
+       ],
+       "despues": "Toca <b>Guardar</b>.",
+       "img": "166-proyecto-nuevo"
+      }
+     ]
+    },
+    {
+     "titulo": "Adentro del proyecto",
+     "pasos": [
+      {
+       "titulo": "El resumen",
+       "lista": [
+        "La <b>fase</b> en la que va. Tócala para cambiarla.",
+        "<b>Gastado</b>, lo que <b>falta juntar</b> y lo que <b>calculaste</b>, con el avance de tareas.",
+        "<b>Lo que falta:</b> las tareas pendientes, en orden. Deja presionada una para moverla de lugar."
+       ],
+       "img": "161-proyecto-1"
+      },
+      {
+       "titulo": "Palomea lo que ya quedó",
+       "texto": "Toca el cuadrito de una tarea cuando la terminen. Baja a <b>Ya quedó</b> y el avance se actualiza solo. La fase se mueve sola: al palomear la primera, un proyecto planeado pasa a <b>en obra</b>, y al palomear la última pasa a <b>listo</b>. Un proyecto pausado no se mueve solo.",
+       "img": "164-palomear"
+      },
+      {
+       "titulo": "Agrega tareas",
+       "texto": "Toca <b>Agregar tarea</b>, escribe qué hay que hacer y, si quieres, cuánto crees que cuesta.",
+       "img": "165-agregar-tarea"
+      },
+      {
+       "titulo": "Los gastos de la obra",
+       "texto": "Abajo salen los gastos ligados al proyecto. Con <b>Registrar gasto</b> apuntas uno que ya viene ligado.",
+       "img": "163-proyecto-3"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Lo calculado es solo de referencia",
+     "texto": "Si la obra sale más cara, no pasa nada: la app no te regaña. La cifra es para acordarte de lo que calculaste."
+    }
+   ]
+  },
+  {
+   "id": "dieta",
+   "grupo": "El rancho",
+   "icono": "🌾",
+   "titulo": "Dieta",
+   "resumen": "Ingredientes, costo y nutrientes",
+   "ruta": "El rancho · Dieta",
+   "entrada": "Arma lo que les das de comer: costales, pacas, sal. La app te dice cuánto cuesta por cabeza, cuánta proteína y energía llevan, y qué ingrediente te rinde más por tu dinero.",
+   "secciones": [
+    {
+     "titulo": "Hacer una dieta",
+     "pasos": [
+      {
+       "titulo": "Pestaña Dieta → +",
+       "lista": [
+        "Cada dieta con su costo por cabeza al día, proteína y materia seca (MS).",
+        "El <b>+</b> para hacer una nueva."
+       ],
+       "img": "170-dietas"
+      },
+      {
+       "titulo": "Nombre, cada cuándo y cuántos animales",
+       "lista": [
+        "<b>Nombre</b>, por ejemplo “Engorda invierno”.",
+        "<b>Cada cuándo se da:</b> al día, cada semana, cada 8 días… Lo que captures abajo es lo que se da en ese periodo.",
+        "<b>Cada cuántos días</b>, si es otro periodo.",
+        "<b>Número de animales que la comen.</b>"
+       ],
+       "despues": "Toca <b>Guardar</b>.",
+       "img": "176-dieta-nueva"
+      },
+      {
+       "titulo": "Agrega los ingredientes",
+       "texto": "Adentro de la dieta, en <b>Ingredientes</b> toca <b>Agregar</b>.",
+       "img": "171-dieta-1"
+      },
+      {
+       "titulo": "Cada ingrediente",
+       "lista": [
+        "El nombre del ingrediente.",
+        "Las sugerencias: maíz, sorgo, pacas, melaza, sal mineral…",
+        "<b>Cantidad</b> y <b>peso por unidad</b>: un costal de 40 kg, una paca de 25 kg.",
+        "<b>Unidad:</b> costal, paca, kg o litro.",
+        "<b>Precio por unidad</b>, para sacar el costo."
+       ],
+       "img": "174-ingrediente"
+      }
+     ]
+    },
+    {
+     "titulo": "Los números",
+     "pasos": [
+      {
+       "titulo": "Toca la barra de abajo",
+       "lista": [
+        "Materia seca, proteína y energía por cabeza al día.",
+        "El porcentaje de proteína con una referencia: engorda 12 a 14%, mantenimiento 8 a 10%.",
+        "El costo del periodo y por cabeza al día."
+       ],
+       "img": "172-numeros"
+      },
+      {
+       "titulo": "¿Qué conviene comprar?",
+       "lista": [
+        "Compara por <b>proteína, energía o alimento</b>.",
+        "Te dice cuánto cuesta en realidad cada kilo de proteína de cada ingrediente, y cuál es <b>el más rendidor</b>."
+       ],
+       "img": "173-conviene"
+      },
+      {
+       "titulo": "Registrar la compra",
+       "lista": [
+        "Con <b>Registrar compra</b> apuntas lo que pagaste del alimento.",
+        "En <b>Compras de alimento</b> ves las que llevas."
+       ],
+       "img": "171-dieta-3"
+      },
+      {
+       "titulo": "La compra se vuelve gasto",
+       "texto": "El monto viene con el costo de la dieta y lo puedes ajustar. Se guarda como gasto de alimentación en Dinero.",
+       "img": "175-compra"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Son valores de referencia",
+     "texto": "Los números de nutrientes son aproximados. No sustituyen a un nutriólogo pecuario."
+    }
+   ]
+  },
+  {
+   "id": "clima-pendientes",
+   "grupo": "El rancho",
+   "icono": "⛅",
+   "titulo": "Clima y pendientes",
+   "resumen": "Pronóstico, recomendaciones y descomposturas",
+   "ruta": "El rancho · Clima y pendientes",
+   "entrada": "El pronóstico de la semana en tu rancho, avisos según el clima y la lista de lo que se descompone: cercos, mangueras, la pila, el papalote.",
+   "secciones": [
+    {
+     "titulo": "La pantalla de Rancho",
+     "pasos": [
+      {
+       "titulo": "Ábrela desde Inicio",
+       "texto": "Toca la tarjeta del clima o la de <b>Rancho</b>.",
+       "img": "55-barra-arriba"
+      },
+      {
+       "titulo": "Lo que ves",
+       "lista": [
+        "<b>El clima:</b> hoy y los próximos días, con la lluvia que se espera.",
+        "<b>Antes de ir:</b> recomendaciones según el clima y lo que ya te ha pasado.",
+        "<b>Abiertas y Resueltas:</b> los pendientes.",
+        "La lista de pendientes. Toca el círculo para resolverlo.",
+        "<b>¿Qué se descompone más seguido?</b>",
+        "<b>Apuntar pendiente.</b>"
+       ],
+       "img": "180-rancho-1"
+      }
+     ]
+    },
+    {
+     "titulo": "Avisos por el clima",
+     "texto": "La app cruza el pronóstico con lo que se te ha descompuesto antes. Por ejemplo:",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Ejemplos de lo que te puede decir",
+       "lista": [
+        "<b>Viene lluvia:</b> “Probablemente encuentres el arroyo desbordado y no puedas acceder; te recomiendo llevar pico y pala.”",
+        "<b>Temporada de seca:</b> “Ve preparado para problemas con la manguera o el agua (lleva repuestos y abrazaderas).”",
+        "<b>Heladas:</b> “Revisa la tubería y la manguera expuesta antes de que truenen.”",
+        "<b>Viento fuerte:</b> “Dale una vuelta a los cercos y al papalote.”"
+       ],
+       "despues": "Solo te avisa de lo que ya te ha pasado antes. Si la semana viene tranquila, dice “Todo en orden”."
+      }
+     ]
+    },
+    {
+     "titulo": "Pendientes",
+     "pasos": [
+      {
+       "titulo": "Apunta lo que se descompuso",
+       "lista": [
+        "<b>Qué pasó.</b> Si ya te pasó antes, tócalo abajo en lugar de escribirlo: así la app lleva la cuenta.",
+        "<b>Descripción</b>, opcional.",
+        "<b>Cuándo:</b> hoy, ayer u otra fecha.",
+        "<b>Por el clima:</b> si fue por lluvia, granizo, sequía, viento o helada."
+       ],
+       "despues": "Toca <b>Guardar</b>.",
+       "img": "182-pendiente-form"
+      },
+      {
+       "titulo": "Resuélvelo",
+       "lista": [
+        "Toca el círculo del pendiente. Revisa la fecha.",
+        "Pon lo que costó la reparación, si quieres.",
+        "Palomea <b>Registrar el costo como gasto</b> y se apunta solo en Dinero."
+       ],
+       "despues": "Toca <b>Resolver</b>.",
+       "img": "183-resolver"
+      },
+      {
+       "titulo": "Quedan en Resueltas",
+       "texto": "Con la fecha, el clima y lo que costó.",
+       "img": "184-resueltas"
+      },
+      {
+       "titulo": "Qué tan seguido pasa",
+       "texto": "Cuántas veces ha pasado cada cosa, cada cuánto y la última vez.",
+       "img": "181-frecuencia"
+      }
+     ]
+    },
+    {
+     "titulo": "La ubicación del rancho",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Para que el clima sea el de tu rancho",
+       "lista": [
+        "<b>Usar mi ubicación actual</b>, estando en el rancho.",
+        "O <b>Elegir municipio</b>.",
+        "O pega la latitud y longitud de Google Maps."
+       ],
+       "despues": "Se abre con el icono de arriba, junto a la campana.",
+       "img": "185-ubicacion"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Sin señal",
+     "texto": "El último pronóstico se guarda en el teléfono. Sin señal ves ese, con la fecha de la última actualización."
+    }
+   ]
+  },
+  {
+   "id": "inventario",
+   "grupo": "El rancho",
+   "icono": "📦",
+   "titulo": "Inventario",
+   "resumen": "Lo que tienes guardado y lo que se acaba",
+   "ruta": "El rancho · Inventario",
+   "entrada": "Lo que tienes guardado en el almacén: sal, medicinas, alambre, mangueras. La app te lleva la cuenta y te avisa cuando algo se está acabando.",
+   "secciones": [
+    {
+     "titulo": "Tu almacén",
+     "pasos": [
+      {
+       "titulo": "Ábrelo desde Inicio",
+       "lista": [
+        "<b>Buscar</b> en el almacén.",
+        "Filtros: <b>Queda poco</b> y por categoría.",
+        "Lo que se está acabando sale en rojo.",
+        "<b>Nuevo artículo</b>."
+       ],
+       "despues": "Se abre con la tarjeta <b>Inventario</b> de Inicio.",
+       "img": "190-inventario"
+      },
+      {
+       "titulo": "Dar de alta un artículo",
+       "lista": [
+        "<b>Qué es:</b> escríbelo o toca una sugerencia.",
+        "<b>Medida o detalle</b>, opcional.",
+        "<b>Cómo lo cuentas:</b> costal, frasco, rollo, pieza…",
+        "<b>Cuánto tienes ahora.</b>",
+        "<b>Avísame cuando baje de…</b> Déjalo vacío si no quieres aviso."
+       ],
+       "despues": "Bájale para ponerle categoría y precio, y toca <b>Guardar</b>.",
+       "img": "194-nuevo-articulo"
+      }
+     ]
+    },
+    {
+     "titulo": "Entradas y salidas",
+     "pasos": [
+      {
+       "titulo": "Abre el artículo",
+       "lista": [
+        "Cuánto hay en el almacén.",
+        "<b>Entró</b> cuando compras, <b>Se usó</b> cuando lo gastas.",
+        "Cuándo te avisa, el precio y cuánto vale lo que tienes."
+       ],
+       "img": "191-articulo"
+      },
+      {
+       "titulo": "Apunta lo que se usó",
+       "lista": [
+        "Cuánto se usó.",
+        "Para qué o de dónde, opcional.",
+        "La fecha.",
+        "Toca <b>Guardar</b>."
+       ],
+       "img": "192-se-uso"
+      },
+      {
+       "titulo": "Movimientos",
+       "texto": "Abajo queda cada entrada y salida. Si te equivocaste, toca la flechita para deshacerla.",
+       "img": "193-tras-salida"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "Compras que entran solas",
+     "texto": "Si al apuntar un gasto escoges <b>Mandar al inventario</b>, lo que compraste entra solo al almacén."
+    }
+   ]
+  },
+  {
+   "id": "avisos",
+   "grupo": "Cuenta y familia",
+   "icono": "🔔",
+   "titulo": "Avisos",
+   "resumen": "Qué te avisa la app y cuándo",
+   "ruta": "Cuenta y familia · Avisos",
+   "entrada": "La app te avisa cuando toca vacunar, cuando una vaca ya va a parir, cuando viene mal clima o cuando una obra arranca. Los avisos viven en tu teléfono: funcionan sin señal.",
+   "secciones": [
+    {
+     "titulo": "Ver tus avisos",
+     "pasos": [
+      {
+       "titulo": "Toca la campana",
+       "texto": "Está arriba, en casi todas las pantallas. El número rojo es cuántos avisos tienes.",
+       "img": "55-barra-arriba"
+      },
+      {
+       "titulo": "Hoy y próximos",
+       "lista": [
+        "<b>Hoy:</b> lo que hay que hacer ya, como revisar a una vaca que está por parir.",
+        "<b>Próximos:</b> lo que viene, como la siguiente dosis de una vacuna."
+       ],
+       "despues": "Toca un aviso para ir directo al animal o a lo que se trate.",
+       "img": "51-avisos"
+      }
+     ]
+    },
+    {
+     "titulo": "Que te lleguen al teléfono",
+     "pasos": [
+      {
+       "titulo": "Dale permiso a la app",
+       "texto": "Ve a <b>Ajustes</b> (el engrane), baja hasta <b>Avisos</b> y toca <b>Permitir avisos</b>. El teléfono te pregunta: toca <b>Permitir</b>."
+      },
+      {
+       "titulo": "Escoge qué te avisa y a qué hora",
+       "lista": [
+        "Prende o apaga cada tipo: <b>vacunas, partos próximos, clima y obras</b>.",
+        "<b>Aviso del día</b> (en la mañana) y <b>aviso de la víspera</b> (la tarde de antes). Toca la hora para cambiarla."
+       ],
+       "img": "63-avisos-activos"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "¿No te llegan?",
+     "texto": "Algunos teléfonos duermen las apps para ahorrar pila. En Ajustes → Avisos toca <b>Abrir ajustes de batería</b> y quítale a Ganova el ahorro de batería."
+    }
+   ]
+  },
+  {
+   "id": "cuenta",
+   "grupo": "Cuenta y familia",
+   "icono": "☁️",
+   "titulo": "Cuenta y respaldo",
+   "resumen": "Que no se pierda nada si cambias de teléfono",
+   "ruta": "Cuenta y familia · Cuenta",
+   "entrada": "Sin cuenta, la app funciona completa, pero todo vive solo en tu teléfono. Con cuenta se respalda en la nube: si cambias de teléfono o se te pierde, entras y te baja tu rancho tal como lo dejaste.",
+   "secciones": [
+    {
+     "titulo": "Crear tu cuenta",
+     "pasos": [
+      {
+       "titulo": "Ajustes → Entrar o crear cuenta",
+       "texto": "Arriba de los Ajustes te dice si tus datos solo están en este teléfono. Toca <b>Entrar o crear cuenta</b>. También está en la nube de arriba.",
+       "img": "60-ajustes-cuenta"
+      },
+      {
+       "titulo": "Correo y contraseña",
+       "lista": [
+        "Tu <b>correo</b>.",
+        "Una <b>contraseña</b> de mínimo 6 caracteres.",
+        "Toca <b>Continuar</b>."
+       ],
+       "despues": "Si es tu primera vez, se crea tu cuenta. Si ya la tenías, entras y te baja tu rancho. Lo que ya habías apuntado en el teléfono no se pierde.",
+       "img": "221-cuenta-llena"
+      },
+      {
+       "titulo": "Listo: ya se respalda",
+       "texto": "En Ajustes sale tu correo y si hay cambios sin subir. Se suben solos cuando agarras señal. Si alguna vez te pide <b>confirmar tu correo</b>, abre el mensaje que te llegó, toca el enlace y regresa a la app.",
+       "img": "223-ajustes-con-cuenta"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "¿Olvidaste tu contraseña?",
+     "texto": "En la misma pantalla toca <b>¿Olvidaste tu contraseña?</b> y te llega un correo para cambiarla."
+    },
+    {
+     "titulo": "Necesitas señal",
+     "texto": "Para crear la cuenta o entrar sí ocupas internet. Después, lo que apuntes se sube solo cada que agarres señal."
+    }
+   ]
+  },
+  {
+   "id": "familia",
+   "grupo": "Cuenta y familia",
+   "icono": "👨‍👩‍👧",
+   "titulo": "Invitar a la familia",
+   "resumen": "Códigos de invitación y qué puede hacer cada quien",
+   "ruta": "Cuenta y familia · Familia",
+   "entrada": "Para que tu familia o tus vaqueros vean y apunten en el mismo rancho desde su teléfono. Tú generas un código, se los pasas por WhatsApp y entran.",
+   "secciones": [
+    {
+     "titulo": "Invitar a alguien",
+     "pasos": [
+      {
+       "titulo": "Ajustes → Miembros e invitaciones",
+       "lista": [
+        "Arriba ves que tu cuenta ya está respaldada.",
+        "<b>Miembros e invitaciones</b> sale cuando ya tienes cuenta."
+       ],
+       "img": "223-ajustes-con-cuenta"
+      },
+      {
+       "titulo": "Genera un código",
+       "lista": [
+        "<b>Generar código</b> para invitar.",
+        "<b>Unirme a un rancho</b>, si a ti te invitaron.",
+        "<b>Miembros del rancho:</b> quiénes están y con qué rol."
+       ],
+       "img": "224-miembros"
+      },
+      {
+       "titulo": "Escoge qué puede hacer",
+       "lista": [
+        "<b>Permisos:</b> administrador, vaquero o solo lectura.",
+        "<b>Vigencia:</b> 24 horas, 7 días o 30 días.",
+        "<b>Cuántas personas</b> pueden usarlo: una o varias.",
+        "Toca <b>Generar código</b>."
+       ],
+       "img": "225-generar"
+      },
+      {
+       "titulo": "Pásaselo",
+       "lista": [
+        "El código y para quién es.",
+        "Cópialo y pégalo en WhatsApp.",
+        "Si te arrepientes, cancélalo con el circulito."
+       ],
+       "img": "226-codigo"
+      }
+     ]
+    },
+    {
+     "titulo": "El que entra",
+     "pasos": [
+      {
+       "titulo": "Pega el código",
+       "lista": [
+        "En su teléfono, al abrir la app por primera vez toca <b>Me invitaron a un rancho</b>. Si ya usa la app, entra por Ajustes → Miembros → <b>Unirme a un rancho</b>.",
+        "Pega el código y toca <b>Unirme</b>."
+       ],
+       "despues": "No necesita cuenta ni contraseña. La primera vez sí ocupa internet; después funciona sin señal.",
+       "img": "227-unirme"
+      },
+      {
+       "titulo": "Que proteja su acceso",
+       "texto": "Quien entró con código conviene que vaya a Ajustes → <b>Proteger mi acceso</b> y le ponga correo y contraseña. Así puede abrirlo en otro teléfono y no lo pierde."
+      }
+     ]
+    },
+    {
+     "titulo": "Qué puede hacer cada quien",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Los roles",
+       "lista": [
+        "<b>Dueño:</b> todo. Es el único que puede borrar el rancho.",
+        "<b>Administrador:</b> todo, incluso invitar y quitar gente, menos borrar el rancho.",
+        "<b>Vaquero:</b> apunta todo lo del día a día: ganado, partos, gastos, pendientes, dieta, salud. No invita ni quita gente.",
+        "<b>Solo lectura:</b> ve todo pero no puede cambiar nada. Para un socio o el contador."
+       ]
+      },
+      {
+       "titulo": "Cambiar el rol o quitar a alguien",
+       "texto": "En <b>Miembros del rancho</b> toca los tres puntitos de la persona: <b>Cambiar rol</b> o <b>Quitar del rancho</b>. Si lo quitas, pierde el acceso y los datos se le borran de su teléfono; lo que haya apuntado se queda en el rancho."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ajustes",
+   "grupo": "Cuenta y familia",
+   "icono": "⚙️",
+   "titulo": "Ajustes y varios ranchos",
+   "resumen": "Datos del rancho, tema claro u oscuro",
+   "ruta": "Cuenta y familia · Ajustes",
+   "entrada": "El engrane de arriba abre los Ajustes: tu cuenta, tus ranchos, los datos del rancho, los avisos y si quieres la app clara u oscura.",
+   "secciones": [
+    {
+     "titulo": "Lo que hay en Ajustes",
+     "pasos": [
+      {
+       "titulo": "Arriba",
+       "lista": [
+        "<b>Cuenta y respaldo:</b> si tus datos ya están en la nube.",
+        "<b>Tus ranchos:</b> en cuál estás. Toca otro para cambiarte.",
+        "<b>Agregar otro rancho.</b>",
+        "<b>Este rancho:</b> nombre, UPP y ubicación."
+       ],
+       "img": "60-ajustes"
+      },
+      {
+       "titulo": "Abajo: la apariencia",
+       "texto": "Escoge <b>Claro</b>, <b>Oscuro</b> o <b>Sistema</b> (el que traiga tu teléfono). Más arriba están los avisos: ver el capítulo de Avisos.",
+       "img": "201-zona-riesgo"
+      }
+     ]
+    },
+    {
+     "titulo": "Datos del rancho",
+     "pasos": [
+      {
+       "titulo": "Ajustes → Datos del rancho",
+       "lista": [
+        "<b>El giro</b> (ganadería extensiva) no se cambia.",
+        "<b>Nombre del rancho.</b>",
+        "<b>UPP:</b> la clave de tu Unidad de Producción Pecuaria, la que piden para mover ganado.",
+        "<b>Punto para el clima:</b> dónde está el rancho.",
+        "<b>Borrar este rancho.</b> Solo el dueño lo puede hacer."
+       ],
+       "despues": "Toca <b>Guardar cambios</b>.",
+       "img": "200-datos-rancho"
+      }
+     ]
+    },
+    {
+     "titulo": "Varios ranchos",
+     "pasos": [
+      {
+       "titulo": "Agregar otro rancho",
+       "lista": [
+        "Ponle nombre.",
+        "Escoge a qué se dedica."
+       ],
+       "despues": "Cada rancho lleva su ganado, su dinero y su almacén aparte; no se mezclan. Para brincar de uno a otro, tócalo en <b>Tus ranchos</b>.",
+       "img": "202-otro-rancho"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sin-senal",
+   "grupo": "Cuenta y familia",
+   "icono": "📵",
+   "titulo": "Sin señal",
+   "resumen": "Qué funciona sin internet",
+   "ruta": "Cuenta y familia · Sin señal",
+   "entrada": "Ganova está hecha para el campo: todo funciona sin internet. Lo que apuntas se guarda en el teléfono y, si tienes cuenta, se sube solo cuando agarras señal.",
+   "secciones": [
+    {
+     "titulo": "Qué funciona sin señal",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Todo lo del día a día",
+       "lista": [
+        "Dar de alta animales, partos, ventas, vacunas, enfermedades.",
+        "Gastos, entradas, proyectos, dieta, inventario y pendientes.",
+        "Los avisos: viven en el teléfono, también sin señal.",
+        "El clima: se ve el último pronóstico que bajó."
+       ],
+       "despues": "Así se ve la pantalla de Rancho en modo avión: el clima sigue ahí y la nube tachada dice cuántos cambios faltan por subir.",
+       "img": "210-sin-senal"
+      }
+     ]
+    },
+    {
+     "titulo": "Lo que necesita internet",
+     "numerados": false,
+     "pasos": [
+      {
+       "titulo": "Solo esto",
+       "lista": [
+        "<b>Respaldar en la nube</b> y ver lo que apuntó la familia en otro teléfono.",
+        "<b>Actualizar el clima.</b>",
+        "<b>Entrar o crear cuenta</b>, e invitar a alguien con código."
+       ]
+      },
+      {
+       "titulo": "La nube te dice cómo vas",
+       "lista": [
+        "Cuántos cambios faltan por subir.",
+        "Si no tienes cuenta, desde aquí la creas."
+       ],
+       "img": "211-nube-sin-senal"
+      }
+     ]
+    }
+   ],
+   "consejos": [
+    {
+     "titulo": "No pierdas lo apuntado",
+     "texto": "Sin cuenta, tus datos solo viven en ese teléfono. Si se pierde o se descompone, se pierden. Crea tu cuenta en cuanto tengas señal: ver <b>Cuenta y respaldo</b>."
+    }
+   ]
+  }
+ ],
+ "creditos": [
+  "Las capturas son de un rancho de prueba con datos inventados.",
+  "Brahman: Fiszi37, CC0, Wikimedia Commons.",
+  "Charolais con cría: Brian Robert Marshall, CC BY-SA 2.0, Wikimedia Commons.",
+  "Vacas Beefmaster: Beefmaster Breeders United, CC BY-SA 4.0, Wikimedia Commons.",
+  "Vaca con becerro: Evelyn Simak, CC BY-SA 2.0, Wikimedia Commons."
+ ]
+}

@@ -1,0 +1,132 @@
+---
+/**
+ * Un capítulo de la guía de Ganova. Sale de `src/data/ganova-guia.json`
+ * (ver `GanovaGuia.astro`). El texto trae negritas como <b>…</b>: es contenido
+ * nuestro, escrito en el repo de la app, por eso se pinta con set:html.
+ */
+import GanovaGuia from '@/components/productos/GanovaGuia.astro';
+import guia from '@/data/ganova-guia.json';
+import { SITE_URL } from '@/data/seo';
+
+export function getStaticPaths() {
+  const listos = guia.capitulos.filter((c) => c.secciones?.length);
+  return listos.map((c, i) => ({
+    params: { capitulo: c.id },
+    props: { c, anterior: listos[i - 1], siguiente: listos[i + 1], pagina: i + 1 },
+  }));
+}
+
+type Paso = { titulo: string; texto?: string; lista?: string[]; despues?: string; img?: string | string[]; opcional?: boolean };
+
+const { c, anterior, siguiente, pagina } = Astro.props;
+const url = `${SITE_URL}/ganova/guia/${c.id}/`;
+const img = (n: string) => `/assets/image/ganova/manual/${n}.webp`;
+const fotos = (p: Paso) => (p.img ? (Array.isArray(p.img) ? p.img : [p.img]) : []);
+const plano = (s: string) => s.replace(/<[^>]+>/g, '');
+
+const pasos = c.secciones.flatMap((s: { pasos?: Paso[] }) => s.pasos ?? []);
+const schema = [
+  {
+    '@type': 'HowTo',
+    name: plano(c.titulo),
+    description: plano(c.entrada),
+    inLanguage: 'es-MX',
+    step: pasos.map((p: Paso, i: number) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: plano(p.titulo),
+      text: plano([p.texto, ...(p.lista ?? []), p.despues].filter(Boolean).join(' ')),
+      ...(fotos(p)[0] ? { image: `${SITE_URL}${img(fotos(p)[0])}` } : {}),
+    })),
+  },
+];
+---
+
+<GanovaGuia
+  title={`${plano(c.titulo)} — Guía de Ganova | Geck Codex`}
+  description={plano(c.entrada).slice(0, 158)}
+  canonical={url}
+  breadcrumbs={[
+    { name: 'Ganova', url: `${SITE_URL}/ganova/` },
+    { name: 'Guía', url: `${SITE_URL}/ganova/guia/` },
+    { name: plano(c.titulo), url },
+  ]}
+  schema={schema}
+>
+  <p class="gg-ruta">
+    <a href="/ganova/">Ganova</a> › <a href="/ganova/guia/">Guía</a> › <span set:html={c.ruta} /> · pág. {pagina}
+  </p>
+  <h1 class="gg-titulo" set:html={c.titulo} />
+  <p class="gg-entrada" set:html={c.entrada} />
+
+  {c.video && (
+    <figure class="gg-video">
+      <div class="gg-foto">
+        <video
+          src={`/assets/video/ganova/manual/${c.video}.mp4`}
+          poster={c.poster ? img(c.poster) : undefined}
+          controls
+          playsinline
+          muted
+          preload="metadata"
+        ></video>
+        {c.pie && <figcaption set:html={c.pie} />}
+      </div>
+    </figure>
+  )}
+
+  {c.secciones.map((s: { titulo?: string; texto?: string; pasos?: Paso[]; numerados?: boolean }) => (
+    <section>
+      {s.titulo && <h2 set:html={s.titulo} />}
+      {s.texto && <p class="gg-texto" set:html={s.texto} />}
+      {s.pasos?.length && (
+        <ol class:list={['gg-pasos', { 'gg-pasos--num': s.numerados !== false }]}>
+          {s.pasos.map((p) => (
+            <li class:list={['gg-paso', { 'con-foto': fotos(p).length > 0 }]}>
+              <div class="gg-paso__txt">
+                {p.opcional && <span class="gg-tag">opcional</span>}
+                <h3 set:html={p.titulo} />
+                {p.texto && <p set:html={p.texto} />}
+                {p.lista && (
+                  <ol class="gg-lista">
+                    {p.lista.map((x) => <li set:html={x} />)}
+                  </ol>
+                )}
+                {p.despues && <p set:html={p.despues} />}
+              </div>
+              {fotos(p).length > 0 && (
+                <div class="gg-fotos">
+                  {fotos(p).map((n) => (
+                    <figure class="gg-foto">
+                      <img src={img(n)} alt={plano(p.titulo)} loading="lazy" decoding="async" width="720" height="1508" />
+                    </figure>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  ))}
+
+  {c.consejos?.length && (
+    <aside class="gg-notas" aria-label="Notas">
+      {c.consejos.map((k: { titulo: string; texto: string }) => (
+        <div class="gg-nota">
+          <h3 set:html={k.titulo} />
+          <p set:html={k.texto} />
+        </div>
+      ))}
+    </aside>
+  )}
+
+  <nav class="gg-sigue" aria-label="Otros capítulos">
+    {anterior ? (
+      <a href={`/ganova/guia/${anterior.id}/`}><small>← Anterior</small>{plano(anterior.titulo)}</a>
+    ) : <a href="/ganova/guia/"><small>← Volver</small>Índice de la guía</a>}
+    {siguiente ? (
+      <a class="der" href={`/ganova/guia/${siguiente.id}/`}><small>Siguiente →</small>{plano(siguiente.titulo)}</a>
+    ) : <a class="der" href="/ganova/guia/"><small>Volver →</small>Índice de la guía</a>}
+  </nav>
+</GanovaGuia>

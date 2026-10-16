@@ -1,0 +1,145 @@
+---
+/**
+ * Pie de una pagina de producto.
+ *
+ * Aqui SI se nombra a Geck Codex en grande, y es deliberado: el pie es donde
+ * alguien mira cuando ya decidio que le interesa y quiere saber a quien le va a
+ * pagar. Arriba estorbaba; abajo es lo que cierra la venta.
+ *
+ * Generico igual que `ProductNav`: colores y tipografia se heredan de las
+ * variables `--pr-*` del <body>.
+ */
+import { BUSINESS } from '@/data/seo';
+import { localizedPath } from '@/i18n/routes';
+
+interface Props {
+  name: string;
+  /** Una linea de que es el producto. */
+  tagline: string;
+  /** WhatsApp con el mensaje ya armado. */
+  waHref: string;
+}
+
+const { name, tagline, waHref } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="pr-foot">
+  <div class="pr-foot__in">
+    <div class="pr-foot__col pr-foot__col--brand">
+      <span class="pr-foot__name">{name}</span>
+      <p class="pr-foot__tag">{tagline}</p>
+    </div>
+
+    <div class="pr-foot__col">
+      <p class="pr-foot__k">Contacto</p>
+      <ul>
+        <li><a href={waHref} data-lead="footer">WhatsApp {BUSINESS.phoneDisplay}</a></li>
+        <li><a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a></li>
+      </ul>
+    </div>
+
+    <div class="pr-foot__col">
+      <p class="pr-foot__k">Quién lo hace</p>
+      <ul>
+        <li><a href="/">Geck Codex</a></li>
+        <li><a href={localizedPath('portfolio', 'es')}>Portafolio</a></li>
+        <li><a href={localizedPath('services', 'es')}>Desarrollo a medida</a></li>
+      </ul>
+    </div>
+
+    <div class="pr-foot__col">
+      <p class="pr-foot__k">Legal</p>
+      <ul>
+        <li><a href={localizedPath('privacy', 'es')}>Aviso de Privacidad</a></li>
+        <li><a href={localizedPath('terms', 'es')}>Términos y Condiciones</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="pr-foot__bar">
+    © {year} {name} · un producto de <a href="/">Geck Codex</a> ·
+    {BUSINESS.city}, {BUSINESS.region}, México
+  </p>
+</footer>
+
+<style>
+  .pr-foot {
+    border-top: 1px solid var(--pr-line);
+    background: var(--pr-ink-deep);
+    color: var(--pr-fg-dim);
+  }
+
+  .pr-foot__in {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 3.5rem) 1.25rem 2rem;
+  }
+
+  .pr-foot__name {
+    font-family: var(--pr-font);
+    font-size: 1.15rem;
+    font-weight: 800;
+    font-stretch: 115%;
+    letter-spacing: -.02em;
+    color: var(--pr-fg);
+  }
+
+  .pr-foot__tag {
+    margin: .5rem 0 0;
+    max-width: 22rem;
+    font-size: .85rem;
+    line-height: 1.55;
+    color: var(--pr-fg-faint);
+  }
+
+  .pr-foot__k {
+    margin: 0 0 .7rem;
+    font-family: var(--pr-font);
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--pr-fg);
+  }
+
+  .pr-foot__col ul { margin: 0; padding: 0; list-style: none; }
+
+  .pr-foot__col li + li { margin-top: .45rem; }
+
+  .pr-foot__col a {
+    font-size: .87rem;
+    color: var(--pr-fg-dim);
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+
+  .pr-foot__col a:hover { color: var(--pr-accent); }
+
+  .pr-foot__bar {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1.1rem 1.25rem 2rem;
+    border-top: 1px solid var(--pr-line);
+    font-size: .78rem;
+    color: var(--pr-fg-faint);
+  }
+
+  .pr-foot__bar a { color: var(--pr-fg-dim); text-decoration: none; }
+  .pr-foot__bar a:hover { color: var(--pr-accent); }
+
+  @media (max-width: 52rem) {
+    .pr-foot__in { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem; }
+    .pr-foot__col--brand { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 26rem) {
+    .pr-foot__in { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pr-foot__col a,
+    .pr-foot__bar a { transition: none; }
+  }
+</style>

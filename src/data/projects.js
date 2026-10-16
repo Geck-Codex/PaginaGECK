@@ -30,7 +30,7 @@
 export const PROJECTS_STATIC = [
   { id: 22, cat: 'landing',  title: 'Handlove',               tech: ['Astro', 'Tailwind CSS'],                                            link: 'https://handloves.mx/',                   gradient: 'linear-gradient(145deg, #030C1D 0%, #0D1625 45%, #F4E4BC 100%)', image: '/assets/image/portafolio/handlove.webp', cardFit: 'contain',
     gallery: ['/assets/image/portafolio/handloves-2.webp', '/assets/image/portafolio/handloves-m-1.webp', '/assets/image/portafolio/handloves-3.webp'] },
-  { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Riverpod', 'Drift', 'Supabase'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp',
+  { id: 19, cat: 'mobile',   title: 'Ganova App',             tech: ['Flutter', 'Riverpod', 'Drift', 'Supabase'],                                                                                     gradient: 'linear-gradient(145deg, #0B1D33 0%, #0c1e3c 45%, #D4AF37 100%)', image: '/assets/image/portafolio/ganova.webp', page: '/ganova/',
     gallery: ['/assets/image/portafolio/ganova-1.webp', '/assets/image/portafolio/ganova-2.webp', '/assets/image/portafolio/ganova-3.webp'] },
   { id: 24, cat: 'software', title: 'Bot de Atención al Cliente', tech: ['Python', 'FastAPI', 'PostgreSQL', 'WhatsApp API'], gradient: 'linear-gradient(145deg, #1e1e1c 0%, #0B1D33 50%, #B8941F 100%)', image: '/assets/image/portafolio/nomda.webp',
     /* Grabacion real de la conversacion del bot de Nomada en Instagram DM.

@@ -145,6 +145,7 @@ armado a pedazos.
 | App o web | Dos cajas de latón cerradas de distinto tamaño sobre piedra oscura |
 | Google Maps | Chincheta de latón clavada en un mapa de papel viejo, primer plano cerrado |
 | Excel o sistema (Juárez) | Ábaco antiguo de latón y madera oscura sobre un escritorio de piedra, cuentas desordenadas, un haz de luz cálida desde la derecha |
+| Merma en abarrotes | Reloj de arena de latón sobre piedra oscura, con una grieta fina en el vidrio inferior por donde se escapa un hilo de arena dorada que forma un pequeño montón a un lado |
 
 Si un artículo no tiene sujeto asignado, buscar un **objeto físico que sea
 metáfora de la decisión** del lector, no del tema. Una balanza no es "precios":

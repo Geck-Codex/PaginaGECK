@@ -70,7 +70,7 @@ Gobierno Municipal de Hidalgo del Parral, Restaurante Las Chikis, Capital Transp
 - **Plantilla Inmobiliaria** — Plantilla para inmobiliarias: fichas de propiedades, galería, formulario y mapa.
 - **Handlove** — Sitio para distribuidor mayorista de guantes de seguridad industrial, con catálogo y solicitudes de cotización.
 - **Capital Transport** — App móvil de gestión de flotillas: rastreo en tiempo real, control documental y comunicación con operadores.
-- **Ganova App** — App móvil para el control integral de ranchos ganaderos: animales, dietas, gastos y métricas productivas.
+- **Ganova** — Producto propio y estrella de Geck Codex: app móvil (Android) para ranchos ganaderos del norte de México. Ganado con arete y foto, partos y madres probables de una cría, salud, dinero, obras, dieta y equipo; funciona sin señal y sincroniza con internet. En desarrollo, alfa próxima. Página: https://geckcodex.com/ganova/
 - **Coronado Gym** — Plataforma de gestión de gimnasio: usuarios, rutinas personalizadas, progreso y membresías.
 - **Nuki** — Plataforma de lealtad: los clientes acumulan puntos con cada compra y los canjean por recompensas.
 - **Tablá** — Carta digital por código QR que se actualiza al instante, sin reimprimir nada.

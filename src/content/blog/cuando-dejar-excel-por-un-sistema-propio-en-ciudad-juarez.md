@@ -54,7 +54,7 @@ Si te reconociste en casi todo, quédate con Excel. En serio. Lo que sí vale la
 
 **Solo una persona entiende el archivo.** Tiene sus fórmulas, sus colores, sus pestañas escondidas. El día que se va de vacaciones o renuncia —y en Juárez la rotación de personal es un tema que cualquier empresa conoce—, la operación se queda a ciegas.
 
-**No sabes cuánto tienes sin ir a contarlo.** Si para saber tu inventario real hay que caminar al almacén, el Excel dejó de ser tu inventario hace rato.
+**No sabes cuánto tienes sin ir a contarlo.** Si para saber tu inventario real hay que caminar al almacén, el Excel dejó de ser tu inventario hace rato. Y lo que no se cuenta seguido se pierde sin que nadie lo vea: en [una tienda de abarrotes que diagnosticamos](/blog/merma-en-tienda-de-abarrotes-chihuahua/), la merma tardaba hasta seis meses en aparecer.
 
 **Tu cliente te pide trazabilidad.** Si le vendes a la maquila, tarde o temprano te van a pedir registros: qué lote, quién lo revisó, cuándo, con qué resultado. Un Excel que cualquiera puede editar sin dejar rastro no es un registro confiable, y en una auditoría se nota. Y si ese cliente está del otro lado del puente, lo más probable es que además te lo pida en inglés, igual que te va a pedir [una página que le hable en su idioma](/blog/pagina-web-bilingue-para-negocios-en-la-frontera/).
 

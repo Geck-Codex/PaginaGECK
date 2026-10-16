@@ -1,0 +1,1587 @@
+---
+/**
+ * Ganova — la pagina del producto estrella.
+ *
+ * Todo lo que dice sale de la boveda `C:\Bobedas\Ganova`, del video "Que es
+ * Ganova (dinamico)" y de la guia de la app (`C:\ganova\guia`). Las
+ * pantallas de `/assets/image/ganova/guia/` son capturas reales de esa guia
+ * (rancho de prueba), sin la barra de estado del telefono; las grabaciones
+ * `ganova-registrar-parto.mp4` y `ganova-alta-animal.mp4` salen de la misma
+ * carpeta. `pantalla-inicio.webp` sigue siendo un cuadro del video.
+ *
+ * ── LO QUE NO SE PROMETE ──
+ * La app NO esta publicada y la alfa no tiene fecha (usuario, 2026-10-15): la
+ * accion es apartar lugar por WhatsApp. Solo Android. SIN PRECIO y SIN CIFRAS
+ * de uso, a proposito.
+ *
+ * ── DISEÑO ──
+ * Marca olivo/crema del logotipo con el amarillo del arete como acento. Una
+ * sola familia, Archivo, usando su eje de ancho; Caveat solo para la letra a
+ * mano de la libreta. Secciones como losas que se enciman.
+ *
+ * ── MOVIMIENTO ──
+ * El usuario pidio "picardia" y animaciones (2026-10-16). Todas salen del
+ * rancho: la vaquita de la barra de avance, la libreta que se tacha, el dia en
+ * el rancho (el cielo pasa de amanecer a noche y gira el papalote), el juego
+ * de la cria, los avisos que caen y el hato que camina. El motor vive en `src/scripts/ganova.js`: un solo bucle de scroll
+ * que reparte `--p` a cada escena y el CSS hace el resto. Con movimiento
+ * reducido no se arma nada y todo se ve en su estado final.
+ *
+ * `chrome="product"`: nav y pie de Ganova. SOLO EN ESPAÑOL, sin `pageKey`.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import ProductNav from '@/components/productos/ProductNav.astro';
+import ProductFooter from '@/components/productos/ProductFooter.astro';
+import Arete from '@/components/productos/Arete.astro';
+import { BUSINESS, SITE_URL } from '@/data/seo';
+import { localizedPath } from '@/i18n/routes';
+
+const url = `${SITE_URL}/ganova/`;
+const img = (f: string) => `/assets/image/ganova/${f}`;
+
+const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent(
+  'Hola, tengo ganado y quiero entrar a la alfa de Ganova.',
+)}`;
+
+const B = {
+  crema: '#F2EDE2',
+  hueso: '#E6DFD0',
+  linea: '#D6CDBA',
+  olivo: '#485A30',
+  monte: '#263018',
+  texto: '#4E5540',
+  tenue: '#757A63',
+  tinta: '#15130F',
+  tintaLinea: '#2B2823',
+  arete: '#E3B23C',
+  brote: '#A8D08D',
+  font: "'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  mano: "'Caveat', 'Segoe Print', cursive",
+  fontHref:
+    'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&display=swap',
+};
+
+const bodyStyle = [
+  `--pr-ink:${B.crema}`, `--pr-ink-deep:${B.hueso}`, `--pr-surface:#FFFFFF`,
+  `--pr-line:${B.linea}`, `--pr-fg:${B.monte}`, `--pr-fg-dim:${B.texto}`,
+  `--pr-fg-faint:${B.tenue}`, `--pr-accent:${B.olivo}`, `--pr-on-accent:#FFFFFF`,
+  `--pr-font:${B.font}`,
+  `--gn-crema:${B.crema}`, `--gn-hueso:${B.hueso}`, `--gn-linea:${B.linea}`,
+  `--gn-olivo:${B.olivo}`, `--gn-monte:${B.monte}`, `--gn-texto:${B.texto}`,
+  `--gn-tenue:${B.tenue}`, `--gn-tinta:${B.tinta}`, `--gn-tinta-linea:${B.tintaLinea}`,
+  `--gn-arete:${B.arete}`, `--gn-brote:${B.brote}`, `--gn-mano:${B.mano}`,
+  `background:${B.crema}`, `color:${B.texto}`,
+].join(';');
+
+/* Titular partido en palabras para que suban una por una. El texto sigue
+   siendo un solo <h1> para buscadores y lectores de pantalla. */
+const h1 = 'Tu rancho completo, en el bolsillo.'.split(' ');
+
+/* La libreta: palitos de conteo (grupos de cinco, el quinto cruzado) y las
+   notas que se apuntan a mano. Coordenadas en el viewBox 400×500. */
+const palos: { x1: number; y1: number; x2: number; y2: number }[] = [];
+for (let k = 0; k < 22; k++) {
+  const g = Math.floor(k / 5);
+  const m = k % 5;
+  const x0 = 44 + g * 64;
+  palos.push(
+    m < 4
+      ? { x1: x0 + m * 11, y1: 134, x2: x0 + m * 11 + 1, y2: 168 }
+      : { x1: x0 - 6, y1: 162, x2: x0 + 40, y2: 140 },
+  );
+}
+const notas = [
+  { t: 'La Pinta ¿ya parió?', x: 34, y: 220, r: 0 },
+  { t: 'Cerco caído, avisarle a Chuy', x: 34, y: 268, r: 0 },
+  { t: 'Pastura $1,800 ¿ya pagué?', x: 34, y: 316, r: 0 },
+  { t: '¿o eran 23?', x: 236, y: 372, r: -5 },
+];
+
+/* Un dia en el rancho: cada hora es una pantalla real de la guia. Lo que
+   dicen los textos esta en la guia de la app (aretes, partos, vacunas,
+   enfermedades, inventario, gastos y sin señal). */
+const g = (f: string) => img(`guia/${f}`);
+const dia = [
+  { h: '6:30', k: 'Antes de salir', src: g('rancho-1.webp'),
+    d: 'El clima de la semana y lo que conviene llevar, según lo que se te ha descompuesto antes. Si la semana viene tranquila, te dice que todo en orden.',
+    alt: 'Pantalla Rancho: pronóstico de lluvia, sin avisos del clima esta semana y dos pendientes: cerco tirado y pila sucia' },
+  { h: '8:00', k: 'Aretada en el chute', src: g('poner-arete.webp'),
+    d: 'Pones la tanda una sola vez y solo tecleas los últimos dígitos. La cría sale de la lista y sigues con la otra.',
+    alt: 'Jornada de aretado: la cría MC026-01 con la tanda 051202 y los últimos dígitos 14 a punto de guardarse' },
+  { h: '10:30', k: 'Nació una becerra', video: '/assets/video/ganova-registrar-parto.mp4', poster: g('poster-registrar-parto.webp'),
+    d: 'Escoges a la madre y guardas. La app crea la cría, la liga con su madre y te calcula el siguiente parto.',
+    alt: 'Grabación de registrar un parto: se escoge a la madre, se guarda y la app recuerda vigilar el ombligo del becerro' },
+  { h: '12:00', k: 'Vacuna al lote de jalón', src: g('masiva-llena.webp'),
+    d: 'La misma vacuna a quince animales en un solo paso. Si pones la próxima dosis, te avisa ese día.',
+    alt: 'Vacunación masiva: desparasitante para 15 animales seleccionados, con próxima dosis en abril' },
+  { h: '14:00', k: 'Una trae gusano', src: g('senasica.webp'),
+    d: 'El gusano barrenador queda como alerta sanitaria, y la app te da el teléfono, el WhatsApp y el correo de SENASICA para avisar.',
+    alt: 'Ventana Reportar a SENASICA con el teléfono 800 751 2100, el WhatsApp y el correo' },
+  { h: '16:00', k: '¿Todavía hay medicina?', src: g('inventario.webp'),
+    d: 'La bodega lleva su cuenta. Lo que se está acabando sale en rojo, como la ivermectina.',
+    alt: 'Inventario: alambre de púas, ivermectina marcada como queda poco, maíz y sal mineral' },
+  { h: '18:00', k: 'Las cuentas del día', src: g('gasto-form.webp'),
+    d: 'El diésel del tractor, $1,200. Lo apuntas como lo dirías y se suma solo en Dinero.',
+    alt: 'Registrar gasto: 1,200 pesos de combustible, diésel del tractor, con fecha de hoy' },
+  { h: '21:00', k: 'Y sin señal todo el día', src: g('nube-sin-senal.webp'),
+    d: 'Todo quedó guardado en el teléfono: 164 cambios esperando. Agarras internet y se sube solo.',
+    alt: 'Sincronización: 164 cambios por sincronizar, con la opción de entrar o crear cuenta' },
+];
+
+/* Estrellas de la noche del dia en el rancho (posicion en % de la escena). */
+const estrellas = [[12, 12], [22, 26], [31, 9], [44, 18], [53, 6], [61, 22], [70, 11], [78, 28], [86, 8], [93, 19], [38, 30], [66, 34]];
+
+/* El juego de la cria. Datos de la pantalla real del demo: la 4106 le tocaba
+   parir, la 4232 se vio cerca, y la 4471 ya trae su cria (la app ya ni la
+   ofrece). */
+const juego = [
+  { id: '4106', nombre: 'Prieta', color: '#2A2622', rol: 'madre', lugar: 1,
+    porque: 'Le tocaba parir: su parto estimado era el 14 de noviembre.',
+    msg: '¡Esa merito! Ganova la pone primero: le tocaba parir.' },
+  { id: '4232', nombre: 'La Pinta', color: '#E9E3D6', rol: 'quiza', lugar: 2,
+    porque: 'Se vio cerca hace 3 días, pero no le tocaba parir.',
+    msg: 'Casi. Se vio cerca, pero no le tocaba parir. Ganova la pone segunda.' },
+  { id: '4471', nombre: 'La Güera', color: '#B5643A', rol: 'no', lugar: 3,
+    porque: 'Ya trae su cría aretada. A una vaca con cría ya no se le ofrece otra.',
+    msg: 'Nel. La Güera ya trae su cría; Ganova ni te la ofrece.' },
+];
+
+/* Lo que va cayendo en el telefono bloqueado. Push de servidor (cuando alguien
+   registra algo) y avisos locales (la vispera y el dia). */
+const avisos = [
+  { t: 'Chuy registró un parto', d: 'Becerra prieta, hija de la 4106.' },
+  { t: 'Mañana toca vacunar', d: 'A la 4232 le toca su refuerzo.' },
+  { t: 'Viene viento el jueves', d: 'Revisa el cerco y el papalote.' },
+  { t: 'Mamá apuntó un gasto', d: '$60 de cemento para la pila.' },
+  { t: 'Sigue pendiente', d: 'La manguera trozada lleva 45 días.' },
+  { t: 'Carlos registró una venta', d: '2 becerros por $27,200.' },
+];
+
+const cita = 'Yo la programo. Yo la uso en mi rancho.'.split(' ');
+
+/* El hato que camina por las lomas del cierre: duracion y arranque de cada
+   una, para que no vayan en fila india. */
+const hato = [
+  { d: 58, s: -4, y: 0, w: 74, x: 10 },
+  { d: 64, s: -22, y: 8, w: 62, x: 30 },
+  { d: 52, s: -35, y: -6, w: 82, x: 52 },
+  { d: 70, s: -48, y: 4, w: 58, x: 70 },
+  { d: 61, s: -12, y: 12, w: 52, x: 86 },
+];
+
+const faq = [
+  { q: '¿Necesito internet para usar Ganova?', a: 'No. Todo se captura y se consulta en el teléfono sin señal. Cuando vuelves a tener internet, lo que capturaste se sube solo y le llega al resto del rancho.' },
+  { q: '¿Funciona en iPhone?', a: 'Por ahora es solo para Android. La versión para iPhone viene después.' },
+  { q: '¿Cuándo sale?', a: 'Estamos por abrir una alfa con pocos ranchos y todavía no tiene fecha. Quienes nos escriben ahora son los primeros en entrar.' },
+  { q: '¿Mis vaqueros necesitan hacer cuenta?', a: 'No. Les mandas un código por WhatsApp y entran con él. Tú decides quién está en el rancho y lo puedes sacar cuando quieras.' },
+];
+---
+
+<Layout
+  title="Ganova — App para Ranchos Ganaderos del Norte de México | Geck Codex"
+  description="Tu rancho completo en el teléfono: ganado con arete y foto, partos, salud, dinero, obras y dieta. Funciona sin señal en el corral. Alfa muy pronto para Android."
+  ogTitle="Ganova — tu rancho completo, en el bolsillo"
+  ogDescription="Ganado, partos, dinero y pendientes del rancho en el teléfono, y funciona sin señal. Hecha en el rancho por Geck Codex."
+  image={`${SITE_URL}/assets/image/ganova/og-ganova.jpg`}
+  canonical={url}
+  lang="es"
+  chrome="product"
+  bodyStyle={bodyStyle}
+  breadcrumbs={[{ name: 'Ganova', url }]}
+  schema={[
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${url}#app`,
+      name: 'Ganova',
+      applicationCategory: 'BusinessApplication',
+      applicationSubCategory: 'Administración de ranchos ganaderos',
+      operatingSystem: 'Android',
+      url,
+      inLanguage: 'es-MX',
+      description:
+        'App móvil para administrar ranchos ganaderos del norte de México: ganado con arete y foto, partos, salud, dinero, obras, dieta y equipo. Funciona sin internet y sincroniza cuando hay señal.',
+      image: `${SITE_URL}/assets/image/portafolio/ganova.webp`,
+      screenshot: dia.filter((d) => d.src).map((d) => `${SITE_URL}${d.src}`),
+      featureList: dia.map((d) => d.k),
+      publisher: { '@id': `${SITE_URL}/#organization` },
+    },
+    {
+      '@type': 'VideoObject',
+      name: 'Qué es Ganova',
+      description: 'Ganova en menos de dos minutos: el ganado con su arete, los partos, la salud, los pendientes del rancho, el dinero, las obras, la dieta y el equipo.',
+      thumbnailUrl: `${SITE_URL}${img('que-es-poster.webp')}`,
+      contentUrl: `${SITE_URL}/assets/video/ganova-que-es.mp4`,
+      uploadDate: '2026-10-15',
+      duration: 'PT1M52S',
+      inLanguage: 'es-MX',
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${url}#faq`,
+      mainEntity: faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ]}
+>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href={B.fontHref} />
+
+  <ProductNav
+    slot="chrome-top"
+    name="Ganova"
+    mark={img('marca-128.webp')}
+    href="/ganova/"
+    links={[
+      { label: 'Un día', href: '#dia' },
+      { label: 'Las crías', href: '#cria' },
+      { label: 'La alfa', href: '#alfa' },
+      { label: 'Preguntas', href: '#preguntas' },
+    ]}
+    cta={{ label: 'Entrar a la alfa', href: wa }}
+    byHref="/"
+  />
+
+  <ProductFooter
+    slot="chrome-bottom"
+    name="Ganova"
+    tagline="Tu rancho completo en el teléfono. Funciona sin señal en el corral y sincroniza cuando hay internet."
+    waHref={wa}
+  />
+
+  <!-- Antes de pintar: si se puede animar, se arman los estados iniciales. -->
+  <script is:inline>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('gn-anim');
+    }
+  </script>
+
+  <!-- Barra de avance: una vaquita camina conforme bajas. -->
+  <div class="gn-barra" aria-hidden="true">
+    <span class="gn-barra__fill"></span>
+    <span class="gn-barra__vaca gn-silueta gn-silueta--caminando"></span>
+  </div>
+
+  <article class="gn">
+    <!-- ══ Portada ══ -->
+    <section class="gn-hero">
+      <div class="gn-hero__in">
+        <div class="gn-hero__copy">
+          <h1 class="gn-hero__h1">
+            {h1.map((w, i) => (
+              <><span class="gn-w"><span style={`--i:${i}`}>{w}</span></span>{' '}</>
+            ))}
+          </h1>
+          <p class="gn-hero__lead gn-hero__sube" style="--d:520ms">
+            Cada vaca con su arete, cada parto y cada peso que entra o sale. Lo capturas
+            parado en el corral, sin señal, y se sube solo cuando agarras internet.
+          </p>
+          <div class="gn-hero__ctas gn-hero__sube" style="--d:640ms">
+            <a class="gn-btn gn-btn--olivo" href={wa} data-lead="hero" data-magnet>Quiero entrar a la alfa</a>
+            <a class="gn-btn gn-btn--linea" href="#dia">Ver un día con Ganova</a>
+          </div>
+          <p class="gn-hero__estado gn-hero__sube" style="--d:760ms">
+            <span class="gn-hero__punto" aria-hidden="true"></span>
+            En desarrollo. La alfa abre pronto, solo en Android.
+          </p>
+        </div>
+
+        <div class="gn-hero__escena">
+          <div class="gn-hero__entra">
+            <figure class="gn-reel">
+              <video
+                class="gn-reel__video"
+                muted
+                loop
+                playsinline
+                preload="none"
+                poster={img('que-es-poster.webp')}
+                width="720"
+                height="1280"
+                aria-label="Video: qué es Ganova, en menos de dos minutos"
+              >
+                <source src="/assets/video/ganova-que-es.mp4" type="video/mp4" />
+              </video>
+              <div class="gn-reel__ctrl">
+                <button type="button" class="gn-reel__btn" data-reel="play" aria-pressed="false">Reproducir</button>
+                <button type="button" class="gn-reel__btn" data-reel="sound" aria-pressed="false">Activar sonido</button>
+              </div>
+            </figure>
+          </div>
+          <!-- Aretes que cuelgan alrededor del video: decoracion con sentido,
+               son los numeros que aparecen en la app. -->
+          <span class="gn-flota gn-flota--1" aria-hidden="true"><span class="gn-arete"><Arete num="4471" linea="00 08 9500" /></span></span>
+          <span class="gn-flota gn-flota--2" aria-hidden="true"><span class="gn-arete"><Arete num="4106" linea="00 08 9500" /></span></span>
+          <span class="gn-flota gn-flota--3" aria-hidden="true"><span class="gn-arete"><Arete num="4232" linea="00 08 9501" /></span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ La libreta: de los palitos a la app ══ -->
+    <section class="gn-lib" data-scene="pin" aria-labelledby="gn-lib-t">
+      <div class="gn-lib__pin">
+        <div class="gn-lib__in">
+          <div class="gn-lib__copy">
+            <div class="gn-lib__fase gn-lib__fase--a">
+              <h2 class="gn-h2" id="gn-lib-t">Así se lleva hoy.</h2>
+              <p class="gn-sub">Una libreta en la troca, palitos para contar y lo que se acuerde el vaquero.</p>
+            </div>
+            <div class="gn-lib__fase gn-lib__fase--b">
+              <p class="gn-h2" aria-hidden="true">Así se lleva con Ganova.</p>
+              <p class="gn-sub">Los mismos datos, pero no se mojan, no se pierden y se suman solos.</p>
+            </div>
+          </div>
+
+          <div class="gn-lib__escena" aria-hidden="true">
+            <div class="gn-lib__hoja">
+              <svg viewBox="0 0 400 500" class="gn-lib__svg">
+                <rect x="0" y="0" width="400" height="500" rx="10" class="gn-lib__papel" />
+                {Array.from({ length: 9 }, (_, k) => (
+                  <line x1="0" x2="400" y1={76 + 48 * k} y2={76 + 48 * k} class="gn-lib__renglon" />
+                ))}
+                <line x1="26" x2="26" y1="0" y2="500" class="gn-lib__margen" />
+                <circle cx="318" cy="424" r="38" class="gn-lib__cafe" />
+                <text x="34" y="118" class="gn-lib__mano gn-lib__titulo">Vacas:</text>
+                {palos.map((l, k) => (
+                  <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} pathLength="1" class="gn-lib__palo" style={`--k:${k}`} />
+                ))}
+                {notas.map((n, i) => (
+                  <text x={n.x} y={n.y} class:list={['gn-lib__mano gn-lib__nota', { 'gn-lib__nota--roja': i === 3 }]} style={`--n:${i}`} transform={n.r ? `rotate(${n.r} ${n.x} ${n.y})` : undefined}>{n.t}</text>
+                ))}
+                <path d="M30 150 L80 128 L60 172 L130 126 L110 174 L190 128 L168 176 L250 130 L226 172 L320 134 L300 170 L350 150" pathLength="1" class="gn-lib__tache" />
+              </svg>
+            </div>
+            <div class="gn-tel gn-lib__tel">
+              <img class="gn-tel__screen is-on" src={img('pantalla-inicio.webp')} alt="" width="540" height="966" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Un dia en el rancho: escena clavada que corre de lado ══ -->
+    <section class="gn-dia" id="dia" data-scene="pin" aria-labelledby="gn-dia-t">
+      <div class="gn-dia__pin">
+        <div class="gn-dia__cielo" aria-hidden="true">
+          <span class="gn-dia__tarde"></span>
+          <span class="gn-dia__sol"></span>
+        </div>
+
+        <div class="gn-dia__tierra" aria-hidden="true">
+          <svg class="gn-dia__loma gn-dia__loma--lejos" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0 110C220 60 470 80 720 92s500-50 720-22v130H0z" /></svg>
+          <svg class="gn-dia__papalote" viewBox="0 0 120 200">
+            <path d="M60 64 42 200M60 64l18 136M47 160h26M51 120h18M55 90h10M44 190l32-30M76 190l-32-30" class="gn-dia__torre" />
+            <path d="M60 60h36l-4-6h-28z" class="gn-dia__cola" />
+            <g class="gn-dia__aspas">
+              {Array.from({ length: 8 }, (_, k) => (
+                <path d="M60 60l28-5v10z" transform={`rotate(${k * 45} 60 60)`} />
+              ))}
+              <circle cx="60" cy="60" r="4" />
+            </g>
+          </svg>
+          <svg class="gn-dia__loma gn-dia__loma--cerca" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0 150c300-34 620-14 900-22 230-6 400 8 540 2v70H0z" /></svg>
+          <svg class="gn-dia__cerco" viewBox="0 0 400 40" preserveAspectRatio="none">
+            <path d="M0 14h400M0 26h400" />
+            {Array.from({ length: 11 }, (_, k) => (<rect x={k * 40} y="6" width="4" height="34" />))}
+          </svg>
+        </div>
+
+        <span class="gn-dia__noche" aria-hidden="true"></span>
+        <div class="gn-dia__astros" aria-hidden="true">
+          <span class="gn-dia__luna"></span>
+          {estrellas.map(([x, y], i) => (<span class="gn-dia__estrella" style={`left:${x}%; top:${y}%; --e:${i}`}></span>))}
+        </div>
+
+        <p class="gn-dia__reloj gn-dia__reloj--dia" aria-hidden="true">6:30</p>
+        <p class="gn-dia__reloj gn-dia__reloj--noche" aria-hidden="true">6:30</p>
+
+        <ol class="gn-dia__track">
+          <li class="gn-dia__intro">
+            <h2 class="gn-h2" id="gn-dia-t">Un día en el rancho.</h2>
+            <p class="gn-sub">
+              De las seis y media de la mañana a las nueve de la noche, en el mismo
+              teléfono. Baja y ve pasando el día.
+            </p>
+          </li>
+          {dia.map((d, i) => (
+            <li class="gn-hora" style={`--i:${i}`}>
+              <div class="gn-tel gn-tel--guia">
+                {d.video ? (
+                  <video class="gn-tel__screen is-on" data-pantalla muted loop playsinline preload="none" poster={d.poster} width="540" height="1144" aria-label={d.alt}>
+                    <source src={d.video} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img class="gn-tel__screen is-on" src={d.src} alt={d.alt} width="540" height="1131" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+                )}
+              </div>
+              <div class="gn-hora__txt">
+                <p class="gn-hora__h">{d.h}</p>
+                <h3 class="gn-hora__k">{d.k}</h3>
+                <p class="gn-hora__d">{d.d}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- ══ ¿De quien es esta cria? — el juego ══ -->
+    <section class="gn-cria" id="cria">
+      <div class="gn-cria__in">
+        <div class="gn-cria__copy">
+          <h2 class="gn-h2 gn-h2--claro">¿De quién es esta cría?</h2>
+          <p class="gn-sub gn-sub--claro">
+            En el monte una vaca pare y nadie la ve. Días después aparece un becerro sin
+            arete y hay que adivinar de quién es. Antes eran 120 aretes a ciegas en una
+            lista. Ahora Ganova te enseña las madres probables, y por qué.
+          </p>
+          <p class="gn-sub gn-sub--claro gn-cria__reto">A ver, tú dile cuál es.</p>
+        </div>
+
+        <div class="gn-juego">
+          <div class="gn-juego__cria">
+            <span class="gn-juego__becerra gn-silueta gn-silueta--pie" aria-hidden="true"></span>
+            <div>
+              <p class="gn-juego__k">Becerra prieta</p>
+              <p class="gn-juego__d">Sin arete. Se vio hoy junto al aguaje.</p>
+            </div>
+          </div>
+          <p class="gn-juego__pide" id="gn-juego-pide">¿Cuál es su madre?</p>
+          <div class="gn-juego__vacas" role="group" aria-labelledby="gn-juego-pide">
+            {juego.map((v) => (
+              <button
+                type="button"
+                class="gn-juego__vaca"
+                data-vaca={v.rol}
+                data-msg={v.msg}
+                aria-pressed="false"
+                style={`--c:${v.color}; --lugar:${v.lugar}`}
+              >
+                <span class="gn-juego__silueta gn-silueta gn-silueta--pie" aria-hidden="true"></span>
+                <span class="gn-juego__arete"><Arete num={v.id} /></span>
+                <span class="gn-juego__nombre">{v.nombre}</span>
+                <span class="gn-juego__porque">{v.porque}</span>
+              </button>
+            ))}
+          </div>
+          <p class="gn-juego__msg" aria-live="polite"></p>
+          <button type="button" class="gn-juego__otra">Otra vez</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Avisos: el telefono bloqueado ══ -->
+    <section class="gn-avisos">
+      <div class="gn-avisos__in">
+        <div class="gn-avisos__copy">
+          <h2 class="gn-h2">Te avisa a ti y a los tuyos.</h2>
+          <p class="gn-sub">
+            Cuando alguien del rancho registra algo, a los demás les llega al teléfono. Y lo
+            que va a pasar, te lo recuerda la víspera y el día.
+          </p>
+        </div>
+        <div class="gn-tel gn-avisos__tel" aria-label="Ejemplos de avisos de Ganova" role="img">
+          <div class="gn-avisos__bloqueo" aria-hidden="true">
+            <p class="gn-avisos__hora">7:12</p>
+            <p class="gn-avisos__fecha">jueves, 16 de octubre</p>
+          </div>
+          <ul class="gn-avisos__pila" aria-hidden="true">
+            {avisos.map((a, i) => (
+              <li class="gn-aviso" data-pos={String(Math.min(i, 4))}>
+                <img src={img('marca-128.webp')} alt="" width="28" height="28" loading="lazy" />
+                <div>
+                  <p class="gn-aviso__t"><strong>{a.t}</strong><span>ahora</span></p>
+                  <p class="gn-aviso__d">{a.d}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Monte: origen + alfa, con el hato caminando ══ -->
+    <section class="gn-monte" id="alfa" data-scene="pass" style={`--n:${cita.length}`}>
+      <div class="gn-monte__in">
+        <blockquote class="gn-monte__cita">
+          <p>
+            {cita.map((w, i) => (
+              <><span class="gn-mw" style={`--i:${i}`}>{w}</span>{' '}</>
+            ))}
+          </p>
+        </blockquote>
+        <p class="gn-monte__origen">
+          Ganova no salió de una oficina. La hace Geck Codex en {BUSINESS.city},
+          {BUSINESS.region}, y se prueba en un rancho de verdad: cada pantalla se ha
+          cambiado porque algo no aguantó en el corral.
+        </p>
+
+        <div class="gn-monte__alfa">
+          <img class="gn-monte__marca" src={img('marca-128.webp')} alt="" width="72" height="72" loading="lazy" />
+          <div>
+            <h2 class="gn-monte__h2">Entra a la alfa</h2>
+            <p>
+              Estamos por abrir una alfa con pocos ranchos y todavía no tiene fecha. Si
+              tienes ganado y quieres usarla antes que nadie, y decirnos qué le falta,
+              escríbenos y te apartamos lugar.
+            </p>
+            <span class="gn-monte__cta">
+              <a class="gn-btn gn-btn--arete" href={wa} data-lead="alfa" data-magnet>Apartar mi lugar</a>
+              <span class="gn-monte__colgado" aria-hidden="true"><span class="gn-arete"><Arete num="ALFA" linea="00 08 2026" /></span></span>
+            </span>
+            <p class="gn-monte__fine">Se abre WhatsApp con el mensaje ya escrito. Por ahora solo Android.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="gn-lomas" aria-hidden="true" data-vivo>
+        <svg class="gn-lomas__capa gn-lomas__capa--1" viewBox="0 0 1440 220" preserveAspectRatio="none"><path d="M0 120C240 70 480 92 720 102s480-48 720-18v136H0z" /></svg>
+        <svg class="gn-lomas__capa gn-lomas__capa--2" viewBox="0 0 1440 220" preserveAspectRatio="none"><path d="M0 150c300-50 600-20 900-30 240-8 400 10 540 0v100H0z" /></svg>
+        <div class="gn-hato">
+          {hato.map((v) => (
+            <span class="gn-hato__vaca" style={`--d:${v.d}s; --s:${v.s}s; --y:${v.y}px; --w:${v.w}px; --x:${v.x}%`}>
+              <span class="gn-silueta gn-silueta--caminando"></span>
+            </span>
+          ))}
+        </div>
+        <svg class="gn-lomas__capa gn-lomas__capa--3" viewBox="0 0 1440 220" preserveAspectRatio="none"><path d="M0 190c360-35 720-10 1080-20 180-5 280 5 360 2v48H0z" /></svg>
+      </div>
+    </section>
+
+    <!-- ══ Preguntas ══ -->
+    <section class="gn-faq" id="preguntas">
+      <div class="gn-faq__in">
+        <h2 class="gn-h2">Preguntas</h2>
+        <div class="gn-faq__list">
+          {faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <div class="gn-faq__puente">
+          <p>
+            Ganova es un producto de Geck Codex. Si necesitas otra cosa, como una app, un
+            sistema a la medida o una página, también lo hacemos.
+          </p>
+          <a class="gn-btn gn-btn--linea" href={localizedPath('services', 'es')}>Ver lo que hacemos</a>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>
+
+<script>
+  import '../scripts/ganova.js';
+</script>
+
+<style>
+  .gn { background: var(--gn-crema); color: var(--gn-texto); overflow-x: clip; }
+
+  /* La vaca: siluetas de perfil (de pie y caminando) usadas como mascara, asi
+     una sola imagen toma el color que le toque con `color`. */
+  .gn-silueta {
+    display: block;
+    background: currentColor;
+    -webkit-mask: var(--m) center / contain no-repeat;
+    mask: var(--m) center / contain no-repeat;
+  }
+
+  .gn-silueta--pie { --m: url('/assets/image/ganova/vaca-pie.webp'); aspect-ratio: 640 / 435; }
+  .gn-silueta--caminando { --m: url('/assets/image/ganova/vaca-caminando.webp'); aspect-ratio: 640 / 391; }
+
+  /* El nav es pegajoso: sin esto, los anclas dejan el titulo debajo de el. */
+  .gn section[id] { scroll-margin-top: 4.5rem; }
+
+  .gn h1,
+  .gn h2,
+  .gn h3,
+  .gn-btn,
+  .gn-monte__cita,
+  .gn-juego,
+  .gn-faq summary { font-family: var(--pr-font); }
+
+  /* ── Escala tipografica ── display ensanchado, cuerpo a 100%. */
+  .gn-h2 {
+    margin: 0 0 .7rem;
+    max-width: 18ch;
+    font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+    font-weight: 800;
+    font-stretch: 118%;
+    line-height: 1.02;
+    letter-spacing: -.03em;
+    color: var(--gn-monte);
+  }
+
+  .gn-h2--claro { color: var(--gn-crema); }
+
+  .gn-sub {
+    margin: 0;
+    max-width: 50ch;
+    font-size: clamp(1rem, 2vw, 1.13rem);
+    line-height: 1.6;
+  }
+
+  .gn-sub--claro { color: #CBC3B3; }
+
+  /* ── Botones ── */
+  .gn-btn {
+    display: inline-block;
+    padding: .95rem 1.55rem;
+    border: 2px solid transparent;
+    border-radius: .45rem;
+    font-weight: 700;
+    font-stretch: 108%;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .25s cubic-bezier(.2, .9, .3, 1.3);
+  }
+
+  .gn-btn:focus-visible,
+  .gn-reel__btn:focus-visible,
+  .gn-juego button:focus-visible,
+  .gn-faq summary:focus-visible { outline: 3px solid var(--gn-arete); outline-offset: 3px; }
+
+  .gn-btn--olivo { background: var(--gn-olivo); border-color: var(--gn-olivo); color: #FFFFFF; }
+  .gn-btn--olivo:hover { background: var(--gn-monte); border-color: var(--gn-monte); }
+
+  .gn-btn--linea { background: transparent; border-color: var(--gn-olivo); color: var(--gn-olivo); }
+  .gn-btn--linea:hover { background: var(--gn-olivo); color: #FFFFFF; }
+
+  .gn-btn--arete { background: var(--gn-arete); border-color: var(--gn-arete); color: var(--gn-tinta); }
+  .gn-btn--arete:hover { background: #EEC55C; border-color: #EEC55C; }
+
+  /* ═══ Barra de avance con la vaquita ═══ */
+  .gn-barra {
+    --p: 0;
+    position: fixed;
+    top: 3.6rem;
+    left: 0;
+    right: 0;
+    z-index: 51; /* encima del nav: la vaquita camina sobre su borde */
+    height: 3px;
+    pointer-events: none;
+  }
+
+  .gn-barra__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--gn-olivo);
+    transform: scaleX(var(--p));
+    transform-origin: 0 50%;
+  }
+
+  .gn-barra__vaca {
+    position: absolute;
+    top: -25px;
+    left: calc(var(--p) * (100% - 42px));
+    width: 42px;
+    color: var(--gn-monte);
+  }
+
+  :global(html:not(.gn-anim)) .gn-barra { display: none; }
+
+  .gn-barra.is-andando .gn-barra__vaca { animation: gn-trote .32s ease-in-out infinite alternate; }
+
+  @keyframes gn-trote {
+    from { transform: translateY(0) rotate(-2deg); }
+    to   { transform: translateY(-3px) rotate(2deg); }
+  }
+
+  /* ═══ Portada ═══ */
+  .gn-hero { padding: clamp(2rem, 5vw, 3.5rem) 1.25rem clamp(4.5rem, 10vw, 7rem); }
+
+  .gn-hero__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    max-width: 76rem;
+    margin: 0 auto;
+  }
+
+  .gn-hero__h1 {
+    margin: 0 0 1.4rem;
+    font-size: clamp(2.8rem, 7.4vw, 6.4rem);
+    font-weight: 900;
+    font-stretch: 125%;
+    line-height: .92;
+    letter-spacing: -.045em;
+    color: var(--gn-monte);
+  }
+
+  /* Cada palabra vive en una mascara y sube desde abajo. */
+  .gn-w { display: inline-block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; vertical-align: top; }
+  .gn-w > span { display: inline-block; }
+
+  .gn-hero__lead {
+    margin: 0;
+    max-width: 44ch;
+    font-size: clamp(1.05rem, 2.1vw, 1.2rem);
+    line-height: 1.6;
+  }
+
+  .gn-hero__ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+
+  .gn-hero__estado {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 1.6rem 0 0;
+    font-size: .9rem;
+    color: var(--gn-tenue);
+  }
+
+  .gn-hero__punto {
+    flex: none;
+    width: .6rem;
+    height: .6rem;
+    border-radius: 50%;
+    background: var(--gn-arete);
+    box-shadow: 0 0 0 3px rgba(227, 178, 60, .25);
+  }
+
+  :global(.gn-anim) .gn-hero__punto { animation: gn-latido 2.2s ease-out infinite; }
+
+  @keyframes gn-latido {
+    0%   { box-shadow: 0 0 0 0 rgba(227, 178, 60, .55); }
+    70%  { box-shadow: 0 0 0 .6rem rgba(227, 178, 60, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(227, 178, 60, 0); }
+  }
+
+  .gn-hero__escena { position: relative; justify-self: center; width: 100%; max-width: 22rem; }
+  .gn-hero__entra { perspective: 1200px; }
+
+  /* El video: reel vertical, se inclina siguiendo al mouse (--rx/--ry). */
+  .gn-reel {
+    --rx: 0deg;
+    --ry: 0deg;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    aspect-ratio: 9 / 16;
+    border-radius: 1.75rem;
+    background: var(--gn-tinta);
+    overflow: hidden;
+    box-shadow: 0 40px 80px -40px rgba(38, 48, 24, .7);
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+  }
+
+  .gn-reel__video { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .gn-reel__ctrl {
+    position: absolute;
+    left: .75rem;
+    right: .75rem;
+    bottom: .75rem;
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+
+  .gn-reel__btn {
+    padding: .5rem .85rem;
+    border: 0;
+    border-radius: .4rem;
+    background: rgba(21, 19, 15, .78);
+    color: var(--gn-crema);
+    font: 600 .82rem/1 var(--pr-font);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+
+  .gn-reel__btn:hover { background: rgba(21, 19, 15, .95); }
+
+  /* Aretes flotando alrededor del video. Se mecen y se corren un poco con el
+     mouse (--mx/--my los pone el script en la portada). */
+  .gn-flota {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .gn-flota--1 { top: 10%; left: -18%; }
+  .gn-flota--2 { top: 46%; right: -20%; }
+  .gn-flota--3 { bottom: 9%; left: -12%; }
+
+  .gn-flota .gn-arete { width: 4.8rem; }
+
+  :global(.gn-anim) .gn-flota--1 .gn-arete { animation: gn-mecer 3.4s ease-in-out infinite alternate; }
+  :global(.gn-anim) .gn-flota--2 .gn-arete { animation: gn-mecer 4.1s ease-in-out -1.3s infinite alternate; }
+  :global(.gn-anim) .gn-flota--3 .gn-arete { animation: gn-mecer 3.8s ease-in-out -2.2s infinite alternate; }
+
+  @keyframes gn-mecer {
+    from { rotate: -7deg; }
+    to   { rotate: 7deg; }
+  }
+
+  .gn-hero .gn-flota--1 { translate: calc(var(--mx, 0) * -26px) calc(var(--my, 0) * -18px); }
+  .gn-hero .gn-flota--2 { translate: calc(var(--mx, 0) * 30px) calc(var(--my, 0) * 22px); }
+  .gn-hero .gn-flota--3 { translate: calc(var(--mx, 0) * -18px) calc(var(--my, 0) * 26px); }
+
+  /* ── Entrada de la portada (solo con movimiento) ── */
+  :global(.gn-anim) .gn-w > span { transform: translateY(108%); }
+  :global(.gn-anim) .gn-hero__sube { opacity: 0; transform: translateY(18px); }
+  :global(.gn-anim) .gn-hero__entra { opacity: 0; transform: translateY(60px) rotate(7deg) scale(.92); }
+  :global(.gn-anim) .gn-flota { opacity: 0; }
+
+  .gn-hero.is-in .gn-w > span {
+    transform: none;
+    transition: transform .95s cubic-bezier(.2, .9, .2, 1) calc(var(--i) * 75ms);
+  }
+
+  .gn-hero.is-in .gn-hero__sube {
+    opacity: 1;
+    transform: none;
+    transition: opacity .7s ease var(--d), transform .8s cubic-bezier(.2, .9, .2, 1) var(--d);
+  }
+
+  .gn-hero.is-in .gn-hero__entra {
+    opacity: 1;
+    transform: none;
+    transition: opacity .6s ease .25s, transform 1.2s cubic-bezier(.16, 1.2, .3, 1) .25s;
+  }
+
+  .gn-hero.is-in .gn-flota { opacity: 1; transition: opacity .5s ease 1s; }
+
+  /* ═══ Losas ═══ */
+  .gn-cria,
+  .gn-monte {
+    position: relative;
+    border-radius: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem) 0 0;
+    margin-top: calc(-1 * clamp(1.5rem, 4vw, 3rem));
+  }
+
+  /* ═══ El arete ═══
+     Tipo bandera como el del SINIIGA (componente `Arete.astro`). El que lo
+     envuelve gira desde el boton, que es por donde cuelga de la oreja: el
+     boton esta al 14% del alto del arete. */
+  .gn-arete { display: block; transform-origin: 50% 14%; }
+
+  /* ═══ La libreta ═══
+     Escena clavada: 260vh de recorrido para una pantalla quieta. El avance
+     --p dibuja los palitos, apunta las notas, tacha todo, aparta la hoja y
+     sube el telefono. Sin movimiento, se ven la hoja tachada y el telefono
+     lado a lado, sin clavar. */
+  .gn-lib { --p: 1; position: relative; background: var(--gn-crema); }
+
+  /* Con movimiento, las escenas arrancan en cero hasta que el script reparte
+     su avance; sin el, se quedan en 1 (estado final). */
+  :global(.gn-anim) .gn-lib,
+  :global(.gn-anim) .gn-dia,
+  :global(.gn-anim) .gn-monte { --p: 0; }
+
+  :global(.gn-anim) .gn-lib { height: 260vh; }
+
+  .gn-lib__pin { padding: clamp(4rem, 9vw, 6rem) 1.25rem; }
+
+  :global(.gn-anim) .gn-lib__pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-block: 4.5rem 2rem;
+  }
+
+  .gn-lib__in {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 4rem);
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+
+  .gn-lib__copy { display: grid; }
+  .gn-lib__fase { grid-area: 1 / 1; }
+  .gn-lib__fase--b { margin-top: 2rem; }
+
+  :global(.gn-anim) .gn-lib__fase--b { margin-top: 0; }
+  :global(.gn-anim) .gn-lib__fase--a { opacity: clamp(0, calc((.62 - var(--p)) * 18), 1); }
+  :global(.gn-anim) .gn-lib__fase--b {
+    opacity: clamp(0, calc((var(--p) - .68) * 18), 1);
+    transform: translateY(calc(clamp(0, calc((.74 - var(--p)) * 18), 1) * 24px));
+  }
+
+  .gn-lib__escena {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  :global(.gn-anim) .gn-lib__escena {
+    display: block;
+    height: min(72vh, 36rem);
+  }
+
+  .gn-lib__hoja { width: 100%; max-width: 26rem; }
+
+  :global(.gn-anim) .gn-lib__hoja {
+    --t: clamp(0, calc((var(--p) - .64) * 4.5), 1);
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    height: fit-content;
+    transform: translateX(calc(var(--t) * -42%)) rotate(calc(-3deg - var(--t) * 12deg)) scale(calc(1 - var(--t) * .2));
+    opacity: calc(1 - var(--t) * .55);
+  }
+
+  .gn-lib__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 30px 40px rgba(38, 48, 24, .25));
+  }
+
+  .gn-lib__papel { fill: #FBF8F1; }
+  .gn-lib__renglon { stroke: #C9D6E3; stroke-width: 1.2; }
+  .gn-lib__margen { stroke: #E3A6A0; stroke-width: 1.5; }
+  .gn-lib__cafe { fill: none; stroke: #8A5A34; stroke-width: 6; opacity: .14; }
+
+  .gn-lib__mano { font-family: var(--gn-mano); font-weight: 600; fill: #2C3A55; }
+  .gn-lib__titulo { font-size: 34px; }
+  .gn-lib__nota { font-size: 27px; }
+  .gn-lib__nota--roja { fill: #B23A2E; font-size: 25px; }
+
+  .gn-lib__palo { stroke: #2C3A55; stroke-width: 3.4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .gn-lib__tache { fill: none; stroke: #B23A2E; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+
+  :global(.gn-anim) .gn-lib__palo { stroke-dashoffset: clamp(0, calc(1 - (var(--p) * 52 - 1 - var(--k))), 1); }
+  :global(.gn-anim) .gn-lib__nota { opacity: clamp(0, calc((var(--p) - .2 - var(--n) * .08) * 14), 1); }
+  :global(.gn-anim) .gn-lib__tache { stroke-dashoffset: clamp(0, calc(1 - (var(--p) - .52) * 9), 1); }
+
+  .gn-lib__tel { width: min(42vw, 13rem); }
+
+  :global(.gn-anim) .gn-lib__tel {
+    --u: clamp(0, calc((var(--p) - .66) * 4.5), 1);
+    position: absolute;
+    right: 6%;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    width: min(42vw, 15.5rem);
+    height: fit-content;
+    transform: translateY(calc((1 - var(--u)) * 55%)) rotate(calc((1 - var(--u)) * 10deg));
+    opacity: var(--u);
+  }
+
+  /* ═══ Un dia en el rancho ═══
+     Escena clavada: el script fija el alto de la seccion y --dx (lo que corre
+     la pista de lado). Con --p el cielo cambia: tarde de 45% a 70%, noche
+     desde 78%. El sol cruza en arco con sin(); de noche sale la luna. Sin
+     movimiento, la pista es un carrusel normal que se desliza con el dedo. */
+  .gn-dia { --p: 0; --dx: 0; position: relative; background: var(--gn-crema); }
+
+  .gn-dia__pin {
+    position: relative;
+    overflow: hidden;
+    padding: 4.5rem 0 3rem;
+  }
+
+  :global(.gn-anim) .gn-dia__pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 0;
+  }
+
+  .gn-dia__cielo,
+  .gn-dia__noche,
+  .gn-dia__astros,
+  .gn-dia__tierra { position: absolute; inset: 0; pointer-events: none; }
+
+  .gn-dia__tarde {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, #E9C98A, #F2DDB0 60%, var(--gn-crema));
+    opacity: clamp(0, calc((var(--p) - .42) * 4), 1);
+  }
+
+  .gn-dia__sol {
+    position: absolute;
+    /* Sale de detras de las lomas y se mete por el otro lado. */
+    left: calc(10% + var(--p) * 78%);
+    top: calc(84% - sin(calc(var(--p) * 180deg)) * 72%);
+    width: clamp(3.5rem, 6vw, 5.5rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--gn-arete);
+    box-shadow: 0 0 0 14px rgba(227, 178, 60, .18), 0 0 80px rgba(227, 178, 60, .5);
+  }
+
+  .gn-dia__tierra { top: auto; height: 24vh; }
+
+  .gn-dia__loma { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%; }
+  .gn-dia__loma--lejos { fill: #B9BE95; transform: translateX(calc(var(--p) * -3vw)); width: 106%; }
+  .gn-dia__loma--cerca { fill: #8E9A66; }
+
+  .gn-dia__papalote {
+    position: absolute;
+    right: 9%;
+    bottom: 34%;
+    width: clamp(3.5rem, 6vw, 5rem);
+    height: auto;
+    transform: translateX(calc(var(--p) * -6vw));
+  }
+
+  .gn-dia__torre { fill: none; stroke: #5F6A43; stroke-width: 3; stroke-linecap: round; }
+  .gn-dia__cola { fill: #5F6A43; }
+  .gn-dia__aspas { fill: #5F6A43; transform-box: fill-box; transform-origin: center; }
+
+  :global(.gn-anim) .gn-dia__aspas { animation: gn-girar 3.2s linear infinite; }
+
+  @keyframes gn-girar { to { transform: rotate(360deg); } }
+
+  .gn-dia__cerco { position: absolute; left: 0; bottom: 6%; width: 100%; height: 2.2rem; }
+  .gn-dia__cerco path { fill: none; stroke: #6B7550; stroke-width: 1.5; }
+  .gn-dia__cerco rect { fill: #6B7550; }
+
+  .gn-dia__noche {
+    background: linear-gradient(to bottom, #0E1409, #1C2614 70%, #222D17);
+    opacity: clamp(0, calc((var(--p) - .76) * 5), .92);
+  }
+
+  .gn-dia__luna {
+    position: absolute;
+    left: 22%;
+    top: calc(12% + (1 - clamp(0, calc((var(--p) - .8) * 6), 1)) * 30%);
+    width: 3.6rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: inset -12px -4px 0 0 #F2EDE2;
+    opacity: clamp(0, calc((var(--p) - .8) * 6), 1);
+    rotate: -20deg;
+  }
+
+  .gn-dia__estrella {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #F2EDE2;
+    opacity: clamp(0, calc((var(--p) - .82 - var(--e) * .005) * 8), .9);
+  }
+
+  :global(.gn-anim) .gn-dia__estrella { animation: gn-titila 2.6s ease-in-out infinite alternate; animation-delay: calc(var(--e) * -.37s); }
+
+  @keyframes gn-titila { from { scale: 1; } to { scale: .4; } }
+
+  /* El reloj de la escena: uno para el dia y otro para la noche, cruzados. */
+  .gn-dia__reloj {
+    position: absolute;
+    right: clamp(1.25rem, 4vw, 3rem);
+    top: 4.6rem;
+    z-index: 3;
+    margin: 0;
+    font: 900 clamp(2.4rem, 5vw, 4rem)/1 var(--pr-font);
+    font-stretch: 125%;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.04em;
+  }
+
+  .gn-dia__reloj--dia { color: var(--gn-monte); opacity: calc(1 - clamp(0, calc((var(--p) - .76) * 5), 1)); }
+  .gn-dia__reloj--noche { color: var(--gn-crema); opacity: clamp(0, calc((var(--p) - .76) * 5), 1); }
+
+  :global(html:not(.gn-anim)) .gn-dia__reloj { display: none; }
+
+  .gn-dia__track {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    margin: 0;
+    padding: 0 clamp(1.25rem, 6vw, 5rem);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  :global(.gn-anim) .gn-dia__track {
+    height: 100%;
+    width: max-content;
+    overflow: visible;
+    padding-top: 7rem;
+    padding-bottom: 12vh;
+    transform: translateX(calc(var(--p) * var(--dx) * -1px));
+    will-change: transform;
+  }
+
+  .gn-dia__intro { flex: none; width: min(80vw, 24rem); scroll-snap-align: start; }
+
+  .gn-hora {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    scroll-snap-align: center;
+  }
+
+  /* La pantalla de la guia: mas alta que la del video (1080×2262). */
+  .gn-tel--guia { aspect-ratio: 540 / 1131; width: auto; height: min(54vh, 31rem); }
+
+  .gn-hora__txt {
+    width: min(64vw, 16rem);
+    padding: 1.3rem 1.3rem 1.4rem;
+    border-radius: 1.2rem;
+    background: rgba(242, 237, 226, .94);
+    box-shadow: 0 24px 40px -28px rgba(38, 48, 24, .6);
+    rotate: calc((var(--i) - 3.5) * .6deg);
+  }
+
+  .gn-hora__h {
+    margin: 0 0 .5rem;
+    font: 900 2.2rem/1 var(--pr-font);
+    font-stretch: 125%;
+    letter-spacing: -.04em;
+    color: var(--gn-olivo);
+  }
+
+  .gn-hora__k { margin: 0 0 .45rem; font-size: 1.25rem; font-weight: 800; font-stretch: 110%; line-height: 1.1; color: var(--gn-monte); }
+  .gn-hora__d { margin: 0; font-size: .95rem; line-height: 1.55; color: var(--gn-texto); }
+
+  /* El telefono: un bisel de CSS alrededor de la pantalla. */
+  .gn-tel {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: min(100%, 19rem, calc((100vh - 8rem) * 540 / 966));
+    aspect-ratio: 540 / 966;
+    border: .55rem solid #0E0D0B;
+    border-radius: 2.4rem;
+    background: var(--gn-tinta);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px #3A362F, 0 50px 90px -45px rgba(38, 48, 24, .75);
+  }
+
+  .gn-tel__screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+  }
+
+  .gn-tel__screen.is-on { opacity: 1; z-index: 2; }
+
+  /* ═══ El juego de la cria ═══ */
+  .gn-cria {
+    padding: clamp(4.5rem, 10vw, 7rem) 1.25rem clamp(6rem, 12vw, 8rem);
+    background: var(--gn-tinta);
+    color: #CBC3B3;
+  }
+
+  .gn-cria__in {
+    display: grid;
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: clamp(2.5rem, 7vw, 5rem);
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+
+  .gn-cria__reto { margin-top: 1.5rem; color: var(--gn-arete); font-weight: 600; }
+
+  .gn-juego {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--gn-tinta-linea);
+    border-radius: 1.5rem;
+    background: #1D1A16;
+  }
+
+  .gn-juego__cria {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px dashed var(--gn-tinta-linea);
+  }
+
+  /* La becerra es la misma silueta, mas chica: se lee como cria junto a las vacas. */
+  .gn-juego__becerra { flex: none; width: 3.4rem; color: #4A433A; filter: drop-shadow(0 0 1px #A39A8A); }
+
+  :global(.gn-anim) .gn-juego__becerra { animation: gn-respira 2.6s ease-in-out infinite; }
+
+  @keyframes gn-respira {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
+  }
+
+  .gn-juego__k { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--gn-crema); }
+  .gn-juego__d { margin: .2rem 0 0; font-size: .9rem; color: #8F887B; }
+
+  .gn-juego__pide { margin: 1.25rem 0 .85rem; font-weight: 700; color: var(--gn-crema); }
+
+  .gn-juego__vacas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+
+  .gn-juego__vaca {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .35rem;
+    padding: 1rem .5rem .9rem;
+    border: 2px solid var(--gn-tinta-linea);
+    border-radius: 1rem;
+    background: #24201B;
+    color: var(--gn-crema);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color .2s ease, transform .25s cubic-bezier(.2, .9, .3, 1.4), opacity .3s ease;
+  }
+
+  .gn-juego__vaca:hover { border-color: #5A5246; transform: translateY(-3px); }
+
+  .gn-juego__silueta { width: 82%; color: var(--c); filter: drop-shadow(0 0 1px #8F887B); }
+
+  /* El arete de cada vaca, chiquito: el numero grande se sigue leyendo. */
+  .gn-juego__arete { display: block; width: 2.5rem; margin-top: -.2rem; }
+
+  .gn-juego__nombre { font-size: .9rem; font-weight: 600; }
+
+  /* El porque de cada vaca aparece solo al resolver. */
+  .gn-juego__porque {
+    display: none;
+    font: 400 .78rem/1.35 var(--pr-font);
+    color: #B5AD9E;
+    text-align: center;
+  }
+
+  .gn-juego.is-resuelto .gn-juego__porque { display: block; animation: gn-aparece .45s ease both calc(var(--lugar) * 120ms); }
+  .gn-juego.is-resuelto .gn-juego__vaca { cursor: default; transform: none; }
+  .gn-juego.is-resuelto .gn-juego__vaca[data-vaca='madre'] { border-color: var(--gn-brote); }
+  .gn-juego.is-resuelto .gn-juego__vaca[data-vaca='no'] { opacity: .5; }
+  .gn-juego.is-resuelto .gn-juego__vaca.is-escogida:not([data-vaca='madre']) { border-color: #D98C52; }
+
+  .gn-juego[data-resultado='bien'] .is-escogida { animation: gn-brinco .6s cubic-bezier(.3, 1.8, .5, 1); }
+  .gn-juego[data-resultado='mal'] .is-escogida { animation: gn-nel .45s ease; }
+
+  @keyframes gn-brinco {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.08) translateY(-6px); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes gn-nel {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    50%      { transform: translateX(6px); }
+    75%      { transform: translateX(-3px); }
+  }
+
+  @keyframes gn-aparece {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .gn-juego__msg {
+    min-height: 1.6em;
+    margin: 1.1rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gn-crema);
+  }
+
+  .gn-juego[data-resultado='bien'] .gn-juego__msg { color: var(--gn-brote); }
+
+  .gn-juego__otra {
+    display: none;
+    margin-top: .75rem;
+    padding: .45rem .9rem;
+    border: 1px solid #5A5246;
+    border-radius: .4rem;
+    background: transparent;
+    color: var(--gn-crema);
+    font: 600 .85rem/1 var(--pr-font);
+    cursor: pointer;
+  }
+
+  .gn-juego.is-resuelto .gn-juego__otra { display: inline-block; }
+
+  /* ═══ Avisos ═══ */
+  .gn-avisos { padding: clamp(5rem, 11vw, 8rem) 1.25rem clamp(4rem, 9vw, 6rem); background: var(--gn-crema); }
+
+  .gn-avisos__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+
+  .gn-avisos__tel {
+    width: min(78vw, 19rem);
+    background:
+      radial-gradient(120% 60% at 50% 0%, #2B3A1E 0%, transparent 70%),
+      var(--gn-tinta);
+  }
+
+  .gn-avisos__bloqueo { padding: 2.75rem 1rem 0; text-align: center; color: var(--gn-crema); }
+  .gn-avisos__hora { margin: 0; font: 700 3.6rem/1 var(--pr-font); font-stretch: 112%; letter-spacing: -.03em; }
+  .gn-avisos__fecha { margin: .4rem 0 0; font-size: .85rem; color: #CBC3B3; }
+
+  .gn-avisos__pila { position: absolute; left: .7rem; right: .7rem; top: 9.5rem; margin: 0; padding: 0; list-style: none; }
+
+  /* Cada aviso se acomoda por su posicion: 0 es el mas nuevo, arriba. */
+  .gn-aviso {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    gap: .65rem;
+    padding: .7rem .8rem;
+    border-radius: 1rem;
+    background: rgba(242, 237, 226, .14);
+    color: var(--gn-crema);
+    backdrop-filter: blur(10px);
+    transition: transform .6s cubic-bezier(.2, .9, .2, 1), opacity .5s ease;
+  }
+
+  .gn-aviso img { flex: none; width: 1.75rem; height: 1.75rem; border-radius: .45rem; }
+
+  .gn-aviso__t { display: flex; justify-content: space-between; gap: .5rem; margin: 0; font-size: .8rem; }
+  .gn-aviso__t span { color: #A9A190; font-size: .72rem; }
+  .gn-aviso__d { margin: .15rem 0 0; font-size: .78rem; line-height: 1.35; color: #DCD5C7; }
+
+  .gn-aviso[data-pos='0'] { transform: translateY(0); opacity: 1; }
+  .gn-aviso[data-pos='1'] { transform: translateY(4.4rem) scale(.97); opacity: .85; }
+  .gn-aviso[data-pos='2'] { transform: translateY(8.8rem) scale(.94); opacity: .6; }
+  .gn-aviso[data-pos='3'] { transform: translateY(13.2rem) scale(.91); opacity: .3; }
+  .gn-aviso[data-pos='4'] { transform: translateY(-3rem) scale(.95); opacity: 0; transition: none; }
+
+  /* ═══ Monte: origen + alfa + lomas ═══ */
+  .gn-monte {
+    --p: 1;
+    padding: clamp(5rem, 11vw, 8rem) 1.25rem 0;
+    background: var(--gn-monte);
+    color: #C9CFB8;
+    overflow: hidden;
+  }
+
+  .gn-monte__in { max-width: 64rem; margin: 0 auto; }
+
+  .gn-monte__cita { margin: 0; }
+
+  .gn-monte__cita p {
+    margin: 0;
+    max-width: 14ch;
+    font-size: clamp(2.6rem, 7.6vw, 6rem);
+    font-weight: 900;
+    font-stretch: 125%;
+    line-height: .92;
+    letter-spacing: -.045em;
+    color: var(--gn-crema);
+  }
+
+  .gn-mw { display: inline-block; }
+  :global(.gn-anim) .gn-mw {
+    opacity: clamp(.12, calc(var(--p) * var(--n) * 3.2 - var(--i)), 1);
+    transform: translateY(calc((1 - clamp(0, calc(var(--p) * var(--n) * 3.2 - var(--i)), 1)) * .25em));
+  }
+
+  .gn-monte__origen {
+    margin: 1.75rem 0 0;
+    max-width: 50ch;
+    font-size: clamp(1rem, 2vw, 1.13rem);
+    line-height: 1.6;
+  }
+
+  .gn-monte__alfa {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.5rem;
+    margin-top: clamp(3.5rem, 8vw, 5rem);
+    padding-top: clamp(2.5rem, 6vw, 3.5rem);
+    border-top: 1px solid rgba(242, 237, 226, .18);
+  }
+
+  .gn-monte__marca { width: 4.5rem; height: 4.5rem; border-radius: 1rem; }
+
+  .gn-monte__h2 {
+    margin: 0 0 .6rem;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    font-stretch: 118%;
+    line-height: 1;
+    letter-spacing: -.03em;
+    color: var(--gn-crema);
+  }
+
+  .gn-monte__alfa p { margin: 0 0 1.75rem; max-width: 48ch; font-size: 1.05rem; line-height: 1.6; }
+
+  .gn-monte__alfa .gn-monte__fine { margin: 1.4rem 0 0; font-size: .88rem; color: #9FA88C; }
+
+  /* El boton con su arete "Alfa" colgado de la esquina. */
+  .gn-monte__cta { position: relative; display: inline-block; }
+
+  .gn-monte__colgado { position: absolute; top: .1rem; right: -4.6rem; pointer-events: none; }
+  .gn-monte__colgado .gn-arete { width: 3.3rem; }
+
+  :global(.gn-anim) .gn-monte__colgado .gn-arete { animation: gn-mecer 2.6s ease-in-out infinite alternate; }
+
+  /* Lomas en capas con un hato que camina entre ellas. */
+  .gn-lomas {
+    position: relative;
+    height: clamp(9rem, 18vw, 13rem);
+    margin: clamp(3rem, 7vw, 5rem) -1.25rem 0;
+  }
+
+  .gn-lomas__capa { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%; }
+  .gn-lomas__capa--1 { fill: #2F3D1D; transform: translateY(calc((1 - var(--p)) * 30px)); }
+  .gn-lomas__capa--2 { fill: #3A4A24; transform: translateY(calc((1 - var(--p)) * 18px)); }
+  .gn-lomas__capa--3 { fill: var(--gn-olivo); }
+
+  .gn-hato { position: absolute; left: 0; right: 0; bottom: 18%; height: 4rem; }
+
+  .gn-hato__vaca {
+    position: absolute;
+    bottom: var(--y);
+    left: var(--x);
+    width: var(--w);
+    color: var(--gn-tinta);
+  }
+
+  .gn-hato__vaca .gn-silueta { width: 100%; }
+
+  :global(.gn-anim) .gn-hato__vaca {
+    left: 0;
+    animation: gn-caminar var(--d) linear var(--s) infinite;
+  }
+
+  :global(.gn-anim) .gn-hato__vaca .gn-silueta { animation: gn-paso .5s ease-in-out infinite alternate; }
+
+  :global(.gn-anim) .gn-lomas .gn-hato__vaca,
+  :global(.gn-anim) .gn-lomas .gn-hato__vaca .gn-silueta { animation-play-state: paused; }
+
+  :global(.gn-anim) .gn-lomas.is-vivo .gn-hato__vaca,
+  :global(.gn-anim) .gn-lomas.is-vivo .gn-hato__vaca .gn-silueta { animation-play-state: running; }
+
+  @keyframes gn-caminar {
+    from { transform: translateX(-80px); }
+    to   { transform: translateX(calc(100vw + 80px)); }
+  }
+
+  @keyframes gn-paso {
+    from { translate: 0 0; }
+    to   { translate: 0 -2px; }
+  }
+
+  /* ═══ Preguntas ═══ */
+  .gn-faq { padding: clamp(4rem, 9vw, 6rem) 1.25rem; background: var(--gn-crema); }
+
+  .gn-faq__in { max-width: 46rem; margin: 0 auto; }
+
+  .gn-faq__list { margin-top: 1.75rem; border-top: 1px solid var(--gn-linea); }
+
+  .gn-faq__list details { border-bottom: 1px solid var(--gn-linea); }
+
+  /* Las respuestas se abren deslizando donde el navegador lo sabe hacer. */
+  .gn-faq__list details { interpolate-size: allow-keywords; }
+  .gn-faq__list details::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size .35s ease, content-visibility .35s allow-discrete;
+  }
+  .gn-faq__list details[open]::details-content { block-size: auto; }
+
+  .gn-faq summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: var(--gn-monte);
+  }
+
+  .gn-faq summary::-webkit-details-marker { display: none; }
+
+  .gn-faq summary::after {
+    content: '+';
+    flex: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--gn-olivo);
+    transition: transform .25s ease;
+  }
+
+  .gn-faq details[open] summary::after { transform: rotate(45deg); }
+
+  .gn-faq__list p { margin: 0 0 1.3rem; max-width: 58ch; font-size: 1rem; line-height: 1.6; }
+
+  .gn-faq__puente {
+    margin-top: clamp(3rem, 7vw, 4.5rem);
+    padding: 1.75rem;
+    border-radius: 1rem;
+    background: var(--gn-hueso);
+  }
+
+  .gn-faq__puente p { margin: 0 0 1.25rem; max-width: 52ch; line-height: 1.6; }
+
+  /* ═══ Responsive ═══ */
+  @media (max-width: 56rem) {
+    .gn-hero__in,
+    .gn-cria__in,
+    .gn-lib__in,
+    .gn-avisos__in { grid-template-columns: 1fr; }
+
+    .gn-hero__escena { max-width: 18rem; }
+    .gn-flota--1 { left: -12%; }
+    .gn-flota--2 { right: -12%; }
+    .gn-flota--3 { left: -8%; }
+
+    :global(.gn-anim) .gn-lib { height: 240vh; }
+    :global(.gn-anim) .gn-lib__pin { padding-top: 4rem; }
+    :global(.gn-anim) .gn-lib__in { gap: 1rem; }
+    :global(.gn-anim) .gn-lib__escena { height: min(58vh, 30rem); }
+    :global(.gn-anim) .gn-lib__hoja { max-width: min(80vw, 22rem); }
+    :global(.gn-anim) .gn-lib__tel { width: min(40vw, 11rem); right: 4%; }
+
+    /* El dia en telefono: cada hora es una columna (pantalla arriba). */
+    .gn-hora { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .gn-tel--guia { height: min(46vh, 26rem); }
+    .gn-hora__txt { width: min(74vw, 18rem); padding: 1rem 1.1rem 1.1rem; }
+    .gn-hora__h { font-size: 1.7rem; }
+    .gn-dia__reloj { top: 4.2rem; }
+    :global(.gn-anim) .gn-dia__track { padding-top: 4.5rem; padding-bottom: 8vh; align-items: center; }
+    .gn-dia__tierra { height: 18vh; }
+
+    .gn-avisos__tel { justify-self: center; }
+  }
+
+  @media (max-width: 40rem) {
+    .gn-hero__ctas .gn-btn { flex: 1 1 100%; text-align: center; }
+
+    .gn-juego__vacas { gap: .5rem; }
+    .gn-juego__nombre { font-size: .8rem; }
+
+    .gn-monte__alfa { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gn-btn,
+    .gn-juego__vaca,
+    .gn-aviso,
+    .gn-faq summary::after { transition: none; }
+    .gn-faq__list details::details-content { transition: none; }
+    .gn-juego.is-resuelto .gn-juego__porque,
+    .gn-juego[data-resultado] .is-escogida { animation: none; }
+  }
+</style>

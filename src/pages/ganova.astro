@@ -235,6 +235,8 @@ const faq = [
     slot="chrome-top"
     name="Ganova"
     mark={img('marca-128.webp')}
+    markMask="/assets/image/ganova/marca-toro.webp"
+    badge="alfa"
     href="/ganova/"
     links={[
       { label: 'Inicio', href: '#inicio', icon: 'inicio', soloMovil: true },
@@ -1547,6 +1549,9 @@ const faq = [
     .gn-cria__in,
     .gn-lib__in,
     .gn-avisos__in { grid-template-columns: 1fr; }
+
+    /* En telefono la vaquita pisaria el logo y el nombre: queda la linea. */
+    .gn-barra__vaca { display: none; }
 
     .gn-hero__escena { max-width: 18rem; }
     .gn-flota--1 { left: -12%; }

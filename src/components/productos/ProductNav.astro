@@ -25,6 +25,12 @@ interface Props {
       el: un logo solo obliga a reconocerlo, y quien llega por una busqueda no
       lo ha visto nunca. */
   mark?: string;
+  /** Silueta del logo para usar como mascara (fondo transparente). Si viene,
+      la marca se pinta como icono de app: la silueta en crema sobre un cuadro
+      del color de acento, nitida a cualquier tamaño. Manda sobre `mark`. */
+  markMask?: string;
+  /** Etiqueta chiquita junto al nombre ("alfa", "beta"). */
+  badge?: string;
   /** Enlace del propio producto (su H1), para que el nombre lleve a arriba. */
   href: string;
   /** Anclas internos: [{ label, href, icon? }]. Los que traen `icon` son las
@@ -38,7 +44,7 @@ interface Props {
 
 type Icono = 'inicio' | 'dia' | 'cria' | 'avisos' | 'alfa' | 'preguntas' | 'guia' | 'app';
 
-const { name, mark, href, links = [], cta, byHref } = Astro.props;
+const { name, mark, markMask, badge, href, links = [], cta, byHref } = Astro.props;
 const tabs = links.filter((l) => l.icon).slice(0, 5);
 
 /* Iconos de linea en 24×24, del mismo trazo que los de la barra de la app. */
@@ -57,8 +63,13 @@ const iconos: Record<Icono, string> = {
 <header class="pr-nav">
   <nav class="pr-nav__in" aria-label={`Navegación de ${name}`}>
     <a class="pr-nav__brand" href={href} aria-label={`${name}, inicio`}>
-      {mark && <img class="pr-nav__mark" src={mark} alt="" width="32" height="32" />}
+      {markMask ? (
+        <span class="pr-nav__app" style={`--mm:url('${markMask}')`} aria-hidden="true"><span></span></span>
+      ) : mark && (
+        <img class="pr-nav__mark" src={mark} alt="" width="32" height="32" />
+      )}
       <span class="pr-nav__name">{name}</span>
+      {badge && <span class="pr-nav__badge">{badge}</span>}
     </a>
 
     {links.length > 0 && (
@@ -90,61 +101,78 @@ const iconos: Record<Icono, string> = {
 )}
 
 <script is:inline>
-  // Marca la pestaña activa: la de la pagina actual, o la de la seccion que
-  // cruza la mitad de la pantalla cuando son anclas de la misma pagina. Espera
-  // al DOM: el nav se pinta antes que las secciones a las que apunta.
+  // 1) La barra de arriba se compacta y toma vidrio en cuanto hay scroll.
+  // 2) Marca la seccion activa en las pestañas de abajo y en los enlaces de
+  //    arriba: la de la pagina actual, o la de la seccion que ya paso la mitad
+  //    de la pantalla cuando son anclas. Espera al DOM: el nav se pinta antes
+  //    que las secciones a las que apunta.
   (function (run) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
     else run();
   })(function () {
-    var tabs = Array.prototype.slice.call(document.querySelectorAll('.pr-tabs__a'));
-    if (!tabs.length) return;
-    var marcar = function (a) {
-      tabs.forEach(function (t) {
-        if (t === a) t.setAttribute('aria-current', 'true');
-        else t.removeAttribute('aria-current');
+    var nav = document.querySelector('.pr-nav');
+    var enlaces = Array.prototype.slice.call(document.querySelectorAll('.pr-tabs__a, .pr-nav__links a'));
+    var hrefs = enlaces.map(function (a) { return a.getAttribute('href'); })
+      .filter(function (h, i, arr) { return arr.indexOf(h) === i; });
+
+    var marcar = function (href) {
+      enlaces.forEach(function (a) {
+        if (href && a.getAttribute('href') === href) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
       });
     };
+
     var aqui = location.pathname;
-    var dePagina = tabs.filter(function (t) { return t.getAttribute('href').charAt(0) !== '#'; });
-    // La de la ruta mas larga que contiene a la actual: /ganova/guia/aretes/
-    // marca "Guía" (/ganova/guia/) y no "La app" (/ganova/).
-    var exacta = dePagina
-      .filter(function (t) { return aqui.indexOf(t.getAttribute('href')) === 0; })
-      .sort(function (a, b) { return b.getAttribute('href').length - a.getAttribute('href').length; })[0];
-    var anclas = tabs.filter(function (t) { return t.getAttribute('href').charAt(0) === '#'; });
-    if (!anclas.length) { if (exacta) marcar(exacta); return; }
-    var pares = anclas.map(function (t) {
-      return { t: t, el: document.getElementById(t.getAttribute('href').slice(1)) };
-    }).filter(function (x) { return x.el; });
+    // La ruta mas larga que contiene a la actual: /ganova/guia/aretes/ marca
+    // "Guía" (/ganova/guia/) y no "La app" (/ganova/).
+    var exacta = hrefs
+      .filter(function (h) { return h.charAt(0) !== '#' && aqui.indexOf(h) === 0; })
+      .sort(function (a, b) { return b.length - a.length; })[0] || null;
+    var pares = hrefs
+      .filter(function (h) { return h.charAt(0) === '#'; })
+      .map(function (h) { return { h: h, el: document.getElementById(h.slice(1)) }; })
+      .filter(function (x) { return x.el; })
+      // En el orden de la pagina, no en el del nav: "Inicio" puede venir al
+      // final de la lista y aun asi es la primera seccion.
+      .sort(function (a, b) {
+        return a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+      });
+
     var ticking = false;
-    var elegir = function () {
+    var pinta = function () {
       ticking = false;
+      if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 8);
+      if (!pares.length) { marcar(exacta); return; }
       var mitad = window.innerHeight / 2;
       var actual = null;
       pares.forEach(function (x) {
-        var r = x.el.getBoundingClientRect();
-        // La ultima seccion que ya paso la mitad: entre dos anclas se queda
-        // marcada la anterior en vez de quedarse sin ninguna.
-        if (r.top <= mitad) actual = x.t;
+        if (x.el.getBoundingClientRect().top <= mitad) actual = x.h;
       });
-      marcar(actual || exacta || null);
+      marcar(actual || exacta);
     };
     window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(elegir); }
+      if (!ticking) { ticking = true; requestAnimationFrame(pinta); }
     }, { passive: true });
-    elegir();
+    pinta();
   });
 </script>
 
 <style>
+  /* Arriba de todo la barra es transparente y respira; en cuanto hay scroll
+     se compacta y toma vidrio con una sombra suave (`is-scrolled`). */
   .pr-nav {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--pr-ink) 88%, transparent);
-    border-bottom: 1px solid var(--pr-line);
-    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .pr-nav.is-scrolled {
+    background: color-mix(in srgb, var(--pr-ink) 84%, transparent);
+    border-bottom-color: color-mix(in srgb, var(--pr-line) 70%, transparent);
+    box-shadow: 0 10px 30px -22px rgba(38, 48, 24, .55);
+    backdrop-filter: blur(14px) saturate(1.3);
   }
 
   .pr-nav__in {
@@ -153,8 +181,11 @@ const iconos: Record<Icono, string> = {
     gap: 1.25rem;
     max-width: 72rem;
     margin: 0 auto;
-    padding: .8rem 1.25rem;
+    padding: 1rem 1.25rem;
+    transition: padding .3s cubic-bezier(.2, .9, .2, 1);
   }
+
+  .pr-nav.is-scrolled .pr-nav__in { padding-block: .55rem; }
 
   .pr-nav__brand {
     display: flex;
@@ -172,13 +203,50 @@ const iconos: Record<Icono, string> = {
     mix-blend-mode: multiply;
   }
 
+  /* La marca como icono de app: la silueta en crema sobre el acento. */
+  .pr-nav__app {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: .65rem;
+    background: var(--pr-accent);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08), 0 6px 14px -8px rgba(38, 48, 24, .7);
+    transition: transform .35s cubic-bezier(.3, 1.6, .5, 1);
+  }
+
+  .pr-nav__app span {
+    width: 74%;
+    height: 74%;
+    background: var(--pr-ink);
+    -webkit-mask: var(--mm) center / contain no-repeat;
+    mask: var(--mm) center / contain no-repeat;
+  }
+
+  .pr-nav__brand:hover .pr-nav__app { transform: rotate(-8deg) scale(1.06); }
+
   .pr-nav__name {
     font-family: var(--pr-font);
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 800;
-    font-stretch: 115%;
-    letter-spacing: -.02em;
+    font-stretch: 118%;
+    letter-spacing: -.035em;
     color: var(--pr-fg);
+  }
+
+  /* "alfa": etiqueta de estado, del amarillo del arete. */
+  .pr-nav__badge {
+    align-self: flex-start;
+    margin: .1rem 0 0 -.2rem;
+    padding: .12rem .38rem;
+    border-radius: .35rem;
+    background: #F2CC1D;
+    color: #15130F;
+    font-family: var(--pr-font);
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+    line-height: 1.2;
   }
 
   .pr-nav__links {
@@ -190,6 +258,8 @@ const iconos: Record<Icono, string> = {
   }
 
   .pr-nav__links a {
+    position: relative;
+    padding: .3rem 0;
     font-size: .88rem;
     font-weight: 500;
     color: var(--pr-fg-dim);
@@ -197,7 +267,23 @@ const iconos: Record<Icono, string> = {
     transition: color .2s ease;
   }
 
-  .pr-nav__links a:hover { color: var(--pr-accent); }
+  /* La seccion donde estas se subraya sola. */
+  .pr-nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -.1rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--pr-accent);
+    transform: scaleX(0);
+    transition: transform .35s cubic-bezier(.2, .9, .2, 1);
+  }
+
+  .pr-nav__links a:hover,
+  .pr-nav__links a[aria-current] { color: var(--pr-fg); }
+  .pr-nav__links a[aria-current]::after { transform: scaleX(1); }
 
   .pr-nav__right {
     display: flex;
@@ -237,6 +323,7 @@ const iconos: Record<Icono, string> = {
      Siempre quedan el nombre y el boton. */
   @media (max-width: 52rem) {
     .pr-nav__links { display: none; }
+    .pr-nav__cta { padding: .5rem .9rem; font-size: .8rem; }
   }
 
   /* ── Dock de pestañas (solo movil) ──
@@ -332,7 +419,11 @@ const iconos: Record<Icono, string> = {
 
   @media (prefers-reduced-motion: reduce) {
     .pr-tabs__a,
-    .pr-tabs__ico { transition: none; }
+    .pr-tabs__ico,
+    .pr-nav,
+    .pr-nav__in,
+    .pr-nav__app,
+    .pr-nav__links a::after { transition: none; }
     .pr-nav__links a,
     .pr-nav__by,
     .pr-nav__cta { transition: none; }

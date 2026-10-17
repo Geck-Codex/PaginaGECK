@@ -7,10 +7,12 @@
  * tipografia NO llegan como props: se heredan de las variables `--pr-*` que la
  * pagina pone en el <body> por `bodyStyle` del layout.
  *
- * SIN JAVASCRIPT. En movil no hay menu hamburguesa: se esconden los anclas y se
- * quedan el nombre y el boton, que es lo unico que alguien toca en la pantalla
- * de un telefono. Un cajon desplegable aqui seria JS para revelar tres enlaces
- * que la propia pagina ya recorre al bajar.
+ * EN MOVIL, PESTAÑAS ABAJO. Arriba se quedan el nombre y el boton; los
+ * enlaces que traen `icon` bajan a una barra de pestañas fija, como la de la
+ * propia app (Inicio · Ganado · Dinero…). No es un menu hamburguesa: son
+ * enlaces de verdad, siempre visibles, a un pulgar de distancia. El unico JS
+ * es el que marca la pestaña de la seccion que se esta viendo, y sin el los
+ * enlaces funcionan igual.
  *
  * El reconocimiento de la agencia va discreto y a la derecha del nombre, no
  * arriba: quien llega buscando el producto no viene por Geck Codex, pero saber
@@ -23,29 +25,56 @@ interface Props {
       el: un logo solo obliga a reconocerlo, y quien llega por una busqueda no
       lo ha visto nunca. */
   mark?: string;
+  /** Silueta del logo para usar como mascara (fondo transparente). Si viene,
+      la marca se pinta como icono de app: la silueta en crema sobre un cuadro
+      del color de acento, nitida a cualquier tamaño. Manda sobre `mark`. */
+  markMask?: string;
+  /** Etiqueta chiquita junto al nombre ("alfa", "beta"). */
+  badge?: string;
   /** Enlace del propio producto (su H1), para que el nombre lleve a arriba. */
   href: string;
-  /** Anclas internos: [{ label, href }]. */
-  links?: { label: string; href: string }[];
+  /** Anclas internos: [{ label, href, icon? }]. Los que traen `icon` son las
+      pestañas de abajo en movil (cinco como mucho, como en la app). */
+  links?: { label: string; href: string; icon?: Icono; soloMovil?: boolean }[];
   /** Llamada a la accion principal. */
   cta: { label: string; href: string };
   /** A donde manda el credito de la agencia. */
   byHref: string;
 }
 
-const { name, mark, href, links = [], cta, byHref } = Astro.props;
+type Icono = 'inicio' | 'dia' | 'cria' | 'avisos' | 'alfa' | 'preguntas' | 'guia' | 'app';
+
+const { name, mark, markMask, badge, href, links = [], cta, byHref } = Astro.props;
+const tabs = links.filter((l) => l.icon).slice(0, 5);
+
+/* Iconos de linea en 24×24, del mismo trazo que los de la barra de la app. */
+const iconos: Record<Icono, string> = {
+  inicio: 'M3 18 9 9l4 5 3-4 5 8z',
+  dia: 'M12 3v2M12 19v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M3 12h2M19 12h2M4.6 19.4 6 18M18 6l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
+  cria: 'M5 8c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3l-1 1-1-2h-8L8 9zM7 9h10v5a5 5 0 0 1-10 0zM10 13h.01M14 13h.01M10.5 16.5h3',
+  avisos: 'M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0',
+  alfa: 'M9 3h6l1 4c2 1.5 3 3.5 3 5.5V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6.5C5 10.5 6 8.5 8 7zM12 5.5h.01M9 15h6',
+  preguntas: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5h.01M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',
+  guia: 'M4 5c2.5-1 5-1 8 1 3-2 5.5-2 8-1v14c-2.5-1-5-1-8 1-3-2-5.5-2-8-1zM12 6v14',
+  app: 'M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM11 18h2',
+};
 ---
 
 <header class="pr-nav">
   <nav class="pr-nav__in" aria-label={`Navegación de ${name}`}>
     <a class="pr-nav__brand" href={href} aria-label={`${name}, inicio`}>
-      {mark && <img class="pr-nav__mark" src={mark} alt="" width="32" height="32" />}
+      {markMask ? (
+        <span class="pr-nav__app" style={`--mm:url('${markMask}')`} aria-hidden="true"><span></span></span>
+      ) : mark && (
+        <img class="pr-nav__mark" src={mark} alt="" width="32" height="32" />
+      )}
       <span class="pr-nav__name">{name}</span>
+      {badge && <span class="pr-nav__badge">{badge}</span>}
     </a>
 
     {links.length > 0 && (
       <ul class="pr-nav__links">
-        {links.map((l) => (
+        {links.filter((l) => !l.soloMovil).map((l) => (
           <li><a href={l.href}>{l.label}</a></li>
         ))}
       </ul>
@@ -58,14 +87,92 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
   </nav>
 </header>
 
+{tabs.length > 0 && (
+  <nav class="pr-tabs" aria-label={`Secciones de ${name}`}>
+    {tabs.map((t) => (
+      <a class="pr-tabs__a" href={t.href}>
+        <span class="pr-tabs__ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={iconos[t.icon as Icono]} /></svg>
+        </span>
+        <span class="pr-tabs__t">{t.label}</span>
+      </a>
+    ))}
+  </nav>
+)}
+
+<script is:inline>
+  // 1) La barra de arriba se compacta y toma vidrio en cuanto hay scroll.
+  // 2) Marca la seccion activa en las pestañas de abajo y en los enlaces de
+  //    arriba: la de la pagina actual, o la de la seccion que ya paso la mitad
+  //    de la pantalla cuando son anclas. Espera al DOM: el nav se pinta antes
+  //    que las secciones a las que apunta.
+  (function (run) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
+    else run();
+  })(function () {
+    var nav = document.querySelector('.pr-nav');
+    var enlaces = Array.prototype.slice.call(document.querySelectorAll('.pr-tabs__a, .pr-nav__links a'));
+    var hrefs = enlaces.map(function (a) { return a.getAttribute('href'); })
+      .filter(function (h, i, arr) { return arr.indexOf(h) === i; });
+
+    var marcar = function (href) {
+      enlaces.forEach(function (a) {
+        if (href && a.getAttribute('href') === href) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    };
+
+    var aqui = location.pathname;
+    // La ruta mas larga que contiene a la actual: /ganova/guia/aretes/ marca
+    // "Guía" (/ganova/guia/) y no "La app" (/ganova/).
+    var exacta = hrefs
+      .filter(function (h) { return h.charAt(0) !== '#' && aqui.indexOf(h) === 0; })
+      .sort(function (a, b) { return b.length - a.length; })[0] || null;
+    var pares = hrefs
+      .filter(function (h) { return h.charAt(0) === '#'; })
+      .map(function (h) { return { h: h, el: document.getElementById(h.slice(1)) }; })
+      .filter(function (x) { return x.el; })
+      // En el orden de la pagina, no en el del nav: "Inicio" puede venir al
+      // final de la lista y aun asi es la primera seccion.
+      .sort(function (a, b) {
+        return a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+      });
+
+    var ticking = false;
+    var pinta = function () {
+      ticking = false;
+      if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 8);
+      if (!pares.length) { marcar(exacta); return; }
+      var mitad = window.innerHeight / 2;
+      var actual = null;
+      pares.forEach(function (x) {
+        if (x.el.getBoundingClientRect().top <= mitad) actual = x.h;
+      });
+      marcar(actual || exacta);
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(pinta); }
+    }, { passive: true });
+    pinta();
+  });
+</script>
+
 <style>
+  /* Arriba de todo la barra es transparente y respira; en cuanto hay scroll
+     se compacta y toma vidrio con una sombra suave (`is-scrolled`). */
   .pr-nav {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--pr-ink) 88%, transparent);
-    border-bottom: 1px solid var(--pr-line);
-    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .pr-nav.is-scrolled {
+    background: color-mix(in srgb, var(--pr-ink) 84%, transparent);
+    border-bottom-color: color-mix(in srgb, var(--pr-line) 70%, transparent);
+    box-shadow: 0 10px 30px -22px rgba(38, 48, 24, .55);
+    backdrop-filter: blur(14px) saturate(1.3);
   }
 
   .pr-nav__in {
@@ -74,8 +181,11 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
     gap: 1.25rem;
     max-width: 72rem;
     margin: 0 auto;
-    padding: .8rem 1.25rem;
+    padding: 1rem 1.25rem;
+    transition: padding .3s cubic-bezier(.2, .9, .2, 1);
   }
+
+  .pr-nav.is-scrolled .pr-nav__in { padding-block: .55rem; }
 
   .pr-nav__brand {
     display: flex;
@@ -93,13 +203,50 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
     mix-blend-mode: multiply;
   }
 
+  /* La marca como icono de app: la silueta en crema sobre el acento. */
+  .pr-nav__app {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: .65rem;
+    background: var(--pr-accent);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08), 0 6px 14px -8px rgba(38, 48, 24, .7);
+    transition: transform .35s cubic-bezier(.3, 1.6, .5, 1);
+  }
+
+  .pr-nav__app span {
+    width: 74%;
+    height: 74%;
+    background: var(--pr-ink);
+    -webkit-mask: var(--mm) center / contain no-repeat;
+    mask: var(--mm) center / contain no-repeat;
+  }
+
+  .pr-nav__brand:hover .pr-nav__app { transform: rotate(-8deg) scale(1.06); }
+
   .pr-nav__name {
     font-family: var(--pr-font);
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 800;
-    font-stretch: 115%;
-    letter-spacing: -.02em;
+    font-stretch: 118%;
+    letter-spacing: -.035em;
     color: var(--pr-fg);
+  }
+
+  /* "alfa": etiqueta de estado, del amarillo del arete. */
+  .pr-nav__badge {
+    align-self: flex-start;
+    margin: .1rem 0 0 -.2rem;
+    padding: .12rem .38rem;
+    border-radius: .35rem;
+    background: #F2CC1D;
+    color: #15130F;
+    font-family: var(--pr-font);
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+    line-height: 1.2;
   }
 
   .pr-nav__links {
@@ -111,6 +258,8 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
   }
 
   .pr-nav__links a {
+    position: relative;
+    padding: .3rem 0;
     font-size: .88rem;
     font-weight: 500;
     color: var(--pr-fg-dim);
@@ -118,7 +267,23 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
     transition: color .2s ease;
   }
 
-  .pr-nav__links a:hover { color: var(--pr-accent); }
+  /* La seccion donde estas se subraya sola. */
+  .pr-nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -.1rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--pr-accent);
+    transform: scaleX(0);
+    transition: transform .35s cubic-bezier(.2, .9, .2, 1);
+  }
+
+  .pr-nav__links a:hover,
+  .pr-nav__links a[aria-current] { color: var(--pr-fg); }
+  .pr-nav__links a[aria-current]::after { transform: scaleX(1); }
 
   .pr-nav__right {
     display: flex;
@@ -158,13 +323,107 @@ const { name, mark, href, links = [], cta, byHref } = Astro.props;
      Siempre quedan el nombre y el boton. */
   @media (max-width: 52rem) {
     .pr-nav__links { display: none; }
+    .pr-nav__cta { padding: .5rem .9rem; font-size: .8rem; }
   }
+
+  /* ── Dock de pestañas (solo movil) ──
+     Capsula oscura flotando sobre la pagina, despegada de los bordes. Cada
+     pestaña lleva icono Y nombre, como la barra de la propia app (Inicio,
+     Ganado, Dinero…): un ranchero que entra por primera vez no tiene por que
+     adivinar que el sol es "Un día". La activa pone una pastilla detras del
+     icono, el mismo gesto que la app. */
+  .pr-tabs { display: none; }
+
+  @media (max-width: 52rem) {
+    .pr-tabs {
+      --dock-tinta: #15130F;
+      --dock-activa: #A8D08D;
+      position: fixed;
+      left: 50%;
+      bottom: calc(.7rem + env(safe-area-inset-bottom));
+      z-index: 60;
+      display: flex;
+      align-items: stretch;
+      width: max-content;
+      max-width: calc(100vw - 1.25rem);
+      padding: .35rem .4rem;
+      border: 1px solid rgba(242, 237, 226, .1);
+      border-radius: 1.6rem;
+      background: color-mix(in srgb, var(--dock-tinta) 88%, transparent);
+      box-shadow: 0 18px 40px -14px rgba(10, 12, 6, .6), 0 2px 6px rgba(10, 12, 6, .25), inset 0 1px 0 rgba(255, 255, 255, .06);
+      transform: translateX(-50%);
+      backdrop-filter: blur(16px) saturate(1.4);
+    }
+
+    /* Que el dock no tape el final de la pagina. */
+    :global(body[data-chrome='product']) { padding-bottom: calc(5.8rem + env(safe-area-inset-bottom)); }
+  }
+
+  .pr-tabs__a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .18rem;
+    width: 4.1rem;
+    padding: .2rem 0 .25rem;
+    border-radius: 1.2rem;
+    color: rgba(242, 237, 226, .66);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color .25s ease, transform .2s ease;
+  }
+
+  .pr-tabs__a:active { transform: scale(.92); }
+
+  .pr-tabs__ico {
+    display: grid;
+    place-items: center;
+    width: 3.2rem;
+    height: 1.95rem;
+    border-radius: 999px;
+    transition: background-color .35s cubic-bezier(.2, .9, .2, 1), width .35s cubic-bezier(.2, .9, .2, 1);
+  }
+
+  .pr-tabs__ico svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pr-tabs__t {
+    max-width: 100%;
+    overflow: hidden;
+    font-family: var(--pr-font);
+    font-size: .68rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .pr-tabs__a[aria-current] { color: #F2EDE2; }
+  .pr-tabs__a[aria-current] .pr-tabs__ico { background: var(--dock-activa, #A8D08D); color: var(--dock-tinta, #15130F); }
+  .pr-tabs__a[aria-current] .pr-tabs__t { font-weight: 800; }
+
+  .pr-tabs__a:not([aria-current]):hover { color: #F2EDE2; }
+
+  .pr-tabs__a:focus-visible { outline: none; }
+  .pr-tabs__a:focus-visible .pr-tabs__ico { outline: 2px solid var(--dock-activa, #A8D08D); outline-offset: 2px; }
 
   @media (max-width: 30rem) {
     .pr-nav__by { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .pr-tabs__a,
+    .pr-tabs__ico,
+    .pr-nav,
+    .pr-nav__in,
+    .pr-nav__app,
+    .pr-nav__links a::after { transition: none; }
     .pr-nav__links a,
     .pr-nav__by,
     .pr-nav__cta { transition: none; }

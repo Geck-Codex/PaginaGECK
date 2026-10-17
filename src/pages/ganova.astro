@@ -163,6 +163,7 @@ const cita = 'Yo la programo. Yo la uso en mi rancho.'.split(' ');
    una, para que no vayan en fila india. */
 const hato = [
   { d: 58, s: -4, y: 0, w: 74, x: 10 },
+  { d: 58, s: -6.4, y: 0, w: 40, x: 17, cria: true },
   { d: 64, s: -22, y: 8, w: 62, x: 30 },
   { d: 52, s: -35, y: -6, w: 82, x: 52 },
   { d: 70, s: -48, y: 4, w: 58, x: 70 },
@@ -234,13 +235,16 @@ const faq = [
     slot="chrome-top"
     name="Ganova"
     mark={img('marca-128.webp')}
+    markMask="/assets/image/ganova/marca-toro.webp"
+    badge="alfa"
     href="/ganova/"
     links={[
-      { label: 'Un día', href: '#dia' },
-      { label: 'Las crías', href: '#cria' },
-      { label: 'La alfa', href: '#alfa' },
+      { label: 'Inicio', href: '#inicio', icon: 'inicio', soloMovil: true },
+      { label: 'Un día', href: '#dia', icon: 'dia' },
+      { label: 'Las crías', href: '#cria', icon: 'cria' },
+      { label: 'La alfa', href: '#alfa', icon: 'alfa' },
       { label: 'Preguntas', href: '#preguntas' },
-      { label: 'Guía', href: '/ganova/guia/' },
+      { label: 'Guía', href: '/ganova/guia/', icon: 'guia' },
     ]}
     cta={{ label: 'Entrar a la alfa', href: wa }}
     byHref="/"
@@ -268,7 +272,7 @@ const faq = [
 
   <article class="gn">
     <!-- ══ Portada ══ -->
-    <section class="gn-hero">
+    <section class="gn-hero" id="inicio">
       <div class="gn-hero__in">
         <div class="gn-hero__copy">
           <h1 class="gn-hero__h1">
@@ -444,7 +448,7 @@ const faq = [
 
         <div class="gn-juego">
           <div class="gn-juego__cria">
-            <span class="gn-juego__becerra gn-silueta gn-silueta--pie" aria-hidden="true"></span>
+            <span class="gn-juego__becerra gn-silueta gn-silueta--cria" aria-hidden="true"></span>
             <div>
               <p class="gn-juego__k">Becerra prieta</p>
               <p class="gn-juego__d">Sin arete. Se vio hoy junto al aguaje.</p>
@@ -544,7 +548,7 @@ const faq = [
         <div class="gn-hato">
           {hato.map((v) => (
             <span class="gn-hato__vaca" style={`--d:${v.d}s; --s:${v.s}s; --y:${v.y}px; --w:${v.w}px; --x:${v.x}%`}>
-              <span class="gn-silueta gn-silueta--caminando"></span>
+              <span class:list={['gn-silueta', v.cria ? 'gn-silueta--cria' : 'gn-silueta--caminando']}></span>
             </span>
           ))}
         </div>
@@ -595,6 +599,7 @@ const faq = [
 
   .gn-silueta--pie { --m: url('/assets/image/ganova/vaca-pie.webp'); aspect-ratio: 640 / 435; }
   .gn-silueta--caminando { --m: url('/assets/image/ganova/vaca-caminando.webp'); aspect-ratio: 640 / 391; }
+  .gn-silueta--cria { --m: url('/assets/image/ganova/vaca-cria.webp'); aspect-ratio: 640 / 492; }
 
   /* El nav es pegajoso: sin esto, los anclas dejan el titulo debajo de el. */
   .gn section[id] { scroll-margin-top: 4.5rem; }
@@ -886,6 +891,7 @@ const faq = [
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     padding-block: 4.5rem 2rem;
@@ -993,6 +999,7 @@ const faq = [
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     padding: 0;
   }
 
@@ -1211,8 +1218,8 @@ const faq = [
     border-bottom: 1px dashed var(--gn-tinta-linea);
   }
 
-  /* La becerra es la misma silueta, mas chica: se lee como cria junto a las vacas. */
-  .gn-juego__becerra { flex: none; width: 3.4rem; color: #4A433A; filter: drop-shadow(0 0 1px #A39A8A); }
+  /* La becerra: silueta de cria (patas largas, orejas grandes, sin cuernos). */
+  .gn-juego__becerra { flex: none; width: 3.6rem; color: #4A433A; filter: drop-shadow(0 0 1px #A39A8A); }
 
   :global(.gn-anim) .gn-juego__becerra { animation: gn-respira 2.6s ease-in-out infinite; }
 
@@ -1543,6 +1550,9 @@ const faq = [
     .gn-lib__in,
     .gn-avisos__in { grid-template-columns: 1fr; }
 
+    /* En telefono la vaquita pisaria el logo y el nombre: queda la linea. */
+    .gn-barra__vaca { display: none; }
+
     .gn-hero__escena { max-width: 18rem; }
     .gn-flota--1 { left: -12%; }
     .gn-flota--2 { right: -12%; }
@@ -1569,6 +1579,25 @@ const faq = [
 
   @media (max-width: 40rem) {
     .gn-hero__ctas .gn-btn { flex: 1 1 100%; text-align: center; }
+
+    /* Portada en telefono: titular que cabe sin apretar letras, y aretes
+       chicos que cuelgan del borde del video en vez de taparlo. */
+    .gn-hero { padding-top: 1.5rem; }
+    .gn-hero__h1 { font-size: clamp(2.4rem, 11.5vw, 3.1rem); line-height: .95; }
+    .gn-hero__escena { max-width: 15.5rem; margin-top: .5rem; }
+    .gn-flota .gn-arete { width: 3.4rem; }
+    .gn-flota--1 { top: 5%; left: -15%; }
+    .gn-flota--2 { top: 50%; right: -15%; }
+    .gn-flota--3 { display: none; }
+
+    /* El dia en telefono: el reloj arriba sin pisar el telefono, y todo un
+       poco mas compacto para que la tarjeta no quede bajo las pestañas. */
+    .gn-dia__reloj { top: 4.3rem; font-size: 2rem; }
+    .gn-tel--guia { height: min(40vh, 21rem); }
+    :global(.gn-anim) .gn-dia__track { padding-top: 6.5rem; padding-bottom: 6.5rem; }
+    .gn-hora__txt { width: min(74vw, 17rem); }
+    .gn-hora__k { font-size: 1.1rem; }
+    .gn-hora__d { font-size: .9rem; }
 
     .gn-juego__vacas { gap: .5rem; }
     .gn-juego__nombre { font-size: .8rem; }

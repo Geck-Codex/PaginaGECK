@@ -240,10 +240,11 @@ const iconos: Record<Icono, string> = {
   }
 
   /* ── Dock de pestañas (solo movil) ──
-     Capsula oscura flotando sobre la pagina, despegada de los bordes. Las
-     pestañas en reposo son solo icono; la activa se abre en una pastilla con
-     icono y nombre, y el cambio se anima solo con el ancho de la etiqueta.
-     La etiqueta nunca sale del DOM: los lectores de pantalla la leen siempre. */
+     Capsula oscura flotando sobre la pagina, despegada de los bordes. Cada
+     pestaña lleva icono Y nombre, como la barra de la propia app (Inicio,
+     Ganado, Dinero…): un ranchero que entra por primera vez no tiene por que
+     adivinar que el sol es "Un día". La activa pone una pastilla detras del
+     icono, el mismo gesto que la app. */
   .pr-tabs { display: none; }
 
   @media (max-width: 52rem) {
@@ -252,16 +253,15 @@ const iconos: Record<Icono, string> = {
       --dock-activa: #A8D08D;
       position: fixed;
       left: 50%;
-      bottom: calc(.75rem + env(safe-area-inset-bottom));
+      bottom: calc(.7rem + env(safe-area-inset-bottom));
       z-index: 60;
       display: flex;
-      align-items: center;
-      gap: .15rem;
+      align-items: stretch;
       width: max-content;
-      max-width: calc(100vw - 1.5rem);
-      padding: .38rem;
+      max-width: calc(100vw - 1.25rem);
+      padding: .35rem .4rem;
       border: 1px solid rgba(242, 237, 226, .1);
-      border-radius: 999px;
+      border-radius: 1.6rem;
       background: color-mix(in srgb, var(--dock-tinta) 88%, transparent);
       box-shadow: 0 18px 40px -14px rgba(10, 12, 6, .6), 0 2px 6px rgba(10, 12, 6, .25), inset 0 1px 0 rgba(255, 255, 255, .06);
       transform: translateX(-50%);
@@ -269,66 +269,62 @@ const iconos: Record<Icono, string> = {
     }
 
     /* Que el dock no tape el final de la pagina. */
-    :global(body[data-chrome='product']) { padding-bottom: calc(5.4rem + env(safe-area-inset-bottom)); }
+    :global(body[data-chrome='product']) { padding-bottom: calc(5.8rem + env(safe-area-inset-bottom)); }
   }
 
   .pr-tabs__a {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0;
-    min-height: 2.75rem;
-    padding: 0 .85rem;
-    border-radius: 999px;
-    color: rgba(242, 237, 226, .62);
+    gap: .18rem;
+    width: 4.1rem;
+    padding: .2rem 0 .25rem;
+    border-radius: 1.2rem;
+    color: rgba(242, 237, 226, .66);
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
-    transition:
-      background-color .35s cubic-bezier(.2, .9, .2, 1),
-      color .25s ease,
-      gap .35s cubic-bezier(.2, .9, .2, 1),
-      padding .35s cubic-bezier(.2, .9, .2, 1),
-      transform .2s ease;
+    transition: color .25s ease, transform .2s ease;
   }
 
   .pr-tabs__a:active { transform: scale(.92); }
 
-  .pr-tabs__ico { display: grid; place-items: center; }
+  .pr-tabs__ico {
+    display: grid;
+    place-items: center;
+    width: 3.2rem;
+    height: 1.95rem;
+    border-radius: 999px;
+    transition: background-color .35s cubic-bezier(.2, .9, .2, 1), width .35s cubic-bezier(.2, .9, .2, 1);
+  }
 
   .pr-tabs__ico svg {
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 1.3rem;
+    height: 1.3rem;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.75;
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: fill .3s ease;
   }
 
   .pr-tabs__t {
-    max-width: 0;
+    max-width: 100%;
     overflow: hidden;
-    opacity: 0;
     font-family: var(--pr-font);
-    font-size: .82rem;
-    font-weight: 700;
+    font-size: .68rem;
+    font-weight: 600;
     white-space: nowrap;
-    transition: max-width .4s cubic-bezier(.2, .9, .2, 1), opacity .25s ease;
+    text-overflow: ellipsis;
   }
 
-  .pr-tabs__a[aria-current] {
-    gap: .45rem;
-    padding: 0 1rem 0 .8rem;
-    background: var(--dock-activa, #A8D08D);
-    color: var(--dock-tinta, #15130F);
-  }
-
-  .pr-tabs__a[aria-current] .pr-tabs__ico svg { fill: color-mix(in srgb, currentColor 18%, transparent); }
-  .pr-tabs__a[aria-current] .pr-tabs__t { max-width: 7rem; opacity: 1; transition-delay: 0s, .08s; }
+  .pr-tabs__a[aria-current] { color: #F2EDE2; }
+  .pr-tabs__a[aria-current] .pr-tabs__ico { background: var(--dock-activa, #A8D08D); color: var(--dock-tinta, #15130F); }
+  .pr-tabs__a[aria-current] .pr-tabs__t { font-weight: 800; }
 
   .pr-tabs__a:not([aria-current]):hover { color: #F2EDE2; }
 
-  .pr-tabs__a:focus-visible { outline: 2px solid var(--dock-activa, #A8D08D); outline-offset: 2px; }
+  .pr-tabs__a:focus-visible { outline: none; }
+  .pr-tabs__a:focus-visible .pr-tabs__ico { outline: 2px solid var(--dock-activa, #A8D08D); outline-offset: 2px; }
 
   @media (max-width: 30rem) {
     .pr-nav__by { display: none; }
@@ -336,8 +332,7 @@ const iconos: Record<Icono, string> = {
 
   @media (prefers-reduced-motion: reduce) {
     .pr-tabs__a,
-    .pr-tabs__t,
-    .pr-tabs__ico svg { transition: none; }
+    .pr-tabs__ico { transition: none; }
     .pr-nav__links a,
     .pr-nav__by,
     .pr-nav__cta { transition: none; }

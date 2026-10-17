@@ -1,0 +1,162 @@
+---
+/**
+ * Aviso de privacidad de la app Ganova.
+ *
+ * Es aparte del aviso del sitio (/privacidad/) porque Google Play y la App
+ * Store piden uno que hable de la app: qué guarda del rancho, dónde vive y
+ * cómo se borra. El del sitio solo habla del formulario y de la analítica.
+ *
+ * Solo en español: la app solo existe en español.
+ *
+ * Lo que dice aquí tiene que coincidir con lo que la app hace de verdad. Si la
+ * app empieza a guardar algo nuevo (otro proveedor, otro dato), se agrega aquí
+ * el mismo día.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import LegalDoc from '@/components/legal/LegalDoc.astro';
+import { BUSINESS, SITE_URL } from '@/data/seo';
+
+const url = `${SITE_URL}/ganova/privacidad/`;
+const borrar = `${SITE_URL}/ganova/borrar-cuenta/`;
+const actualizado = '17 de octubre de 2026';
+
+type Bloque = { p?: string; ul?: string[] };
+const secciones: { h2: string; blocks: Bloque[] }[] = [
+  {
+    h2: '1. Quién es responsable',
+    blocks: [
+      { p: `<strong>Geck Codex</strong>, con domicilio en ${BUSINESS.city}, ${BUSINESS.region}, México, es responsable de los datos que guardas en Ganova, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).` },
+      { p: `Para cualquier asunto de privacidad: <a href="mailto:${BUSINESS.email}">${BUSINESS.email}</a> · WhatsApp ${BUSINESS.phoneDisplay}.` },
+    ],
+  },
+  {
+    h2: '2. Qué guarda la app',
+    blocks: [
+      { p: 'Ganova funciona sin internet: todo lo que capturas se guarda primero en tu teléfono. Si creas una cuenta, se respalda en la nube para que no se pierda y para que lo vean los demás miembros de tu rancho.' },
+      { ul: [
+        '<strong>Tu cuenta:</strong> nombre y correo. La contraseña la guarda nuestro proveedor de cuentas cifrada; nosotros no la podemos ver.',
+        '<strong>Tu rancho:</strong> su nombre, municipio, estado, clave de UPP si la capturas, y la ubicación (latitud y longitud) que tú le pongas.',
+        '<strong>Lo que capturas del rancho:</strong> animales, aretes, partos, crías, ventas y compradores, gastos, proyectos, incidencias, dietas, inventario, vacunas y enfermedades.',
+        '<strong>Fotos de los animales</strong> que tomes o escojas de tu galería.',
+        '<strong>Miembros del rancho:</strong> quién pertenece a cada rancho y con qué rol, y los códigos de invitación.',
+        '<strong>Avisos:</strong> si los permites, un identificador de tu teléfono para mandarte avisos de lo que registra tu familia (un parto, una incidencia, una venta).',
+        '<strong>Reportes de fallas:</strong> cuando la app se cierra por un error, se manda un reporte técnico con el modelo del teléfono, la versión de Android o iPhone, la versión de la app y en qué parte del código falló. No lleva tus datos del rancho.',
+      ] },
+      { p: 'La app no te pide datos bancarios, no guarda tu ubicación mientras te mueves y no lee tus contactos.' },
+    ],
+  },
+  {
+    h2: '3. Permisos del teléfono',
+    blocks: [
+      { ul: [
+        '<strong>Ubicación:</strong> solo cuando tú tocas el botón para ubicar el rancho. Se usa una vez para guardar dónde está el rancho y pedir su pronóstico del clima.',
+        '<strong>Cámara y galería:</strong> solo para las fotos de los animales que tú decides tomar o escoger.',
+        '<strong>Notificaciones:</strong> para los recordatorios (vacunas, partos) y los avisos de la familia.',
+      ] },
+    ],
+  },
+  {
+    h2: '4. Para qué se usa',
+    blocks: [
+      { ul: [
+        'Que la app funcione: guardar, respaldar y sincronizar lo que capturas entre los teléfonos de tu rancho.',
+        'Calcular lo que la app te enseña: próximos partos, riesgo de los animales, costos, clima y recomendaciones. Todo eso se calcula en tu teléfono.',
+        'Mandarte los avisos que tú activaste.',
+        'Encontrar y arreglar fallas de la app.',
+      ] },
+      { p: '<strong>No vendemos, rentamos ni compartimos tus datos</strong> con nadie para publicidad. La app no muestra anuncios.' },
+    ],
+  },
+  {
+    h2: '5. Quién más ve tus datos',
+    blocks: [
+      { p: 'Los datos de un rancho solo los ven sus miembros, cada quien según su rol (dueño, administrador, vaquero o solo lectura). Eso lo cuida el servidor, no solo la app: nadie de otro rancho puede leerlos.' },
+      { p: 'Para funcionar, la app usa estos proveedores, que guardan o procesan datos por cuenta nuestra:' },
+      { ul: [
+        '<strong>Supabase</strong>: cuentas, respaldo en la nube y fotos.',
+        '<strong>Google Firebase</strong>: envío de avisos al teléfono y reportes de fallas.',
+        '<strong>Open-Meteo</strong>: pronóstico del clima. Solo recibe la ubicación del rancho, sin tu nombre ni tu cuenta.',
+      ] },
+      { p: 'Estos proveedores pueden guardar la información fuera de México, bajo sus propias políticas de privacidad.' },
+    ],
+  },
+  {
+    h2: '6. Cómo borrar tu cuenta y tus datos',
+    blocks: [
+      { p: 'Dentro de la app: <strong>Ajustes → Con cuidado → Borrar mi cuenta</strong>. Se borra al momento.' },
+      { p: `Sin la app, o si ya la desinstalaste: sigue los pasos de <a href="${borrar}">${borrar}</a>.` },
+      { p: 'Al borrar tu cuenta se borran tu perfil, tu cuenta, tus membresías y los ranchos de los que eres dueño con todo lo que tienen, aunque otras personas también trabajen en ellos. De los ranchos que son de alguien más solo sales: sus datos no son tuyos y se quedan.' },
+      { p: 'También puedes borrar solo un rancho, o animales y registros sueltos, desde la misma app.' },
+    ],
+  },
+  {
+    h2: '7. Cuánto tiempo se guardan',
+    blocks: [
+      { p: 'Mientras tengas tu cuenta. Al borrarla, los datos se quitan de la nube de inmediato. Las copias de seguridad automáticas del servidor se renuevan solas y lo borrado desaparece de ellas en cuanto se reemplazan. Los reportes de fallas se borran solos a los 90 días.' },
+      { p: 'Lo que está guardado en tu teléfono se queda ahí hasta que desinstalas la app o borras sus datos desde los ajustes del teléfono.' },
+    ],
+  },
+  {
+    h2: '8. Tus derechos (ARCO)',
+    blocks: [
+      { p: 'Tienes derecho a <strong>Acceder</strong> a tus datos, <strong>Rectificarlos</strong>, <strong>Cancelarlos</strong> y <strong>Oponerte</strong> a su uso. Casi todo se puede hacer desde la app: lo que capturaste se ve y se corrige ahí mismo, y la cuenta se borra desde Ajustes.' },
+      { p: `Para lo demás, escribe a <a href="mailto:${BUSINESS.email}">${BUSINESS.email}</a> desde el correo de tu cuenta. Respondemos en un máximo de 20 días hábiles.` },
+    ],
+  },
+  {
+    h2: '9. Seguridad',
+    blocks: [
+      { p: 'Los datos viajan cifrados entre tu teléfono y la nube. En el servidor cada rancho está separado de los demás y solo sus miembros tienen acceso. Ninguna medida es perfecta, pero cuidamos tu información como si fuera nuestra.' },
+    ],
+  },
+  {
+    h2: '10. Menores de edad',
+    blocks: [
+      { p: 'Ganova está hecha para personas mayores de 18 años. No recabamos a propósito datos de menores.' },
+    ],
+  },
+  {
+    h2: '11. Cambios a este aviso',
+    blocks: [
+      { p: `Si cambia lo que la app guarda, cambiamos este aviso. La versión vigente siempre está en <a href="${url}">${url}</a> con su fecha de actualización.` },
+    ],
+  },
+];
+
+const schema = [{
+  '@type': 'WebPage',
+  '@id': `${url}#webpage`,
+  url,
+  name: 'Aviso de privacidad de Ganova',
+  inLanguage: 'es-MX',
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+}];
+---
+
+<Layout
+  title="Aviso de privacidad de Ganova | Geck Codex"
+  description="Qué datos guarda la app Ganova, para qué se usan, quién los ve y cómo borrar tu cuenta."
+  canonical={url}
+  breadcrumbs={[
+    { name: 'Ganova', url: `${SITE_URL}/ganova/` },
+    { name: 'Aviso de privacidad', url },
+  ]}
+  schema={schema}
+  lang="es"
+>
+  <LegalDoc
+    heading="Aviso de privacidad de Ganova"
+    intro="Qué guarda la app Ganova de ti y de tu rancho, para qué, quién lo ve y cómo lo borras."
+    updated={actualizado}
+  >
+    {secciones.map((s) => (
+      <>
+        <h2>{s.h2}</h2>
+        {s.blocks.map((b) => b.ul
+          ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
+          : <p set:html={b.p} />)}
+      </>
+    ))}
+  </LegalDoc>
+</Layout>

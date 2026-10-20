@@ -10,9 +10,10 @@
  * carpeta. `pantalla-inicio.webp` sigue siendo un cuadro del video.
  *
  * ── LO QUE NO SE PROMETE ──
- * La app NO esta publicada y la alfa no tiene fecha (usuario, 2026-10-15): la
- * accion es apartar lugar por WhatsApp. Solo Android. SIN PRECIO y SIN CIFRAS
- * de uso, a proposito.
+ * La app NO esta publicada. Es BETA, no alfa (usuario, 2026-10-17): abre el
+ * 13 de noviembre de 2026 en Android, que es seguro; iPhone se busca para la
+ * misma fecha pero NO se promete. La accion es apartar lugar por WhatsApp.
+ * SIN PRECIO y SIN CIFRAS de uso, a proposito.
  *
  * ── DISEÑO ──
  * Marca olivo/crema del logotipo con el amarillo del arete como acento. Una
@@ -40,7 +41,7 @@ const url = `${SITE_URL}/ganova/`;
 const img = (f: string) => `/assets/image/ganova/${f}`;
 
 const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent(
-  'Hola, tengo ganado y quiero entrar a la alfa de Ganova.',
+  'Hola, tengo ganado y quiero entrar a la beta de Ganova.',
 )}`;
 
 const B = {
@@ -163,23 +164,76 @@ const cita = 'Yo la programo. Yo la uso en mi rancho.'.split(' ');
    una, para que no vayan en fila india. */
 const hato = [
   { d: 58, s: -4, y: 0, w: 74, x: 10 },
+  { d: 58, s: -6.4, y: 0, w: 40, x: 17, cria: true },
   { d: 64, s: -22, y: 8, w: 62, x: 30 },
   { d: 52, s: -35, y: -6, w: 82, x: 52 },
   { d: 70, s: -48, y: 4, w: 58, x: 70 },
   { d: 61, s: -12, y: 12, w: 52, x: 86 },
 ];
 
+/* Formulario de la beta. Los registros se guardan en el Supabase de Ganova,
+   esquema `beta` (C:\ganova\supabase\beta_registros.sql), por la funcion
+   registrar_beta; de ahi los toma el CRM de Geck Codex. Si no se puede guardar,
+   se abre WhatsApp con los datos ya escritos (src/scripts/ganova-registro.js).
+
+   Cada opcion es [codigo, texto]: el codigo es lo que se guarda y lo que lee el
+   CRM; el texto es lo que ve la persona y lo que va en el WhatsApp. Los codigos
+   son los de docs/registro-beta/registro.schema.json y los CHECK de la tabla:
+   si se cambia uno, se cambia en los tres lados. El texto se puede cambiar
+   libre. Chihuahua va primero porque la app esta hecha ahi. */
+const SUPABASE = {
+  rpc: 'https://voigbndxjzphuttdcula.supabase.co/rest/v1/rpc/registrar_beta',
+  // Llave publica (anon), la misma que trae la app. No da acceso a nada:
+  // el esquema `beta` esta cerrado y la funcion solo sabe insertar.
+  anon: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvaWdibmR4anpwaHV0dGRjdWxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NTQxNjgsImV4cCI6MjA5ODIzMDE2OH0.ehXKnfveRLvrgn9OqnsDkO4DOgWXRD5bQfKDzrSXv_M',
+};
+type Opcion = [codigo: string, texto: string];
+const estadosMx = [
+  'Chihuahua', 'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche',
+  'Chiapas', 'Ciudad de México', 'Coahuila', 'Colima', 'Durango', 'Estado de México',
+  'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Michoacán', 'Morelos', 'Nayarit',
+  'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí',
+  'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas',
+];
+// Codigo ISO de dos letras; XX = "Otro pais" (lo que escriba va en pais_nombre).
+const paises: Opcion[] = [
+  ['MX', 'México'], ['US', 'Estados Unidos'], ['GT', 'Guatemala'], ['HN', 'Honduras'],
+  ['SV', 'El Salvador'], ['NI', 'Nicaragua'], ['CR', 'Costa Rica'], ['PA', 'Panamá'],
+  ['CO', 'Colombia'], ['VE', 'Venezuela'], ['EC', 'Ecuador'], ['PE', 'Perú'],
+  ['BO', 'Bolivia'], ['PY', 'Paraguay'], ['UY', 'Uruguay'], ['AR', 'Argentina'],
+  ['CL', 'Chile'], ['BR', 'Brasil'], ['ES', 'España'], ['XX', 'Otro país'],
+];
+const ocupaciones: Opcion[] = [
+  ['ganadero', 'Ganadero o ranchero'], ['vaquero', 'Vaquero o encargado'], ['veterinario', 'Veterinario'],
+  ['engordador', 'Engordador'], ['asesor', 'Asesor o técnico'], ['otra', 'Otra'],
+];
+const especialidades: Opcion[] = [
+  ['cria', 'Cría (vaca y becerro)'], ['engorda', 'Engorda'], ['leche', 'Leche'], ['caballos', 'Caballos'],
+  ['cabras_borregos', 'Cabras y borregos'], ['aves', 'Aves'], ['otra', 'Otra'],
+];
+const cabezas: Opcion[] = [
+  ['menos_20', 'Menos de 20'], ['20_100', 'De 20 a 100'], ['100_500', 'De 100 a 500'],
+  ['mas_500', 'Más de 500'], ['sin_ganado', 'Todavía no tengo ganado'],
+];
+const senales: Opcion[] = [['no_hay', 'No hay señal'], ['a_ratos', 'Hay a ratos'], ['buena', 'Hay buena señal']];
+const equipos: Opcion[] = [['solo_yo', 'Solo yo'], ['1_2', '1 o 2 más'], ['3_mas', '3 o más']];
+const medios: Opcion[] = [
+  ['tiktok', 'TikTok'], ['facebook', 'Facebook'], ['instagram', 'Instagram'], ['youtube', 'YouTube'],
+  ['whatsapp', 'WhatsApp'], ['conocido', 'Un conocido'], ['asociacion', 'Asociación ganadera'], ['otro', 'Otro'],
+];
+
 const faq = [
   { q: '¿Necesito internet para usar Ganova?', a: 'No. Todo se captura y se consulta en el teléfono sin señal. Cuando vuelves a tener internet, lo que capturaste se sube solo y le llega al resto del rancho.' },
-  { q: '¿Funciona en iPhone?', a: 'Por ahora es solo para Android. La versión para iPhone viene después.' },
-  { q: '¿Cuándo sale?', a: 'Estamos por abrir una alfa con pocos ranchos y todavía no tiene fecha. Quienes nos escriben ahora son los primeros en entrar.' },
+  { q: '¿Funciona en iPhone?', a: 'Android sale primero, el 13 de noviembre. La versión para iPhone está en camino y queremos que salga lo antes posible.' },
+  { q: '¿Cuándo sale?', a: 'La beta abre el 13 de noviembre en Android, con 40 lugares en la primera tanda. Si se llenan, quedas apuntado para la siguiente.' },
+  { q: '¿Me sirve si no soy de Chihuahua?', a: 'Ganova está hecha en Chihuahua: habla como se habla en los ranchos del norte, sus avisos del clima están pensados para la seca y las heladas, y lleva la UPP de tu rancho. De un estado a otro cambian muchas cosas, así que si eres de otro lado apúntate igual y dinos de dónde eres: con eso sabemos qué ajustar.' },
   { q: '¿Mis vaqueros necesitan hacer cuenta?', a: 'No. Les mandas un código por WhatsApp y entran con él. Tú decides quién está en el rancho y lo puedes sacar cuando quieras.' },
 ];
 ---
 
 <Layout
   title="Ganova — App para Ranchos Ganaderos del Norte de México | Geck Codex"
-  description="Tu rancho completo en el teléfono: ganado con arete y foto, partos, salud, dinero, obras y dieta. Funciona sin señal en el corral. Alfa muy pronto para Android."
+  description="Tu rancho completo en el teléfono: ganado con arete y foto, partos, salud, dinero, obras y dieta. Funciona sin señal en el corral. Beta el 13 de noviembre en Android."
   ogTitle="Ganova — tu rancho completo, en el bolsillo"
   ogDescription="Ganado, partos, dinero y pendientes del rancho en el teléfono, y funciona sin señal. Hecha en el rancho por Geck Codex."
   image={`${SITE_URL}/assets/image/ganova/og-ganova.jpg`}
@@ -234,15 +288,18 @@ const faq = [
     slot="chrome-top"
     name="Ganova"
     mark={img('marca-128.webp')}
+    markMask="/assets/image/ganova/marca-toro.webp"
+    badge="beta"
     href="/ganova/"
     links={[
-      { label: 'Un día', href: '#dia' },
-      { label: 'Las crías', href: '#cria' },
-      { label: 'La alfa', href: '#alfa' },
+      { label: 'Inicio', href: '#inicio', icon: 'inicio', soloMovil: true },
+      { label: 'Un día', href: '#dia', icon: 'dia' },
+      { label: 'Las crías', href: '#cria', icon: 'cria' },
+      { label: 'La beta', href: '#beta', icon: 'alfa' },
       { label: 'Preguntas', href: '#preguntas' },
-      { label: 'Guía', href: '/ganova/guia/' },
+      { label: 'Guía', href: '/ganova/guia/', icon: 'guia' },
     ]}
-    cta={{ label: 'Entrar a la alfa', href: wa }}
+    cta={{ label: 'Entrar a la beta', href: '#apartar' }}
     byHref="/"
   />
 
@@ -268,7 +325,7 @@ const faq = [
 
   <article class="gn">
     <!-- ══ Portada ══ -->
-    <section class="gn-hero">
+    <section class="gn-hero" id="inicio">
       <div class="gn-hero__in">
         <div class="gn-hero__copy">
           <h1 class="gn-hero__h1">
@@ -281,12 +338,12 @@ const faq = [
             parado en el corral, sin señal, y se sube solo cuando agarras internet.
           </p>
           <div class="gn-hero__ctas gn-hero__sube" style="--d:640ms">
-            <a class="gn-btn gn-btn--olivo" href={wa} data-lead="hero" data-magnet>Quiero entrar a la alfa</a>
+            <a class="gn-btn gn-btn--olivo" href="#apartar" data-magnet>Quiero entrar a la beta</a>
             <a class="gn-btn gn-btn--linea" href="#dia">Ver un día con Ganova</a>
           </div>
           <p class="gn-hero__estado gn-hero__sube" style="--d:760ms">
             <span class="gn-hero__punto" aria-hidden="true"></span>
-            En desarrollo. La alfa abre pronto, solo en Android.
+            En desarrollo. La beta abre el 13 de noviembre en Android.
           </p>
         </div>
 
@@ -444,7 +501,7 @@ const faq = [
 
         <div class="gn-juego">
           <div class="gn-juego__cria">
-            <span class="gn-juego__becerra gn-silueta gn-silueta--pie" aria-hidden="true"></span>
+            <span class="gn-juego__becerra gn-silueta gn-silueta--cria" aria-hidden="true"></span>
             <div>
               <p class="gn-juego__k">Becerra prieta</p>
               <p class="gn-juego__d">Sin arete. Se vio hoy junto al aguaje.</p>
@@ -504,8 +561,8 @@ const faq = [
       </div>
     </section>
 
-    <!-- ══ Monte: origen + alfa, con el hato caminando ══ -->
-    <section class="gn-monte" id="alfa" data-scene="pass" style={`--n:${cita.length}`}>
+    <!-- ══ Monte: origen + beta, con el hato caminando ══ -->
+    <section class="gn-monte" id="beta" data-scene="pass" style={`--n:${cita.length}`}>
       <div class="gn-monte__in">
         <blockquote class="gn-monte__cita">
           <p>
@@ -520,20 +577,211 @@ const faq = [
           cambiado porque algo no aguantó en el corral.
         </p>
 
-        <div class="gn-monte__alfa">
+        <div class="gn-monte__alfa" id="apartar">
           <img class="gn-monte__marca" src={img('marca-128.webp')} alt="" width="72" height="72" loading="lazy" />
           <div>
-            <h2 class="gn-monte__h2">Entra a la alfa</h2>
+            <h2 class="gn-monte__h2">Entra a la beta</h2>
             <p>
-              Estamos por abrir una alfa con pocos ranchos y todavía no tiene fecha. Si
-              tienes ganado y quieres usarla antes que nadie, y decirnos qué le falta,
-              escríbenos y te apartamos lugar.
+              El 13 de noviembre abrimos la beta, primero en Android, con 40 lugares en la
+              primera tanda. Si tienes ganado y quieres usarla antes que nadie, y decirnos qué
+              le falta, déjanos tus datos y te apartamos lugar. Si se llenan, quedas apuntado
+              para la siguiente tanda.
             </p>
-            <span class="gn-monte__cta">
-              <a class="gn-btn gn-btn--arete" href={wa} data-lead="alfa" data-magnet>Apartar mi lugar</a>
-              <span class="gn-monte__colgado" aria-hidden="true"><span class="gn-arete"><Arete num="ALFA" linea="00 08 2026" /></span></span>
-            </span>
-            <p class="gn-monte__fine">Se abre WhatsApp con el mensaje ya escrito. Por ahora solo Android.</p>
+
+            <form class="gn-reg" id="gn-reg" data-endpoint={SUPABASE.rpc} data-llave={SUPABASE.anon} data-wa={BUSINESS.whatsapp} novalidate>
+              <div class="gn-reg__campo">
+                <label for="gn-nombre">Nombre</label>
+                <input id="gn-nombre" name="nombre" type="text" autocomplete="name" required />
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-correo">Correo electrónico</label>
+                <input id="gn-correo" name="correo" type="email" autocomplete="email" inputmode="email" required />
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-whatsapp">WhatsApp</label>
+                <input id="gn-whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required />
+              </div>
+
+              <div class="gn-reg__campo">
+                <label for="gn-pais">País</label>
+                <select id="gn-pais" name="pais" autocomplete="country-name" required>
+                  {paises.map(([v, t]) => <option value={v} selected={v === 'MX'}>{t}</option>)}
+                </select>
+              </div>
+              <div class="gn-reg__campo" data-solo="otro-pais" hidden>
+                <label for="gn-pais-otro">¿Qué país?</label>
+                <input id="gn-pais-otro" name="pais_otro" type="text" />
+              </div>
+
+              <div class="gn-reg__campo" data-solo="mx">
+                <label for="gn-estado">Estado</label>
+                <select id="gn-estado" name="estado" required>
+                  <option value="" disabled selected>Escoge tu estado</option>
+                  {estadosMx.map((e) => <option value={e}>{e}</option>)}
+                </select>
+              </div>
+              <div class="gn-reg__campo" data-solo="fuera" hidden>
+                <label for="gn-provincia">Estado o provincia</label>
+                <input id="gn-provincia" name="provincia" type="text" autocomplete="address-level1" />
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-municipio">Municipio o delegación</label>
+                <input id="gn-municipio" name="municipio" type="text" autocomplete="address-level2" required />
+              </div>
+
+              <div class="gn-reg__campo">
+                <label for="gn-ocupacion">Ocupación</label>
+                <select id="gn-ocupacion" name="ocupacion" required>
+                  <option value="" disabled selected>¿A qué te dedicas?</option>
+                  {ocupaciones.map(([v, t]) => <option value={v}>{t}</option>)}
+                </select>
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-especialidad">Especialidad</label>
+                <select id="gn-especialidad" name="especialidad" required>
+                  <option value="" disabled selected>¿Con qué ganado?</option>
+                  {especialidades.map(([v, t]) => <option value={v}>{t}</option>)}
+                </select>
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-cabezas">¿Cuántas cabezas tienes?</label>
+                <select id="gn-cabezas" name="cabezas" required>
+                  <option value="" disabled selected>Escoge una</option>
+                  {cabezas.map(([v, t]) => <option value={v}>{t}</option>)}
+                </select>
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-senal">¿Hay señal en tu rancho?</label>
+                <select id="gn-senal" name="senal" required>
+                  <option value="" disabled selected>Escoge una</option>
+                  {senales.map(([v, t]) => <option value={v}>{t}</option>)}
+                </select>
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-equipo">¿Cuántos más la usarían en tu rancho?</label>
+                <select id="gn-equipo" name="equipo" required>
+                  <option value="" disabled selected>Escoge una</option>
+                  {equipos.map(([v, t]) => <option value={v}>{t}</option>)}
+                </select>
+              </div>
+
+              <div class="gn-reg__campo">
+                <label for="gn-rancho">Nombre del rancho <span class="gn-reg__opc">(si tienes)</span></label>
+                <input id="gn-rancho" name="rancho" type="text" />
+              </div>
+              <div class="gn-reg__campo">
+                <label for="gn-medio">¿Cómo te enteraste?</label>
+                <select id="gn-medio" name="medio" required>
+                  <option value="" disabled selected>Escoge uno</option>
+                  {medios.map(([v, t]) => <option value={v}>{t}</option>)}
+                </select>
+              </div>
+
+              <fieldset class="gn-reg__campo gn-reg__so">
+                <legend>Tu teléfono</legend>
+                <label class="gn-reg__chip"><input type="radio" name="sistema" value="android" required /> Android</label>
+                <label class="gn-reg__chip"><input type="radio" name="sistema" value="iphone" /> iPhone</label>
+              </fieldset>
+
+              {/* Trampa para bots: una persona nunca la ve ni la llena. */}
+              <div class="gn-reg__trampa" aria-hidden="true">
+                <label for="gn-sitio">Sitio web</label>
+                <input id="gn-sitio" name="sitio_web" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <p class="gn-reg__aviso gn-reg__ancho">
+                <span data-aviso-estado>Antes de apartar tu lugar te pedimos permiso para usar tus datos.</span>
+                <button class="gn-reg__leer" type="button" data-abrir-aviso>Leer el aviso de privacidad</button>
+              </p>
+
+              <div class="gn-reg__ancho">
+                <span class="gn-monte__cta">
+                  <button class="gn-btn gn-btn--arete" type="submit" data-magnet>Apartar mi lugar</button>
+                  <span class="gn-monte__colgado" aria-hidden="true"><span class="gn-arete"><Arete num="BETA" linea="13 11 2026" /></span></span>
+                </span>
+              </div>
+              <p class="gn-reg__estado gn-reg__ancho" role="status" aria-live="polite"></p>
+            </form>
+
+            {/* Aviso de privacidad simplificado (LFPDPPP art. 16 fr. II): sale al
+                tocar "Quiero entrar a la beta", al empezar a llenar o al enviar,
+                lo que pase primero. El integral vive en /ganova/beta/privacidad/.
+                La casilla de cabezas es consentimiento expreso porque es dato
+                patrimonial (art. 7). */}
+            <dialog class="gn-aviso" id="gn-aviso" aria-labelledby="gn-aviso-titulo">
+              <form class="gn-aviso__in" method="dialog">
+                <h2 class="gn-aviso__h2" id="gn-aviso-titulo" tabindex="-1" autofocus>Antes de apartar tu lugar</h2>
+                <p class="gn-aviso__lead">Te decimos qué datos te vamos a pedir y para qué. Es corto.</p>
+
+                <h3>Quién los cuida</h3>
+                <p>
+                  Geck Codex, de {BUSINESS.city}, {BUSINESS.region}, es responsable de tus datos
+                  conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.
+                </p>
+
+                <h3>Qué te pedimos</h3>
+                <p>
+                  Nombre, correo y WhatsApp; de dónde eres; a qué te dedicas y con qué ganado; cuántas
+                  cabezas tienes; si hay señal en tu rancho, cuántos más la usarían allí y su nombre,
+                  si quieres darlo; qué teléfono usas y cómo te enteraste. Ninguno es un dato sensible.
+                  Cuántas cabezas tienes habla de tu patrimonio, por eso te pedimos permiso por escrito.
+                </p>
+
+                <h3>Para qué</h3>
+                <ul>
+                  <li>Escoger los ranchos que entran a la beta (40 lugares en la primera tanda) y, si se llenan, invitarte a la siguiente.</li>
+                  <li>Mandarte la invitación y los avisos de la beta por correo o WhatsApp.</li>
+                  <li>Preguntarte cómo te va con la app y usar lo que nos digas para seguir mejorando Ganova.</li>
+                </ul>
+                <p>
+                  Y solo si tú quieres: avisarte de novedades de Ganova cuando acabe la beta. Si dices
+                  que no, igual conservas tu lugar.
+                </p>
+
+                <h3>Lo que no hacemos</h3>
+                <p>
+                  No vendemos ni rentamos tus datos, ni se los damos a nadie para sus propios fines.
+                  Solo los ve el equipo de Geck Codex que organiza la beta, en nuestro propio sistema de
+                  seguimiento, y se guardan con proveedores que trabajan por encargo nuestro.
+                </p>
+
+                <h3>Tus derechos</h3>
+                <p>
+                  Puedes pedir ver, corregir o borrar tus datos, oponerte a que los usemos o retirar tu
+                  permiso cuando quieras. Escríbenos a <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
+                  o por WhatsApp al {BUSINESS.phoneDisplay}.
+                </p>
+
+                <p class="gn-aviso__integral">
+                  <a href="/ganova/beta/privacidad/" target="_blank" rel="noopener">Leer el aviso de privacidad completo</a>
+                </p>
+
+                <label class="gn-aviso__check">
+                  <input type="checkbox" name="acepto" data-acepto />
+                  <span>
+                    Tengo 18 años o más, leí el aviso y doy mi consentimiento para que Geck Codex use mis
+                    datos, incluido cuántas cabezas tengo, para lo necesario de la beta.
+                  </span>
+                </label>
+                <label class="gn-aviso__check">
+                  <input type="checkbox" name="novedades" data-novedades />
+                  <span>
+                    También quiero recibir novedades de Ganova cuando termine la beta.
+                    <span class="gn-aviso__opc">(opcional)</span>
+                  </span>
+                </label>
+
+                <div class="gn-aviso__acciones">
+                  <button class="gn-btn gn-btn--linea" type="button" data-cerrar-aviso>Ahora no</button>
+                  <button class="gn-btn gn-btn--olivo" type="submit" value="si" data-aceptar-aviso disabled>Acepto, sigo</button>
+                </div>
+              </form>
+            </dialog>
+
+            <p class="gn-monte__fine">
+              ¿Prefieres escribirnos tú? <a href={wa} data-lead="beta">Abre WhatsApp</a>.
+              Primero Android; iPhone, en camino.
+            </p>
           </div>
         </div>
       </div>
@@ -544,7 +792,7 @@ const faq = [
         <div class="gn-hato">
           {hato.map((v) => (
             <span class="gn-hato__vaca" style={`--d:${v.d}s; --s:${v.s}s; --y:${v.y}px; --w:${v.w}px; --x:${v.x}%`}>
-              <span class="gn-silueta gn-silueta--caminando"></span>
+              <span class:list={['gn-silueta', v.cria ? 'gn-silueta--cria' : 'gn-silueta--caminando']}></span>
             </span>
           ))}
         </div>
@@ -579,6 +827,7 @@ const faq = [
 
 <script>
   import '../scripts/ganova.js';
+  import '../scripts/ganova-registro.js';
 </script>
 
 <style>
@@ -595,9 +844,11 @@ const faq = [
 
   .gn-silueta--pie { --m: url('/assets/image/ganova/vaca-pie.webp'); aspect-ratio: 640 / 435; }
   .gn-silueta--caminando { --m: url('/assets/image/ganova/vaca-caminando.webp'); aspect-ratio: 640 / 391; }
+  .gn-silueta--cria { --m: url('/assets/image/ganova/vaca-cria.webp'); aspect-ratio: 640 / 492; }
 
   /* El nav es pegajoso: sin esto, los anclas dejan el titulo debajo de el. */
-  .gn section[id] { scroll-margin-top: 4.5rem; }
+  .gn section[id],
+  .gn-monte__alfa { scroll-margin-top: 4.5rem; }
 
   .gn h1,
   .gn h2,
@@ -886,6 +1137,7 @@ const faq = [
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     padding-block: 4.5rem 2rem;
@@ -993,6 +1245,7 @@ const faq = [
     position: sticky;
     top: 0;
     height: 100vh;
+    height: 100svh;
     padding: 0;
   }
 
@@ -1211,8 +1464,8 @@ const faq = [
     border-bottom: 1px dashed var(--gn-tinta-linea);
   }
 
-  /* La becerra es la misma silueta, mas chica: se lee como cria junto a las vacas. */
-  .gn-juego__becerra { flex: none; width: 3.4rem; color: #4A433A; filter: drop-shadow(0 0 1px #A39A8A); }
+  /* La becerra: silueta de cria (patas largas, orejas grandes, sin cuernos). */
+  .gn-juego__becerra { flex: none; width: 3.6rem; color: #4A433A; filter: drop-shadow(0 0 1px #A39A8A); }
 
   :global(.gn-anim) .gn-juego__becerra { animation: gn-respira 2.6s ease-in-out infinite; }
 
@@ -1364,7 +1617,7 @@ const faq = [
   .gn-aviso[data-pos='3'] { transform: translateY(13.2rem) scale(.91); opacity: .3; }
   .gn-aviso[data-pos='4'] { transform: translateY(-3rem) scale(.95); opacity: 0; transition: none; }
 
-  /* ═══ Monte: origen + alfa + lomas ═══ */
+  /* ═══ Monte: origen + beta + lomas ═══ */
   .gn-monte {
     --p: 1;
     padding: clamp(5rem, 11vw, 8rem) 1.25rem 0;
@@ -1426,13 +1679,189 @@ const faq = [
 
   .gn-monte__alfa .gn-monte__fine { margin: 1.4rem 0 0; font-size: .88rem; color: #9FA88C; }
 
-  /* El boton con su arete "Alfa" colgado de la esquina. */
+  /* El boton con su arete "Beta" colgado de la esquina. */
   .gn-monte__cta { position: relative; display: inline-block; }
 
   .gn-monte__colgado { position: absolute; top: .1rem; right: -4.6rem; pointer-events: none; }
   .gn-monte__colgado .gn-arete { width: 3.3rem; }
 
   :global(.gn-anim) .gn-monte__colgado .gn-arete { animation: gn-mecer 2.6s ease-in-out infinite alternate; }
+
+  /* ── Formulario de la beta ── campos claros sobre el monte. */
+  .gn-reg {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.1rem;
+    max-width: 40rem;
+  }
+
+  .gn-reg__ancho { grid-column: 1 / -1; }
+
+  .gn-reg__campo { display: flex; flex-direction: column; gap: .4rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+  .gn-reg__campo[hidden] { display: none; }
+
+  .gn-reg label,
+  .gn-reg legend {
+    padding: 0;
+    font-size: .85rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+    color: var(--gn-crema);
+  }
+
+  .gn-reg__opc { font-weight: 400; color: #9FA88C; }
+
+  .gn-reg input[type='text'],
+  .gn-reg input[type='email'],
+  .gn-reg input[type='tel'],
+  .gn-reg select {
+    width: 100%;
+    min-height: 3rem;
+    box-sizing: border-box;
+    padding: .7rem .85rem;
+    border: 1.5px solid rgba(242, 237, 226, .28);
+    border-radius: .45rem;
+    background: rgba(242, 237, 226, .07);
+    color: var(--gn-crema);
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  .gn-reg select option { color: #15130F; background: #F2EDE2; }
+
+  .gn-reg input:focus-visible,
+  .gn-reg select:focus-visible { outline: 3px solid var(--gn-arete); outline-offset: 1px; border-color: transparent; }
+
+  .gn-reg input[aria-invalid='true'],
+  .gn-reg select[aria-invalid='true'] { border-color: #F0A37A; }
+
+  .gn-reg__so { flex-direction: row; flex-wrap: wrap; gap: .4rem .6rem; }
+  .gn-reg__so legend { float: left; width: 100%; margin-bottom: 0; }
+
+  /* El radio sin escoger también se marca, en la cajita de cada opción. */
+  .gn-reg.is-revisado .gn-reg__so:has(input:invalid) .gn-reg__chip { border-color: #F0A37A; }
+
+  .gn-reg .gn-reg__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    min-height: 3rem;
+    padding: 0 1.2rem;
+    border: 1.5px solid rgba(242, 237, 226, .28);
+    border-radius: 999px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .gn-reg__chip:has(input:checked) { border-color: var(--gn-arete); background: rgba(242, 204, 29, .12); }
+  .gn-reg__chip input { accent-color: var(--gn-arete); width: 1.1rem; height: 1.1rem; margin: 0; }
+
+  .gn-reg__trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .gn-monte__alfa .gn-reg__aviso { margin: .2rem 0 0; font-size: .88rem; color: #9FA88C; }
+  .gn-reg__aviso a,
+  .gn-monte__fine a { color: var(--gn-crema); }
+
+  /* Se ve como enlace pero es boton: abre la ventana, no lleva a otra pagina. */
+  .gn-reg .gn-reg__leer {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--gn-crema);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* ── Aviso de privacidad ── hoja crema sobre el monte oscurecido. */
+  /* Fijada al centro a mano: hay reglas de la pagina que le ponen
+     position/display a lo que vive en .gn-monte y la sacaban de la pantalla. */
+  .gn-aviso { display: none; }
+  .gn-aviso[open] {
+    display: block;
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    height: fit-content;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .gn-aviso {
+    width: min(36rem, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    border: 0;
+    border-radius: 1rem;
+    background: var(--gn-crema);
+    color: var(--gn-texto);
+    box-shadow: 0 24px 60px rgba(21, 19, 15, .45);
+  }
+
+  .gn-aviso::backdrop { background: rgba(21, 19, 15, .72); }
+
+  .gn-aviso__in { padding: clamp(1.4rem, 4vw, 2rem); font-size: .97rem; line-height: 1.55; }
+
+  .gn-aviso__h2 {
+    margin: 0 0 .4rem;
+    font-family: var(--pr-font);
+    font-size: clamp(1.5rem, 4vw, 1.9rem);
+    font-weight: 800;
+    font-stretch: 118%;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    color: var(--gn-monte);
+  }
+
+  /* La ventana vive dentro de .gn-monte__alfa: se le quita el estilo de sus parrafos. */
+  .gn-aviso p,
+  .gn-aviso ul { max-width: none; margin: 0; font-size: inherit; line-height: inherit; }
+
+  /* Recibe el foco al abrir para que la ventana empiece arriba, no en el primer enlace. */
+  .gn-aviso__h2:focus { outline: none; }
+
+  .gn-aviso .gn-aviso__lead { margin: 0 0 1.1rem; color: var(--gn-tenue); }
+
+  .gn-aviso h3 { margin: 1.1rem 0 .3rem; font-size: 1rem; font-weight: 800; color: var(--gn-monte); }
+  .gn-aviso ul { padding-left: 1.2rem; list-style: disc; }
+  .gn-aviso li + li { margin-top: .25rem; }
+  .gn-aviso ul + p { margin-top: .6rem; }
+  .gn-aviso a { color: var(--gn-olivo); font-weight: 700; }
+
+  .gn-aviso .gn-aviso__integral { margin: 1.1rem 0 0; }
+
+  /* Casillas grandes: se marcan con el dedo, no con punteria. */
+  .gn-aviso__check {
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+    margin-top: .8rem;
+    padding: .85rem 1rem;
+    border: 2px solid var(--gn-linea);
+    border-radius: .6rem;
+    background: #FFFFFF;
+    color: var(--gn-monte);
+    cursor: pointer;
+  }
+
+  .gn-aviso__check:first-of-type { margin-top: 1.4rem; }
+  .gn-aviso__check:has(input:checked) { border-color: var(--gn-olivo); }
+  .gn-aviso__check input { flex: none; width: 1.35rem; height: 1.35rem; margin: .1rem 0 0; accent-color: var(--gn-olivo); }
+  .gn-aviso__opc { color: var(--gn-tenue); }
+
+  .gn-aviso__acciones { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: flex-end; margin-top: 1.4rem; }
+  .gn-aviso__acciones .gn-btn { cursor: pointer; font-family: var(--pr-font); }
+  .gn-aviso__acciones .gn-btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+  @media (max-width: 30rem) {
+    .gn-aviso__acciones .gn-btn { flex: 1 1 100%; text-align: center; }
+    .gn-aviso__acciones [data-aceptar-aviso] { order: -1; }
+  }
+
+  .gn-monte__alfa .gn-reg__estado { margin: 0; min-height: 1.4em; font-size: .95rem; font-weight: 600; color: var(--gn-arete); }
+  .gn-monte__alfa .gn-reg__estado:empty { display: none; }
+
+  .gn-reg button.gn-btn { cursor: pointer; font-family: var(--pr-font); }
 
   /* Lomas en capas con un hato que camina entre ellas. */
   .gn-lomas {
@@ -1543,6 +1972,9 @@ const faq = [
     .gn-lib__in,
     .gn-avisos__in { grid-template-columns: 1fr; }
 
+    /* En telefono la vaquita pisaria el logo y el nombre: queda la linea. */
+    .gn-barra__vaca { display: none; }
+
     .gn-hero__escena { max-width: 18rem; }
     .gn-flota--1 { left: -12%; }
     .gn-flota--2 { right: -12%; }
@@ -1570,10 +2002,30 @@ const faq = [
   @media (max-width: 40rem) {
     .gn-hero__ctas .gn-btn { flex: 1 1 100%; text-align: center; }
 
+    /* Portada en telefono: titular que cabe sin apretar letras, y aretes
+       chicos que cuelgan del borde del video en vez de taparlo. */
+    .gn-hero { padding-top: 1.5rem; }
+    .gn-hero__h1 { font-size: clamp(2.4rem, 11.5vw, 3.1rem); line-height: .95; }
+    .gn-hero__escena { max-width: 15.5rem; margin-top: .5rem; }
+    .gn-flota .gn-arete { width: 3.4rem; }
+    .gn-flota--1 { top: 5%; left: -15%; }
+    .gn-flota--2 { top: 50%; right: -15%; }
+    .gn-flota--3 { display: none; }
+
+    /* El dia en telefono: el reloj arriba sin pisar el telefono, y todo un
+       poco mas compacto para que la tarjeta no quede bajo las pestañas. */
+    .gn-dia__reloj { top: 4.3rem; font-size: 2rem; }
+    .gn-tel--guia { height: min(40vh, 21rem); }
+    :global(.gn-anim) .gn-dia__track { padding-top: 6.5rem; padding-bottom: 6.5rem; }
+    .gn-hora__txt { width: min(74vw, 17rem); }
+    .gn-hora__k { font-size: 1.1rem; }
+    .gn-hora__d { font-size: .9rem; }
+
     .gn-juego__vacas { gap: .5rem; }
     .gn-juego__nombre { font-size: .8rem; }
 
     .gn-monte__alfa { grid-template-columns: 1fr; }
+    .gn-reg { grid-template-columns: 1fr; }
   }
 
   @media (prefers-reduced-motion: reduce) {

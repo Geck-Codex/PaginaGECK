@@ -62,7 +62,7 @@ const bodyStyle = [
 ].join(';');
 
 const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent(
-  'Hola, tengo ganado y quiero entrar a la alfa de Ganova.',
+  'Hola, tengo ganado y quiero entrar a la beta de Ganova.',
 )}`;
 ---
 
@@ -84,12 +84,14 @@ const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent(
     slot="chrome-top"
     name="Ganova"
     mark="/assets/image/ganova/marca-128.webp"
+    markMask="/assets/image/ganova/marca-toro.webp"
+    badge="beta"
     href="/ganova/"
     links={[
-      { label: 'La app', href: '/ganova/' },
-      { label: 'Guía', href: '/ganova/guia/' },
+      { label: 'La app', href: '/ganova/', icon: 'app' },
+      { label: 'Guía', href: '/ganova/guia/', icon: 'guia' },
     ]}
-    cta={{ label: 'Entrar a la alfa', href: wa }}
+    cta={{ label: 'Entrar a la beta', href: '/ganova/#apartar' }}
     byHref="/"
   />
 

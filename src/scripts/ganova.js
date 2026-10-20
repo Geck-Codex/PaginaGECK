@@ -146,6 +146,16 @@ function initScenes() {
 
   window.addEventListener('scroll', request, { passive: true });
   window.addEventListener('resize', () => { placeBar(); request(); }, { passive: true });
+  // El nav se compacta al bajar (`is-scrolled`): la barra lo sigue durante y
+  // al final de esa transicion.
+  if (nav) {
+    nav.addEventListener('transitionend', placeBar);
+    new MutationObserver(() => {
+      const t0 = performance.now();
+      const seguir = () => { placeBar(); if (performance.now() - t0 < 350) requestAnimationFrame(seguir); };
+      requestAnimationFrame(seguir);
+    }).observe(nav, { attributes: true, attributeFilter: ['class'] });
+  }
   placeBar();
   update();
 }

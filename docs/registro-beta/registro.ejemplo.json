@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "id": "6f1c2b9e-3d4a-4b8f-9c1e-2a7d5e8f0b13",
+  "enviado_en": "2026-10-19T21:14:03.512Z",
+  "contacto": {
+    "nombre": "Juan Pérez Holguín",
+    "correo": "juan.perez@gmail.com",
+    "whatsapp": "+526271234567"
+  },
+  "ubicacion": {
+    "pais": "MX",
+    "pais_nombre": "México",
+    "estado": "Chihuahua",
+    "municipio": "Hidalgo del Parral"
+  },
+  "perfil": {
+    "ocupacion": "ganadero",
+    "especialidad": "cria",
+    "cabezas": "20_100",
+    "senal": "a_ratos",
+    "equipo": "1_2",
+    "rancho": "El Mezquite",
+    "telefono": "android",
+    "medio": "tiktok"
+  },
+  "consentimiento": {
+    "aviso_version": "2026-10-19",
+    "aviso_url": "/ganova/beta/privacidad/",
+    "aceptado_en": "2026-10-19T21:12:47.081Z",
+    "mayor_de_edad": true,
+    "finalidades_necesarias": true,
+    "novedades": false
+  },
+  "origen": {
+    "pagina": "https://geckcodex.com/ganova/",
+    "referente": "https://www.tiktok.com/",
+    "utm": {
+      "source": "tiktok",
+      "medium": "organico",
+      "campaign": "beta-nov-2026"
+    }
+  }
+}

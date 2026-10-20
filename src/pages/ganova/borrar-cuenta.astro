@@ -1,0 +1,93 @@
+---
+/**
+ * Cómo borrar la cuenta de Ganova, para quien ya no tiene la app.
+ *
+ * Google Play pide una página web donde se pueda pedir el borrado sin
+ * instalar nada. Dentro de la app ya existe (Ajustes → Con cuidado → Borrar
+ * mi cuenta); esto es la otra puerta, y dice exactamente lo mismo de qué se
+ * borra.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import LegalDoc from '@/components/legal/LegalDoc.astro';
+import { BUSINESS, SITE_URL } from '@/data/seo';
+
+const url = `${SITE_URL}/ganova/borrar-cuenta/`;
+const privacidad = `${SITE_URL}/ganova/privacidad/`;
+const actualizado = '17 de octubre de 2026';
+const asunto = encodeURIComponent('Borrar mi cuenta de Ganova');
+const correo = `mailto:${BUSINESS.email}?subject=${asunto}`;
+---
+
+<Layout
+  title="Borrar tu cuenta de Ganova | Geck Codex"
+  description="Cómo borrar tu cuenta de Ganova y sus datos, desde la app o sin ella."
+  canonical={url}
+  breadcrumbs={[
+    { name: 'Ganova', url: `${SITE_URL}/ganova/` },
+    { name: 'Borrar tu cuenta', url },
+  ]}
+  lang="es"
+>
+  <LegalDoc
+    heading="Borrar tu cuenta de Ganova"
+    intro="Puedes borrar tu cuenta y sus datos cuando quieras, con la app o sin ella."
+    updated={actualizado}
+  >
+    <h2>Desde la app (al momento)</h2>
+    <ol>
+      <li>Abre Ganova y entra a <strong>Ajustes</strong>.</li>
+      <li>Baja hasta <strong>Con cuidado</strong> y toca <strong>Borrar mi cuenta</strong>.</li>
+      <li>Escribe <strong>BORRAR</strong> para confirmar.</li>
+    </ol>
+
+    <h2>Sin la app</h2>
+    <p>
+      Escríbenos a <a href={correo}>{BUSINESS.email}</a>
+      <strong>desde el mismo correo de tu cuenta</strong>, con el asunto
+      “Borrar mi cuenta de Ganova”. Así sabemos que la cuenta es tuya.
+    </p>
+    <p>
+      Te confirmamos por correo y la borramos en un máximo de 20 días hábiles.
+      También puedes escribir por WhatsApp al {BUSINESS.phoneDisplay}, pero la
+      confirmación se hace por correo.
+    </p>
+
+    <h2>Qué se borra</h2>
+    <ul>
+      <li>Tu perfil y tu cuenta (nombre, correo y contraseña).</li>
+      <li>
+        Los <strong>ranchos de los que eres dueño</strong>, con todo lo que
+        tienen: animales, partos, ventas, gastos, proyectos, incidencias,
+        dietas, inventario, salud y fotos. <strong>Aunque otras personas
+        también trabajen en ellos</strong>: su trabajo en esos ranchos se borra
+        también.
+      </li>
+      <li>Tu lugar en los ranchos de otras personas. Los datos de esos ranchos no son tuyos y se quedan.</li>
+      <li>El registro de tu teléfono para los avisos.</li>
+    </ul>
+
+    <h2>Qué no se borra</h2>
+    <ul>
+      <li>
+        Lo que está guardado <strong>en tu teléfono</strong>: se queda hasta
+        que desinstalas la app o borras sus datos desde los ajustes del
+        teléfono.
+      </li>
+      <li>
+        Los reportes de fallas de la app, que no llevan tus datos del rancho y
+        se borran solos a los 90 días.
+      </li>
+    </ul>
+
+    <h2>Si solo quieres borrar una parte</h2>
+    <p>
+      No hace falta borrar la cuenta: dentro de la app puedes borrar un rancho
+      completo, o animales y registros sueltos.
+    </p>
+
+    <p>
+      Todo lo que guarda la app está explicado en el
+      <a href={privacidad}>aviso de privacidad de Ganova</a>.
+    </p>
+  </LegalDoc>
+</Layout>

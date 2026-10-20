@@ -1,0 +1,395 @@
+---
+/**
+ * Panel de aspirantes a la beta de Ganova — solo para el equipo de Geck Codex.
+ *
+ * Se entra con una cuenta de Ganova (Supabase Auth), pero tener cuenta no
+ * basta: las funciones panel_beta_registros y panel_beta_decidir solo contestan
+ * a las cuentas que estén en beta.equipo (C:\ganova\supabase\beta_registros.sql,
+ * sección 6). Lo que se marca aquí se guarda en la base y le llega solo al CRM.
+ *
+ * Página aparte a propósito: sin la plantilla del sitio (ni su menú, ni su
+ * analítica), con noindex y fuera del sitemap (astro.config.mjs). No es para el
+ * público; si alguien la encuentra, sin una cuenta del equipo no ve nada.
+ *
+ * Lo que manda la gente en el formulario se pinta SIEMPRE con textContent
+ * (src/scripts/ganova-panel.js): son datos de afuera.
+ */
+import { SUPABASE, ocupaciones, especialidades, cabezas, senales, equipos, medios, decisiones } from '@/data/ganova-beta';
+
+const aMapa = (xs: [string, string][]) => Object.fromEntries(xs);
+const etiquetas = JSON.stringify({
+  ocupacion: aMapa(ocupaciones),
+  especialidad: aMapa(especialidades),
+  cabezas: aMapa(cabezas),
+  senal: aMapa(senales),
+  equipo: aMapa(equipos),
+  medio: aMapa(medios),
+  decision: aMapa(decisiones),
+});
+const fontHref = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap';
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#263018" />
+  <title>Aspirantes a la beta · Ganova</title>
+  <link rel="icon" href="/assets/image/ganova/marca-128.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href={fontHref} />
+</head>
+<body>
+  <main id="gp" class="gp" data-supabase={SUPABASE.url} data-llave={SUPABASE.anon} data-etiquetas={etiquetas}>
+
+    <!-- ══ Entrar ══ -->
+    <section class="gp-entrar" data-vista="entrar">
+      <div class="gp-entrar__in">
+        <img src="/assets/image/ganova/marca-128.webp" alt="" width="56" height="56" class="gp-entrar__marca" />
+        <h1 class="gp-entrar__h1">Aspirantes a la beta</h1>
+        <p class="gp-entrar__sub">Entra con tu cuenta de Ganova. Solo el equipo de Geck Codex puede ver esto.</p>
+        <form class="gp-entrar__form" data-entrar novalidate>
+          <label>Correo
+            <input name="correo" type="email" autocomplete="email" inputmode="email" required />
+          </label>
+          <label>Contraseña
+            <input name="contrasena" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="gp-btn gp-btn--arete" type="submit">Entrar</button>
+          <p class="gp-entrar__error" role="alert" data-entrar-error></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ══ Panel ══ -->
+    <section class="gp-panel" data-vista="panel" hidden>
+      <header class="gp-cabeza">
+        <div class="gp-cabeza__marca">
+          <img src="/assets/image/ganova/marca-128.webp" alt="" width="40" height="40" />
+          <div>
+            <h1 class="gp-cabeza__h1">Aspirantes a la beta</h1>
+            <p class="gp-cabeza__sub" data-quien></p>
+          </div>
+        </div>
+        <div class="gp-cabeza__acciones">
+          <button class="gp-btn gp-btn--fantasma" type="button" data-actualizar>Actualizar</button>
+          <button class="gp-btn gp-btn--fantasma" type="button" data-salir>Salir</button>
+        </div>
+      </header>
+
+      <div class="gp-in">
+        <section class="gp-tiles" aria-label="Resumen" data-tiles></section>
+
+        <section class="gp-filtros" aria-label="Filtros">
+          <div class="gp-chips" role="group" aria-label="Decisión" data-chips></div>
+          <div class="gp-campos">
+            <label>Buscar
+              <input type="search" placeholder="Nombre, correo, rancho o municipio" data-filtro="texto" />
+            </label>
+            <label>Estado
+              <select data-filtro="estado"><option value="">Todos</option></select>
+            </label>
+            <label>Cabezas
+              <select data-filtro="cabezas"><option value="">Todas</option></select>
+            </label>
+            <label>Señal
+              <select data-filtro="senal"><option value="">Todas</option></select>
+            </label>
+            <label>Más usuarios
+              <select data-filtro="equipo"><option value="">Todos</option></select>
+            </label>
+            <label>Teléfono
+              <select data-filtro="telefono">
+                <option value="">Todos</option>
+                <option value="android">Android</option>
+                <option value="iphone">iPhone</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <p class="gp-cuantos" data-cuantos></p>
+
+        <div class="gp-tabla">
+          <div class="gp-fila gp-fila--titulos" aria-hidden="true">
+            <span>Aspirante</span><span>De dónde</span><span>Cabezas</span><span>Señal</span>
+            <span>Más usuarios</span><span>Teléfono</span><span>Llegó</span><span>Decisión</span>
+          </div>
+          <ul class="gp-lista" data-lista></ul>
+          <p class="gp-vacio" data-vacio hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="gp-ficha" data-ficha aria-labelledby="gp-ficha-nombre"></dialog>
+    <p class="gp-aviso" role="status" aria-live="polite" data-aviso></p>
+  </main>
+
+  <script>
+    import '../../../scripts/ganova-panel.js';
+  </script>
+</body>
+</html>
+
+<style is:global>
+  :root {
+    --gp-crema: #F2EDE2;
+    --gp-hueso: #E6DFD0;
+    --gp-linea: #D6CDBA;
+    --gp-olivo: #485A30;
+    --gp-monte: #263018;
+    --gp-texto: #4E5540;
+    --gp-tenue: #6B705A;
+    --gp-arete: #E3B23C;
+    --gp-tinta: #15130F;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body { margin: 0; background: var(--gp-crema); }
+
+  .gp {
+    min-height: 100vh;
+    font-family: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--gp-texto);
+    font-size: 15px;
+  }
+
+  [hidden] { display: none !important; }
+
+  .gp button, .gp input, .gp select, .gp textarea { font: inherit; }
+
+  .gp :focus-visible { outline: 3px solid var(--gp-arete); outline-offset: 2px; }
+
+  /* ── Botones ── */
+  .gp-btn {
+    min-height: 44px;
+    padding: 0 18px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .gp-btn--arete { background: var(--gp-arete); color: var(--gp-tinta); }
+  .gp-btn--olivo { background: var(--gp-olivo); color: #FFFFFF; }
+  .gp-btn--fantasma { background: transparent; border-color: #757A63; color: var(--gp-crema); }
+  .gp-btn[disabled] { opacity: .55; cursor: wait; }
+
+  /* ── Entrar ── */
+  .gp-entrar {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: var(--gp-monte);
+    color: var(--gp-crema);
+  }
+  .gp-entrar__in { width: min(100%, 380px); display: flex; flex-direction: column; gap: 12px; }
+  .gp-entrar__marca { border-radius: 14px; }
+  .gp-entrar__h1 { margin: 6px 0 0; font-size: 30px; font-weight: 800; font-stretch: 118%; letter-spacing: -.02em; line-height: 1.05; }
+  .gp-entrar__sub { margin: 0 0 12px; color: #CBC3B3; line-height: 1.5; }
+  .gp-entrar__form { display: flex; flex-direction: column; gap: 14px; }
+  .gp-entrar__form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; }
+  .gp-entrar__form input {
+    min-height: 50px;
+    padding: 0 14px;
+    border: 1.5px solid #757A63;
+    border-radius: 10px;
+    background: #33402A;
+    color: var(--gp-crema);
+    font-size: 16px;
+  }
+  .gp-entrar__form .gp-btn { min-height: 52px; margin-top: 6px; font-size: 17px; }
+  .gp-entrar__error { margin: 0; min-height: 1.4em; color: #F0A37A; font-weight: 600; }
+
+  /* ── Cabeza del panel ── */
+  .gp-cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+    padding: 14px max(16px, calc((100vw - 1216px) / 2));
+    background: var(--gp-monte);
+    color: var(--gp-crema);
+  }
+  .gp-cabeza__marca { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .gp-cabeza__marca img { border-radius: 10px; flex: none; }
+  .gp-cabeza__h1 { margin: 0; font-size: 20px; font-weight: 800; font-stretch: 118%; letter-spacing: -.02em; }
+  .gp-cabeza__sub { margin: 0; font-size: 13px; color: #CBC3B3; overflow-wrap: anywhere; }
+  .gp-cabeza__acciones { display: flex; gap: 8px; }
+
+  .gp-in { max-width: 1216px; margin: 0 auto; padding: 24px 16px 64px; display: flex; flex-direction: column; gap: 18px; }
+
+  /* ── Resumen ── */
+  .gp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .gp-tile { background: #FFFFFF; border: 1.5px solid var(--gp-linea); border-radius: 14px; padding: 14px 16px; }
+  .gp-tile__k { margin: 0; font-size: 13px; font-weight: 600; color: var(--gp-tenue); }
+  .gp-tile__v { margin: 2px 0; font-size: 30px; font-weight: 800; font-stretch: 112%; color: var(--gp-monte); line-height: 1.05; }
+  .gp-tile__s { margin: 0; font-size: 12px; color: var(--gp-tenue); }
+
+  /* ── Filtros ── */
+  .gp-filtros { background: #FFFFFF; border: 1.5px solid var(--gp-linea); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+  .gp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gp-chip {
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--gp-linea);
+    background: #FFFFFF;
+    color: var(--gp-monte);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .gp-chip[aria-pressed='true'] { background: var(--gp-monte); border-color: var(--gp-monte); color: var(--gp-crema); font-weight: 700; }
+  .gp-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .gp-campos label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 700; color: var(--gp-monte); }
+  .gp-campos input, .gp-campos select {
+    min-height: 44px;
+    padding: 0 10px;
+    border: 1.5px solid var(--gp-linea);
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: var(--gp-monte);
+    font-size: 15px;
+  }
+  .gp-campos label:first-child { grid-column: span 2; }
+
+  .gp-cuantos { margin: 0; font-size: 13px; color: var(--gp-tenue); }
+
+  /* ── Lista: tabla en la compu, tarjetas en el teléfono ── */
+  .gp-tabla { background: #FFFFFF; border: 1.5px solid var(--gp-linea); border-radius: 14px; overflow: hidden; }
+  .gp-lista { list-style: none; margin: 0; padding: 0; }
+  .gp-fila {
+    display: grid;
+    grid-template-columns: minmax(180px, 2fr) 1.4fr 1fr .9fr 1fr .8fr .9fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--gp-hueso);
+  }
+  .gp-fila--titulos { border-top: 0; background: var(--gp-hueso); font-size: 13px; font-weight: 700; color: var(--gp-monte); }
+  .gp-fila__abrir {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+  }
+  .gp-fila > * { min-width: 0; overflow-wrap: anywhere; }
+  .gp-fila__nombre { font-weight: 700; color: var(--gp-monte); text-decoration: underline; text-decoration-color: var(--gp-linea); text-underline-offset: 3px; }
+  .gp-fila__sub { font-size: 12px; color: var(--gp-tenue); }
+  .gp-fila__dato { font-size: 14px; }
+  .gp-fila__dato[data-k]::before { content: none; }
+  .gp-fila__llego { color: var(--gp-tenue); font-size: 13px; }
+
+  .gp-senal { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .gp-senal--no_hay { background: var(--gp-monte); color: var(--gp-crema); }
+  .gp-senal--a_ratos { background: var(--gp-hueso); color: var(--gp-monte); }
+  .gp-senal--buena { border: 1px solid var(--gp-linea); color: var(--gp-texto); }
+
+  /* Los tres botones de decisión, pegados como un solo control. */
+  .gp-decidir { display: inline-flex; border: 1.5px solid var(--gp-linea); border-radius: 10px; overflow: hidden; }
+  .gp-decidir button {
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
+    background: #FFFFFF;
+    color: var(--gp-texto);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .gp-decidir button + button { border-left: 1.5px solid var(--gp-linea); }
+  .gp-decidir button[aria-pressed='true'][data-valor='escogido'] { background: var(--gp-olivo); color: #FFFFFF; }
+  .gp-decidir button[aria-pressed='true'][data-valor='en_espera'] { background: var(--gp-arete); color: var(--gp-tinta); }
+  .gp-decidir button[aria-pressed='true'][data-valor='descartado'] { background: #757A63; color: #FFFFFF; }
+
+  .gp-vacio { margin: 0; padding: 32px 16px; text-align: center; color: var(--gp-tenue); }
+
+  @media (max-width: 920px) {
+    .gp-fila--titulos { display: none; }
+    .gp-fila {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      padding: 14px 16px;
+    }
+    .gp-fila__abrir, .gp-fila .gp-decidir-celda { grid-column: 1 / -1; }
+    .gp-fila__dato[data-k]::before { content: attr(data-k); display: block; font-size: 11px; font-weight: 700; color: var(--gp-tenue); }
+    .gp-decidir { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+    .gp-campos label:first-child { grid-column: 1 / -1; }
+  }
+
+  /* ── Ficha de un aspirante ── */
+  .gp-ficha {
+    width: min(560px, calc(100% - 24px));
+    max-height: calc(100dvh - 24px);
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: var(--gp-crema);
+    color: var(--gp-texto);
+    box-shadow: 0 24px 60px rgba(21, 19, 15, .45);
+  }
+  .gp-ficha::backdrop { background: rgba(21, 19, 15, .6); }
+  .gp-ficha__cabeza { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 18px 0; }
+  .gp-ficha__h2 { margin: 0; font-size: 26px; font-weight: 800; font-stretch: 116%; letter-spacing: -.02em; color: var(--gp-monte); line-height: 1.05; overflow-wrap: anywhere; }
+  .gp-ficha__sub { margin: 4px 0 0; color: var(--gp-tenue); font-size: 14px; }
+  .gp-ficha__cerrar { flex: none; width: 44px; height: 44px; border: 0; border-radius: 10px; background: var(--gp-hueso); color: var(--gp-monte); font-size: 22px; line-height: 1; cursor: pointer; }
+  .gp-ficha__cuerpo { padding: 14px 18px; display: flex; flex-direction: column; gap: 14px; }
+  .gp-ficha__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .gp-ficha__chips span { padding: 6px 11px; border-radius: 999px; background: #FFFFFF; border: 1.5px solid var(--gp-linea); font-size: 13px; font-weight: 600; color: var(--gp-monte); }
+  .gp-ficha dl { margin: 0; background: #FFFFFF; border: 1.5px solid var(--gp-linea); border-radius: 14px; padding: 4px 14px; }
+  .gp-ficha dl div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--gp-hueso); }
+  .gp-ficha dl div:first-child { border-top: 0; }
+  .gp-ficha dt { color: var(--gp-tenue); }
+  .gp-ficha dd { margin: 0; font-weight: 600; color: var(--gp-monte); text-align: right; overflow-wrap: anywhere; }
+  .gp-ficha dd a { color: var(--gp-olivo); }
+  .gp-ficha__wa {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 2px solid var(--gp-olivo);
+    color: var(--gp-olivo);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .gp-ficha__notas { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--gp-monte); }
+  .gp-ficha__notas textarea { padding: 10px 12px; border: 1.5px solid var(--gp-linea); border-radius: 10px; font-size: 15px; resize: vertical; min-height: 80px; color: var(--gp-monte); }
+  .gp-ficha__guardar { align-self: flex-end; }
+  .gp-ficha__pie { padding: 12px 18px 18px; background: #FFFFFF; border-top: 1.5px solid var(--gp-linea); display: flex; flex-direction: column; gap: 8px; }
+  .gp-ficha__pie p { margin: 0; font-size: 12px; font-weight: 700; color: var(--gp-tenue); }
+  .gp-ficha .gp-decidir { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .gp-ficha .gp-decidir button { min-height: 52px; font-size: 15px; }
+
+  /* ── Aviso flotante ("Guardado", "No se guardó") ── */
+  .gp-aviso {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: var(--gp-monte);
+    color: var(--gp-crema);
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(21, 19, 15, .3);
+    pointer-events: none;
+  }
+  .gp-aviso:empty { display: none; }
+</style>

@@ -3,10 +3,12 @@
     {
       "version": 1,
       "id": "6f1c2b9e-3d4a-4b8f-9c1e-2a7d5e8f0b13",
-      "enviado_en": "2026-10-19T21:14:03.512Z",
-      "recibido_en": "2026-10-19T21:14:04.120Z",
-      "actualizado_en": "2026-10-19T21:14:04.120Z",
+      "enviado_en": "2026-10-19T21:14:03.512+00:00",
+      "recibido_en": "2026-10-19T21:14:04.120+00:00",
+      "actualizado_en": "2026-10-20T16:40:12.004+00:00",
       "eliminado_en": null,
+      "decision": "escogido",
+      "notas": "Rancho sin señal, buen caso para probar la sync",
       "contacto": {
         "nombre": "Juan Pérez Holguín",
         "correo": "juan.perez@gmail.com",
@@ -30,8 +32,7 @@
       },
       "consentimiento": {
         "aviso_version": "2026-10-19",
-        "aviso_url": "/ganova/beta/privacidad/",
-        "aceptado_en": "2026-10-19T21:12:47.081Z",
+        "aceptado_en": "2026-10-19T21:12:47.081+00:00",
         "mayor_de_edad": true,
         "finalidades_necesarias": true,
         "novedades": false
@@ -48,10 +49,10 @@
     },
     {
       "id": "a03e7c51-9b2f-4e6d-8a14-5c0f3b9d27e8",
-      "actualizado_en": "2026-10-20T16:02:11.430Z",
-      "eliminado_en": "2026-10-20T16:02:11.430Z"
+      "actualizado_en": "2026-10-20T16:02:11.430+00:00",
+      "eliminado_en": "2026-10-20T16:02:11.430+00:00"
     }
   ],
-  "siguiente": "MjAyNi0xMC0yMFQxNjowMjoxMS40MzBafGEwM2U3YzUx",
+  "siguiente": "MjAyNi0xMC0yMCAxNjo0MDoxMi4wMDQrMDB8NmYxYzJiOWUtM2Q0YS00YjhmLTljMWUtMmE3ZDVlOGYwYjEz",
   "hay_mas": false
 }

@@ -82,7 +82,9 @@ const iconos: Record<Icono, string> = {
 
     <div class="pr-nav__right">
       <a class="pr-nav__by" href={byHref}>un producto de <strong>Geck Codex</strong></a>
-      <a class="pr-nav__cta" href={cta.href} data-lead="nav">{cta.label}</a>
+      {/* Solo cuenta como contacto si sale del sitio (WhatsApp); si lleva al
+          formulario de la misma pagina, el contacto se cuenta al enviarlo. */}
+      <a class="pr-nav__cta" href={cta.href} data-lead={/^https?:/.test(cta.href) ? 'nav' : undefined}>{cta.label}</a>
     </div>
   </nav>
 </header>
@@ -234,7 +236,7 @@ const iconos: Record<Icono, string> = {
     color: var(--pr-fg);
   }
 
-  /* "alfa": etiqueta de estado, del amarillo del arete. */
+  /* "beta": etiqueta de estado, del amarillo del arete. */
   .pr-nav__badge {
     align-self: flex-start;
     margin: .1rem 0 0 -.2rem;

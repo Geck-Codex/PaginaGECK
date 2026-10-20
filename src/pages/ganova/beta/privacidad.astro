@@ -1,0 +1,186 @@
+---
+/**
+ * Aviso de privacidad integral del registro a la beta de Ganova.
+ *
+ * Es aparte del aviso de la app (/ganova/privacidad/) y del sitio (/privacidad/)
+ * porque el formulario pide datos que ninguno de los dos menciona: cuántas
+ * cabezas tienes, si hay señal y qué teléfono usas. El formulario enseña su
+ * versión corta (aviso simplificado, art. 16 fr. II) en una ventana antes de
+ * apartar lugar, y esa ventana manda aquí.
+ *
+ * Sigue la LFPDPPP publicada en el DOF el 20 de marzo de 2025 (última reforma
+ * 14-11-2025). Cada sección dice qué artículo cubre para que, si la ley cambia,
+ * se sepa qué tocar.
+ *
+ * Si cambia `version`, cambia también AVISO.version en
+ * src/scripts/ganova-registro.js: es la que viaja con cada registro como
+ * prueba de qué aviso aceptó la persona.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import LegalDoc from '@/components/legal/LegalDoc.astro';
+import { BUSINESS, SITE_URL } from '@/data/seo';
+
+const url = `${SITE_URL}/ganova/beta/privacidad/`;
+const appUrl = `${SITE_URL}/ganova/privacidad/`;
+const actualizado = '19 de octubre de 2026';
+const correo = `<a href="mailto:${BUSINESS.email}">${BUSINESS.email}</a>`;
+
+type Bloque = { p?: string; ul?: string[] };
+
+const secciones: { h2: string; blocks: Bloque[] }[] = [
+  {
+    // Art. 15 fr. I y art. 29
+    h2: '1. Quién es responsable de tus datos',
+    blocks: [
+      { p: `<strong>Geck Codex</strong>, con domicilio en ${BUSINESS.city}, ${BUSINESS.region}, C.P. ${BUSINESS.postalCode}, México, es responsable de los datos que nos das al registrarte a la beta de Ganova, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).` },
+      { p: `Quien atiende todo lo de privacidad es el área de datos personales de Geck Codex: ${correo} · WhatsApp ${BUSINESS.phoneDisplay}.` },
+    ],
+  },
+  {
+    // Art. 15 fr. II, art. 7 (patrimoniales) y art. 8 (sensibles)
+    h2: '2. Qué datos te pedimos',
+    blocks: [
+      { ul: [
+        '<strong>Para contactarte:</strong> nombre, correo electrónico y número de WhatsApp.',
+        '<strong>De dónde eres:</strong> país, estado o provincia y municipio.',
+        '<strong>Tu trabajo con el ganado:</strong> a qué te dedicas, con qué ganado trabajas y, si quieres darlo, el nombre del rancho.',
+        '<strong>Tu hato:</strong> cuántas cabezas tienes, en rangos (menos de 20, de 20 a 100, etc.).',
+        '<strong>Cómo lo usarías:</strong> si hay señal en tu rancho, cuántas personas más la usarían allí y si tu teléfono es Android o iPhone.',
+        '<strong>Cómo nos encontraste:</strong> la red social, la persona o el medio por el que te enteraste.',
+      ] },
+      { p: '<strong>No te pedimos datos sensibles</strong> (salud, religión, origen, preferencias, etc.), ni datos bancarios, ni tu ubicación exacta.' },
+      { p: 'Cuántas cabezas tienes habla de tu patrimonio. Por eso, aunque sea solo un rango, te pedimos tu consentimiento <strong>expreso</strong>: la casilla que marcas antes de apartar lugar.' },
+    ],
+  },
+  {
+    // Art. 15 fr. III y art. 11
+    h2: '3. Para qué los usamos',
+    blocks: [
+      { p: '<strong>Finalidades necesarias para la beta.</strong> Sin ellas no podemos darte un lugar:' },
+      { ul: [
+        'Revisar los registros y escoger los ranchos que entran a la beta: la primera tanda es de 40 lugares. Buscamos variedad: ranchos con y sin señal, de distintos tamaños y tipos de ganado, y con una o varias personas trabajando.',
+        'Si la primera tanda se llena, guardar tu registro para invitarte a la siguiente.',
+        'Mandarte la invitación, las instrucciones para instalar la app y los avisos de la beta por correo o WhatsApp.',
+        'Preguntarte cómo te va con la app durante la beta (mensajes, encuestas cortas o una llamada si tú quieres) y usar lo que nos digas, junto con los datos de tu registro, para seguir mejorando Ganova.',
+        'Sacar números de conjunto, sin nombres (por ejemplo, cuántos registros vienen de ranchos sin señal), para decidir qué se construye primero.',
+      ] },
+      { p: '<strong>Finalidad adicional, solo si tú la aceptas.</strong> Puedes negarte y conservas tu lugar en la beta:' },
+      { ul: [
+        'Avisarte de novedades de Ganova cuando termine la beta: el lanzamiento, funciones nuevas y nuevas versiones.',
+      ] },
+      { p: 'Si algún día queremos usar tus datos para algo que no esté en esta lista, te pedimos permiso otra vez antes de hacerlo.' },
+    ],
+  },
+  {
+    // Art. 15 fr. IV
+    h2: '4. Cómo limitar el uso de tus datos',
+    blocks: [
+      { ul: [
+        'Si no quieres recibir novedades, deja sin marcar esa casilla al registrarte. Si ya la marcaste, escríbenos "BAJA" por WhatsApp o al correo y dejamos de mandártelas.',
+        'Si ya no quieres participar en la beta, avísanos por el mismo medio y dejamos de contactarte.',
+        'No usamos tus datos para anuncios ni para armar perfiles que se vendan.',
+      ] },
+    ],
+  },
+  {
+    // Art. 35 y art. 36: no hay transferencias; solo encargados
+    h2: '5. Quién más ve tus datos',
+    blocks: [
+      { p: '<strong>No vendemos, rentamos ni transferimos tus datos</strong> a nadie para que los use para sus propios fines.' },
+      { p: 'Dentro de Geck Codex, tu registro solo lo ve el equipo que organiza la beta, en nuestro propio sistema de seguimiento (CRM), donde anotamos en qué va cada registro.' },
+      { p: 'Para guardarlos y hacer funcionar ese sistema usamos proveedores que trabajan <strong>por encargo nuestro</strong>, solo para las finalidades de este aviso y con obligación de confidencialidad:' },
+      { ul: [
+        '<strong>Supabase</strong>: la base de datos donde se guarda tu registro.',
+        '<strong>Los servidores donde corre nuestro sistema de seguimiento.</strong>',
+        '<strong>Meta / WhatsApp</strong>: cuando el registro se manda por WhatsApp o cuando te escribimos por ahí.',
+      ] },
+      { p: 'Estos proveedores pueden guardar la información fuera de México, bajo sus propias políticas de privacidad.' },
+    ],
+  },
+  {
+    // Art. 15 fr. V, arts. 21 a 34 y art. 7 (revocación)
+    h2: '6. Tus derechos ARCO y cómo retirar tu permiso',
+    blocks: [
+      { p: 'Tienes derecho a <strong>Acceder</strong> a tus datos, <strong>Rectificarlos</strong> si están mal, <strong>Cancelarlos</strong> para que los borremos y <strong>Oponerte</strong> a que los usemos. También puedes <strong>retirar tu consentimiento</strong> cuando quieras; eso no deshace lo que ya se hizo con él antes.' },
+      { p: `Escríbenos a ${correo} o por WhatsApp al ${BUSINESS.phoneDisplay} con:` },
+      { ul: [
+        'Tu nombre y un medio para contestarte.',
+        'Algo que confirme que eres tú: lo más fácil es escribir desde el correo o el WhatsApp con el que te registraste. Si lo pide alguien por ti, una carta poder.',
+        'Qué derecho quieres ejercer y sobre qué datos. Si es para corregir, cuál es el dato bueno.',
+      ] },
+      { p: 'Te contestamos en un máximo de <strong>20 días</strong> y, si procede, lo hacemos en los <strong>15 días</strong> siguientes. Es gratis. Si borramos tus datos, también se borran del sistema de seguimiento y de cualquier proveedor que los tenga, y te avisamos cuando quede hecho.' },
+    ],
+  },
+  {
+    // Art. 10
+    h2: '7. Cuánto tiempo los guardamos',
+    blocks: [
+      { p: 'Mientras dure la beta (programada de noviembre de 2026 a febrero de 2027) y hasta 12 meses después de que termine, para avisarte del lanzamiento si lo aceptaste. Después se borran. Si los pides borrar antes, se borran antes.' },
+      { p: `Si te vuelves usuario de la app, lo que captures dentro de ella se rige por el <a href="${appUrl}">aviso de privacidad de la app Ganova</a>.` },
+    ],
+  },
+  {
+    // Arts. 18, 19 y 20
+    h2: '8. Cómo los cuidamos',
+    blocks: [
+      { p: 'Tu registro viaja cifrado desde la página hasta la base de datos. Solo el equipo de Geck Codex que organiza la beta puede leer los registros; nuestro sistema de seguimiento entra con su propia llave, aparte de la de la app, y todos están obligados a guardar confidencialidad. Si alguna vez hubiera una falla de seguridad que afecte tus datos, te avisamos de inmediato para que puedas protegerte.' },
+    ],
+  },
+  {
+    h2: '9. Menores de edad',
+    blocks: [
+      { p: 'El registro a la beta es solo para personas de 18 años o más. Si nos enteramos de que un menor se registró, borramos sus datos.' },
+    ],
+  },
+  {
+    // Art. 15 fr. VI
+    h2: '10. Cambios a este aviso',
+    blocks: [
+      { p: `La versión vigente siempre está en <a href="${url}">${url}</a> con su fecha de actualización. Si un cambio afecta para qué usamos tus datos, te lo avisamos por correo o WhatsApp antes de aplicarlo y, si hace falta, te pedimos permiso de nuevo.` },
+    ],
+  },
+  {
+    h2: '11. Si no te atendemos',
+    blocks: [
+      { p: 'Si crees que no respetamos tus derechos, puedes acudir a la Secretaría Anticorrupción y Buen Gobierno, que es la autoridad en protección de datos personales.' },
+    ],
+  },
+];
+
+const schema = [{
+  '@type': 'WebPage',
+  '@id': `${url}#webpage`,
+  url,
+  name: 'Aviso de privacidad del registro a la beta de Ganova',
+  inLanguage: 'es-MX',
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+}];
+---
+
+<Layout
+  title="Aviso de privacidad de la beta de Ganova | Geck Codex"
+  description="Qué datos pide el registro a la beta de Ganova, para qué se usan, quién los ve y cómo pedir que se borren."
+  canonical={url}
+  breadcrumbs={[
+    { name: 'Ganova', url: `${SITE_URL}/ganova/` },
+    { name: 'Aviso de privacidad de la beta', url },
+  ]}
+  schema={schema}
+  lang="es"
+>
+  <LegalDoc
+    heading="Aviso de privacidad de la beta de Ganova"
+    intro="Qué datos te pedimos al registrarte a la beta, para qué, quién los ve y cómo pedir que se borren."
+    updated={actualizado}
+  >
+    {secciones.map((s) => (
+      <>
+        <h2>{s.h2}</h2>
+        {s.blocks.map((b) => b.ul
+          ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
+          : <p set:html={b.p} />)}
+      </>
+    ))}
+  </LegalDoc>
+</Layout>

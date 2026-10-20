@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geckcodex.com/ganova/registro-beta/v1",
+  "title": "Registro a la beta de Ganova",
+  "description": "Lo que manda el formulario de geckcodex.com/ganova. El servidor lo valida con este esquema, lo guarda y se lo entrega al CRM tal cual, mas recibido_en, actualizado_en y eliminado_en. Las opciones van como codigo (no como el texto que ve la persona) para que cambiar una etiqueta en la pagina no rompa el CRM.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "enviado_en", "contacto", "ubicacion", "perfil", "consentimiento"],
+  "properties": {
+    "version": {
+      "const": 1,
+      "description": "Version de este formato. Si se agrega un campo obligatorio o se cambia un codigo, sube a 2."
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID v4 generado en el navegador. Si el envio se repite (señal mala, doble toque), el servidor ve el mismo id y no duplica."
+    },
+    "enviado_en": { "type": "string", "format": "date-time" },
+
+    "contacto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nombre", "correo", "whatsapp"],
+      "properties": {
+        "nombre": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "correo": { "type": "string", "format": "email", "maxLength": 254 },
+        "whatsapp": {
+          "type": "string",
+          "pattern": "^\\+[1-9][0-9]{9,14}$",
+          "description": "En formato internacional E.164: +52 y 10 digitos para Mexico."
+        }
+      }
+    },
+
+    "ubicacion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pais", "pais_nombre", "estado", "municipio"],
+      "properties": {
+        "pais": {
+          "type": "string",
+          "pattern": "^([A-Z]{2}|XX)$",
+          "description": "ISO 3166-1 alfa-2. XX si escogio 'Otro pais'; lo que escribio va en pais_nombre."
+        },
+        "pais_nombre": { "type": "string", "maxLength": 80 },
+        "estado": { "type": "string", "maxLength": 80, "description": "Estado de la lista si es Mexico; estado o provincia escrito si no." },
+        "municipio": { "type": "string", "maxLength": 120 }
+      }
+    },
+
+    "perfil": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ocupacion", "especialidad", "cabezas", "senal", "equipo", "telefono", "medio"],
+      "properties": {
+        "ocupacion": {
+          "enum": ["ganadero", "vaquero", "veterinario", "engordador", "asesor", "otra"],
+          "description": "ganadero = Ganadero o ranchero · vaquero = Vaquero o encargado · veterinario · engordador · asesor = Asesor o tecnico · otra"
+        },
+        "especialidad": {
+          "enum": ["cria", "engorda", "leche", "caballos", "cabras_borregos", "aves", "otra"],
+          "description": "cria = Cria (vaca y becerro) · engorda · leche · caballos · cabras_borregos = Cabras y borregos · aves · otra"
+        },
+        "cabezas": {
+          "enum": ["menos_20", "20_100", "100_500", "mas_500", "sin_ganado"],
+          "description": "Dato patrimonial: requiere consentimiento expreso (LFPDPPP art. 7). sin_ganado = Todavia no tengo ganado"
+        },
+        "senal": {
+          "enum": ["no_hay", "a_ratos", "buena"],
+          "description": "¿Hay señal en tu rancho? No hay señal / Hay a ratos / Hay buena señal"
+        },
+        "equipo": {
+          "enum": ["solo_yo", "1_2", "3_mas"],
+          "description": "¿Cuántos más la usarían en tu rancho? Solo yo / 1 o 2 más / 3 o más. Sirve para meter ranchos con varios miembros a la beta."
+        },
+        "rancho": {
+          "type": ["string", "null"],
+          "maxLength": 120,
+          "description": "Opcional. null si no lo dio."
+        },
+        "telefono": { "enum": ["android", "iphone"] },
+        "medio": {
+          "enum": ["tiktok", "facebook", "instagram", "youtube", "whatsapp", "conocido", "asociacion", "otro"],
+          "description": "¿Como te enteraste? conocido = Un conocido · asociacion = Asociacion ganadera"
+        }
+      }
+    },
+
+    "consentimiento": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["aviso_version", "aviso_url", "aceptado_en", "mayor_de_edad", "finalidades_necesarias", "novedades"],
+      "description": "Prueba de que acepto el aviso. Sin esto el servidor rechaza el registro.",
+      "properties": {
+        "aviso_version": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "aviso_url": { "type": "string" },
+        "aceptado_en": { "type": "string", "format": "date-time" },
+        "mayor_de_edad": { "const": true },
+        "finalidades_necesarias": { "const": true },
+        "novedades": {
+          "type": "boolean",
+          "description": "Finalidad adicional. false = no mandarle nada despues de la beta. Se puede volver false si pide BAJA."
+        }
+      }
+    },
+
+    "origen": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Opcional. De donde llego, para medir que canal trae ranchos.",
+      "properties": {
+        "pagina": { "type": "string", "maxLength": 300 },
+        "referente": { "type": ["string", "null"], "maxLength": 300 },
+        "utm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source": { "type": "string", "maxLength": 100 },
+            "medium": { "type": "string", "maxLength": 100 },
+            "campaign": { "type": "string", "maxLength": 100 },
+            "content": { "type": "string", "maxLength": 100 }
+          }
+        }
+      }
+    }
+  }
+}

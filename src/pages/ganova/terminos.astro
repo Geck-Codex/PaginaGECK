@@ -1,0 +1,207 @@
+---
+/**
+ * Términos y condiciones de la app Ganova.
+ *
+ * Son un contrato de adhesión (LFPC art. 85): en español, letra legible y sin
+ * cláusulas que el art. 90 tiene por no puestas. Por eso aquí NO hay: cambios
+ * de los términos sin avisar (fr. I), liberar a Geck Codex de toda
+ * responsabilidad (fr. II), plazos para reclamar más cortos que los legales
+ * (fr. IV), trámites especiales para reclamar (fr. V) ni tribunales
+ * extranjeros (fr. VI). El art. 76 Bis pide domicilio y medios de contacto
+ * antes de usar el servicio, y respetar a quien no quiere avisos comerciales.
+ *
+ * Lo que dice tiene que coincidir con lo que la app hace de verdad. Si la app
+ * cambia algo de lo que aquí se promete (que es gratis en la beta, que los
+ * datos son del ranchero, cómo se borra la cuenta), se cambia aquí y se
+ * avisa antes, como dice la sección 14.
+ */
+import GanovaLegal from '@/components/productos/GanovaLegal.astro';
+import { BUSINESS, SITE_URL } from '@/data/seo';
+
+const url = `${SITE_URL}/ganova/terminos/`;
+const privacidad = '/ganova/privacidad/';
+const privacidadBeta = '/ganova/beta/privacidad/';
+const borrar = '/ganova/borrar-cuenta/';
+const actualizado = '20 de octubre de 2026';
+const correo = `<a href="mailto:${BUSINESS.email}">${BUSINESS.email}</a>`;
+
+type Bloque = { p?: string; ul?: string[] };
+
+const secciones: { h2: string; blocks: Bloque[] }[] = [
+  {
+    // LFPC art. 76 Bis fr. III
+    h2: '1. Quiénes somos',
+    blocks: [
+      { p: `Ganova es una app de <strong>Geck Codex</strong>, con domicilio en ${BUSINESS.city}, ${BUSINESS.region}, C.P. ${BUSINESS.postalCode}, México. Para cualquier duda, aclaración o queja: ${correo} · WhatsApp ${BUSINESS.phoneDisplay}.` },
+      { p: 'Ganova sirve para llevar el rancho desde el teléfono: el ganado con su arete y su foto, partos y crías, ventas, gastos, obras, incidencias, dietas, salud y el clima. Funciona sin internet y respalda cuando hay señal.' },
+    ],
+  },
+  {
+    h2: '2. Cuándo aplican estos términos',
+    blocks: [
+      { p: 'Al crear una cuenta, o al usar la app aunque no tengas cuenta, aceptas estos términos. Si no estás de acuerdo con ellos, no uses la app.' },
+      { p: 'Ganova es para personas de <strong>18 años o más</strong>. Si usas la app para el rancho de tu familia o de tu patrón, aceptas estos términos a tu nombre.' },
+    ],
+  },
+  {
+    h2: '3. La beta',
+    blocks: [
+      { p: 'Ahorita Ganova está en <strong>beta</strong>: una versión de prueba que abre el 13 de noviembre de 2026 con pocos ranchos y que tenemos pensado cerrar en febrero de 2027. Eso quiere decir que:' },
+      { ul: [
+        'Puede tener fallas. Te pedimos que nos avises cuando algo no funcione o no se entienda: para eso es la beta.',
+        'Vamos a ir cambiando pantallas y funciones con lo que nos digan los ranchos, y a veces una función se puede ir para regresar mejorada.',
+        'Te vamos a preguntar cómo te va, como dice el <a href="' + privacidadBeta + '">aviso de privacidad de la beta</a>. Contestar es voluntario.',
+      ] },
+      { p: 'Lo que captures en la beta <strong>no se borra al terminar la beta</strong>: sigue siendo tuyo y sigue en la app.' },
+    ],
+  },
+  {
+    // LFPC art. 76 Bis fr. V
+    h2: '4. Cuánto cuesta',
+    blocks: [
+      { p: '<strong>Durante la beta, Ganova es gratis.</strong> No te pedimos tarjeta ni datos bancarios, y la app no tiene anuncios.' },
+      { p: 'Si después de la beta alguna parte empieza a costar, te avisamos el precio y las condiciones <strong>con al menos 30 días de anticipación</strong>, al correo de tu cuenta. <strong>Nada se cobra sin que tú lo aceptes</strong>, y nunca vamos a retener tus datos para obligarte a pagar: si no aceptas, puedes borrar tu cuenta y tus datos cuando quieras.' },
+    ],
+  },
+  {
+    h2: '5. Tu cuenta y tu rancho',
+    blocks: [
+      { ul: [
+        'Cuida tu contraseña y no se la des a nadie. Lo que se haga con tu cuenta cuenta como hecho por ti, salvo que nos avises que alguien más entró sin tu permiso.',
+        'Puedes invitar a tu familia o a tus trabajadores a tu rancho con un código. Tú decides qué puede hacer cada quien (dueño, administrador, vaquero o solo lectura) y puedes quitarlos cuando quieras.',
+        'El <strong>dueño del rancho</strong> responde por a quién invita. Si borra el rancho o su cuenta, se borra todo lo del rancho, incluido lo que capturaron los demás miembros.',
+        'Lo que captures debe ser de tu rancho o de un rancho donde te dieron permiso.',
+      ] },
+    ],
+  },
+  {
+    h2: '6. Tus datos son tuyos',
+    blocks: [
+      { p: 'Todo lo que capturas en Ganova (animales, fotos, partos, ventas, gastos y lo demás) <strong>es tuyo y de tu rancho</strong>, no de Geck Codex.' },
+      { p: 'Para que la app funcione, nos das permiso de guardarlo, respaldarlo en la nube y enseñárselo a los miembros de tu rancho. Solo para eso. No lo vendemos, no lo rentamos y no lo usamos para anuncios. Todo lo que tiene que ver con tus datos está en el <a href="' + privacidad + '">aviso de privacidad de la app</a>.' },
+      { p: `Puedes borrar tu cuenta y tus datos cuando quieras, desde la app (Ajustes → Con cuidado → Borrar mi cuenta) o sin ella, siguiendo los pasos de <a href="${borrar}">esta página</a>.` },
+    ],
+  },
+  {
+    h2: '7. Cómo se usa bien',
+    blocks: [
+      { p: 'Al usar Ganova te comprometes a no:' },
+      { ul: [
+        'Usarla para algo ilegal, como registrar ganado robado o esconder el origen de un animal.',
+        'Intentar entrar a ranchos o cuentas que no son tuyos, ni saltarte los permisos de tu rol.',
+        'Meter datos personales de otras personas sin su permiso.',
+        'Copiar, desarmar o revender la app, o usarla para hacer una igual.',
+        'Atascarla a propósito: mandar datos en masa con programas o hacer cualquier cosa que la tumbe para los demás.',
+      ] },
+    ],
+  },
+  {
+    h2: '8. Lo que calcula la app es una guía',
+    blocks: [
+      { p: 'Ganova calcula cosas para ayudarte a decidir: cuándo podría parir una vaca, qué tan probable es que la cría sea hembra, el riesgo de cada animal, los nutrientes de una dieta, tus números y las recomendaciones según el clima. <strong>Son estimaciones con los datos que tú capturas</strong>, y pueden fallar.' },
+      { ul: [
+        '<strong>No sustituyen</strong> a un médico veterinario, a un nutriólogo pecuario ni a un contador.',
+        'El pronóstico del clima viene de un servicio externo (Open-Meteo) y puede cambiar.',
+        'Cuando una enfermedad es de <strong>reporte obligatorio</strong>, como el gusano barrenador, la app te lo recuerda y te da los datos de SENASICA, pero <strong>no hace el reporte por ti</strong>. Reportarla sigue siendo obligación de quien tiene el animal.',
+      ] },
+    ],
+  },
+  {
+    h2: '9. Sin señal, y cuándo se respalda',
+    blocks: [
+      { p: 'Ganova guarda todo primero en tu teléfono y lo sube a la nube cuando hay internet. Mientras no se suba, <strong>lo que capturaste vive solo en ese teléfono</strong>: si se pierde, se rompe o borras la app antes de que se respalde, eso se pierde. La app te enseña cuántos cambios faltan por subir.' },
+      { p: 'Mantén la app actualizada. Si una versión queda muy vieja, puede dejar de respaldar hasta que la actualices; la app te avisa y tus datos se quedan guardados en el teléfono mientras tanto.' },
+    ],
+  },
+  {
+    h2: '10. Cuándo puede no estar',
+    blocks: [
+      { p: 'Hacemos lo posible porque el respaldo y la sincronización funcionen siempre, pero a veces se detienen: por mantenimiento, por fallas de los proveedores que usamos (Supabase para la nube y Google Firebase para los avisos) o por causas fuera de nuestro alcance. Como la app funciona sin internet, puedes seguir capturando; se sube cuando vuelva.' },
+    ],
+  },
+  {
+    // LFPC art. 90 fr. II y III: no se libera de toda responsabilidad
+    h2: '11. De qué respondemos',
+    blocks: [
+      { p: 'Geck Codex responde por los daños que cause por su culpa o su descuido, conforme a la ley. No respondemos por:' },
+      { ul: [
+        'Decisiones que tomes con base en las estimaciones de la sección 8.',
+        'Datos que se pierdan porque no alcanzaron a respaldarse, como dice la sección 9.',
+        'Fallas de tu teléfono, de tu internet o de servicios que no son nuestros.',
+        'Lo que pase por usar la app de una forma que estos términos no permiten, o porque alguien entró con tu contraseña.',
+      ] },
+      { p: 'Nada de esto te quita los derechos que te dan las leyes mexicanas, incluida la Ley Federal de Protección al Consumidor.' },
+    ],
+  },
+  {
+    h2: '12. Lo que es de Geck Codex',
+    blocks: [
+      { p: 'La app, su código, su diseño, el nombre y la marca Ganova son de Geck Codex. Te damos permiso de usarla para llevar tu rancho, mientras cumplas estos términos. Ese permiso es personal: no lo puedes vender ni pasar a alguien más.' },
+    ],
+  },
+  {
+    h2: '13. Cuándo se termina',
+    blocks: [
+      { ul: [
+        `<strong>Tú</strong> puedes dejar de usar Ganova cuando quieras, y borrar tu cuenta y tus datos como dice la <a href="${borrar}">página para borrar la cuenta</a>.`,
+        '<strong>Nosotros</strong> podemos suspender o cerrar una cuenta que rompa la sección 7. Si se puede, te avisamos antes y te decimos por qué. Si no estás de acuerdo, escríbenos y lo revisamos.',
+        'Si algún día Ganova deja de existir, te avisamos <strong>con al menos 60 días de anticipación</strong>.',
+      ] },
+    ],
+  },
+  {
+    // LFPC art. 90 fr. I: no se cambian sin avisar
+    h2: '14. Cambios a estos términos',
+    blocks: [
+      { p: `Si cambiamos estos términos, te avisamos al correo de tu cuenta <strong>con al menos 15 días de anticipación</strong>, y aquí dejamos la versión nueva con su fecha. Los cambios no aplican hacia atrás. Si no estás de acuerdo con ellos, puedes dejar de usar la app y borrar tu cuenta antes de que entren en vigor.` },
+    ],
+  },
+  {
+    h2: '15. Avisos que te mandamos',
+    blocks: [
+      { p: 'Te mandamos los avisos que hacen falta para usar la app (por ejemplo, que hay una versión nueva o que cambian estos términos) y, solo si tú lo aceptaste, novedades de Ganova. Las novedades las puedes dejar de recibir cuando quieras escribiendo "BAJA" por WhatsApp o al correo.' },
+    ],
+  },
+  {
+    // LFPC art. 90 fr. VI: nunca tribunales extranjeros
+    h2: '16. Leyes y quejas',
+    blocks: [
+      { p: `Estos términos se rigen por las leyes de México. Si tienes una queja, escríbenos primero a ${correo}: te contestamos en un máximo de 10 días hábiles. También puedes acudir en cualquier momento a la <strong>Procuraduría Federal del Consumidor (Profeco)</strong>.` },
+      { p: `Si hay que ir a juicio, serán competentes los tribunales de ${BUSINESS.city}, ${BUSINESS.region}, salvo que la ley te dé derecho a hacerlo donde vives.` },
+    ],
+  },
+];
+
+const schema = [{
+  '@type': 'WebPage',
+  '@id': `${url}#webpage`,
+  url,
+  name: 'Términos y condiciones de Ganova',
+  inLanguage: 'es-MX',
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+}];
+---
+
+<GanovaLegal
+  title="Términos y condiciones de Ganova | Geck Codex"
+  description="Las reglas para usar la app Ganova: la beta, cuánto cuesta, de quién son tus datos y de qué responde Geck Codex."
+  canonical={url}
+  breadcrumbs={[
+    { name: 'Ganova', url: `${SITE_URL}/ganova/` },
+    { name: 'Términos y condiciones', url },
+  ]}
+  schema={schema}
+  heading="Términos y condiciones de Ganova"
+  intro="Las reglas para usar la app: qué es la beta, cuánto cuesta, de quién son tus datos y de qué respondemos."
+  updated={actualizado}
+>
+  {secciones.map((s) => (
+    <>
+      <h2>{s.h2}</h2>
+      {s.blocks.map((b) => b.ul
+        ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
+        : <p set:html={b.p} />)}
+    </>
+  ))}
+</GanovaLegal>

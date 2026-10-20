@@ -12,8 +12,7 @@
  * app empieza a guardar algo nuevo (otro proveedor, otro dato), se agrega aquí
  * el mismo día.
  */
-import Layout from '@/layouts/MainLayout.astro';
-import LegalDoc from '@/components/legal/LegalDoc.astro';
+import GanovaLegal from '@/components/productos/GanovaLegal.astro';
 import { BUSINESS, SITE_URL } from '@/data/seo';
 
 const url = `${SITE_URL}/ganova/privacidad/`;
@@ -134,7 +133,7 @@ const schema = [{
 }];
 ---
 
-<Layout
+<GanovaLegal
   title="Aviso de privacidad de Ganova | Geck Codex"
   description="Qué datos guarda la app Ganova, para qué se usan, quién los ve y cómo borrar tu cuenta."
   canonical={url}
@@ -143,20 +142,16 @@ const schema = [{
     { name: 'Aviso de privacidad', url },
   ]}
   schema={schema}
-  lang="es"
+  heading="Aviso de privacidad de Ganova"
+  intro="Qué guarda la app Ganova de ti y de tu rancho, para qué, quién lo ve y cómo lo borras."
+  updated={actualizado}
 >
-  <LegalDoc
-    heading="Aviso de privacidad de Ganova"
-    intro="Qué guarda la app Ganova de ti y de tu rancho, para qué, quién lo ve y cómo lo borras."
-    updated={actualizado}
-  >
-    {secciones.map((s) => (
-      <>
-        <h2>{s.h2}</h2>
-        {s.blocks.map((b) => b.ul
-          ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
-          : <p set:html={b.p} />)}
-      </>
-    ))}
-  </LegalDoc>
-</Layout>
+  {secciones.map((s) => (
+    <>
+      <h2>{s.h2}</h2>
+      {s.blocks.map((b) => b.ul
+        ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
+        : <p set:html={b.p} />)}
+    </>
+  ))}
+</GanovaLegal>

@@ -21,6 +21,7 @@
 import Layout from '@/layouts/MainLayout.astro';
 import ProductNav from '@/components/productos/ProductNav.astro';
 import ProductFooter from '@/components/productos/ProductFooter.astro';
+import { GANOVA_LEGAL } from '@/data/ganova-legal';
 import { BUSINESS } from '@/data/seo';
 
 interface Props {
@@ -100,6 +101,7 @@ const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent(
     name="Ganova"
     tagline="Tu rancho completo en el teléfono. Funciona sin señal en el corral y sincroniza cuando hay internet."
     waHref={wa}
+    legal={GANOVA_LEGAL}
   />
 
   <article class="gg">

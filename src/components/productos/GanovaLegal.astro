@@ -1,0 +1,229 @@
+---
+/**
+ * Marco de los documentos legales de Ganova: aviso de privacidad de la app, de
+ * la beta, términos y borrar la cuenta.
+ *
+ * Antes usaban la plantilla del sitio (LegalDoc) y se veían como de Geck Codex,
+ * con su nav y su pie mandando a los documentos de Geck. Aquí llevan el nav, el
+ * pie y la paleta de Ganova, como la guía: crema, olivo y el amarillo del arete,
+ * Archivo para todo. Sin animación y con letra grande: son páginas para leer
+ * con calma, y Google Play y Google Ads las revisan a mano.
+ *
+ * El contenido llega por el slot como h2, p, ul y ol sueltos.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import ProductNav from '@/components/productos/ProductNav.astro';
+import ProductFooter from '@/components/productos/ProductFooter.astro';
+import { GANOVA_LEGAL } from '@/data/ganova-legal';
+import { BUSINESS } from '@/data/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  breadcrumbs: { name: string; url: string }[];
+  schema?: Record<string, unknown>[];
+  heading: string;
+  intro: string;
+  updated: string;
+}
+
+const { title, description, canonical, breadcrumbs, schema = [], heading, intro, updated } = Astro.props;
+
+const B = {
+  crema: '#F2EDE2',
+  hueso: '#E6DFD0',
+  linea: '#D6CDBA',
+  olivo: '#485A30',
+  monte: '#263018',
+  texto: '#4E5540',
+  tenue: '#757A63',
+  arete: '#E3B23C',
+  font: "'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  fontHref: 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap',
+};
+
+const bodyStyle = [
+  `--pr-ink:${B.crema}`, `--pr-ink-deep:${B.hueso}`, `--pr-surface:#FFFFFF`,
+  `--pr-line:${B.linea}`, `--pr-fg:${B.monte}`, `--pr-fg-dim:${B.texto}`,
+  `--pr-fg-faint:${B.tenue}`, `--pr-accent:${B.olivo}`, `--pr-on-accent:#FFFFFF`,
+  `--pr-font:${B.font}`,
+  `--gl-crema:${B.crema}`, `--gl-hueso:${B.hueso}`, `--gl-linea:${B.linea}`,
+  `--gl-olivo:${B.olivo}`, `--gl-monte:${B.monte}`, `--gl-texto:${B.texto}`,
+  `--gl-tenue:${B.tenue}`, `--gl-arete:${B.arete}`, `--gl-font:${B.font}`,
+  `background:${B.crema}`, `color:${B.texto}`,
+].join(';');
+
+const wa = `${BUSINESS.whatsapp}?text=${encodeURIComponent('Hola, tengo una duda sobre Ganova.')}`;
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonical}
+  lang="es"
+  chrome="product"
+  bodyStyle={bodyStyle}
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href={B.fontHref} />
+
+  <ProductNav
+    slot="chrome-top"
+    name="Ganova"
+    mark="/assets/image/ganova/marca-128.webp"
+    markMask="/assets/image/ganova/marca-toro.webp"
+    badge="beta"
+    href="/ganova/"
+    links={[
+      { label: 'La app', href: '/ganova/', icon: 'app' },
+      { label: 'Guía', href: '/ganova/guia/', icon: 'guia' },
+    ]}
+    cta={{ label: 'Entrar a la beta', href: '/ganova/#apartar' }}
+    byHref="/"
+  />
+
+  <ProductFooter
+    slot="chrome-bottom"
+    name="Ganova"
+    tagline="Tu rancho completo en el teléfono. Funciona sin señal en el corral y sincroniza cuando hay internet."
+    waHref={wa}
+    legal={GANOVA_LEGAL}
+  />
+
+  <article class="gl">
+    <header class="gl-cabeza">
+      <p class="gl-eyebrow"><span class="gl-arete" aria-hidden="true"></span>Ganova · Legal</p>
+      <h1 class="gl-h1">{heading}</h1>
+      <p class="gl-intro">{intro}</p>
+      <p class="gl-fecha">Última actualización: {updated}</p>
+    </header>
+
+    <nav class="gl-otros" aria-label="Otros documentos de Ganova">
+      {GANOVA_LEGAL.map((l) => (
+        <a href={l.href} aria-current={canonical.endsWith(l.href) ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+
+    <div class="gl-cuerpo">
+      <slot />
+    </div>
+
+    <p class="gl-dudas">
+      ¿Dudas? Escríbenos a <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a> o por
+      WhatsApp al <a href={wa}>{BUSINESS.phoneDisplay}</a>.
+    </p>
+  </article>
+</Layout>
+
+<style is:global>
+  .gl {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: clamp(5.5rem, 11vh, 8rem) max(16px, env(safe-area-inset-right, 0px)) clamp(4rem, 8vw, 6rem)
+      max(16px, env(safe-area-inset-left, 0px));
+    font-family: var(--gl-font);
+    color: var(--gl-texto);
+  }
+
+  .gl-cabeza { padding-bottom: 1.75rem; border-bottom: 2px solid var(--gl-linea); }
+
+  .gl-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin: 0 0 .9rem;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gl-olivo);
+  }
+
+  /* El arete amarillo, como en la marca: un rectángulo redondeado con su hoyito. */
+  .gl-arete {
+    position: relative;
+    width: .9rem;
+    height: 1.15rem;
+    border-radius: .3rem .3rem .45rem .45rem;
+    background: var(--gl-arete);
+  }
+  .gl-arete::after {
+    content: '';
+    position: absolute;
+    top: .18rem;
+    left: 50%;
+    width: .28rem;
+    height: .28rem;
+    margin-left: -.14rem;
+    border-radius: 50%;
+    background: var(--gl-crema);
+  }
+
+  .gl-h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 6vw, 3.1rem);
+    font-weight: 800;
+    font-stretch: 118%;
+    line-height: 1.02;
+    letter-spacing: -.03em;
+    color: var(--gl-monte);
+  }
+
+  .gl-intro { margin: 0 0 .6rem; font-size: clamp(1.05rem, 2.2vw, 1.2rem); line-height: 1.6; }
+  .gl-fecha { margin: 0; font-size: .88rem; color: var(--gl-tenue); }
+
+  /* Los demás documentos, para brincar de uno a otro sin bajar hasta el pie. */
+  .gl-otros { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.5rem 0 .5rem; }
+  .gl-otros a {
+    padding: .5rem .85rem;
+    border: 1.5px solid var(--gl-linea);
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--gl-monte);
+    text-decoration: none;
+    background: #FFFFFF;
+  }
+  .gl-otros a:hover { border-color: var(--gl-olivo); }
+  .gl-otros a[aria-current='page'] { border-color: var(--gl-olivo); background: var(--gl-olivo); color: #FFFFFF; }
+  .gl-otros a:focus-visible,
+  .gl a:focus-visible { outline: 3px solid var(--gl-arete); outline-offset: 2px; }
+
+  .gl-cuerpo h2 {
+    margin: 2.6rem 0 .8rem;
+    font-size: clamp(1.25rem, 3vw, 1.55rem);
+    font-weight: 800;
+    font-stretch: 112%;
+    line-height: 1.15;
+    letter-spacing: -.015em;
+    color: var(--gl-monte);
+  }
+
+  .gl-cuerpo p,
+  .gl-cuerpo li { font-size: 1.04rem; line-height: 1.72; }
+  .gl-cuerpo p { margin: 0 0 1rem; }
+  .gl-cuerpo ul,
+  .gl-cuerpo ol { margin: 0 0 1.2rem; padding-left: 1.3rem; }
+  .gl-cuerpo ul { list-style: disc; }
+  .gl-cuerpo ol { list-style: decimal; }
+  .gl-cuerpo li { margin-bottom: .5rem; }
+  .gl-cuerpo li::marker { color: var(--gl-olivo); }
+  .gl-cuerpo strong { color: var(--gl-monte); }
+
+  .gl-cuerpo a,
+  .gl-dudas a { color: var(--gl-olivo); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+  .gl-dudas {
+    margin: 3rem 0 0;
+    padding: 1.1rem 1.25rem;
+    border-left: 4px solid var(--gl-arete);
+    border-radius: .5rem;
+    background: var(--gl-hueso);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+</style>

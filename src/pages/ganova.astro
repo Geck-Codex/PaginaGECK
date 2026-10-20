@@ -33,6 +33,7 @@
 import Layout from '@/layouts/MainLayout.astro';
 import ProductNav from '@/components/productos/ProductNav.astro';
 import ProductFooter from '@/components/productos/ProductFooter.astro';
+import { GANOVA_LEGAL } from '@/data/ganova-legal';
 import Arete from '@/components/productos/Arete.astro';
 import { BUSINESS, SITE_URL } from '@/data/seo';
 import { localizedPath } from '@/i18n/routes';
@@ -158,7 +159,7 @@ const avisos = [
   { t: 'Carlos registró una venta', d: '2 becerros por $27,200.' },
 ];
 
-const cita = 'Yo la programo. Yo la uso en mi rancho.'.split(' ');
+const cita = "Hecha en el rancho, pa'l rancho.".split(' ');
 
 /* El hato que camina por las lomas del cierre: duracion y arranque de cada
    una, para que no vayan en fila india. */
@@ -308,6 +309,7 @@ const faq = [
     name="Ganova"
     tagline="Tu rancho completo en el teléfono. Funciona sin señal en el corral y sincroniza cuando hay internet."
     waHref={wa}
+    legal={GANOVA_LEGAL}
   />
 
   <!-- Antes de pintar: si se puede animar, se arman los estados iniciales. -->

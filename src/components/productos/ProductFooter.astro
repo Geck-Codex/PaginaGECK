@@ -18,9 +18,23 @@ interface Props {
   tagline: string;
   /** WhatsApp con el mensaje ya armado. */
   waHref: string;
+  /**
+   * Los documentos legales del producto. Si no se pasan, salen los de Geck
+   * Codex: un producto con sus propios avisos (Ganova) tiene que mandar los
+   * suyos, o el pie lo manda a los del sitio, que no hablan de la app.
+   */
+  legal?: { label: string; href: string }[];
 }
 
-const { name, tagline, waHref } = Astro.props;
+const {
+  name,
+  tagline,
+  waHref,
+  legal = [
+    { label: 'Aviso de Privacidad', href: localizedPath('privacy', 'es') },
+    { label: 'Términos y Condiciones', href: localizedPath('terms', 'es') },
+  ],
+} = Astro.props;
 const year = new Date().getFullYear();
 ---
 
@@ -51,8 +65,7 @@ const year = new Date().getFullYear();
     <div class="pr-foot__col">
       <p class="pr-foot__k">Legal</p>
       <ul>
-        <li><a href={localizedPath('privacy', 'es')}>Aviso de Privacidad</a></li>
-        <li><a href={localizedPath('terms', 'es')}>Términos y Condiciones</a></li>
+        {legal.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
       </ul>
     </div>
   </div>

@@ -16,8 +16,7 @@
  * src/scripts/ganova-registro.js: es la que viaja con cada registro como
  * prueba de qué aviso aceptó la persona.
  */
-import Layout from '@/layouts/MainLayout.astro';
-import LegalDoc from '@/components/legal/LegalDoc.astro';
+import GanovaLegal from '@/components/productos/GanovaLegal.astro';
 import { BUSINESS, SITE_URL } from '@/data/seo';
 
 const url = `${SITE_URL}/ganova/beta/privacidad/`;
@@ -158,7 +157,7 @@ const schema = [{
 }];
 ---
 
-<Layout
+<GanovaLegal
   title="Aviso de privacidad de la beta de Ganova | Geck Codex"
   description="Qué datos pide el registro a la beta de Ganova, para qué se usan, quién los ve y cómo pedir que se borren."
   canonical={url}
@@ -167,20 +166,16 @@ const schema = [{
     { name: 'Aviso de privacidad de la beta', url },
   ]}
   schema={schema}
-  lang="es"
+  heading="Aviso de privacidad de la beta de Ganova"
+  intro="Qué datos te pedimos al registrarte a la beta, para qué, quién los ve y cómo pedir que se borren."
+  updated={actualizado}
 >
-  <LegalDoc
-    heading="Aviso de privacidad de la beta de Ganova"
-    intro="Qué datos te pedimos al registrarte a la beta, para qué, quién los ve y cómo pedir que se borren."
-    updated={actualizado}
-  >
-    {secciones.map((s) => (
-      <>
-        <h2>{s.h2}</h2>
-        {s.blocks.map((b) => b.ul
-          ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
-          : <p set:html={b.p} />)}
-      </>
-    ))}
-  </LegalDoc>
-</Layout>
+  {secciones.map((s) => (
+    <>
+      <h2>{s.h2}</h2>
+      {s.blocks.map((b) => b.ul
+        ? <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>
+        : <p set:html={b.p} />)}
+    </>
+  ))}
+</GanovaLegal>

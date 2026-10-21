@@ -21,7 +21,7 @@ import { BUSINESS, SITE_URL } from '@/data/seo';
 
 const url = `${SITE_URL}/ganova/beta/privacidad/`;
 const appUrl = `${SITE_URL}/ganova/privacidad/`;
-const actualizado = '19 de octubre de 2026';
+const actualizado = '21 de octubre de 2026';
 const correo = `<a href="mailto:${BUSINESS.email}">${BUSINESS.email}</a>`;
 
 type Bloque = { p?: string; ul?: string[] };
@@ -86,11 +86,11 @@ const secciones: { h2: string; blocks: Bloque[] }[] = [
     h2: '5. Quién más ve tus datos',
     blocks: [
       { p: '<strong>No vendemos, rentamos ni transferimos tus datos</strong> a nadie para que los use para sus propios fines.' },
-      { p: 'Dentro de Geck Codex, tu registro solo lo ve el equipo que organiza la beta, en nuestro propio sistema de seguimiento (CRM), donde anotamos en qué va cada registro.' },
-      { p: 'Para guardarlos y hacer funcionar ese sistema usamos proveedores que trabajan <strong>por encargo nuestro</strong>, solo para las finalidades de este aviso y con obligación de confidencialidad:' },
+      { p: 'Tu registro se guarda en el <strong>sistema de seguimiento (CRM) de Geck Codex</strong>. Ahí solo lo ve el equipo que organiza la beta, que anota en qué va cada registro y escoge quién entra.' },
+      { p: 'Para hacer llegar tu registro y hacer funcionar ese sistema usamos proveedores que trabajan <strong>por encargo nuestro</strong>, solo para las finalidades de este aviso y con obligación de confidencialidad:' },
       { ul: [
-        '<strong>Supabase</strong>: la base de datos donde se guarda tu registro.',
-        '<strong>Los servidores donde corre nuestro sistema de seguimiento.</strong>',
+        '<strong>Supabase</strong>: recibe tu registro desde la página y se lo pasa al CRM. No lo guarda.',
+        '<strong>Vercel</strong> y la base de datos del CRM: donde corre y guarda la información nuestro sistema de seguimiento.',
         '<strong>Meta / WhatsApp</strong>: cuando el registro se manda por WhatsApp o cuando te escribimos por ahí.',
       ] },
       { p: 'Estos proveedores pueden guardar la información fuera de México, bajo sus propias políticas de privacidad.' },
@@ -122,7 +122,7 @@ const secciones: { h2: string; blocks: Bloque[] }[] = [
     // Arts. 18, 19 y 20
     h2: '8. Cómo los cuidamos',
     blocks: [
-      { p: 'Tu registro viaja cifrado desde la página hasta la base de datos. Solo el equipo de Geck Codex que organiza la beta puede leer los registros; nuestro sistema de seguimiento entra con su propia llave, aparte de la de la app, y todos están obligados a guardar confidencialidad. Si alguna vez hubiera una falla de seguridad que afecte tus datos, te avisamos de inmediato para que puedas protegerte.' },
+      { p: 'Tu registro viaja cifrado desde la página hasta el CRM. Solo el equipo de Geck Codex que organiza la beta puede leer los registros; la página nunca tiene la llave del CRM, que se queda en el servidor, y todos están obligados a guardar confidencialidad. Si alguna vez hubiera una falla de seguridad que afecte tus datos, te avisamos de inmediato para que puedas protegerte.' },
     ],
   },
   {

@@ -18,7 +18,7 @@
 
 // Si cambia el aviso integral (src/pages/ganova/beta/privacidad.astro), cambia
 // la version: lo aceptado con otra version ya no cuenta y se vuelve a pedir.
-const AVISO = { version: '2026-10-19', url: '/ganova/beta/privacidad/' };
+const AVISO = { version: '2026-10-21', url: '/ganova/beta/privacidad/' };
 const LLAVE = 'gn-aviso-beta';
 const LLAVE_ORIGEN = 'gn-origen-beta';
 

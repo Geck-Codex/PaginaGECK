@@ -34,7 +34,7 @@ import Layout from '@/layouts/MainLayout.astro';
 import ProductNav from '@/components/productos/ProductNav.astro';
 import ProductFooter from '@/components/productos/ProductFooter.astro';
 import { GANOVA_LEGAL } from '@/data/ganova-legal';
-import { SUPABASE, estadosMx, paises, ocupaciones, especialidades, cabezas, senales, equipos, medios } from '@/data/ganova-beta';
+import { REGISTRO_BETA, TURNSTILE_SITIO, estadosMx, paises, ocupaciones, especialidades, cabezas, senales, equipos, medios } from '@/data/ganova-beta';
 import Arete from '@/components/productos/Arete.astro';
 import { BUSINESS, SITE_URL } from '@/data/seo';
 import { localizedPath } from '@/i18n/routes';
@@ -173,13 +173,11 @@ const hato = [
   { d: 61, s: -12, y: 12, w: 52, x: 86 },
 ];
 
-/* Formulario de la beta. Los registros se guardan en el Supabase de Ganova,
-   esquema `beta` (C:\ganova\supabase\beta_registros.sql), por la funcion
-   registrar_beta; de ahi los toma el CRM de Geck Codex y el equipo los revisa en
-   /ganova/beta/panel/. Si no se puede guardar, se abre WhatsApp con los datos ya
-   escritos (src/scripts/ganova-registro.js). Las opciones viven en
-   src/data/ganova-beta.ts, compartidas con el panel. */
-const registrarBeta = `${SUPABASE.url}/rest/v1/rpc/registrar_beta`;
+/* Formulario de la beta. Los registros se guardan en el CRM de Geck Codex: la
+   pagina los manda al intermediario registro-beta (Supabase), que se los pasa
+   al CRM con su llave. Ahi se escoge quien entra. Si no se puede guardar, se
+   abre WhatsApp con los datos ya escritos (src/scripts/ganova-registro.js).
+   Las opciones y las direcciones viven en src/data/ganova-beta.ts. */
 
 const faq = [
   { q: '¿Necesito internet para usar Ganova?', a: 'No. Todo se captura y se consulta en el teléfono sin señal. Cuando vuelves a tener internet, lo que capturaste se sube solo y le llega al resto del rancho.' },
@@ -548,7 +546,7 @@ const faq = [
               para la siguiente tanda.
             </p>
 
-            <form class="gn-reg" id="gn-reg" data-endpoint={registrarBeta} data-llave={SUPABASE.anon} data-wa={BUSINESS.whatsapp} novalidate>
+            <form class="gn-reg" id="gn-reg" data-endpoint={REGISTRO_BETA} data-wa={BUSINESS.whatsapp} novalidate>
               <div class="gn-reg__campo">
                 <label for="gn-nombre">Nombre</label>
                 <input id="gn-nombre" name="nombre" type="text" autocomplete="name" required />
@@ -648,6 +646,14 @@ const faq = [
                 <label for="gn-sitio">Sitio web</label>
                 <input id="gn-sitio" name="sitio_web" type="text" tabindex="-1" autocomplete="off" />
               </div>
+
+              {/* Captcha de Cloudflare, solo si hay llave del sitio (src/data/ganova-beta.ts). */}
+              {TURNSTILE_SITIO && (
+                <div class="gn-reg__ancho">
+                  <div class="cf-turnstile" data-sitekey={TURNSTILE_SITIO} data-language="es" data-theme="dark"></div>
+                  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+                </div>
+              )}
 
               <p class="gn-reg__aviso gn-reg__ancho">
                 <span data-aviso-estado>Antes de apartar tu lugar te pedimos permiso para usar tus datos.</span>

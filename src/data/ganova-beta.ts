@@ -1,21 +1,23 @@
 /**
- * La beta de Ganova: con qué Supabase habla la web y las opciones del
- * formulario. Lo usan el formulario (src/pages/ganova.astro) y el panel de
- * aspirantes (src/pages/ganova/beta/panel.astro), para que los dos digan lo mismo.
+ * La beta de Ganova: a dónde manda el formulario (src/pages/ganova.astro) y sus
+ * opciones.
  *
- * Cada opción es [código, texto]. El código es lo que se guarda y lo que lee el
- * CRM; el texto es lo que ve la persona. Los códigos son los de
- * docs/registro-beta/registro.schema.json y los CHECK de la tabla
- * (C:\ganova\supabase\beta_registros.sql): si cambia uno, se cambia en los tres
- * lados. El texto se puede cambiar libre.
+ * Cada opción es [código, texto]. El código es lo que se guarda y lo que valida
+ * el CRM de Geck; el texto es lo que ve la persona. Los códigos son los de
+ * docs/registro-beta/registro.schema.json: si cambia uno, se cambia también
+ * ahí y se le avisa a Geck, o el CRM rechaza el registro. El texto se puede
+ * cambiar libre.
  */
 
-export const SUPABASE = {
-  url: 'https://voigbndxjzphuttdcula.supabase.co',
-  // Llave pública (anon), la misma que trae la app. No da acceso a nada por sí
-  // sola: el esquema `beta` está cerrado y solo se entra por sus funciones.
-  anon: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvaWdibmR4anpwaHV0dGRjdWxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NTQxNjgsImV4cCI6MjA5ODIzMDE2OH0.ehXKnfveRLvrgn9OqnsDkO4DOgWXRD5bQfKDzrSXv_M',
-};
+// El intermediario del formulario: recibe el registro y se lo pasa al CRM de
+// Geck con su llave (C:\ganova\supabase\functions\registro-beta). Aquí no va
+// ninguna llave.
+export const REGISTRO_BETA = 'https://voigbndxjzphuttdcula.supabase.co/functions/v1/registro-beta';
+
+// Turnstile (captcha de Cloudflare). Vacío = sin captcha: quedan la trampa para
+// bots y el límite por IP del intermediario. Para prenderlo se pone aquí la
+// llave del sitio (es pública) y la secreta va en Supabase como TURNSTILE_SECRETA.
+export const TURNSTILE_SITIO = '';
 
 export type Opcion = [codigo: string, texto: string];
 
@@ -53,9 +55,4 @@ export const equipos: Opcion[] = [['solo_yo', 'Solo yo'], ['1_2', '1 o 2 más'],
 export const medios: Opcion[] = [
   ['tiktok', 'TikTok'], ['facebook', 'Facebook'], ['instagram', 'Instagram'], ['youtube', 'YouTube'],
   ['whatsapp', 'WhatsApp'], ['conocido', 'Un conocido'], ['asociacion', 'Asociación ganadera'], ['otro', 'Otro'],
-];
-
-// Lo que decide el equipo en el panel; los mismos valores que el CHECK de `decision`.
-export const decisiones: Opcion[] = [
-  ['pendiente', 'Por revisar'], ['escogido', 'Escogido'], ['en_espera', 'En espera'], ['descartado', 'Descartado'],
 ];

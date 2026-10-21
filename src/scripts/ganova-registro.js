@@ -2,13 +2,13 @@
  * ganova-registro.js — el formulario para apartar lugar en la beta de Ganova.
  *
  * Al enviar, arma el registro en el formato de docs/registro-beta/registro.schema.json
- * y lo manda a la funcion `registrar_beta` del Supabase de Ganova (esquema
- * `beta`, C:\ganova\supabase\beta_registros.sql). De ahi lo toma el CRM de Geck
- * Codex. Si no se puede guardar (sin señal, la funcion no existe todavia, algo
- * vino mal), se abre WhatsApp con los datos ya escritos para no perder a nadie.
+ * y lo manda al intermediario `registro-beta` (Edge Function del Supabase de
+ * Ganova, C:\ganova\supabase\functions\registro-beta), que lo pasa al CRM de
+ * Geck Codex con la llave del CRM. Esa llave vive solo en el servidor: aqui no
+ * va ninguna. Si no se puede guardar (sin señal, el CRM falla, demasiados
+ * envios), se abre WhatsApp con los datos ya escritos para no perder a nadie.
  *
- * La llave de `data-llave` es la publica (anon), la misma que trae la app: no
- * da acceso a nada. Una llave secreta (service role) NUNCA va aqui.
+ * Si la pagina trae el widget de Turnstile, su token viaja como `captcha`.
  *
  * Antes de mandar nada se pide permiso con el aviso de privacidad (la ventana
  * #gn-aviso). Sale al tocar cualquier boton que lleve a #apartar, la primera vez
@@ -204,6 +204,32 @@ if (form instanceof HTMLFormElement) {
     return valor(k);
   };
 
+  // El campo del registro que rechazó el CRM (`perfil.cabezas`) → el campo del
+  // formulario que la persona puede corregir. Lo que no tiene campo visible
+  // (id, consentimiento, origen) no se le puede pedir: cae a WhatsApp.
+  const campoDelFormulario = (ruta) => {
+    if (typeof ruta !== 'string') return null;
+    const esMx = valor('pais') === 'MX';
+    const nombre = {
+      'contacto.nombre': 'nombre',
+      'contacto.correo': 'correo',
+      'contacto.whatsapp': 'whatsapp',
+      'ubicacion.pais': 'pais',
+      'ubicacion.pais_nombre': 'pais_otro',
+      'ubicacion.estado': esMx ? 'estado' : 'provincia',
+      'ubicacion.municipio': 'municipio',
+      'perfil.ocupacion': 'ocupacion',
+      'perfil.especialidad': 'especialidad',
+      'perfil.cabezas': 'cabezas',
+      'perfil.senal': 'senal',
+      'perfil.equipo': 'equipo',
+      'perfil.rancho': 'rancho',
+      'perfil.medio': 'medio',
+    }[ruta];
+    const el = nombre ? form.elements.namedItem(nombre) : null;
+    return el instanceof HTMLInputElement || el instanceof HTMLSelectElement ? el : null;
+  };
+
   // El registro tal como lo pide registro.schema.json (version 1).
   const registro = () => {
     const p = valor('pais');
@@ -319,41 +345,61 @@ if (form instanceof HTMLFormElement) {
 
     const r = registro();
     const endpoint = form.dataset.endpoint;
-    const llave = form.dataset.llave;
-    if (!endpoint || !llave) {
+    if (!endpoint) {
       marcar('whatsapp');
       abrirWa(r);
       decir('Se abrió WhatsApp con tus datos. Nomás dale enviar y te apartamos lugar.');
       return;
     }
 
+    const caerAWhatsapp = () => {
+      marcar('whatsapp');
+      abrirWa(r);
+      decir('No pudimos guardarlo, así que abrimos WhatsApp con tus datos. Dale enviar ahí.');
+    };
+
     const boton = form.querySelector('button[type="submit"]');
     boton?.setAttribute('disabled', '');
     decir('Enviando…');
     try {
+      const captcha = valor('cf-turnstile-response') || null;
       const resp = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: llave,
-          Authorization: `Bearer ${llave}`,
-        },
-        body: JSON.stringify({ registro: r }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registro: r, captcha }),
       });
-      if (!resp.ok) throw new Error(String(resp.status));
-      const resultado = await resp.json();
-      marcar('formulario');
-      form.reset();
-      form.classList.remove('is-revisado');
-      ajustarPais();
-      envioId = nuevoId();
-      decir(resultado === 'ya_registrado'
-        ? 'Ya estabas apuntado con ese correo. Te escribimos antes del 13 de noviembre.'
-        : '¡Listo! Ya tienes tu lugar apartado. Te escribimos antes del 13 de noviembre.');
+      const res = await resp.json().catch(() => ({}));
+
+      if (resp.ok && res.ok) {
+        // El CRM no dice si ya estaba registrado (a propósito): siempre "¡Listo!".
+        marcar('formulario');
+        form.reset();
+        form.classList.remove('is-revisado');
+        ajustarPais();
+        window.turnstile?.reset?.();
+        envioId = nuevoId();
+        decir('¡Listo! Ya tienes tu lugar apartado. Te escribimos antes del 13 de noviembre.');
+        return;
+      }
+
+      if (res.motivo === 'captcha') {
+        window.turnstile?.reset?.();
+        decir('No pudimos comprobar que no eres un robot. Espera un segundo y vuelve a enviar.');
+        return;
+      }
+
+      // Un dato que el CRM rechazó y que la persona puede corregir: se marca.
+      const campo = res.motivo === 'datos' ? campoDelFormulario(res.campo) : null;
+      if (campo) {
+        campo.setAttribute('aria-invalid', 'true');
+        campo.focus();
+        decir('Revisa tus datos: el campo marcado no se pudo guardar así.');
+        return;
+      }
+
+      caerAWhatsapp();
     } catch {
-      marcar('whatsapp');
-      abrirWa(r);
-      decir('No pudimos guardarlo, así que abrimos WhatsApp con tus datos. Dale enviar ahí.');
+      caerAWhatsapp();
     } finally {
       boton?.removeAttribute('disabled');
     }

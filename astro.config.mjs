@@ -72,8 +72,7 @@ export default defineConfig({
       // paginas normales. Un sitemap es la lista de lo que se quiere indexar, y
       // estas llevan noindex —pedirle a Google que rastree algo que le dices que
       // no indexe es mandarle señales contrarias y gastarle presupuesto.
-      // El panel de aspirantes de Ganova tampoco: es del equipo, lleva noindex.
-      filter: (page) => !/\/404\/?$/.test(page) && !/\/ganova\/beta\/panel\/?$/.test(page),
+      filter: (page) => !/\/404\/?$/.test(page),
       // Sin `lastmod` global a propósito — ver readBlogDates() arriba. Solo los
       // artículos declaran fecha, y la declaran de verdad.
       // NO se usa la opción `i18n` del plugin: empareja las variantes por slug

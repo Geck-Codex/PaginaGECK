@@ -17,7 +17,7 @@ import { BUSINESS, SITE_URL } from '@/data/seo';
 
 const url = `${SITE_URL}/ganova/privacidad/`;
 const borrar = `${SITE_URL}/ganova/borrar-cuenta/`;
-const actualizado = '17 de octubre de 2026';
+const actualizado = '7 de noviembre de 2026';
 
 type Bloque = { p?: string; ul?: string[] };
 const secciones: { h2: string; blocks: Bloque[] }[] = [
@@ -48,9 +48,9 @@ const secciones: { h2: string; blocks: Bloque[] }[] = [
     h2: '3. Permisos del teléfono',
     blocks: [
       { ul: [
-        '<strong>Ubicación:</strong> solo cuando tú tocas el botón para ubicar el rancho. Se usa una vez para guardar dónde está el rancho y pedir su pronóstico del clima.',
+        '<strong>Ubicación:</strong> la app te pide el permiso al empezar, y puedes decir que no. Solo lee la ubicación cuando tú tocas el botón para ubicar el rancho: se usa una vez para guardar dónde está y pedir su pronóstico del clima. No te sigue mientras te mueves.',
         '<strong>Cámara y galería:</strong> solo para las fotos de los animales que tú decides tomar o escoger.',
-        '<strong>Notificaciones:</strong> para los recordatorios (vacunas, partos) y los avisos de la familia.',
+        '<strong>Notificaciones:</strong> para los recordatorios (vacunas, partos) y los avisos de la familia. También se piden al empezar y tampoco son obligatorias.',
       ] },
     ],
   },
@@ -74,7 +74,8 @@ const secciones: { h2: string; blocks: Bloque[] }[] = [
       { ul: [
         '<strong>Supabase</strong>: cuentas, respaldo en la nube y fotos.',
         '<strong>Google Firebase</strong>: envío de avisos al teléfono y reportes de fallas.',
-        '<strong>Open-Meteo</strong>: pronóstico del clima. Solo recibe la ubicación del rancho, sin tu nombre ni tu cuenta.',
+        '<strong>Open-Meteo</strong>: pronóstico del clima y búsqueda de municipios por nombre. Solo recibe la ubicación del rancho o el nombre que escribes, sin tu nombre ni tu cuenta.',
+        '<strong>OpenStreetMap (Nominatim)</strong>: convierte la ubicación del rancho en el nombre de su municipio. Solo recibe las coordenadas, sin tu nombre ni tu cuenta.',
       ] },
       { p: 'Estos proveedores pueden guardar la información fuera de México, bajo sus propias políticas de privacidad.' },
     ],
@@ -91,7 +92,8 @@ const secciones: { h2: string; blocks: Bloque[] }[] = [
   {
     h2: '7. Cuánto tiempo se guardan',
     blocks: [
-      { p: 'Mientras tengas tu cuenta. Al borrarla, los datos se quitan de la nube de inmediato. Las copias de seguridad automáticas del servidor se renuevan solas y lo borrado desaparece de ellas en cuanto se reemplazan. Los reportes de fallas se borran solos a los 90 días.' },
+      { p: 'Mientras tengas tu cuenta. Al borrarla, los datos se quitan de la nube de inmediato y las fotos se borran del almacenamiento a más tardar al día siguiente. Las copias de seguridad automáticas del servidor se renuevan solas y lo borrado desaparece de ellas en cuanto se reemplazan. Los reportes de fallas se borran solos a los 90 días.' },
+      { p: 'Lo que borras dentro de la app (un animal, un registro o un rancho completo) desaparece de tus teléfonos al momento y se elimina de la nube para siempre a los 30 días, con sus fotos. Esos días sirven para que el borrado llegue a todos los teléfonos del rancho, aunque alguno pase semanas sin señal. Los animales vendidos o muertos no se borran: siguen siendo parte de tu historial.' },
       { p: 'Lo que está guardado en tu teléfono se queda ahí hasta que desinstalas la app o borras sus datos desde los ajustes del teléfono.' },
     ],
   },

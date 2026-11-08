@@ -56,10 +56,11 @@ export const PROJECTS_STATIC = [
          ffmpeg -i <crudo> -vf "crop=1250:600:0:87,
            pad=1250:782:0:91:0xFFFFFF,scale=1440:900" -an -crf 29 */
     device: 'tablet', video: '/assets/video/bot-seguiar.mp4', videoPoster: '/assets/image/portafolio/bot-seguiar-poster.webp' },
-  { id: 6,  cat: 'landing',  title: 'Mi Caja POS',           tech: ['Astro', 'React', 'Tailwind CSS'],                                   page: '/mi-caja/',          gradient: 'linear-gradient(145deg, #1c1917 0%, #92400e 45%, #d97706 100%)', image: '/assets/image/portafolio/micaja.webp', cardImage: '/assets/image/portafolio/mi-caja.webp',
-    gallery: ['/assets/image/portafolio/micaja-movil-1.webp', '/assets/image/portafolio/micaja-movil-2.webp', '/assets/image/portafolio/micaja-movil-3.webp'] },
-  { id: 25, cat: 'webapp',   title: 'Mi Caja Restaurante',   tech: ['React', 'Node.js', 'PostgreSQL', 'Flutter'],                                                                          gradient: 'linear-gradient(145deg, #0c1e3c 0%, #14532d 45%, #0B1D33 100%)', image: '/assets/image/portafolio/micaja-res.webp', cardFit: 'contain', cardBg: '#D4D4CC',
-    gallery: ['/assets/image/portafolio/micaja-res-1.webp', '/assets/image/portafolio/micaja-res-3.webp', '/assets/image/portafolio/micaja-res-2.webp'] },
+  // Mi Caja: UNA sola ficha (usuario, 2026-11-07). Antes estaba partida en
+  // "Mi Caja POS" y "Mi Caja Restaurante"; hoy es un solo producto que se
+  // arma por giro, con su pagina en /mi-caja/. Sin precio publicado.
+  { id: 6,  cat: 'software', title: 'Mi Caja',               tech: ['.NET', 'WPF', 'SQLite', 'Android'],                                  page: '/mi-caja/',          gradient: 'linear-gradient(145deg, #0c1e3c 0%, #2C4E7A 55%, #EFECE6 100%)', image: '/assets/image/micaja/app/venta.webp', cardImage: '/assets/image/micaja/portafolio-tarjeta.webp',
+    gallery: ['/assets/image/micaja/app/venta.webp', '/assets/image/micaja/app/reportes.webp', '/assets/image/micaja/app/movil-caja.webp'] },
   { id: 17, cat: 'mobile',   title: 'Nuki',                   tech: ['Flutter', 'sqflite'],                                                                    gradient: 'linear-gradient(145deg, #030C1D 0%, #0B1D33 45%, #B8941F 100%)', image: '/assets/image/portafolio/nuki.webp', cardFit: 'contain', cardBg: '#FFFFFF',
     gallery: ['/assets/image/portafolio/nuki-1.webp', '/assets/image/portafolio/nuki-2.webp', '/assets/image/portafolio/nuki-3.webp'] },
   { id: 18, cat: 'webapp',   title: 'Tablá',                  tech: ['Astro', 'React', 'Tailwind CSS'],                                                                                    gradient: 'linear-gradient(145deg, #1e1e1c 0%, #222220 40%, #D4AF37 100%)', image: '/assets/image/portafolio/tabla.webp', cardFit: 'contain', cardBg: '#D4D4CC', link: 'https://laschikis.vercel.app/?tema=fonda' },

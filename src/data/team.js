@@ -54,7 +54,7 @@ export const TEAM = [
     name: 'Eric Martín Ayala Argüello',
     founder: true,
     photo: '/assets/image/equipo/eric.webp',
-    projects: [6, 25, 26],
+    projects: [6, 26],
   },
 
   /* Estos dos no construyen: el cliente los trata, y por eso van en un bloque

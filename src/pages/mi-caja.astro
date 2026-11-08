@@ -1,0 +1,1235 @@
+---
+/**
+ * Mi Caja — pagina del punto de venta, en /mi-caja/ igual que Ganova.
+ *
+ * Sustituye a la landing de mi-caja.geckcodex.com (repo C:\Web\Mi-Caja); ese
+ * sitio se redirige aqui con un 301 desde su propio `public/_redirects`.
+ *
+ * ── LA ESENCIA ──
+ * "Como Barbie" (usuario, 2026-11-07): la base es la muñeca y no cambia; las
+ * piezas son la ropa: se ponen, se quitan y se ajustan segun el negocio.
+ *
+ * ── EL DISEÑO (version 3, rehecha desde cero el 2026-11-07) ──
+ * El usuario rechazo el estilo suave, el "mostrador" brutalista y un retoque
+ * de piel ("cambia todo, que se note que ya no es lo mismo"). Esta version
+ * sale de sus dos referencias, deepbook-v2-wip.webflow.io y
+ * classe.squarespace.com:
+ *  - Portada a la classe: caja 3D al centro sobre plataforma isometrica, que
+ *    gira un cuarto de vuelta con cada negocio; boletos a los lados (el giro
+ *    y la pieza); titular gigante partido en dos.
+ *  - Franja de bloques de color a la deepbook para el "¿cuanto vendiste hoy?".
+ *  - "De fabrica" en dos paneles (azul + cuadricula): se toca una cosa de la
+ *    lista y la pantalla real cambia de seccion. NADA de seccion fija con
+ *    scroll: la rechazo dos veces.
+ *  - "Armalo tu" en panel oscuro; boletos horizontales; tarjetas oscuras con
+ *    bloques tipo Lego isometricos (SVG generado aqui); precio con letra
+ *    gigante partida; preguntas numeradas; pie con "Mi Caja" gigante.
+ * Paleta de la app intacta. Versiones anteriores respaldadas en
+ * D:\Programacion\respaldos\.
+ *
+ * ── LO QUE NO SE PROMETE ──
+ * SIN PRECIO (usuario): "contactanos o contacta a tu proveedor". Ni pago
+ * unico ni mensualidades. Las piezas por giro son el CONCEPTO; las que ya
+ * existen son fiado, apartados y vales. No se nombra a la clienta boutique.
+ * La palabra "Barbie" no va en la pagina.
+ *
+ * El motor (piezas, pantalla, palabra que cambia, caja, armalo) vive en
+ * `src/scripts/mi-caja.js`. Con movimiento reducido no hay vuelos ni giros.
+ * `chrome="product"`: nav y pie propios de esta pagina. SOLO EN ESPAÑOL.
+ */
+import Layout from '@/layouts/MainLayout.astro';
+import MiCajaPantalla from '@/components/productos/MiCajaPantalla.astro';
+import { BUSINESS, SITE_URL } from '@/data/seo';
+import { localizedPath } from '@/i18n/routes';
+
+const url = `${SITE_URL}/mi-caja/`;
+const img = (f: string) => `/assets/image/micaja/${f}`;
+
+const waCon = (texto: string) => `${BUSINESS.whatsapp}?text=${encodeURIComponent(texto)}`;
+const wa = waCon('Hola, tengo un negocio y quiero saber cómo quedaría Mi Caja para mí.');
+const waPrecio = waCon('Hola, ¿cuánto me sale Mi Caja para mi negocio? Vendo: ');
+const waMovil = waCon('Hola, me interesa Mi Caja Móvil para mi negocio. ¿Me pasan información?');
+
+const B = {
+  crema: '#EFECE6',
+  tarjeta: '#FCFBF8',
+  borde: '#E2DBD0',
+  bordeFuerte: '#C8C0B4',
+  texto: '#2A2520',
+  texto2: '#5E564D',
+  tenue: '#8C8379',
+  azul: '#2C4E7A',
+  azulHover: '#3A6498',
+  azulSuave: '#E8EDF5',
+  verde: '#2A6048',
+  verdeSuave: '#E8F5EE',
+  precio: '#8B6914',
+  precioFondo: '#FAF5E8',
+  rojo: '#8B2E2E',
+  rojoSuave: '#F5EAEA',
+  font: "'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  letrero: "'Faculty Glyphic', Georgia, serif",
+  mono: "'Geist Mono', ui-monospace, 'Cascadia Mono', monospace",
+  fontHref:
+    'https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Geist:wght@400..700&family=Geist+Mono:wght@500;600&display=swap',
+};
+
+const bodyStyle = [
+  `--pr-ink:${B.crema}`, `--pr-ink-deep:${B.borde}`, `--pr-surface:${B.tarjeta}`,
+  `--pr-line:${B.borde}`, `--pr-fg:${B.texto}`, `--pr-fg-dim:${B.texto2}`,
+  `--pr-fg-faint:${B.tenue}`, `--pr-accent:${B.azul}`, `--pr-on-accent:#FFFFFF`,
+  `--pr-font:${B.font}`,
+  `--mc-crema:${B.crema}`, `--mc-tarjeta:${B.tarjeta}`, `--mc-borde:${B.borde}`,
+  `--mc-borde2:${B.bordeFuerte}`, `--mc-texto:${B.texto}`, `--mc-texto2:${B.texto2}`,
+  `--mc-tenue:${B.tenue}`, `--mc-azul:${B.azul}`, `--mc-azul-h:${B.azulHover}`,
+  `--mc-azul-s:${B.azulSuave}`, `--mc-verde:${B.verde}`, `--mc-verde-s:${B.verdeSuave}`,
+  `--mc-precio:${B.precio}`, `--mc-precio-f:${B.precioFondo}`, `--mc-rojo:${B.rojo}`,
+  `--mc-rojo-s:${B.rojoSuave}`, `--mc-mono:${B.mono}`, `--mc-letrero:${B.letrero}`, `--mc-cuerpo:${B.font}`,
+  `background:${B.crema}`, `color:${B.texto}`,
+].join(';');
+
+/* ── Iconos de linea 24×24 para las piezas ── */
+const IC: Record<string, string> = {
+  libreta: 'M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6zM9 3v18M12 8h4M12 12h4',
+  lector: 'M3 7V5h4M17 5h4v2M21 17v2h-4M7 19H3v-2M7 9v6M10 9v6M13 9v6M16 9v6',
+  barras: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+  mesa: 'M3 9h18M5 9v10M19 9v10M8 9V6h8v3',
+  comanda: 'M7 3h10v18l-2.5-1.5L12 21l-2.5-1.5L7 21zM10 8h4M10 12h4',
+  bolsa: 'M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2',
+  etiqueta: 'M20 12l-8 8-9-9V3h8zM7.5 7.5h.01',
+  vale: 'M3 7h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4zM10 7v12',
+  playera: 'M8 3 3 7l3 3 2-1v12h8V9l2 1 3-3-5-4c-.5 1.5-2 2.5-4 2.5S8.5 4.5 8 3z',
+  reloj: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+  tijera: 'M6 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM6 15.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM8.2 7.2 20 18M8.2 16.8 20 6',
+  porciento: 'M7 4.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17 14.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM19 5 5 19',
+  metro: 'M3 8h18v8H3zM7 8v3M11 8v4M15 8v3M19 8v4',
+  hoja: 'M6 3h9l3 3v15H6zM9 10h6M9 14h6M9 18h3',
+  cajas: 'M3 13h8v8H3zM13 13h8v8h-8zM8 3h8v8H8z',
+  copias: 'M8 8h12v12H8zM4 16V4h12',
+  paquete: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10',
+  lista: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',
+  bascula: 'M12 3v18M6 21h12M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z',
+  cuchillo: 'M3 21 14 10l3 3-7 7zM14 10l5-5a2 2 0 0 1 3 3l-5 5',
+  cruz: 'M9 3h6v6h6v6h-6v6H9v-6H3V9h6z',
+  calendario: 'M4 6h16v15H4zM4 10h16M8 3v4M16 3v4',
+  propina: 'M12 3v18M16 7c0-1.7-1.8-3-4-3s-4 1.3-4 3 1.8 2.6 4 3 4 1.3 4 3-1.8 3-4 3-4-1.3-4-3',
+};
+
+type Pieza = { id: string; k: string; ic: string; g?: string };
+
+/* ── Lo que cada pieza le cambia a la pantalla de la app ──
+   Fiel a la app donde ya existe: Apartados y Vales meten su seccion en el menu
+   (despues de Venta) y su forma de pago; el fiado mete "Fiar" en la forma de
+   pago. Las demas son concepto y meten su seccion en el menu. */
+const MOD: Record<string, { menu?: [string, string]; pago?: string }> = {
+  fiado: { pago: 'Fiar' }, fiado2: { pago: 'Fiar' },
+  apartados: { menu: ['Apartados', 'etiqueta'], pago: 'Apartar' },
+  vales: { menu: ['Vales', 'vale'], pago: 'Vale' },
+  tallas: { menu: ['Tallas', 'playera'] }, talla: { menu: ['Tallas', 'playera'] },
+  pieza: { menu: ['Por pieza', 'paquete'] },
+  mesas: { menu: ['Mesas', 'mesa'] }, comandas: { menu: ['Comandas', 'comanda'] },
+  llevar: { menu: ['Llevar', 'bolsa'] }, propinas: { pago: 'Propina' },
+  citas: { menu: ['Citas', 'reloj'] }, servicios: { menu: ['Servicios', 'tijera'] },
+  comision: { menu: ['Comisión', 'porciento'] },
+  metro: { menu: ['Por metro', 'metro'] }, cotiza: { menu: ['Cotiza', 'hoja'] },
+  mayoreo: { menu: ['Mayoreo', 'cajas'], pago: 'Mayoreo' }, granel: { menu: ['Granel', 'bascula'] },
+  copias: { menu: ['Copias', 'copias'] }, paquete: { menu: ['Paquetes', 'paquete'] },
+  paquete2: { menu: ['Cajas', 'paquete'] }, listas: { menu: ['Listas', 'lista'] },
+  kilo: { menu: ['Báscula', 'bascula'] }, cortes: { menu: ['Cortes', 'cuchillo'] },
+  caduca: { menu: ['Caduca', 'calendario'] }, receta: { menu: ['Recetas', 'cruz'] },
+};
+const menuDe = (ids: string[]) => ids.filter((id) => MOD[id]?.menu).map((id) => ({ id, k: MOD[id].menu![0], d: IC[MOD[id].menu![1]] }));
+const pagosDe = (ids: string[]) => ids.filter((id) => MOD[id]?.pago).map((id) => ({ id, k: MOD[id].pago! }));
+
+/* ── Los giros de la portada: el concepto, una base y otra ropa ── */
+const giros: { id: string; t: string; c: string; piezas: Pieza[]; tk?: [string, number][] }[] = [
+  { id: 'tiendita', t: 'tiendita', c: B.azul, tk: [['2 Coca-Cola 600 ml', 44], ['1 Sabritas sal 45 g', 19], ['1 Huevo blanco kg', 48]], piezas: [
+    { id: 'fiado', k: 'Fiado', ic: 'libreta' },
+    { id: 'granel', k: 'A granel', ic: 'bascula' },
+    { id: 'mayoreo', k: 'Mayoreo', ic: 'cajas' },
+  ] },
+  { id: 'fonda', t: 'fonda', c: B.rojo, tk: [['2 Orden de enchiladas', 180], ['1 Agua de horchata 1 L', 35], ['3 Tortillas extra', 15]], piezas: [
+    { id: 'mesas', k: 'Mesas', ic: 'mesa' },
+    { id: 'comandas', k: 'Comandas', ic: 'comanda' },
+    { id: 'llevar', k: 'Para llevar', ic: 'bolsa' },
+  ] },
+  { id: 'boutique', t: 'boutique', c: B.verde, tk: [['1 Blusa beige M', 389], ['1 Jeans talla 30', 549], ['1 Cinto de piel', 250]], piezas: [
+    { id: 'apartados', k: 'Apartados', ic: 'etiqueta' },
+    { id: 'vales', k: 'Vales', ic: 'vale' },
+    { id: 'tallas', k: 'Tallas', ic: 'playera' },
+  ] },
+  { id: 'estetica', t: 'estética', c: B.precio, tk: [['1 Corte de dama', 180], ['1 Tinte de raíz', 450], ['1 Shampoo 400 ml', 120]], piezas: [
+    { id: 'citas', k: 'Citas', ic: 'reloj' },
+    { id: 'servicios', k: 'Servicios', ic: 'tijera' },
+    { id: 'comision', k: 'Comisiones', ic: 'porciento' },
+  ] },
+  { id: 'ferreteria', t: 'ferretería', c: B.azulHover, tk: [['2 Clavo 2½ pulgadas kg', 76], ['1 Cinta de aislar', 28], ['3 Foco LED 9 W', 135]], piezas: [
+    { id: 'metro', k: 'Por metro', ic: 'metro' },
+    { id: 'cotiza', k: 'Cotizaciones', ic: 'hoja' },
+    { id: 'mayoreo', k: 'Mayoreo', ic: 'cajas' },
+  ] },
+  { id: 'papeleria', t: 'papelería', c: B.verde, tk: [['20 Copias b/n', 20], ['1 Cuaderno profesional', 45], ['2 Lápiz del 2', 14]], piezas: [
+    { id: 'copias', k: 'Copias', ic: 'copias' },
+    { id: 'paquete', k: 'Pieza o paquete', ic: 'paquete' },
+    { id: 'listas', k: 'Listas escolares', ic: 'lista' },
+  ] },
+  { id: 'carniceria', t: 'carnicería', c: B.rojo, tk: [['1.5 Bistec de res kg', 285], ['1 Chorizo kg', 160], ['2 Tortilla kg', 44]], piezas: [
+    { id: 'kilo', k: 'Por kilo', ic: 'bascula' },
+    { id: 'cortes', k: 'Cortes', ic: 'cuchillo' },
+    { id: 'fiado2', k: 'Fiado', ic: 'libreta' },
+  ] },
+  { id: 'farmacia', t: 'farmacia', c: B.azul, tk: [['1 Paracetamol 500 mg', 38], ['1 Suero oral', 27], ['1 Curitas 20 pz', 35]], piezas: [
+    { id: 'caduca', k: 'Caducidades', ic: 'calendario' },
+    { id: 'receta', k: 'Con receta', ic: 'cruz' },
+    { id: 'paquete2', k: 'Pieza o caja', ic: 'paquete' },
+  ] },
+];
+
+const pesosG = (n: number) => '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const ticketDe = (g: (typeof giros)[number]) => ({
+  rows: (g.tk || []).map(([q, n]) => [q, pesosG(n)] as [string, string]),
+  total: pesosG((g.tk || []).reduce((acc, [, n]) => acc + n, 0)),
+});
+
+/* ── "Ármalo tú": la charola de piezas que el visitante encaja él mismo ──
+   Lo que arma se manda por WhatsApp ya escrito: es la cotización que hoy
+   no se publica. */
+const charola: (Pieza & { c: string })[] = [
+  { id: 'fiado', k: 'Fiado', ic: 'libreta', c: B.azul },
+  { id: 'apartados', k: 'Apartados', ic: 'etiqueta', c: B.verde },
+  { id: 'vales', k: 'Vales', ic: 'vale', c: B.verde },
+  { id: 'tallas', k: 'Tallas', ic: 'playera', c: B.verde },
+  { id: 'mesas', k: 'Mesas', ic: 'mesa', c: B.rojo },
+  { id: 'comandas', k: 'Comandas', ic: 'comanda', c: B.rojo },
+  { id: 'llevar', k: 'Para llevar', ic: 'bolsa', c: B.rojo },
+  { id: 'citas', k: 'Citas', ic: 'reloj', c: B.precio },
+  { id: 'kilo', k: 'Por kilo', ic: 'bascula', c: B.rojo },
+  { id: 'caduca', k: 'Caducidades', ic: 'calendario', c: B.azul },
+  { id: 'cotiza', k: 'Cotizaciones', ic: 'hoja', c: B.azulHover },
+  { id: 'mayoreo', k: 'Mayoreo', ic: 'cajas', c: B.azulHover },
+];
+
+const datos = {
+  wa: BUSINESS.whatsapp,
+  tickets: giros.map(ticketDe),
+  mod: MOD,
+  charola,
+  ic: IC,
+  giros,
+};
+
+/* El ticket del gancho: una venta de tiendita cualquiera. */
+const ticket = [
+  { q: 'Coca-Cola 600 ml', n: 2, p: 44 },
+  { q: 'Sabritas sal 45 g', n: 1, p: 19 },
+  { q: 'Huevo blanco kg', n: 1, p: 48 },
+  { q: 'Pan Bimbo grande', n: 1, p: 56 },
+];
+const total = ticket.reduce((s, r) => s + r.p, 0);
+const pesos = (n: number) => `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+/* La base: lo que trae para cualquier negocio. */
+const base = [
+  { k: 'Cobrar rápido', d: 'Pasas el producto por el lector y ya está en la cuenta. Cobras en efectivo o con tarjeta, y sale el ticket.', i: IC.lector },
+  { k: 'El corte del día', d: 'Con cuánto abriste, lo que entró, lo que salió y lo que debe haber en el cajón. Si falta, lo ves esa misma noche.', i: 'M4 6h16v12H4zM4 10h16M8 15h3' },
+  { k: 'Lo que se está acabando', d: 'Cada venta descuenta de tu mercancía. Lo que va quedando poco te sale en la lista antes de que te lo pidan y no haya.', i: IC.barras },
+  { k: 'Lo que vendiste y lo que te dejó', d: 'No nomás cuánto entró: cuánto te quedó después de lo que te costó la mercancía. Por día, por semana o por mes.', i: 'M3 17l6-6 4 4 8-8M15 7h6v6' },
+  { k: 'Tus clientes', d: 'Los que vuelven, con su nombre y lo que se han llevado.', i: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0' },
+];
+
+const equipo = ['Computadora con Windows', 'Impresora de tickets', 'Lector de código de barras', 'Cajón de dinero'];
+
+const faq = [
+  { q: '¿Cuánto cuesta Mi Caja?', a: 'Depende de las piezas que ocupe tu negocio. Escríbenos por WhatsApp y te decimos, o pregúntale a tu proveedor si alguien te lo ofreció.' },
+  { q: '¿Me sirve para mi negocio?', a: 'Si vendes en mostrador, sí. La base sirve para cualquier negocio que cobra, y lo que sea especial de tu giro se agrega como pieza. Si la pieza que ocupas todavía no existe, se arma para ti.' },
+  { q: '¿Qué piezas ya están hechas?', a: 'Además de la base, ya trabajan con clientes el fiado de la tiendita y los apartados y vales de la boutique. Las demás se arman según el negocio: cuéntanos cómo vendes.' },
+  { q: '¿En qué equipo funciona?', a: 'En la computadora del mostrador, con Windows, conectada a la impresora de tickets, el lector de código de barras y el cajón de dinero. Y con Mi Caja Móvil, en un teléfono o tablet Android. Por ahora no hay versión para iPhone.' },
+  { q: '¿Dónde se guardan mis ventas?', a: 'En tu computadora. Tus ventas, tu mercancía y tus clientes se quedan en tu equipo.' },
+  { q: '¿Quién me lo instala?', a: 'Nosotros o tu proveedor te lo dejamos instalado, con tu mercancía dada de alta, y te enseñamos a usarlo.' },
+];
+
+
+/* ── "De fábrica": cada cosa de la base abre su seccion en la pantalla ── */
+const fabrica = [
+  { vista: 'venta', k: 'Cobrar rápido', d: 'Pasas el producto por el lector y ya está en el ticket. Cobras en efectivo o con tarjeta y sale impreso.' },
+  { vista: 'caja', k: 'Abrir y cerrar la caja', d: 'Con cuánto empiezas, lo que entra y lo que sale. El turno queda apuntado solo.' },
+  { vista: 'corte', k: 'El corte del día', d: 'Lo que debe haber en el cajón contra lo que contaste. Si falta, lo sabes esa misma noche.' },
+  { vista: 'productos', k: 'Lo que se está acabando', d: 'Cada venta descuenta de tu mercancía. Lo que queda poco te sale marcado antes de que te lo pidan.' },
+  { vista: 'reportes', k: 'Lo que vendiste y lo que te dejó', d: 'Lo que vendiste, cuántos tickets, lo que más sale y cómo te pagan. Por día, por semana o por mes.' },
+  { vista: 'clientes', k: 'Tus clientes', d: 'Los que vuelven, con su nombre y lo que se han llevado.' },
+];
+
+/* ── Bloques tipo Lego en isometrico (SVG), como los de la referencia ──
+   Proyeccion isometrica simple; cada bloque pinta su tapa, sus dos costados
+   y sus botoncitos. Se ordenan de atras para adelante. */
+const TONOS: Record<string, [string, string, string]> = {
+  azul: ['#3A6498', '#2C4E7A', '#1E3A5F'],
+  verde: ['#3B7A5E', '#2A6048', '#1E4A36'],
+  dorado: ['#B08A2E', '#8B6914', '#6B500F'],
+  rojo: ['#A84040', '#8B2E2E', '#6B2222'],
+  crema: ['#FCFBF8', '#E2DBD0', '#C8C0B4'],
+  tinta: ['#6B635B', '#4A433C', '#2A2520'],
+};
+type Bloque = { x: number; y: number; z: number; w: number; d: number; h: number; t: keyof typeof TONOS; botones?: boolean };
+const ISO = 16;
+const pt = (x: number, y: number, z: number): [number, number] => [(x - y) * 0.866 * ISO, (x + y) * 0.5 * ISO - z * ISO];
+function isoSvg(bloques: Bloque[], pad = 10) {
+  const orden = [...bloques].sort((a, b) => (a.x + a.y + a.z) - (b.x + b.y + b.z));
+  const formas: { tipo: 'poly' | 'boton'; d: string; fill: string; cx?: number; cy?: number }[] = [];
+  const todos: [number, number][] = [];
+  for (const b of orden) {
+    const [c1, c2, c3] = TONOS[b.t];
+    const z1 = b.z + b.h;
+    const tapa = [pt(b.x, b.y, z1), pt(b.x + b.w, b.y, z1), pt(b.x + b.w, b.y + b.d, z1), pt(b.x, b.y + b.d, z1)];
+    const der = [pt(b.x + b.w, b.y, z1), pt(b.x + b.w, b.y + b.d, z1), pt(b.x + b.w, b.y + b.d, b.z), pt(b.x + b.w, b.y, b.z)];
+    const izq = [pt(b.x, b.y + b.d, z1), pt(b.x + b.w, b.y + b.d, z1), pt(b.x + b.w, b.y + b.d, b.z), pt(b.x, b.y + b.d, b.z)];
+    for (const [cara, fill] of [[izq, c3], [der, c2], [tapa, c1]] as [[number, number][], string][]) {
+      todos.push(...cara);
+      formas.push({ tipo: 'poly', d: cara.map((p) => p.map((n) => n.toFixed(1)).join(',')).join(' '), fill });
+    }
+    if (b.botones !== false) {
+      for (let i = 0; i < b.w; i++) for (let j = 0; j < b.d; j++) {
+        const [cx, cy] = pt(b.x + i + 0.5, b.y + j + 0.5, z1);
+        formas.push({ tipo: 'boton', d: '', fill: c1, cx, cy });
+      }
+    }
+  }
+  const xs = todos.map((p) => p[0]);
+  const ys = todos.map((p) => p[1]);
+  const minX = Math.min(...xs) - pad, minY = Math.min(...ys) - pad - 6;
+  const vb = `${minX.toFixed(0)} ${minY.toFixed(0)} ${(Math.max(...xs) - minX + pad).toFixed(0)} ${(Math.max(...ys) - minY + pad).toFixed(0)}`;
+  return { vb, formas };
+}
+const dibujoCero = isoSvg([
+  { x: 0, y: 0, z: 0, w: 2, d: 1, h: 1, t: 'rojo' },
+  { x: 3.4, y: -0.6, z: 0, w: 1, d: 2, h: 1, t: 'dorado' },
+  { x: 0.6, y: 2.4, z: 0, w: 2, d: 2, h: 1, t: 'verde' },
+  { x: 0.6, y: 2.4, z: 1, w: 1, d: 1, h: 1, t: 'azul' },
+  { x: 4, y: 2.6, z: 0, w: 1, d: 1, h: 1, t: 'tinta' },
+  { x: 2.8, y: 4.6, z: 0, w: 2, d: 1, h: 1, t: 'azul' },
+]);
+const dibujoBase = isoSvg([
+  { x: 0, y: 0, z: 0, w: 6, d: 6, h: 0.35, t: 'crema' },
+  { x: 0, y: 0, z: 0.35, w: 2, d: 2, h: 1, t: 'azul' },
+  { x: 3, y: 0, z: 0.35, w: 3, d: 2, h: 1, t: 'verde' },
+  { x: 0, y: 3, z: 0.35, w: 2, d: 3, h: 1, t: 'dorado' },
+  { x: 3, y: 3, z: 0.35, w: 2, d: 2, h: 1, t: 'rojo' },
+]);
+const dibujoPieza = isoSvg([
+  { x: 0, y: 0, z: 0, w: 5, d: 5, h: 0.35, t: 'crema' },
+  { x: 1.5, y: 1.5, z: 0.35, w: 2, d: 2, h: 1, t: 'tinta' },
+  { x: 1.5, y: 1.5, z: 3.2, w: 2, d: 2, h: 1, t: 'azul' },
+]);
+
+/* Capturas reales de la app (rediseño, base de DEMOSTRACION con una tiendita de
+   ejemplo, 2026-11-07). La base real de la clienta nunca se abrio: se aparto,
+   se uso una vacia y se regreso identica (SHA-256). El corte vive en Caja. */
+const capturas = [
+  { vista: 'venta', archivo: 'venta', alt: 'Pantalla de Venta de Mi Caja: buscador para escanear, favoritos con aviso de poco stock y el ticket con su total' },
+  { vista: 'caja', archivo: 'caja', alt: 'Pantalla de Caja: caja abierta, ventas de hoy, efectivo esperado en caja y un retiro registrado' },
+  { vista: 'corte', archivo: 'caja', alt: 'Caja con el efectivo esperado, el fondo inicial y el botón para cerrar caja y hacer el corte' },
+  { vista: 'productos', archivo: 'productos', alt: 'Pantalla de Productos: precios, margen y existencias, con las que se están acabando marcadas en rojo' },
+  { vista: 'reportes', archivo: 'reportes', alt: 'Pantalla de Reportes: lo vendido, tickets, ventas por hora, lo más vendido y cómo te pagan' },
+  { vista: 'clientes', archivo: 'clientes', alt: 'Pantalla de Clientes: lo que debe cada cliente y cuánto se le puede fiar' },
+];
+
+const g0 = giros[0];
+---
+
+<Layout
+  title="Mi Caja — Punto de Venta que se Arma como tu Negocio | Geck Codex"
+  description="Punto de venta para tiendas, fondas, boutiques, estéticas y negocios de mostrador en Chihuahua. Trae lo básico para cobrar y cerrar el día, y le pones solo las piezas que tu negocio ocupa."
+  ogTitle="Mi Caja — el punto de venta que se arma como tu negocio"
+  ogDescription="La misma base, vestida para tu negocio: le pones, le quitas y le ajustas piezas. Hecho por Geck Codex en Parral, Chihuahua."
+  image={`${SITE_URL}${img('og-micaja.jpg')}`}
+  canonical={url}
+  lang="es"
+  chrome="product"
+  bodyStyle={bodyStyle}
+  breadcrumbs={[{ name: 'Mi Caja', url }]}
+  schema={[
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${url}#app`,
+      name: 'Mi Caja',
+      applicationCategory: 'BusinessApplication',
+      applicationSubCategory: 'Punto de venta',
+      operatingSystem: 'Windows, Android',
+      url,
+      inLanguage: 'es-MX',
+      description:
+        'Punto de venta para negocios de mostrador: cobro con lector de códigos, corte de caja, control de mercancía, reportes de utilidad y clientes, con piezas que se agregan según el giro (fiado, apartados, vales).',
+      image: `${SITE_URL}${img('og-micaja.jpg')}`,
+      featureList: [...base.map((b) => b.k), 'Fiado', 'Apartados', 'Vales'],
+      publisher: { '@id': `${SITE_URL}/#organization` },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${url}#faq`,
+      mainEntity: faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ]}
+>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href={B.fontHref} />
+
+  <!-- ══ Nav propio: barra segmentada tipo boleto ══ -->
+  <header class="mx-nav" slot="chrome-top">
+    <nav class="mx-nav__barra" aria-label="Navegación de Mi Caja">
+      <a class="mx-nav__marca" href="/mi-caja/"><span class="mx-nav__logo" aria-hidden="true"></span>Mi Caja</a>
+      <a class="mx-nav__seg" href="#fabrica">De fábrica <small>01</small></a>
+      <a class="mx-nav__seg" href="#armalo">Ármalo <small>02</small></a>
+      <a class="mx-nav__seg" href="#precio">Precio <small>03</small></a>
+      <a class="mx-nav__seg" href="#preguntas">Preguntas <small>04</small></a>
+    </nav>
+    <a class="mx-pildora mx-pildora--azul mx-nav__cta" href={wa} data-lead="nav"><em class="mx-largo">Cuéntanos qué vendes</em><em class="mx-corto">Escríbenos</em><span aria-hidden="true">→</span></a>
+  </header>
+
+  <!-- ══ Pie propio: Mi Caja gigante ══ -->
+  <footer class="mx-pie" slot="chrome-bottom">
+    <div class="mx-in mx-pie__cols">
+      <div>
+        <p class="mx-pie__k">Mi Caja</p>
+        <p>El punto de venta que se arma como tu negocio. Un producto de Geck Codex, hecho en Hidalgo del Parral, Chihuahua.</p>
+      </div>
+      <div>
+        <p class="mx-pie__k">Contacto</p>
+        <a href={wa}>WhatsApp {BUSINESS.phoneDisplay}</a>
+        <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
+      </div>
+      <div>
+        <p class="mx-pie__k">Quién lo hace</p>
+        <a href="/">Geck Codex</a>
+        <a href={localizedPath('portfolio', 'es')}>Portafolio</a>
+        <a href={localizedPath('services', 'es')}>Desarrollo a medida</a>
+      </div>
+      <div>
+        <p class="mx-pie__k">Legal</p>
+        <a href={localizedPath('privacy', 'es')}>Aviso de Privacidad</a>
+        <a href={localizedPath('terms', 'es')}>Términos y Condiciones</a>
+      </div>
+    </div>
+    <p class="mx-pie__gigante" aria-hidden="true">Mi Caja</p>
+    <p class="mx-pie__legal">© {new Date().getFullYear()} Mi Caja · un producto de Geck Codex</p>
+  </footer>
+
+  <script is:inline>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('mc-anim');
+    }
+  </script>
+  <script type="application/json" id="mc-datos" set:html={JSON.stringify(datos)} />
+
+  <article class="mc mx">
+    <!-- ══ 1. Portada: la caja gira y se viste ══ -->
+    <section class="mx-hero" id="inicio" data-hero style={`--gc:${g0.c}`}>
+      <div class="mx-hero__escena">
+        <!-- Boleto izquierdo: el negocio -->
+        <div class="mx-hero__lado mx-hero__lado--izq">
+          <div class="mx-boleto mx-boleto--claro">
+            <span class="mx-boleto__k">punto de venta para tu</span>
+            <span class="mx-boleto__palabra"><span class="mc-sr">negocio</span><span class="mc-rot" aria-hidden="true" data-rot><span class="mc-rot__w">{g0.t}</span></span></span>
+          </div>
+          <p class="mx-hero__texto">Viene con lo básico para cobrar y cerrar el día. Lo demás son piezas: se ponen, se quitan y se ajustan.</p>
+          <a class="mx-pildora mx-pildora--tinta" href="#armalo">Ármalo tú<span aria-hidden="true">→</span></a>
+        </div>
+
+        <!-- Centro: la caja 3D sobre su plataforma y las piezas que caen -->
+        <div class="mx-hero__centro">
+          <div class="mx-escenario" aria-hidden="true">
+            <div class="mx-plataforma"></div>
+            <div class="mx-cubo" data-cubo style="--ry:0deg">
+              {[0, 1, 2, 3].map((k) => (
+                <div class={`mx-cubo__cara mx-cubo__cara--${k}`} data-cara={k}>
+                  <span class="mx-cubo__logo"></span>
+                  <b data-cara-giro>{giros[k].t}</b>
+                  <small>Mi Caja · punto de venta</small>
+                </div>
+              ))}
+              <div class="mx-cubo__tapa"></div>
+              <div class="mx-cubo__fondo"></div>
+            </div>
+          </div>
+          <div class="mc-maq mx-hero__piezas" data-maq="hero">
+            <div class="mc-riel mc-riel--3" data-slots>
+              {g0.piezas.map((p) => (
+                <div class="mc-slot">
+                  <div class="mc-tile" style={`--c:${g0.c}`} data-id={p.id}>
+                    <span class="mc-tile__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={IC[p.ic]} /></svg></span>
+                    <span class="mc-tile__k">{p.k}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Boleto derecho: la pieza -->
+        <div class="mx-hero__lado mx-hero__lado--der">
+          <div class="mx-boleto mx-boleto--oscuro">
+            <span class="mx-boleto__k">y le pones</span>
+            <span class="mx-boleto__palabra" data-pieza-rot>{g0.piezas[0].k}</span>
+          </div>
+          <p class="mx-hero__texto mx-hero__texto--der">La base no cambia.<br /><span>Las piezas, sí.</span></p>
+          <div class="mx-chips" role="group" aria-label="Ver cómo queda para otro negocio">
+            {giros.map((g, i) => (
+              <button type="button" class="mx-chip" data-giro={i} aria-pressed={i === 0 ? 'true' : 'false'} style={`--c:${g.c}`}>{g.t}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <h1 class="mx-hero__h1">
+        <span>Tu punto de venta,</span>
+        <span>armado como tu negocio.</span>
+      </h1>
+    </section>
+
+    <!-- ══ 2. ¿Cuánto vendiste hoy? Franja de bloques ══ -->
+    <section class="mx-gancho">
+      <div class="mx-in mx-sube">
+        <p class="mx-gancho__q">¿Cuánto vendiste hoy?</p>
+        <p class="mx-gancho__a">Y no me digas “pues lo que hay en el cajón”.</p>
+      </div>
+      <div class="mx-franja">
+        <div class="mx-bloque mx-bloque--azul mx-sube" style="--i:0"><b>¿Ya no hay?</b><span>Lo que se acabó lo sabes cuando te lo piden.</span></div>
+        <div class="mx-bloque mx-bloque--tinta mx-sube" style="--i:1"><b>–$50</b><span>El cajón nunca cuadra y no sabes por qué.</span></div>
+        <div class="mx-bloque mx-bloque--gris mx-sube" style="--i:2"><b>¿Como cuánto?</b><span>Lo que te dejó la semana, a ojo.</span></div>
+        <div class="mx-bloque mx-bloque--blanco mx-sube" style="--i:3"><b>Mi Caja</b><span>Lo cobra, lo cuenta y te lo dice.</span></div>
+      </div>
+    </section>
+
+    <!-- ══ 3. De fábrica: dos paneles; se toca y la pantalla cambia ══ -->
+    <section class="mx-sec" id="fabrica">
+      <div class="mx-in mx-split" data-fabrica>
+        <div class="mx-panel mx-panel--azul">
+          <span class="mx-mas mx-mas--a" aria-hidden="true">+</span><span class="mx-mas mx-mas--b" aria-hidden="true">+</span>
+          <span class="mx-mas mx-mas--c" aria-hidden="true">+</span><span class="mx-mas mx-mas--d" aria-hidden="true">+</span>
+          <p class="mx-etiqueta mx-etiqueta--claro">De fábrica</p>
+          <h2>Lo que trae puesto desde el primer día.</h2>
+          <ol class="mx-lista">
+            {fabrica.map((f, i) => (
+              <li>
+                <button type="button" class="mx-lista__btn" data-ver={f.vista} aria-pressed={i === 0 ? 'true' : 'false'}>
+                  <span class="mx-lista__n">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="mx-lista__k">{f.k}</span>
+                </button>
+                <p class="mx-lista__d">{f.d}</p>
+              </li>
+            ))}
+          </ol>
+          <div class="mx-pager" aria-hidden="true">{fabrica.map((_, i) => <i data-pag={i}></i>)}</div>
+        </div>
+        <div class="mx-panel mx-panel--puntos">
+          <figure class="mx-monitor" data-capturas>
+            <div class="mx-monitor__barra" aria-hidden="true"><i></i><i></i><i></i><span>Mi Caja · Abarrotes La Esquina</span></div>
+            <div class="mx-monitor__pantalla">
+              {capturas.map((c, i) => (
+                <img class={i === 0 ? 'is-activa' : ''} data-vista={c.vista} src={img(`app/${c.archivo}.webp`)} alt={c.alt} width="1200" height="682" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              ))}
+            </div>
+            <figcaption>Capturas reales de Mi Caja, con una tiendita de ejemplo.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 3b. Mi Caja Móvil: también en el teléfono ══ -->
+    <section class="mx-sec mx-movil" id="movil">
+      <div class="mx-in mx-movil__in">
+        <div class="mx-movil__txt mx-sube">
+          <p class="mx-etiqueta">Mi Caja Móvil</p>
+          <h2>También en el teléfono.</h2>
+          <p class="mx-movil__lead">Tu punto de venta también cabe en el teléfono o la tablet, para cobrar donde esté el cliente sin amarrarte al mostrador.</p>
+          <ul class="mx-movil__lista">
+            <li><b>La misma idea, en tu mano.</b> Lo que vendes y lo que te dejó, contigo.</li>
+            <li><b>¿Ya está para tu negocio?</b> Pregúntanos y te decimos.</li>
+          </ul>
+          <a class="mx-pildora mx-pildora--azul" href={waMovil} data-lead="movil">Pregunta por Mi Caja Móvil<span aria-hidden="true">→</span></a>
+        </div>
+        <div class="mx-movil__telefonos" aria-label="Capturas reales de Mi Caja Móvil">
+          <figure class="mx-tel mx-tel--atras mx-sube" style="--i:1">
+            <div class="mx-tel__marco">
+              <div class="mx-tel__estado" aria-hidden="true"><span>9:35</span><i></i><span>▮▮▮ 84%</span></div>
+              <img src={img('app/movil-productos.webp')} width="526" height="1054" loading="lazy" decoding="async" alt="Mi Caja Móvil: alta de un producto nuevo con nombre, código de barras con lector de cámara, precio, costo, unidad y control de inventario" />
+            </div>
+          </figure>
+          <figure class="mx-tel mx-tel--frente mx-sube" style="--i:0">
+            <div class="mx-tel__marco">
+              <div class="mx-tel__estado" aria-hidden="true"><span>4:15</span><i></i><span>▮▮▮ 26%</span></div>
+              <img src={img('app/movil-caja.webp')} width="522" height="1082" loading="lazy" decoding="async" alt="Mi Caja Móvil: caja abierta con fondo de apertura, ingresos, retiros, botones de ingreso, retiro, cajón y cerrar caja, y los movimientos del turno" />
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 4. Ármalo tú: panel oscuro ══ -->
+    <section class="mx-sec mx-oscuro" id="armalo" data-juega>
+      <div class="mx-in">
+        <header class="mx-cabeza mx-sube">
+          <p class="mx-etiqueta mx-etiqueta--claro">Ármalo tú</p>
+          <h2>Vístelo como tu negocio.</h2>
+          <p>Toca hasta seis piezas y mira cómo cambia tu punto de venta. Si te equivocas, tócala otra vez y se quita.</p>
+        </header>
+        <div class="mx-juega">
+          <div class="mc-maq mc-maq--juega" data-maq="juega">
+            <MiCajaPantalla giro="el tuyo" venta="$0.00" ticket={[]} />
+            <div class="mc-riel mc-riel--6" data-slots>
+              <div class="mc-slot"></div><div class="mc-slot"></div><div class="mc-slot"></div><div class="mc-slot"></div><div class="mc-slot"></div><div class="mc-slot"></div>
+            </div>
+            <p class="mc-juega__aviso" data-aviso role="status" aria-live="polite">Toca una pieza de la charola.</p>
+          </div>
+          <div class="mx-charola">
+            <p class="mx-etiqueta">La charola</p>
+            <ul class="mx-charola__lista">
+              {charola.map((p) => (
+                <li>
+                  <button type="button" class="mx-ficha" data-pieza={p.id} aria-pressed="false" style={`--c:${p.c}`}>
+                    <span class="mx-ficha__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={IC[p.ic]} /></svg></span>
+                    {p.k}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <a class="mx-pildora mx-pildora--azul mx-pildora--ancha" href={wa} data-wa-armado data-lead="armalo">Mándanos tu armado por WhatsApp<span aria-hidden="true">→</span></a>
+            <p class="mx-charola__nota">Te contestamos qué piezas ya están hechas y cuáles se arman para ti.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 5. Piezas que ya trabajan: boletos horizontales ══ -->
+    <section class="mx-sec">
+      <div class="mx-in">
+        <header class="mx-cabeza mx-sube">
+          <p class="mx-etiqueta">Piezas que ya trabajan</p>
+          <h2>Así se ven en un mostrador de verdad.</h2>
+        </header>
+        <div class="mx-boletos">
+          {[
+            { c: B.azul, k: 'Fiado', dice: '“Ahí me lo apuntas, el viernes te pago.”', d: 'Cada cliente con su cuenta: lo que se llevó y lo que debe. Se acabó la libreta de las deudas.', ej: [['Doña Mary', '$340.00'], ['Don Beto', '$85.50']] },
+            { c: B.verde, k: 'Apartados', dice: '“¿Me lo apartas? En la quincena paso.”', d: 'El papelito pegado en la bolsa se vuelve un apartado con nombre y fecha, y te dice cuántos días lleva esperando.', ej: [['Blusa beige · Karla', 'Hace 3 días'], ['Botas café · Lupita', 'Hace 12 días']] },
+            { c: B.precio, k: 'Vales', dice: '“¿Me la cambias por otra talla?”', d: 'Si cambia la prenda y no se lleva otra, queda su vale con su nombre. No depende de que tú te acuerdes.', ej: [['Vale de Sofía', '$450.00'], ['Vale de Mariana', '$280.00']] },
+          ].map((b, i) => (
+            <article class="mx-boletote mx-sube" style={`--c:${b.c};--i:${i}`}>
+              <div class="mx-boletote__talon">
+                <span class="mx-boletote__n">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{b.k}</h3>
+                <p>{b.dice}</p>
+              </div>
+              <div class="mx-boletote__cuerpo">
+                <p>{b.d}</p>
+                <ul>{b.ej.map(([a, v]) => <li><span>{a}</span><b>{v}</b></li>)}</ul>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 6. Desde cero contra Mi Caja: tarjetas oscuras con bloques ══ -->
+    <section class="mx-sec">
+      <div class="mx-in">
+        <header class="mx-cabeza mx-sube">
+          <p class="mx-etiqueta">Por qué así</p>
+          <h2>Más barato que hecho a la medida desde cero.</h2>
+        </header>
+        <div class="mx-duo">
+          <article class="mx-tarjeta mx-sube">
+            <h3>Desde cero</h3>
+            <svg class="mx-iso" viewBox={dibujoCero.vb} aria-hidden="true">
+              {dibujoCero.formas.map((f) => f.tipo === 'poly'
+                ? <polygon points={f.d} fill={f.fill} />
+                : <g><ellipse cx={f.cx} cy={f.cy! - 1} rx="5" ry="2.9" fill={f.fill} /></g>)}
+            </svg>
+            <ul class="mx-renglones">
+              <li>Como pedirle a la costurera un vestido desde la tela.</li>
+              <li>Queda a tu medida, pero pagas cada puntada.</li>
+              <li>Y esperas semanas antes de vender con él.</li>
+            </ul>
+          </article>
+          <article class="mx-tarjeta mx-tarjeta--mc mx-sube" style="--i:1">
+            <h3>Mi Caja</h3>
+            <svg class="mx-iso" viewBox={dibujoBase.vb} aria-hidden="true">
+              {dibujoBase.formas.map((f) => f.tipo === 'poly'
+                ? <polygon points={f.d} fill={f.fill} />
+                : <g><ellipse cx={f.cx} cy={f.cy! - 1} rx="5" ry="2.9" fill={f.fill} /></g>)}
+            </svg>
+            <ul class="mx-renglones">
+              <li>Es comprar el vestido hecho y mandarlo ajustar.</li>
+              <li>Lo que sirve a todos ya está; nada más se ajusta lo tuyo.</li>
+              <li>Funciona con tu {equipo.map((e) => e.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' y $1')}.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 7. Precio: letra gigante partida ══ -->
+    <section class="mx-precio" id="precio">
+      <div class="mx-in">
+        <p class="mx-etiqueta mx-sube">Precio</p>
+        <h2 class="mx-precio__h">
+          <span>¿Cuánto cuesta?</span>
+          <span>Depende de tus piezas.</span>
+        </h2>
+        <div class="mx-precio__pie mx-sube">
+          <p>Escríbenos y te decimos cuánto queda con lo que tu negocio ocupa. O pregúntale a tu proveedor, si alguien te lo ofreció.</p>
+          <div class="mx-botones">
+            <a class="mx-pildora mx-pildora--azul" href={waPrecio} data-lead="precio">Pregúntanos por WhatsApp<span aria-hidden="true">→</span></a>
+            <a class="mx-pildora mx-pildora--clara" href={localizedPath('contact', 'es')}>Escríbenos<span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 8. Preguntas: carpeta + panel oscuro numerado ══ -->
+    <section class="mx-sec" id="preguntas">
+      <div class="mx-in mx-faq">
+        <aside class="mx-carpeta mx-sube">
+          <span class="mx-carpeta__pestana" aria-hidden="true"></span>
+          <p class="mx-etiqueta mx-etiqueta--claro">Preguntas</p>
+          <h2>Lo que más nos preguntan.</h2>
+          <svg class="mx-iso mx-iso--chico" viewBox={dibujoPieza.vb} aria-hidden="true">
+            {dibujoPieza.formas.map((f) => f.tipo === 'poly'
+              ? <polygon points={f.d} fill={f.fill} />
+              : <g><ellipse cx={f.cx} cy={f.cy! - 1} rx="5" ry="2.9" fill={f.fill} /></g>)}
+          </svg>
+          <a class="mx-pildora mx-pildora--clara" href={wa} data-lead="preguntas">¿Otra duda? Escríbenos<span aria-hidden="true">→</span></a>
+        </aside>
+        <div class="mx-faq__panel">
+          {faq.map((f, i) => (
+            <details class="mx-faq__item">
+              <summary><span class="mx-faq__n">{String(i + 1).padStart(2, '0').split('').map((d) => <i>{d}</i>)}</span>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 9. Cierre ══ -->
+    <section class="mx-cierre">
+      <div class="mx-in mx-sube">
+        <p class="mx-cierre__frase">
+          Toda tu <span class="mc-sr">negocio</span><span class="mc-rot" aria-hidden="true" data-rot><span class="mc-rot__w">{g0.t}</span></span> cabe en Mi&nbsp;Caja.<br />
+          <span class="mx-cierre__dos">Pieza por pieza.</span>
+        </p>
+        <a class="mx-pildora mx-pildora--azul" href={wa} data-lead="cierre">Cuéntanos qué vendes y qué llevas a ojo<span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </article>
+
+  <script>
+    import '../scripts/mi-caja.js';
+  </script>
+</Layout>
+
+<style>
+  /* ── Base de la pagina ── */
+  /* Las variables van tambien en el nav y el pie: viven fuera del <article>. */
+  .mx, .mx-nav, .mx-pie {
+    --tinta: #2A2520;
+    --linea: 1.5px solid var(--tinta);
+    --fondo: #F4F1EB;
+  }
+  .mx {
+    font-family: var(--mc-cuerpo);
+    color: var(--tinta);
+    background: var(--fondo);
+    overflow-x: clip;
+  }
+  .mx-in { width: min(1200px, 100% - 2.5rem); margin-inline: auto; }
+  .mc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .mx h2 { font-family: var(--mc-letrero); font-weight: 400; font-size: clamp(2.2rem, 1.3rem + 3vw, 3.8rem); line-height: 1.02; letter-spacing: -0.03em; margin: 0 0 1rem; color: inherit; }
+  .mx h3 { margin: 0; }
+  .mx p { margin: 0; line-height: 1.6; }
+  .mx-sec { padding: clamp(4.5rem, 9vw, 7.5rem) 0; }
+  .mx-cabeza { max-width: 44rem; margin-bottom: 3rem; }
+  .mx-cabeza > p:not(.mx-etiqueta) { font-size: 1.1rem; color: #57504A; }
+
+  /* Etiqueta con cuadrito */
+  .mx-etiqueta {
+    display: inline-flex; align-items: center; gap: 0.55rem; margin-bottom: 1rem !important;
+    font-family: var(--mc-mono); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: #57504A;
+  }
+  .mx-etiqueta::before { content: ''; width: 8px; height: 8px; background: var(--mc-azul); }
+  .mx-etiqueta--claro { color: rgb(255 255 255 / 0.8); }
+  .mx-etiqueta--claro::before { background: #fff; }
+
+  /* Pildoras con flecha en circulo */
+  .mx-pildora {
+    display: inline-flex; align-items: center; gap: 0.9rem; min-height: 50px; padding: 0 0.4rem 0 1.4rem;
+    border-radius: 999px; border: var(--linea); box-shadow: 3px 4px 0 var(--tinta);
+    font-weight: 600; font-size: 0.98rem; text-decoration: none; white-space: nowrap;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .mx-pildora span {
+    display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
+    border: var(--linea); background: #fff; color: var(--tinta); transition: transform 0.25s;
+  }
+  .mx-pildora:hover { transform: translate(-1px, -1px); box-shadow: 4px 5px 0 var(--tinta); }
+  .mx-pildora:hover span { transform: rotate(-35deg); }
+  .mx-pildora:active { transform: translate(3px, 4px); box-shadow: none; }
+  .mx-pildora:focus-visible { outline: 3px solid var(--mc-azul-h); outline-offset: 3px; }
+  .mx-pildora--azul { background: var(--mc-azul); color: #fff; }
+  .mx-pildora--azul span { background: #E8EDF5; }
+  .mx-pildora--tinta { background: var(--tinta); color: #fff; }
+  .mx-pildora--clara { background: #fff; color: var(--tinta); }
+  .mx-pildora--ancha { width: 100%; justify-content: space-between; white-space: normal; text-align: left; }
+
+  /* ── Nav: barra segmentada tipo boleto ── */
+  .mx-nav {
+    position: fixed; top: 14px; left: 0; right: 0; z-index: 50;
+    display: flex; justify-content: center; align-items: center; gap: 14px; padding: 0 1rem; pointer-events: none;
+    font-family: var(--mc-cuerpo);
+  }
+  .mx-nav > * { pointer-events: auto; }
+  .mx-nav__barra {
+    display: flex; background: #F7E9E9; background: #E8EDF5; border: var(--linea); border-radius: 14px;
+    box-shadow: 0 10px 30px -14px rgb(42 37 32 / 0.4);
+  }
+  .mx-nav__barra > a { position: relative; display: flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.5rem; color: var(--tinta); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+  .mx-nav__barra > a + a { border-left: var(--linea); }
+  .mx-nav__barra > a + a::before, .mx-nav__barra > a + a::after {
+    content: ''; position: absolute; left: -7px; width: 12px; height: 12px; border-radius: 50%; background: var(--fondo, #F4F1EB); border: var(--linea);
+  }
+  .mx-nav__barra > a + a::before { top: -7px; clip-path: inset(50% 0 0 0); }
+  .mx-nav__barra > a + a::after { bottom: -7px; clip-path: inset(0 0 50% 0); }
+  .mx-nav__barra small { font-family: var(--mc-mono); font-size: 0.65rem; color: #8C8379; font-weight: 500; }
+  .mx-nav__marca { white-space: nowrap; font-family: var(--mc-letrero); font-weight: 400 !important; font-size: 1.25rem !important; padding-right: 2rem !important; }
+  .mx-nav__logo { width: 26px; height: 26px; border-radius: 7px; background: var(--mc-azul); -webkit-mask: url('/assets/image/micaja/marca.webp') center / contain no-repeat; mask: url('/assets/image/micaja/marca.webp') center / contain no-repeat; }
+  .mx-nav__seg:hover { background: rgb(255 255 255 / 0.6); }
+  .mx-nav__cta { min-height: 48px; }
+
+  /* ── 1. Portada ── */
+  .mx-hero { position: relative; padding: 120px 0 2.5rem; min-height: 100vh; display: grid; align-content: space-between; }
+  .mx-hero__escena { width: min(1280px, 100% - 2.5rem); margin-inline: auto; display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 2rem; align-items: center; }
+  /* Los dos lados arrancan a la misma altura: los boletos quedan parejos
+     aunque la columna derecha traiga los botones de negocio debajo. */
+  .mx-hero__lado { display: grid; gap: 1.25rem; align-content: start; align-self: start; padding-top: clamp(1.5rem, 5vh, 4rem); }
+  .mx-hero__lado--der { justify-items: end; text-align: right; }
+  .mx-hero__texto { font-size: 1.05rem; color: #57504A; max-width: 22rem; }
+  .mx-hero__texto--der { font-family: var(--mc-letrero); font-size: 1.6rem; line-height: 1.15; color: var(--tinta); }
+  .mx-hero__texto--der span { color: var(--gc); transition: color 0.5s; }
+
+  /* Boletos con muescas */
+  .mx-boleto {
+    position: relative; display: grid; gap: 0.1rem; padding: 0.9rem 1.6rem 1rem 2.4rem; min-width: 15rem;
+    border: var(--linea); border-radius: 14px; box-shadow: 4px 5px 0 var(--tinta);
+  }
+  .mx-boleto::before, .mx-boleto::after {
+    content: ''; position: absolute; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%;
+    background: var(--fondo); border: var(--linea);
+  }
+  .mx-boleto::before { left: -12px; clip-path: inset(0 0 0 50%); }
+  .mx-boleto::after { right: -12px; clip-path: inset(0 50% 0 0); }
+  .mx-boleto--claro { background: color-mix(in srgb, var(--gc) 22%, #fff); transition: background-color 0.5s; }
+  .mx-boleto--oscuro { background: var(--tinta); color: #fff; padding: 0.9rem 2.4rem 1rem 1.6rem; text-align: right; }
+  .mx-boleto__k { font-size: 0.82rem; opacity: 0.75; }
+  .mx-boleto__palabra { display: block; height: 1.3em; font-family: var(--mc-letrero); font-size: clamp(2.6rem, 1.6rem + 2.6vw, 4rem); line-height: 1.3; letter-spacing: -0.03em; white-space: nowrap; }
+
+  /* La palabra que cambia (motor en mi-caja.js) */
+  /* Alto con lugar para las colitas (q, p, g) y el texto bien sentado. */
+  .mc-rot { position: relative; display: inline-block; vertical-align: bottom; height: 1.3em; line-height: 1.3; overflow: hidden; white-space: nowrap; transition: width 0.55s cubic-bezier(0.65, 0, 0.35, 1); }
+  .mc-rot :global(.mc-rot__w) { display: inline-block; }
+  .mc-rot :global(.mc-rot__w--abs) { position: absolute; left: 0; top: 0; }
+  .mc-rot :global(.mc-l) { display: inline-block; white-space: pre; }
+
+  /* Caja 3D sobre su plataforma */
+  .mx-hero__centro { position: relative; display: grid; justify-items: center; }
+  .mx-escenario { position: relative; width: 100%; height: 400px; display: grid; place-items: center; perspective: 1400px; }
+  .mx-plataforma {
+    position: absolute; left: 4%; right: 4%; aspect-ratio: 1; top: 50%;
+    transform: translateY(-38%) scaleY(0.5) rotate(45deg);
+    background-color: #DCE5F1; background-image: radial-gradient(rgb(44 78 122 / 0.35) 1.3px, transparent 1.7px); background-size: 18px 18px;
+    border: var(--linea); border-radius: 22px;
+    box-shadow: 14px 14px 0 var(--gc), 14px 14px 0 1.5px var(--tinta);
+    transition: box-shadow 0.6s;
+  }
+  .mx-cubo {
+    --t: 110px; position: relative; width: calc(var(--t) * 2); height: calc(var(--t) * 2); margin-top: -60px;
+    transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(calc(var(--ry) - 40deg));
+    transition: transform 1s cubic-bezier(0.5, 1.4, 0.5, 1);
+  }
+  .mx-cubo__cara, .mx-cubo__tapa, .mx-cubo__fondo {
+    position: absolute; inset: 0; border: 2px solid var(--tinta); border-radius: 14px; backface-visibility: hidden;
+  }
+  .mx-cubo__cara {
+    display: grid; align-content: center; justify-items: center; gap: 0.35rem; padding: 1rem; text-align: center;
+    background: #FCFBF8;
+    background-image: linear-gradient(transparent calc(100% - 34px), rgb(44 78 122 / 0.08) 0);
+  }
+  .mx-cubo__cara--0 { transform: rotateY(0deg) translateZ(var(--t)); }
+  .mx-cubo__cara--1 { transform: rotateY(90deg) translateZ(var(--t)); }
+  .mx-cubo__cara--2 { transform: rotateY(180deg) translateZ(var(--t)); }
+  .mx-cubo__cara--3 { transform: rotateY(270deg) translateZ(var(--t)); }
+  .mx-cubo__cara b { font-family: var(--mc-letrero); font-weight: 400; font-size: 2rem; line-height: 1; letter-spacing: -0.02em; color: var(--tinta); }
+  .mx-cubo__cara small { font-family: var(--mc-mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: #8C8379; }
+  .mx-cubo__logo { width: 52px; height: 52px; border-radius: 12px; background: var(--mc-azul); -webkit-mask: url('/assets/image/micaja/marca.webp') center / contain no-repeat; mask: url('/assets/image/micaja/marca.webp') center / contain no-repeat; }
+  .mx-cubo__tapa { transform: rotateX(90deg) translateZ(var(--t)); background: var(--gc); transition: background-color 0.6s; background-image: radial-gradient(rgb(255 255 255 / 0.35) 1.4px, transparent 1.8px); background-size: 20px 20px; }
+  .mx-cubo__fondo { transform: rotateX(-90deg) translateZ(var(--t)); background: var(--tinta); }
+
+  /* Marco de las capturas reales en "De fábrica" */
+  .mx-monitor { width: min(620px, 100%); margin: 0; }
+  .mx-monitor__barra {
+    display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #FCFBF8;
+    border: var(--linea); border-bottom: 0; border-radius: 12px 12px 0 0; font-size: 0.75rem; color: #57504A;
+  }
+  .mx-monitor__barra i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--tinta); }
+  .mx-monitor__barra i:nth-child(1) { background: #8B2E2E; } .mx-monitor__barra i:nth-child(2) { background: #8B6914; } .mx-monitor__barra i:nth-child(3) { background: #2A6048; }
+  .mx-monitor__barra span { margin-left: 0.5rem; font-family: var(--mc-mono); }
+  .mx-monitor__pantalla {
+    position: relative; aspect-ratio: 1200 / 682; overflow: hidden; background: #EFECE6;
+    border: var(--linea); border-radius: 0 0 12px 12px; box-shadow: 7px 8px 0 #000;
+  }
+  .mx-monitor__pantalla img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.02); transition: opacity 0.45s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+  .mx-monitor__pantalla img.is-activa { opacity: 1; transform: none; }
+  .mx-monitor figcaption { margin-top: 1rem; font-size: 0.8rem; color: rgb(255 255 255 / 0.6); text-align: center; font-family: var(--mc-mono); }
+
+  /* Las piezas que caen frente a la caja */
+  .mx-hero__piezas { width: min(420px, 100%); margin-top: -40px; position: relative; z-index: 2; }
+
+  .mx-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; max-width: 22rem; }
+  .mx-chip {
+    font: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; min-height: 36px; padding: 0 0.85rem;
+    border-radius: 999px; border: var(--linea); background: #fff; color: var(--tinta); transition: background-color 0.25s, color 0.25s;
+  }
+  .mx-chip:hover { background: color-mix(in srgb, var(--c) 15%, #fff); }
+  .mx-chip[aria-pressed='true'] { background: var(--c); color: #fff; box-shadow: 2px 3px 0 var(--tinta); }
+  .mx-chip:focus-visible { outline: 3px solid var(--mc-azul-h); outline-offset: 2px; }
+
+  .mx-hero__h1 {
+    width: min(1280px, 100% - 2.5rem); margin: 2.5rem auto 0; display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
+    font-family: var(--mc-letrero); font-weight: 400; font-size: clamp(2.4rem, 1rem + 4.4vw, 5.6rem); line-height: 0.98; letter-spacing: -0.035em; color: var(--tinta);
+  }
+  .mx-hero__h1 span:last-child { text-align: right; color: var(--mc-azul); }
+
+  /* ── Piezas tipo Lego (las que crea el motor) ── */
+  .mc-maq { display: grid; gap: 14px; }
+  .mc-riel { display: grid; gap: 10px; }
+  .mc-riel--3 { grid-template-columns: repeat(3, 1fr); }
+  .mc-riel--6 { grid-template-columns: repeat(3, 1fr); }
+  .mc-slot { position: relative; min-height: 96px; border-radius: 12px; border: 1.5px dashed rgb(42 37 32 / 0.35); background: rgb(255 255 255 / 0.5); perspective: 600px; }
+  .mc-maq :global(.mc-tile) {
+    position: absolute; inset: -1px; border-radius: 12px; display: grid; align-content: center; justify-items: center; gap: 7px; padding: 10px 6px; text-align: center;
+    background: color-mix(in srgb, var(--c) 16%, #fff); border: var(--linea);
+    box-shadow: 0 6px 0 var(--c), 0 6px 0 1.5px var(--tinta);
+    transform-origin: 50% 0; backface-visibility: hidden;
+  }
+  .mc-maq :global(.mc-tile::before) {
+    content: ''; position: absolute; top: -9px; left: 50%; translate: -50% 0; width: 36px; height: 9px;
+    background: radial-gradient(ellipse 6px 4px at 9px 6px, var(--c) 0 5px, transparent 5.5px), radial-gradient(ellipse 6px 4px at 27px 6px, var(--c) 0 5px, transparent 5.5px);
+    filter: drop-shadow(0 0 0.6px var(--tinta)) drop-shadow(0 0 0.6px var(--tinta));
+  }
+  .mc-maq :global(.mc-tile__ic) { width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center; background: var(--c); }
+  .mc-maq :global(.mc-tile__ic svg) { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .mc-maq :global(.mc-tile__k) { font-size: 0.8rem; font-weight: 650; line-height: 1.2; color: var(--tinta); }
+  .mc-maq :global(.mc-tile.is-quitando) { --c: #8B2E2E; }
+  .mc-maq :global(.mc-tile.is-quitando::after) { content: '✕'; position: absolute; top: 6px; right: 8px; font-weight: 700; color: #8B2E2E; }
+  .mc-maq--juega :global(.mc-tile) { cursor: pointer; }
+
+  /* La pantalla de la app, con su marco */
+  .mx :global(.mc-app) { border: var(--linea); border-radius: 14px; box-shadow: 6px 7px 0 var(--tinta); }
+  .mx :global(.mc-app__lado) { border-radius: 12px 0 0 12px; }
+  .mx :global(.mc-app__lado::after) { border-radius: 0 0 0 12px; }
+
+  /* ── 2. Gancho: franja de bloques ── */
+  .mx-gancho { padding: clamp(5rem, 10vw, 8rem) 0 0; text-align: center; border-top: var(--linea); background: #FCFBF8; }
+  .mx-gancho__q { font-family: var(--mc-letrero); font-size: clamp(2.8rem, 1.2rem + 6vw, 7rem); line-height: 0.95; letter-spacing: -0.04em; }
+  .mx-gancho__a { font-size: 1.2rem; color: #57504A; margin-top: 1rem !important; }
+  .mx-franja { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: clamp(3rem, 6vw, 5rem); border-top: var(--linea); }
+  .mx-bloque { position: relative; display: grid; align-content: space-between; gap: 3rem; min-height: 15rem; padding: 1.6rem 1.5rem; text-align: left; }
+  .mx-bloque + .mx-bloque { border-left: var(--linea); }
+  .mx-bloque b { font-family: var(--mc-letrero); font-weight: 400; font-size: clamp(2rem, 1.2rem + 2vw, 3.2rem); line-height: 1; letter-spacing: -0.03em; }
+  .mx-bloque span { font-weight: 600; font-size: 0.98rem; padding-right: 1.5rem; }
+  .mx-bloque::after { content: ''; position: absolute; right: 1.2rem; bottom: 1.5rem; width: 8px; height: 8px; background: currentColor; }
+  .mx-bloque--azul { background: var(--mc-azul); color: #fff; }
+  .mx-bloque--tinta { background: var(--tinta); color: #fff; }
+  .mx-bloque--gris { background: #8C8379; color: #fff; }
+  .mx-bloque--blanco { background: #fff; color: var(--mc-azul); }
+
+  /* ── 3. De fábrica: dos paneles ── */
+  .mx-split { display: grid; grid-template-columns: 1fr 1fr; border: var(--linea); }
+  .mx-panel { position: relative; padding: clamp(2rem, 4vw, 3.5rem); }
+  .mx-panel--azul { background: var(--mc-azul); color: #fff; }
+  .mx-panel--azul h2 { font-size: clamp(2rem, 1.2rem + 2.4vw, 3.2rem); }
+  .mx-panel--puntos {
+    border-left: var(--linea); display: grid; place-items: center;
+    background: var(--tinta); background-image: radial-gradient(rgb(255 255 255 / 0.28) 1.2px, transparent 1.6px); background-size: 46px 46px;
+  }
+  .mx-mas { position: absolute; font-family: var(--mc-mono); font-size: 1.1rem; line-height: 1; color: rgb(255 255 255 / 0.7); }
+  .mx-mas--a { top: 14px; left: 16px; } .mx-mas--b { top: 14px; right: 16px; }
+  .mx-mas--c { bottom: 14px; left: 16px; } .mx-mas--d { bottom: 14px; right: 16px; }
+  .mx-lista { list-style: none; padding: 0; margin: 1.5rem 0 1.75rem; display: grid; gap: 4px; }
+  .mx-lista__btn {
+    width: 100%; display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0.9rem; border-radius: 10px;
+    font: inherit; font-size: 1.05rem; font-weight: 600; text-align: left; color: rgb(255 255 255 / 0.75); cursor: pointer;
+    background: transparent; border: 1.5px solid transparent; transition: background-color 0.25s, color 0.25s;
+  }
+  .mx-lista__btn:hover { background: rgb(255 255 255 / 0.08); color: #fff; }
+  .mx-lista__btn[aria-pressed='true'] { background: #fff; color: var(--mc-azul); border-color: var(--tinta); box-shadow: 3px 4px 0 var(--tinta); }
+  .mx-lista__btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  .mx-lista__n { font-family: var(--mc-mono); font-size: 0.8rem; opacity: 0.7; }
+  .mx-lista__d { max-height: 0; overflow: hidden; padding: 0 0.9rem 0 3.2rem; color: #E8EDF5; font-size: 0.95rem; transition: max-height 0.4s, padding 0.4s; }
+  .mx-lista__btn[aria-pressed='true'] + .mx-lista__d { max-height: 6rem; padding: 0.6rem 0.9rem 0.4rem 3.2rem; }
+  .mx-pager { display: inline-flex; gap: 6px; padding: 8px 10px; border-radius: 6px; background: rgb(255 255 255 / 0.12); }
+  .mx-pager i { width: 6px; height: 6px; background: rgb(255 255 255 / 0.45); transition: width 0.3s, background-color 0.3s; }
+  .mx-pager i.is-activo { width: 36px; background: #fff; }
+  .mx-fabrica__maq { width: min(500px, 100%); }
+
+  /* ── 4. Ármalo tú: panel oscuro ── */
+  .mx-oscuro { background: var(--tinta); color: #fff; }
+  .mx-oscuro .mx-cabeza > p:not(.mx-etiqueta) { color: #D9D2C6; }
+  .mx-juega { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .mx-oscuro .mc-slot { border-color: rgb(255 255 255 / 0.3); background: rgb(255 255 255 / 0.04); }
+  .mx-oscuro .mc-maq :global(.mc-tile) { border-color: #fff; box-shadow: 0 6px 0 var(--c), 0 6px 0 1.5px #fff; }
+  .mx-oscuro :global(.mc-app) { border-color: #fff; box-shadow: 6px 7px 0 #000; }
+  .mc-juega__aviso { font-size: 0.92rem; text-align: center; color: #D9D2C6; min-height: 1.5em; }
+  .mx-charola { background: #FCFBF8; color: var(--tinta); border: var(--linea); border-radius: 20px; padding: 1.5rem; box-shadow: 6px 7px 0 #000; }
+  .mx-charola__lista { list-style: none; padding: 0; margin: 0 0 1.25rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.55rem; }
+  .mx-ficha {
+    width: 100%; display: flex; align-items: center; gap: 0.6rem; min-height: 50px; cursor: pointer;
+    font: inherit; font-size: 0.92rem; font-weight: 600; text-align: left; color: var(--tinta);
+    padding: 0.45rem 0.7rem 0.45rem 0.45rem; border-radius: 12px; border: var(--linea); background: #fff;
+    box-shadow: 0 4px 0 var(--tinta); transition: transform 0.15s, box-shadow 0.15s, opacity 0.25s;
+  }
+  .mx-ficha:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--tinta); }
+  .mx-ficha:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--tinta); }
+  .mx-ficha:focus-visible { outline: 3px solid var(--mc-azul-h); outline-offset: 2px; }
+  .mx-ficha[aria-pressed='true'] { opacity: 0.4; border-style: dashed; box-shadow: none; transform: translateY(4px); }
+  .mx-ficha__ic { flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: var(--c); }
+  .mx-ficha__ic svg { width: 19px; height: 19px; fill: none; stroke: #fff; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .mx-charola__nota { font-size: 0.85rem; text-align: center; margin-top: 0.7rem !important; color: #57504A; }
+
+  /* ── 5. Boletos horizontales ── */
+  .mx-boletos { display: grid; gap: 1.5rem; max-width: 980px; }
+  .mx-boletote { position: relative; display: grid; grid-template-columns: 0.9fr 1.1fr; border: var(--linea); border-radius: 18px; background: #FCFBF8; box-shadow: 5px 6px 0 var(--tinta); }
+  .mx-boletote:nth-child(2) { margin-left: clamp(0rem, 6vw, 5rem); }
+  .mx-boletote:nth-child(3) { margin-left: clamp(0rem, 12vw, 10rem); }
+  .mx-boletote__talon { position: relative; padding: 1.6rem 1.8rem; background: var(--c); color: #fff; border-radius: 16px 0 0 16px; display: grid; gap: 0.4rem; align-content: start; }
+  .mx-boletote__talon::after {
+    content: ''; position: absolute; top: 10px; bottom: 10px; right: -1px; border-right: 2px dashed rgb(42 37 32 / 0.55);
+  }
+  .mx-boletote::before, .mx-boletote::after {
+    content: ''; position: absolute; left: calc(45% - 12px); width: 24px; height: 24px; border-radius: 50%; background: var(--fondo); border: var(--linea); z-index: 1;
+  }
+  .mx-boletote::before { top: -13px; clip-path: inset(50% 0 0 0); }
+  .mx-boletote::after { bottom: -13px; clip-path: inset(0 0 50% 0); }
+  .mx-boletote__n { font-family: var(--mc-mono); font-size: 0.75rem; opacity: 0.8; }
+  .mx-boletote h3 { font-family: var(--mc-letrero); font-weight: 400; font-size: clamp(2.4rem, 1.6rem + 2vw, 3.4rem); line-height: 1; letter-spacing: -0.03em; }
+  .mx-boletote__talon p { font-style: italic; opacity: 0.92; }
+  .mx-boletote__cuerpo { padding: 1.6rem 1.8rem; display: grid; gap: 1rem; align-content: center; }
+  .mx-boletote__cuerpo > p { color: #57504A; }
+  .mx-boletote__cuerpo ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.45rem; }
+  .mx-boletote__cuerpo li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid rgb(42 37 32 / 0.15); background: #fff; font-size: 0.92rem; }
+  .mx-boletote__cuerpo b { font-family: var(--mc-mono); color: var(--c); white-space: nowrap; }
+
+  /* ── 6. Tarjetas oscuras con bloques ── */
+  .mx-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .mx-tarjeta { position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 1rem; padding: 1.75rem; border-radius: 6px; background: #1F1C19; color: #fff; min-height: 30rem; }
+  .mx-tarjeta h3 { font-family: var(--mc-letrero); font-weight: 400; font-size: clamp(2.4rem, 1.6rem + 2.4vw, 3.6rem); letter-spacing: -0.03em; line-height: 1; }
+  .mx-tarjeta--mc { background: var(--mc-azul); }
+  .mx-iso { width: min(300px, 80%); justify-self: center; align-self: center; overflow: visible; }
+  .mx-iso polygon, .mx-iso ellipse { stroke: var(--tinta); stroke-width: 1.3; stroke-linejoin: round; }
+  .mx-tarjeta .mx-iso polygon, .mx-tarjeta .mx-iso ellipse { stroke: #000; }
+  .mx-iso--chico { width: min(200px, 70%); }
+  .mx-renglones { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  .mx-renglones li { display: flex; gap: 0.8rem; align-items: baseline; padding: 0.9rem 1rem; background: rgb(0 0 0 / 0.35); border-radius: 4px; font-size: 0.98rem; }
+  .mx-renglones li::before { content: ''; flex: none; width: 9px; height: 9px; background: #fff; translate: 0 -1px; }
+  .mx-tarjeta:not(.mx-tarjeta--mc) .mx-renglones li::before { background: var(--mc-azul-h); }
+
+  /* ── 7. Precio: letra gigante partida ── */
+  .mx-precio { padding: clamp(5rem, 10vw, 8rem) 0; border-block: var(--linea); background: #FCFBF8; }
+  .mx-precio__h { display: grid; gap: 0.3rem; font-size: clamp(2.8rem, 1rem + 6vw, 7.5rem) !important; line-height: 0.95 !important; letter-spacing: -0.04em !important; }
+  .mx-precio__h span:last-child { text-align: right; color: var(--mc-azul); }
+  .mx-precio__pie { display: flex; justify-content: space-between; align-items: center; gap: 2rem; margin-top: 2.5rem; flex-wrap: wrap; }
+  .mx-precio__pie p { max-width: 30rem; font-size: 1.1rem; color: #57504A; }
+  .mx-botones { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  /* ── 8. Preguntas ── */
+  .mx-faq { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 1.5rem; align-items: start; }
+  .mx-carpeta {
+    position: relative; margin-top: 34px; padding: 2rem; border: var(--linea); border-radius: 0 18px 18px 18px;
+    background: var(--mc-azul); color: #fff; box-shadow: 5px 6px 0 var(--tinta); display: grid; gap: 1.25rem; justify-items: start;
+  }
+  .mx-carpeta__pestana {
+    position: absolute; top: -34px; left: -1.5px; width: 44%; height: 34px; background: var(--mc-azul);
+    border: var(--linea); border-bottom: 0; border-radius: 14px 14px 0 0;
+  }
+  .mx-carpeta h2 { margin: 0; }
+  .mx-carpeta .mx-iso { justify-self: center; }
+  .mx-faq__panel { display: grid; gap: 0.6rem; padding: 0.9rem; border-radius: 22px; background: var(--tinta); box-shadow: 5px 6px 0 rgb(42 37 32 / 0.3); }
+  .mx-faq__item { border-radius: 14px; background: #3A3530; color: #F4F1EB; }
+  .mx-faq__item summary { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.1rem; cursor: pointer; list-style: none; font-weight: 500; font-size: 1.05rem; }
+  .mx-faq__item summary::-webkit-details-marker { display: none; }
+  .mx-faq__item summary::after { content: '+'; margin-left: auto; font-size: 1.4rem; line-height: 1; }
+  .mx-faq__item[open] summary::after { content: '–'; }
+  .mx-faq__item summary:focus-visible { outline: 3px solid #fff; outline-offset: 2px; border-radius: 14px; }
+  .mx-faq__n { display: inline-flex; gap: 3px; flex: none; }
+  .mx-faq__n i { display: grid; place-items: center; width: 26px; height: 32px; border-radius: 5px; background: var(--tinta); border: 1px solid #57504A; font-style: normal; font-family: var(--mc-mono); font-size: 1rem; }
+  .mx-faq__item p { margin: 0 1.1rem 1.1rem !important; padding: 0.9rem 1rem; border-radius: 10px; background: #FCFBF8; color: var(--tinta); }
+
+  /* ── 9. Cierre ── */
+  .mx-cierre { padding: clamp(5rem, 10vw, 8rem) 0; text-align: center; background: var(--mc-azul); color: #fff; border-top: var(--linea); }
+  .mx-cierre__frase { font-family: var(--mc-letrero); font-size: clamp(2.4rem, 1.2rem + 4.5vw, 5rem); line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 2.5rem !important; }
+  .mx-cierre .mx-pildora { white-space: normal; }
+  .mx-cierre .mc-rot { vertical-align: -0.25em; height: 1.3em; line-height: 1.3; }
+  .mx-cierre__dos { color: #E3B23C; }
+
+  /* ── Pie con Mi Caja gigante ── */
+  .mx-pie { background: var(--tinta); color: #F4F1EB; padding: 4rem 0 1.5rem; overflow: hidden; font-family: var(--mc-cuerpo); }
+  .mx-pie__cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2rem; }
+  .mx-pie__cols > div { display: grid; gap: 0.5rem; align-content: start; }
+  .mx-pie__cols p { margin: 0; color: #B8B0A4; line-height: 1.6; max-width: 22rem; }
+  .mx-pie__cols a { color: #F4F1EB; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(244 241 235 / 0.4); }
+  .mx-pie__cols a:hover { text-decoration-color: currentColor; }
+  .mx-pie__k { font-weight: 600; color: #fff !important; }
+  .mx-pie__gigante { margin: 2.5rem 0 0; font-family: var(--mc-letrero); font-size: clamp(5rem, 22vw, 22rem); line-height: 0.85; letter-spacing: -0.05em; text-align: center; color: #F4F1EB; white-space: nowrap; }
+  .mx-pie__legal { margin: 1rem auto 0; width: min(1200px, 100% - 2.5rem); font-size: 0.82rem; color: #8C8379; }
+
+  /* ── Entradas al hacer scroll ── */
+  :global(html.mc-anim) .mx-sube { opacity: 0; transform: translateY(26px); transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(var(--i, 0) * 80ms); }
+  :global(html.mc-anim) .mx-sube.is-in { opacity: 1; transform: none; }
+
+  /* ── Telefono y tableta ── */
+  @media (max-width: 1080px) {
+    .mx-nav__barra > .mx-nav__seg { display: none; }
+    .mx-nav__barra { border-radius: 999px; }
+    .mx-nav__marca { padding: 0.6rem 1.1rem !important; }
+    .mx-hero { min-height: 0; }
+    .mx-hero__escena { grid-template-columns: 1fr 1fr; }
+    .mx-hero__centro { grid-column: 1 / -1; order: -1; }
+    .mx-hero__lado--der { justify-items: end; }
+  }
+  @media (max-width: 900px) {
+    .mx-split, .mx-juega, .mx-duo, .mx-faq { grid-template-columns: 1fr; }
+    .mx-panel--puntos { border-left: 0; border-top: var(--linea); }
+    .mx-franja { grid-template-columns: 1fr 1fr; }
+    .mx-bloque:nth-child(3) { border-left: 0; }
+    .mx-bloque:nth-child(n+3) { border-top: var(--linea); }
+    .mx-boletote, .mx-boletote:nth-child(2), .mx-boletote:nth-child(3) { margin-left: 0; }
+    .mx-pie__cols { grid-template-columns: 1fr 1fr; }
+    .mc-maq--juega { position: sticky; top: 76px; z-index: 3; background: var(--tinta); padding: 0.5rem 0 0.25rem; }
+    .mc-maq--juega :global(.mc-app__main) { min-height: 200px; }
+    .mc-maq--juega :global(.mc-app__vista[data-vista="venta"] .mc-app__ticket) { display: none; }
+    .mc-maq--juega .mc-riel--6 { grid-template-columns: repeat(6, 1fr); gap: 5px; }
+    .mc-maq--juega .mc-slot { min-height: 64px; }
+    .mc-maq--juega :global(.mc-tile) { padding: 6px 2px; gap: 3px; }
+    .mc-maq--juega :global(.mc-tile__ic) { width: 28px; height: 28px; }
+    .mc-maq--juega :global(.mc-tile__k) { font-size: 0.5rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+  @media (max-width: 640px) {
+    .mx-nav__cta { font-size: 0.8rem; padding-left: 0.9rem; gap: 0.5rem; white-space: nowrap; min-height: 44px; }
+    .mx-nav__cta span { width: 32px; height: 32px; }
+    .mx-nav { gap: 8px; padding: 0 0.6rem; }
+    .mx-hero { padding-top: 96px; }
+    .mx-hero__escena { grid-template-columns: 1fr; gap: 1.5rem; }
+    .mx-hero__lado--der { justify-items: start; text-align: left; }
+    .mx-boleto--oscuro { text-align: left; padding: 0.9rem 1.6rem 1rem 2.4rem; }
+    .mx-chips { justify-content: flex-start; }
+    .mx-escenario { height: 300px; }
+    .mx-cubo { --t: 80px; margin-top: -40px; }
+    .mx-cubo__cara b { font-size: 1.4rem; }
+    .mx-cubo__logo { width: 36px; height: 36px; }
+    .mx-cubo__cara b { font-size: 0.8rem; }
+    .mx-hero__h1 { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+    .mx-hero__h1 span:last-child { text-align: left; }
+    .mx-precio__h span:last-child { text-align: left; }
+    .mx-boletote { grid-template-columns: 1fr; }
+    .mx-boletote__talon { border-radius: 16px 16px 0 0; }
+    .mx-boletote__talon::after { top: auto; bottom: -1px; left: 10px; right: 10px; border-right: 0; border-bottom: 2px dashed rgb(42 37 32 / 0.55); }
+    .mx-boletote::before, .mx-boletote::after { display: none; }
+    .mx-pildora { white-space: normal; }
+    .mx-pie__cols { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mx-pildora, .mx-pildora span, .mx-cubo, .mx-ficha, .mc-rot { transition: none; }
+    .mx-pildora:hover { transform: none; }
+  }
+
+  /* ── Ajustes de celular y tableta (revision 2026-11-07) ── */
+  .mx-pildora em { font-style: normal; }
+  .mx-corto { display: none; }
+  .mx-cierre__frase { text-wrap: balance; }
+  @media (max-width: 900px) {
+    /* De fábrica: la pantalla va arriba y se queda a la vista mientras se
+       tocan los puntos de la lista, como la base de "Ármalo tú". */
+    .mx-panel--puntos {
+      order: -1; position: sticky; top: 74px; z-index: 2; align-self: start;
+      border-top: 0; border-bottom: var(--linea); padding: 0.9rem;
+    }
+    .mx-monitor { width: min(520px, 100%); margin-inline: auto; }
+    .mx-monitor figcaption { display: none; }
+    .mx-monitor__pantalla { box-shadow: 4px 5px 0 #000; }
+    .mx-lista__btn[aria-pressed='true'] + .mx-lista__d { max-height: 12rem; }
+  }
+  @media (max-width: 640px) {
+    .mx-largo { display: none; }
+    .mx-corto { display: inline; }
+    .mx-hero { padding-top: 112px; }
+    .mx-escenario { margin-top: 0.5rem; }
+    .mx-hero__lado .mx-boleto { width: 100%; min-width: 0; }
+    .mx-hero__texto--der { font-size: 1.35rem; }
+    .mx-nav__marca { font-size: 1.1rem !important; }
+    .mx-cubo__cara small { font-size: 0.45rem; }
+    .mx-cubo__cara { gap: 0.2rem; }
+  }
+  .mx-monitor__barra span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── Mi Caja Móvil ── */
+  .mx-movil { background: #FCFBF8; border-block: var(--linea); overflow: hidden; }
+  .mx-movil__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .mx-movil__lead { font-size: 1.15rem; color: #57504A; margin-bottom: 1.5rem !important; max-width: 32rem; }
+  .mx-movil__lista { list-style: none; padding: 0; margin: 0 0 2rem; display: grid; gap: 0.6rem; max-width: 32rem; }
+  .mx-movil__lista li { display: block; padding: 0.85rem 1rem 0.85rem 2.1rem; position: relative; border: var(--linea); border-radius: 12px; background: #fff; line-height: 1.5; color: #57504A; }
+  .mx-movil__lista li::before { content: ''; position: absolute; left: 1rem; top: 1.35rem; width: 9px; height: 9px; background: var(--mc-azul); }
+  .mx-movil__lista li:last-child { background: color-mix(in srgb, var(--mc-precio) 10%, #fff); }
+  .mx-movil__lista li:last-child::before { background: var(--mc-precio); }
+  .mx-movil__lista b { color: var(--tinta); }
+
+  .mx-movil__telefonos { position: relative; height: 560px; }
+  .mx-movil__telefonos::before {
+    /* La misma plataforma isometrica de la portada, debajo de los telefonos */
+    content: ''; position: absolute; left: 6%; right: 6%; aspect-ratio: 1; top: 50%;
+    transform: translateY(-30%) scaleY(0.45) rotate(45deg);
+    background-color: #DCE5F1; background-image: radial-gradient(rgb(44 78 122 / 0.35) 1.3px, transparent 1.7px); background-size: 18px 18px;
+    border: var(--linea); border-radius: 22px; box-shadow: 12px 12px 0 var(--mc-azul), 12px 12px 0 1.5px var(--tinta);
+  }
+  .mx-tel { position: absolute; margin: 0; width: 230px; }
+  .mx-tel--frente { left: 18%; top: 4%; z-index: 2; --giro: -6deg; }
+  .mx-tel--atras { right: 12%; top: 12%; z-index: 1; --giro: 7deg; }
+  .mx-tel__marco { transform: rotate(var(--giro, 0deg)); transition: transform 0.5s cubic-bezier(0.3, 1.4, 0.5, 1); }
+  .mx-tel__marco {
+    position: relative; overflow: hidden; border-radius: 30px; background: #1B1916;
+    border: 7px solid #1B1916; outline: var(--linea); box-shadow: 8px 10px 0 var(--tinta);
+  }
+  .mx-tel__estado {
+    display: flex; align-items: center; justify-content: space-between; height: 24px; padding: 0 14px;
+    background: #24467A; color: #fff; font-size: 0.6rem; font-weight: 600; font-family: var(--mc-cuerpo);
+  }
+  .mx-tel__estado i { width: 9px; height: 9px; border-radius: 50%; background: #0D0C0A; box-shadow: 0 0 0 2px #1B1916; }
+  .mx-tel__marco img { display: block; width: 100%; height: auto; }
+  :global(html.mc-anim) .mx-tel.mx-sube.is-in { transition-duration: 0.9s; }
+  @media (hover: hover) {
+    .mx-movil__telefonos:hover .mx-tel--frente .mx-tel__marco { transform: rotate(-9deg) translate(-14px, -8px); }
+    .mx-movil__telefonos:hover .mx-tel--atras .mx-tel__marco { transform: rotate(10deg) translate(14px, 6px); }
+  }
+  @media (max-width: 900px) {
+    .mx-movil__in { grid-template-columns: 1fr; }
+    .mx-movil__telefonos { height: 480px; max-width: 440px; width: 100%; margin-inline: auto; }
+    .mx-tel { width: 172px; }
+    .mx-tel--frente { left: 6%; }
+    .mx-tel--atras { right: 8%; }
+  }
+  @media (max-width: 380px) {
+    .mx-movil__telefonos { height: 420px; }
+    .mx-tel { width: 160px; }
+  }
+</style>

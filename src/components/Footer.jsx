@@ -157,6 +157,8 @@ export default function GeckFooter({ lang, pageKey }) {
                   traduce. Es el enlace interno que la saca de depender del
                   sitemap, igual que el del blog. */}
               <li><a href="/ganova/">Ganova</a></li>
+              {/* Mi Caja, igual que Ganova: pagina propia en /mi-caja/, solo en español. */}
+              <li><a href="/mi-caja/">Mi Caja</a></li>
               <li><a href={localizedPath("about", lang)}>{t.nav.about}</a></li>
               {/* El blog va SIN localizedPath porque solo existe en español y no
                   está en SLUGS —ver src/i18n/blog.js—. Y va aquí, no solo en el

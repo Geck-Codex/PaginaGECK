@@ -65,7 +65,7 @@ Gobierno Municipal de Hidalgo del Parral, Restaurante Las Chikis, Capital Transp
 - **Chuchulucos** — Landing de alta conversión para marca de botanas artesanales picosas.
 - **Agend-In** — Automatización de citas vía Telegram con asistente virtual personalizable y sitio propio; integración con WhatsApp en desarrollo.
 - **LandingKit** — Plantilla profesional para publicar landings de alta conversión con secciones prearmadas.
-- **Mi Caja POS** — Punto de venta accesible para abarrotes, carnicerías y negocios de mostrador, con versión de escritorio y app móvil.
+- **Mi Caja** — Punto de venta para tiendas, boutiques y negocios de mostrador que se arma como el negocio: trae lo básico (cobro con lector, corte del día, mercancía que se acaba, lo que vendiste y lo que te dejó, clientes) y se le agregan piezas según el giro (fiado, apartados, vales). Precio según las piezas: se cotiza con Geck Codex o con el proveedor. Página: https://geckcodex.com/mi-caja/
 - **Mi Caja Restaurante** — La versión de Mi Caja para restaurantes y fondas: mesas, zonas, comandas a cocina, para llevar y a domicilio, en computadora y en el celular del mesero.
 - **Plantilla Inmobiliaria** — Plantilla para inmobiliarias: fichas de propiedades, galería, formulario y mapa.
 - **Handlove** — Sitio para distribuidor mayorista de guantes de seguridad industrial, con catálogo y solicitudes de cotización.

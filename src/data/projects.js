@@ -56,7 +56,7 @@ export const PROJECTS_STATIC = [
          ffmpeg -i <crudo> -vf "crop=1250:600:0:87,
            pad=1250:782:0:91:0xFFFFFF,scale=1440:900" -an -crf 29 */
     device: 'tablet', video: '/assets/video/bot-seguiar.mp4', videoPoster: '/assets/image/portafolio/bot-seguiar-poster.webp' },
-  { id: 6,  cat: 'landing',  title: 'Mi Caja POS',           tech: ['Astro', 'React', 'Tailwind CSS'],                                   link: 'https://mi-caja.geckcodex.com/',            gradient: 'linear-gradient(145deg, #1c1917 0%, #92400e 45%, #d97706 100%)', image: '/assets/image/portafolio/micaja.webp', cardImage: '/assets/image/portafolio/mi-caja.webp',
+  { id: 6,  cat: 'landing',  title: 'Mi Caja POS',           tech: ['Astro', 'React', 'Tailwind CSS'],                                   page: '/mi-caja/',          gradient: 'linear-gradient(145deg, #1c1917 0%, #92400e 45%, #d97706 100%)', image: '/assets/image/portafolio/micaja.webp', cardImage: '/assets/image/portafolio/mi-caja.webp',
     gallery: ['/assets/image/portafolio/micaja-movil-1.webp', '/assets/image/portafolio/micaja-movil-2.webp', '/assets/image/portafolio/micaja-movil-3.webp'] },
   { id: 25, cat: 'webapp',   title: 'Mi Caja Restaurante',   tech: ['React', 'Node.js', 'PostgreSQL', 'Flutter'],                                                                          gradient: 'linear-gradient(145deg, #0c1e3c 0%, #14532d 45%, #0B1D33 100%)', image: '/assets/image/portafolio/micaja-res.webp', cardFit: 'contain', cardBg: '#D4D4CC',
     gallery: ['/assets/image/portafolio/micaja-res-1.webp', '/assets/image/portafolio/micaja-res-3.webp', '/assets/image/portafolio/micaja-res-2.webp'] },

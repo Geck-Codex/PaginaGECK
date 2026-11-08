@@ -216,7 +216,7 @@ export const translations = {
         presets: { restaurante: 'Restaurante', retail: 'Retail', citas: 'Con cita', fidelidad: 'Fidelización' },
         modules: {
           menu: 'Menú Digital', crm: 'CRM', cita: 'Agend-In',
-          pos: 'Mi Caja POS', nuki: 'Nuki Lealtad', nfc: 'NFC Reseñas',
+          pos: 'Mi Caja', nuki: 'Nuki Lealtad', nfc: 'NFC Reseñas',
         },
         links: {
           'pos-menu':  'El pedido del menú entra directo a la caja',
@@ -411,8 +411,8 @@ export const translations = {
         2:  { tagline: 'Citas Automáticas vía Telegram',       desc: 'Automatización completa de citas vía Telegram, con sitio web propio. Gestión de clientes, historial de agendas y personalidad del asistente virtual personalizable según tu marca. La integración con WhatsApp está en desarrollo.' },
         3:  { tagline: 'Plantilla Pro para Landings',          desc: 'Plantilla profesional para crear landings de alta conversión. Diseño moderno, rápido y completamente personalizable con secciones pre-construidas listas para usar.',
             shots: ['Sección "Lo que hacemos": el trabajo del negocio contado con fotos y no con párrafos', 'Quiénes somos: años en el mercado, clientes y satisfacción puestos como números grandes', 'Contacto: dirección, horario, teléfono y mapa, con el botón de WhatsApp siempre a la vista']  },
-        6:  { tagline: 'POS Bueno, Bonito y Barato',           desc: 'Punto de venta moderno y accesible para abarrotes, carnicerías y negocios de mostrador. Viene en dos versiones que comparten la misma información: la de escritorio para la caja del negocio y la app móvil para cobrar desde el celular. La versión para computadora va de 1,000 a 1,500 pesos.',
-            shots: ['El punto de venta completo abierto en el celular: salón, venta, caja, productos y reportes', 'Corte de caja: fondo de apertura, ingresos, retiros y cada movimiento del turno con su motivo', 'Alta de producto en segundos: nombre, código de barras, precio, costo y control de inventario']  },
+        6:  { tagline: 'El Punto de Venta que se Arma como tu Negocio', desc: 'Una base para cobrar, hacer el corte y cuidar la mercancía, y piezas que se agregan según el giro: el fiado de la tiendita, las mesas del restaurante. Hoy trabaja en abarrotes y restaurantes, en la computadora del mostrador y en el teléfono.',
+            shots: ['La pantalla de venta: escaneas, cobras y sale el ticket', 'Reportes: lo que vendiste, lo que más sale y cómo te pagan', 'Mi Caja Móvil: la caja abierta en el teléfono, con sus ingresos y retiros'] },
         7:  { tagline: 'Gestión de Flotilla a la Medida',      desc: 'Aplicación móvil desarrollada a la medida para la gestión integral de flotillas vehiculares. Rastreo en tiempo real, control de documentos, estados de unidades y comunicación directa con operadores.' },
         9:  { tagline: 'Gestión Completa de Gimnasio',         desc: 'Plataforma web a la medida para la gestión completa de un gimnasio. Administración de usuarios, asignación de rutinas personalizadas, seguimiento de progreso y control de membresías.' },
         11: { tagline: 'Gafetes Gubernamentales en Segundos',  desc: 'Aplicación web para la elaboración de gafetes gubernamentales. Reduce drásticamente el tiempo de producción de credenciales que antes se creaban a mano, con plantillas, base de datos de empleados y generación de PDF automatizada.' },
@@ -427,8 +427,6 @@ export const translations = {
         23: { tagline: 'Landings para Inmobiliarias',          desc: 'Plantilla lista para publicar landings de inmobiliarias: fichas de propiedades, galería de fotos, formulario de contacto y mapa de ubicación. Permite lanzar el sitio de una agencia en días en vez de meses.',
             shots: ['Listados con precio, metros y recámaras junto al mapa de la zona', 'Calculadora de hipoteca: mueves el enganche y el plazo y la mensualidad cambia al instante', 'Ficha de los asesores, con su especialidad y su teléfono directo']  },
         24: { tagline: 'Atención de Restaurante 24/7',      desc: 'Asistente que atiende a los comensales de un restaurante a cualquier hora: da seguimiento a sus peticiones, agenda reservaciones y cotiza eventos y banquetes sin que nadie tenga que estar al pendiente del teléfono.' },
-        25: { tagline: 'POS para Restaurantes',                desc: 'La versión de Mi Caja hecha para restaurantes, fondas y cocinas económicas: mesas, zonas, comandas a cocina, pedidos para llevar y a domicilio. Funciona en la computadora de la caja y en el celular del mesero al mismo tiempo, sobre la misma información.',
-            shots: ['Mi Caja Restaurante en el navegador: salón, cocina, venta y caja sin instalar nada', 'El salón en el celular del mesero: mesas ocupadas y libres, para llevar y a domicilio', 'Ajustes del negocio: impresora Bluetooth, cuota de envío y las zonas del restaurante']  },
       },
     },
     contact: {
@@ -750,7 +748,7 @@ export const translations = {
         presets: { restaurante: 'Restaurant', retail: 'Retail', citas: 'By appointment', fidelidad: 'Loyalty' },
         modules: {
           menu: 'Digital Menu', crm: 'CRM', cita: 'Agend-In',
-          pos: 'Mi Caja POS', nuki: 'Nuki Loyalty', nfc: 'NFC Reviews',
+          pos: 'Mi Caja', nuki: 'Nuki Loyalty', nfc: 'NFC Reviews',
         },
         links: {
           'pos-menu':  'The order from the menu goes straight to the register',
@@ -945,8 +943,8 @@ export const translations = {
         2:  { tagline: 'Automated Appointments via Telegram', desc: 'Complete appointment automation via Telegram, with its own website. Client management, appointment history and customizable virtual assistant personality for your brand. WhatsApp integration is in development.' },
         3:  { tagline: 'Pro Landing Page Template',           desc: 'Professional template for creating high-conversion landing pages. Modern, fast and fully customizable design with pre-built sections ready to use.',
             shots: ['A "what we do" section that tells the story in photos instead of paragraphs', 'About us: years in business, clients and satisfaction shown as big numbers', 'Contact: address, hours, phone and map, with the WhatsApp button always in sight']  },
-        6:  { tagline: 'Good, Nice and Affordable POS',       desc: 'A modern, affordable point of sale for grocery stores, butcher shops and counter businesses. It comes in two versions sharing the same data: desktop for the till, and a mobile app to charge from a phone. The desktop version costs between 1,000 and 1,500 pesos.',
-            shots: ['The full point of sale open on a phone: floor, sales, till, products and reports', 'Cash close: opening float, cash in, cash out and every movement of the shift with its reason', 'Add a product in seconds: name, barcode, price, cost and inventory tracking']  },
+        6:  { tagline: 'The Point of Sale Built Around Your Business', desc: 'A base to charge, close the day and keep track of stock, plus pieces added per type of business: store credit for the corner shop, tables for the restaurant. Today it runs in grocery stores and restaurants, on the counter computer and on the phone.',
+            shots: ['The sales screen: scan, charge and print the ticket', 'Reports: what you sold, what sells most and how customers pay', 'Mi Caja Mobile: the till open on the phone, with cash in and cash out'] },
         7:  { tagline: 'Custom Fleet Management',             desc: 'Custom-built mobile application for comprehensive fleet management. Real-time tracking, document control, unit statuses and direct communication with drivers.' },
         9:  { tagline: 'Complete Gym Management',             desc: 'Custom web platform for complete gym management. User administration, personalized routine assignment, progress tracking and membership control.' },
         11: { tagline: 'Government Badges in Seconds',        desc: 'Web application for creating government ID badges. Drastically reduces badge production time from manual creation, with templates, employee database and automated PDF generation.' },
@@ -961,8 +959,6 @@ export const translations = {
         23: { tagline: 'Landing Pages for Real Estate',       desc: 'Ready-to-publish template for real estate landing pages: property listings, photo gallery, contact form and location map. Lets an agency launch its site in days instead of months.',
             shots: ['Listings with price, square footage and bedrooms next to the area map', 'Mortgage calculator: move the down payment and the term and the monthly payment updates live', 'The agent roster, with each specialty and a direct phone number']  },
         24: { tagline: 'Restaurant Support, Around the Clock', desc: 'Assistant that serves a restaurant\'s diners at any hour: follows up on their requests, books reservations and quotes events and banquets, with nobody having to watch the phone.' },
-        25: { tagline: 'POS for Restaurants',                  desc: 'The version of Mi Caja built for restaurants and diners: tables, zones, orders sent to the kitchen, takeaway and delivery. It runs on the till computer and on the waiter\'s phone at the same time, over the same data.',
-            shots: ['Mi Caja Restaurante in the browser: floor, kitchen, sales and till with nothing to install', 'The floor on the waiter\'s phone: tables taken and free, takeaway and delivery', 'Business settings: Bluetooth printer, default delivery fee and the restaurant zones']  },
       },
     },
     contact: {
@@ -1282,7 +1278,7 @@ export const translations = {
         presets: { restaurante: 'Restaurante', retail: 'Varejo', citas: 'Com agendamento', fidelidad: 'Fidelidade' },
         modules: {
           menu: 'Cardápio Digital', crm: 'CRM', cita: 'Agend-In',
-          pos: 'Mi Caja POS', nuki: 'Nuki Fidelidade', nfc: 'NFC Avaliações',
+          pos: 'Mi Caja', nuki: 'Nuki Fidelidade', nfc: 'NFC Avaliações',
         },
         links: {
           'pos-menu':  'O pedido do cardápio entra direto no caixa',
@@ -1477,8 +1473,8 @@ export const translations = {
         2:  { tagline: 'Agendamentos Automáticos via Telegram', desc: 'Automação completa de agendamentos via Telegram, com site próprio. Gestão de clientes, histórico de agendas e personalidade do assistente virtual personalizável conforme sua marca. A integração com WhatsApp está em desenvolvimento.' },
         3:  { tagline: 'Template Pro para Landing Pages',       desc: 'Template profissional para criar landing pages de alta conversão. Design moderno, rápido e totalmente personalizável com seções pré-construídas prontas para usar.',
             shots: ['Seção "O que fazemos": o trabalho do negócio contado com fotos e não com parágrafos', 'Quem somos: anos de mercado, clientes e satisfação apresentados como números grandes', 'Contato: endereço, horário, telefone e mapa, com o botão de WhatsApp sempre à vista']  },
-        6:  { tagline: 'PDV Bom, Bonito e Barato',              desc: 'Ponto de venda moderno e acessível para mercearias, açougues e negócios de balcão. Vem em duas versões que compartilham a mesma informação: a de computador para o caixa e o aplicativo móvel para cobrar pelo celular. A versão para computador custa de 1.000 a 1.500 pesos.',
-            shots: ['O ponto de venda completo aberto no celular: salão, venda, caixa, produtos e relatórios', 'Fechamento de caixa: fundo de abertura, entradas, retiradas e cada movimento do turno com seu motivo', 'Cadastro de produto em segundos: nome, código de barras, preço, custo e controle de estoque']  },
+        6:  { tagline: 'O Ponto de Venda que se Monta como o seu Negócio', desc: 'Uma base para cobrar, fechar o caixa e cuidar do estoque, e peças que se adicionam conforme o ramo: o fiado da mercearia, as mesas do restaurante. Hoje funciona em mercearias e restaurantes, no computador do balcão e no celular.',
+            shots: ['A tela de venda: escaneia, cobra e sai o cupom', 'Relatórios: o que vendeu, o que mais sai e como pagam', 'Mi Caja Móvel: o caixa aberto no celular, com entradas e retiradas'] },
         7:  { tagline: 'Gestão de Frota Sob Medida',            desc: 'Aplicativo móvel desenvolvido sob medida para a gestão integral de frotas de veículos. Rastreamento em tempo real, controle de documentos, status das unidades e comunicação direta com motoristas.' },
         9:  { tagline: 'Gestão Completa de Academia',           desc: 'Plataforma web sob medida para gestão completa de academia. Administração de usuários, atribuição de rotinas personalizadas, acompanhamento de progresso e controle de mensalidades.' },
         11: { tagline: 'Crachás Governamentais em Segundos',    desc: 'Aplicação web para elaboração de crachás governamentais. Reduz drasticamente o tempo de produção de credenciais antes feitas manualmente, com templates, banco de funcionários e geração de PDF automatizada.' },
@@ -1493,8 +1489,6 @@ export const translations = {
         23: { tagline: 'Landings para Imobiliárias',           desc: 'Template pronto para publicar landing pages de imobiliárias: fichas de imóveis, galeria de fotos, formulário de contato e mapa de localização. Permite lançar o site de uma agência em dias, e não em meses.',
             shots: ['Anúncios com preço, metragem e quartos ao lado do mapa da região', 'Calculadora de financiamento: mova a entrada e o prazo e a parcela muda na hora', 'Ficha dos corretores, com sua especialidade e telefone direto']  },
         24: { tagline: 'Atendimento de Restaurante 24/7',      desc: 'Assistente que atende os clientes de um restaurante a qualquer hora: acompanha os pedidos, agenda reservas e orça eventos e banquetes sem que ninguém precise ficar de olho no telefone.' },
-        25: { tagline: 'PDV para Restaurantes',                desc: 'A versão do Mi Caja feita para restaurantes e lanchonetes: mesas, zonas, comandas para a cozinha, pedidos para viagem e delivery. Funciona no computador do caixa e no celular do garçom ao mesmo tempo, sobre a mesma informação.',
-            shots: ['Mi Caja Restaurante no navegador: salão, cozinha, venda e caixa sem instalar nada', 'O salão no celular do garçom: mesas ocupadas e livres, para viagem e delivery', 'Ajustes do negócio: impressora Bluetooth, taxa de entrega e as zonas do restaurante']  },
       },
     },
     contact: {

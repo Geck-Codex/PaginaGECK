@@ -50,12 +50,16 @@ export const translations = {
       liveCta: 'Ver en vivo ↗',
       catLabels: { landing: 'Landing', mobile: 'App Móvil', webapp: 'Web', software: 'Software & IA' },
       projects: {
+        19: { tagline: 'Ganadería en el Bolsillo', result: 'El hato se llevaba de memoria y en libreta. Ahora cada animal, su dieta y sus gastos se registran desde el celular, en el corral.' },
+        24: { tagline: 'Atención de Restaurante 24/7', result: 'Los mensajes de los comensales se quedaban sin respuesta. Ahora un asistente atiende, agenda reservaciones y cotiza eventos a cualquier hora.' },
+        21: { tagline: 'Atención que Filtra Clientes', result: 'Todos los mensajes valían igual. Ahora el asistente contesta, detecta al cliente que sí va a comprar y lo manda al CRM con todo el contexto.' },
         1: { tagline: 'Botanas Artesanales', result: 'Vendían solo por mensajes. Ahora tienen una página que muestra el producto y recibe pedidos.' },
         2: { tagline: 'Citas Automáticas Telegram', result: 'Agendaban las citas a mano. Ahora un asistente las agenda solo, a cualquier hora.' },
         3: { tagline: 'Plantilla Pro para Landings', result: 'Cada landing se hacía desde cero. Ahora se arma en horas con secciones ya probadas.' },
         6: { tagline: 'POS para Negocios Locales', result: 'La cuenta se llevaba en libreta. Ahora cada venta queda registrada y el corte del día sale solo.' },
         7: { tagline: 'Gestión de Flotilla', result: 'No sabían dónde iban sus unidades. Ahora ven la flotilla en tiempo real y los papeles al día.' },
         9: { tagline: 'Gym & Membresías', result: 'Las membresías vivían en un cuaderno. Ahora cada socio tiene su rutina y su pago al corriente.' },
+        22: { tagline: 'Guantes de Seguridad al Mayoreo', result: 'Las cotizaciones llegaban sueltas por mensaje. Ahora el catálogo está a la vista y cada solicitud llega ordenada.' },
       },
     },
     whatWeDo: {
@@ -154,7 +158,7 @@ export const translations = {
       careLabel: 'Atención al cliente',
       founderRole: 'Socio fundador',
       more: (n) => `y ${n} más`,
-      roles: { ventas: 'Gerente de ventas', admin: 'Operaciones' },
+      roles: { ventas: 'Cuasi fundador', admin: 'Operaciones' },
       photoAlt: (name) => `${name}, del equipo de Geck Codex`,
     },
     aboutTeaser: {
@@ -582,12 +586,16 @@ export const translations = {
       liveCta: 'View live ↗',
       catLabels: { landing: 'Landing', mobile: 'Mobile App', webapp: 'Web', software: 'Software & AI' },
       projects: {
+        19: { tagline: 'Ranch Management in Your Pocket', result: 'The herd was kept from memory and in a notebook. Now every animal, its diet and its expenses are logged from the phone, out in the corral.' },
+        24: { tagline: 'Restaurant Support, Around the Clock', result: 'Messages from diners went unanswered. Now an assistant replies, books reservations and quotes events at any hour.' },
+        21: { tagline: 'Support That Filters Leads', result: 'Every message looked the same. Now the assistant replies, spots the customer who will actually buy and sends them to the CRM with the full context.' },
         1: { tagline: 'Artisan Spicy Snacks', result: 'They sold through direct messages only. Now they have a page that shows the product and takes orders.' },
         2: { tagline: 'Automated Telegram Appointments', result: 'Appointments were booked by hand. Now an assistant books them on its own, at any hour.' },
         3: { tagline: 'Pro Landing Page Template', result: 'Every landing page started from zero. Now it goes live in hours from sections already proven.' },
         6: { tagline: 'POS for Local Businesses', result: 'The till was a notebook. Now every sale is logged and the daily close comes out on its own.' },
         7: { tagline: 'Fleet Management', result: 'They did not know where their trucks were. Now they see the fleet live and the paperwork up to date.' },
         9: { tagline: 'Gym & Memberships', result: 'Memberships lived in a notebook. Now every member has their routine and their payment on record.' },
+        22: { tagline: 'Wholesale Safety Gloves', result: 'Quote requests came in scattered across messages. Now the catalog is on display and every request arrives organized.' },
       },
     },
     whatWeDo: {
@@ -686,7 +694,7 @@ export const translations = {
       careLabel: 'Client care',
       founderRole: 'Founding partner',
       more: (n) => `and ${n} more`,
-      roles: { ventas: 'Sales Manager', admin: 'Operations' },
+      roles: { ventas: 'Quasi-founder', admin: 'Operations' },
       photoAlt: (name) => `${name}, from the Geck Codex team`,
     },
     aboutTeaser: {
@@ -1112,12 +1120,16 @@ export const translations = {
       liveCta: 'Ver ao vivo ↗',
       catLabels: { landing: 'Landing', mobile: 'App Mobile', webapp: 'Web', software: 'Software & IA' },
       projects: {
+        19: { tagline: 'Pecuária no Bolso', result: 'O rebanho era controlado de cabeça e no caderno. Agora cada animal, sua dieta e seus gastos são registrados pelo celular, no curral.' },
+        24: { tagline: 'Atendimento de Restaurante 24/7', result: 'As mensagens dos clientes ficavam sem resposta. Agora um assistente atende, agenda reservas e orça eventos a qualquer hora.' },
+        21: { tagline: 'Atendimento que Filtra Clientes', result: 'Toda mensagem valia igual. Agora o assistente responde, identifica o cliente que vai comprar e o envia ao CRM com todo o contexto.' },
         1: { tagline: 'Petiscos Artesanais Picantes', result: 'Vendiam só por mensagem. Agora têm uma página que mostra o produto e recebe pedidos.' },
         2: { tagline: 'Agendamentos Automáticos Telegram', result: 'Os agendamentos eram feitos na mão. Agora um assistente agenda sozinho, a qualquer hora.' },
         3: { tagline: 'Template Pro para Landings', result: 'Cada landing começava do zero. Agora sobe em horas com seções já testadas.' },
         6: { tagline: 'PDV para Negócios Locais', result: 'O caixa era um caderno. Agora cada venda fica registrada e o fechamento do dia sai sozinho.' },
         7: { tagline: 'Gestão de Frota', result: 'Não sabiam onde estavam os caminhões. Agora veem a frota ao vivo e a papelada em dia.' },
         9: { tagline: 'Academia & Mensalidades', result: 'As mensalidades viviam num caderno. Agora cada aluno tem seu treino e seu pagamento em dia.' },
+        22: { tagline: 'Luvas de Segurança no Atacado', result: 'Os orçamentos chegavam soltos por mensagem. Agora o catálogo está à vista e cada solicitação chega organizada.' },
       },
     },
     whatWeDo: {
@@ -1216,7 +1228,7 @@ export const translations = {
       careLabel: 'Atendimento ao cliente',
       founderRole: 'Sócio fundador',
       more: (n) => `e mais ${n}`,
-      roles: { ventas: 'Gerente de vendas', admin: 'Operações' },
+      roles: { ventas: 'Quase fundador', admin: 'Operações' },
       photoAlt: (name) => `${name}, do time da Geck Codex`,
     },
     aboutTeaser: {

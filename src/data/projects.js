@@ -78,6 +78,6 @@ export const PROJECTS_STATIC = [
 
 /* Seleccion que se muestra en el carrusel de la home. Solo ids: el titulo, la
  * imagen y la categoria salen de la tabla de arriba. */
-export const HOME_PROJECT_IDS = [1, 2, 3, 6, 7, 9];
+export const HOME_PROJECT_IDS = [19, 24, 21, 6, 22];
 
 export const projectById = (id) => PROJECTS_STATIC.find((p) => p.id === id);
